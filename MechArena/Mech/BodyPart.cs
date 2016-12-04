@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 
-namespace MechArena
+namespace MechArena.Mech
 {
-	public enum MechBodyPartLocations
+	public enum BodyPartLocations
 	{
 		HEAD=0,
 		TORSO,
@@ -15,18 +15,18 @@ namespace MechArena
 
 	public class MechBodyPart
 	{
-		private MechBodyPartLocations location;
+		private BodyPartLocations location;
 		private int slotSpace;
-		private List<MechAttachment> attachments;
+		private List<Attachment> attachments;
 
-		public MechBodyPart (MechBodyPartLocations location, int slotSpace)
+		public MechBodyPart (BodyPartLocations location, int slotSpace)
 		{
 			this.location = location;
 			this.slotSpace = slotSpace;
-			this.attachments = new List<MechAttachment> ();
+			this.attachments = new List<Attachment> ();
 		}
 
-		public MechBodyPartLocations Location { get { return this.location; } }
+		public BodyPartLocations Location { get { return this.location; } }
 		// For some reason, it doesn't include LINQ with MonoDevelop!? Uh. When I get internet back I'll look.
 		public int SlotsUsed
 		{
@@ -42,7 +42,7 @@ namespace MechArena
 		}
 		private int OpenSlots { get { return this.slotSpace - this.SlotsUsed; } }
 
-		public bool CanAttach(MechAttachment attachment)
+		public bool CanAttach(Attachment attachment)
 		{
 			return this.OpenSlots < attachment.SlotsUsed;
 		}

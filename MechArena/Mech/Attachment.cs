@@ -1,12 +1,12 @@
 using System;
 
-namespace MechArena
+namespace MechArena.Mech
 {
-	public class MechAttachment
+	public class Attachment
 	{
 		private int slotsUsed;
 
-		public MechAttachment (int slotsRequired)
+		public Attachment (int slotsRequired)
 		{
 			this.slotsUsed = slotsRequired;
 		}
