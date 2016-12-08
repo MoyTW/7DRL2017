@@ -1,7 +1,11 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MechArena", "MechArena\MechArena.csproj", "{F01512FA-E30C-476C-BD37-84EE722D4B6B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MechArenaTests", "MechArenaTests\MechArenaTests.csproj", "{CBCD73D8-CC1D-4870-AF07-8106ADE86A2E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,6 +17,13 @@ Global
 		{F01512FA-E30C-476C-BD37-84EE722D4B6B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F01512FA-E30C-476C-BD37-84EE722D4B6B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F01512FA-E30C-476C-BD37-84EE722D4B6B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CBCD73D8-CC1D-4870-AF07-8106ADE86A2E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CBCD73D8-CC1D-4870-AF07-8106ADE86A2E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CBCD73D8-CC1D-4870-AF07-8106ADE86A2E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CBCD73D8-CC1D-4870-AF07-8106ADE86A2E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = MechArena\MechArena.csproj

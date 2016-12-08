@@ -9,6 +9,8 @@
     <OutputType>Library</OutputType>
     <RootNamespace>MechArena</RootNamespace>
     <AssemblyName>MechArena</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -35,6 +37,7 @@
     <Compile Include="GameObject.cs" />
     <Compile Include="Mech\Attachment.cs" />
     <Compile Include="Mech\BodyPart.cs" />
+    <Compile Include="Mech\MechEntity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
