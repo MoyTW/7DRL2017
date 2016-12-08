@@ -35,6 +35,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GameObject.cs" />
+    <Compile Include="GameRandom.cs" />
     <Compile Include="Mech\Attachment.cs" />
     <Compile Include="Mech\AttachmentEffect.cs" />
     <Compile Include="Mech\BodyPart.cs" />
