@@ -43,10 +43,10 @@ namespace MechArena.Mech
 
 		public bool CanAttach(Attachment attachment)
 		{
-			return this.OpenSlots > attachment.SlotsUsed;
+			return this.OpenSlots >= attachment.SlotsUsed;
 		}
 
-		public void TryAttach(Attachment attachment)
+		public void Attach(Attachment attachment)
 		{
             if (attachment == null)
                 throw new ArgumentException("Cannot attach null attachment!");
@@ -68,9 +68,29 @@ namespace MechArena.Mech
                 this.attachments.Remove(attachment);
 		}
 
-		private bool TryTakeDamage()
+        private void AssignDamagePoint()
+        {
+            Attachment target = GameRandom.RandomByWeight<Attachment>(this.attachments, (a => a.SizeCurrent));
+            target.TakeDamage();
+            if (target.Destroyed)
+            {
+                this.attachments.Remove(target);
+                Console.WriteLine(String.Format("Attachment %s on part %s was destroyed!", target.ToString(),
+                    this.ToString()));
+            }
+        }
+
+		public int TakeDamage(int damage)
 		{
-			throw new NotImplementedException ();
+            int limit = 9999;
+            int remaining = damage;
+            while (this.attachments.Count > 0 && remaining > 0 && limit > 0)
+            {
+                this.AssignDamagePoint();
+                remaining--;
+                limit--;
+            }
+            return remaining;
 		}
 	}
 }

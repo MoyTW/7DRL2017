@@ -9,6 +9,7 @@ namespace MechArenaTests
     [TestClass]
     public class GameRandomTest
     {
+        // Probibalistic failures possible.
         [TestMethod]
         public void TestRandomByWeight()
         {

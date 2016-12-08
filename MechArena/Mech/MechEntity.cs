@@ -60,7 +60,7 @@ namespace MechArena.Mech
 
         public void Attach(BodyPartLocations location, Attachment attachment)
         {
-            bodyParts[location].TryAttach(attachment);
+            bodyParts[location].Attach(attachment);
         }
 
         public void Detach(BodyPartLocations location, Attachment attachment)

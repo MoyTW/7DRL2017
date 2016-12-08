@@ -8,11 +8,6 @@ namespace MechArenaTests.Mech
     [TestClass]
     public class MechEntityTests
     {
-        public Attachment AttachmentWithSlots(int slots)
-        {
-            return new Attachment("", slots, 5, null);
-        }
-
         [TestMethod]
         public void ConstructorBuildsAllBodyPartsTest()
         {
@@ -29,7 +24,7 @@ namespace MechArenaTests.Mech
         {
             var mech = new MechEntity();
 
-            Attachment a = this.AttachmentWithSlots(1);
+            Attachment a = MechTestUtils.AttachmentWithSlots(1);
             mech.Attach(BodyPartLocations.HEAD, a);
             Assert.AreSame(a, mech.InspectAttachmentsAt(BodyPartLocations.HEAD)[0]);
             Assert.AreEqual(1, mech.SlotsUsedAt(BodyPartLocations.HEAD));
@@ -42,7 +37,7 @@ namespace MechArenaTests.Mech
         {
             var mech = new MechEntity();
 
-            Attachment a = this.AttachmentWithSlots(9999);
+            Attachment a = MechTestUtils.AttachmentWithSlots(9999);
 
             mech.Attach(BodyPartLocations.HEAD, a);
         }
@@ -52,7 +47,7 @@ namespace MechArenaTests.Mech
         {
             var mech = new MechEntity();
 
-            Attachment a = this.AttachmentWithSlots(1);
+            Attachment a = MechTestUtils.AttachmentWithSlots(1);
 
             mech.Attach(BodyPartLocations.HEAD, a);
             mech.Detach(BodyPartLocations.HEAD, a);
@@ -65,7 +60,7 @@ namespace MechArenaTests.Mech
         {
             var mech = new MechEntity();
 
-            Attachment a = this.AttachmentWithSlots(1);
+            Attachment a = MechTestUtils.AttachmentWithSlots(1);
 
             mech.Detach(BodyPartLocations.HEAD, a);
         }

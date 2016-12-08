@@ -17,7 +17,9 @@ namespace MechArena.Mech
         public int SizeMax { get { return this.sizeMax; } }
         public int SizeCurrent { get { return this.sizeMax - this.damageTaken; } }
         public float PercentDamaged { get { return this.SizeCurrent / this.SizeMax; } }
-        public bool Destroyed { get { return this.SizeCurrent <= 0; } }
+        public bool Destroyed { get {
+                Console.WriteLine("SizeCurrent: " + this.SizeCurrent);
+                return this.SizeCurrent <= 0; } }
 
         public Attachment (string label, int slotsRequired, int sizeMax, AttachmentEffect effect)
 		{
