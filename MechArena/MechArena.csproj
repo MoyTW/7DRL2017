@@ -36,6 +36,7 @@
   <ItemGroup>
     <Compile Include="GameObject.cs" />
     <Compile Include="Mech\Attachment.cs" />
+    <Compile Include="Mech\AttachmentEffect.cs" />
     <Compile Include="Mech\BodyPart.cs" />
     <Compile Include="Mech\MechEntity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
