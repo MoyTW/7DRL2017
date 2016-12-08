@@ -27,9 +27,47 @@ namespace MechArena.Mech
             }
         }
 
+        #region Inspection
+
+        public int SlotsRemainingAt(BodyPartLocations location)
+        {
+            return bodyParts[location].SlotsRemaining;
+        }
+
+        public int SlotsUsedAt(BodyPartLocations location)
+        {
+            return bodyParts[location].SlotsUsed;
+        }
+
         public BodyPart InspectPartAt(BodyPartLocations location)
         {
             return bodyParts[location];
         }
+
+        public IList<Attachment> InspectAttachmentsAt(BodyPartLocations location)
+        {
+            return bodyParts[location].InspectAttachments();
+        }
+
+        #endregion
+
+        #region State Changes
+
+        public bool CanAttach(BodyPartLocations location, Attachment attachment)
+        {
+            return bodyParts[location].CanAttach(attachment);
+        }
+
+        public void Attach(BodyPartLocations location, Attachment attachment)
+        {
+            bodyParts[location].TryAttach(attachment);
+        }
+
+        public void Detach(BodyPartLocations location, Attachment attachment)
+        {
+            bodyParts[location].Detach(attachment);
+        }
+
+        #endregion
     }
 }

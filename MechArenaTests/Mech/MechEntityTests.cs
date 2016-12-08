@@ -18,5 +18,51 @@ namespace MechArenaTests.Mech
                 Assert.IsInstanceOfType(mech.InspectPartAt(location), typeof(BodyPart));
             }
         }
+
+        [TestMethod]
+        public void CanAttach()
+        {
+            var mech = new MechEntity();
+
+            Attachment a = new Attachment(1);
+            mech.Attach(BodyPartLocations.HEAD, a);
+            Assert.AreSame(a, mech.InspectAttachmentsAt(BodyPartLocations.HEAD)[0]);
+            Assert.AreEqual(1, mech.SlotsUsedAt(BodyPartLocations.HEAD));
+            Assert.AreEqual(4, mech.SlotsRemainingAt(BodyPartLocations.HEAD));
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void CannotAttachHugeItem()
+        {
+            var mech = new MechEntity();
+
+            Attachment a = new Attachment(9999);
+
+            mech.Attach(BodyPartLocations.HEAD, a);
+        }
+
+        [TestMethod]
+        public void CanDetach()
+        {
+            var mech = new MechEntity();
+
+            Attachment a = new Attachment(1);
+
+            mech.Attach(BodyPartLocations.HEAD, a);
+            mech.Detach(BodyPartLocations.HEAD, a);
+            Assert.AreEqual(0, mech.InspectAttachmentsAt(BodyPartLocations.HEAD).Count);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void CannotDetachPhantomAttachment()
+        {
+            var mech = new MechEntity();
+
+            Attachment a = new Attachment(1);
+
+            mech.Detach(BodyPartLocations.HEAD, a);
+        }
     }
 }

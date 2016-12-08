@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Collections.Generic;
 
 namespace MechArena.Mech
@@ -23,19 +24,13 @@ namespace MechArena.Mech
 		private int OpenSlots { get { return this.slotSpace - this.SlotsUsed; } }
 
 		public BodyPartLocations Location { get { return this.location; } }
-		// For some reason, it doesn't include LINQ with MonoDevelop!? Uh. When I get internet back I'll look.
-		public int SlotsUsed
-		{
-			get
-			{
-				int slotsUsed = 0;
-				for (int i = 0; i < this.attachments.Count; i++)
-				{
-					slotsUsed += this.attachments [i].SlotsUsed;
-				}
-				return slotsUsed;
-			}
-		}
+		public int SlotsUsed { get { return this.attachments.Sum(i => i.SlotsUsed); } }
+        public int SlotsRemaining { get { return this.slotSpace - this.SlotsUsed; } }
+
+        public IList<Attachment> InspectAttachments()
+        {
+            return attachments.AsReadOnly();
+        }
 
 		#endregion
 
@@ -48,36 +43,29 @@ namespace MechArena.Mech
 
 		public bool CanAttach(Attachment attachment)
 		{
-			return this.OpenSlots < attachment.SlotsUsed;
+			return this.OpenSlots > attachment.SlotsUsed;
 		}
 
-		public bool TryAttach(Attachment attachment)
+		public void TryAttach(Attachment attachment)
 		{
             if (attachment == null)
                 throw new ArgumentException("Cannot attach null attachment!");
-            if (this.attachments.Contains(attachment))
-                throw new ArgumentException("Cannout attach attached item " + attachment.ToString() + "!");
-
-            if (this.CanAttach(attachment))
-            {
-                this.attachments.Add(attachment);
-                return true;
-            }
+            else if (this.attachments.Contains(attachment))
+                throw new ArgumentException("Cannot attach attached item " + attachment.ToString() + "!");
+            else if (!this.CanAttach(attachment))
+                throw new ArgumentException("Cannot attach item " + attachments.ToString() + ", too few slots!");
             else
-            {
-                return false;
-            }
+                this.attachments.Add(attachment);
 		}
 
-		public bool TryDetach(Attachment attachment)
+		public void Detach(Attachment attachment)
 		{
             if (attachment == null)
                 throw new ArgumentException("Cannot detach null attachment!");
-            if (!this.attachments.Contains(attachment))
+            else if (!this.attachments.Contains(attachment))
                 throw new ArgumentException("Cannot detach " + attachment.ToString() + " as it is not attached!");
-
-            this.attachments.Remove(attachment);
-            return true;
+            else
+                this.attachments.Remove(attachment);
 		}
 
 		private bool TryTakeDamage()

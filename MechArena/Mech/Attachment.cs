@@ -8,6 +8,10 @@ namespace MechArena.Mech
 
 		public Attachment (int slotsRequired)
 		{
+            if (slotsRequired < 1)
+            {
+                throw new ArgumentException("Attachments cannot have 0 slots required!");
+            }
 			this.slotsUsed = slotsRequired;
 		}
 
