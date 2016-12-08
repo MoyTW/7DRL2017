@@ -13,7 +13,7 @@ namespace MechArena.Mech
 		RIGHT_LEG
 	}
 
-	public class MechBodyPart : GameObject, Stateful
+	public class BodyPart : GameObject
 	{
 		#region Variables & Properties
 
@@ -39,7 +39,7 @@ namespace MechArena.Mech
 
 		#endregion
 
-		public MechBodyPart (BodyPartLocations location, int slotSpace)
+		public BodyPart (BodyPartLocations location, int slotSpace)
 		{
 			this.location = location;
 			this.slotSpace = slotSpace;
@@ -51,34 +51,38 @@ namespace MechArena.Mech
 			return this.OpenSlots < attachment.SlotsUsed;
 		}
 
-		private bool TryAttachPart(StateChange change)
+		public bool TryAttach(Attachment attachment)
 		{
-			throw new NotImplementedException ();
+            if (attachment == null)
+                throw new ArgumentException("Cannot attach null attachment!");
+            if (this.attachments.Contains(attachment))
+                throw new ArgumentException("Cannout attach attached item " + attachment.ToString() + "!");
+
+            if (this.CanAttach(attachment))
+            {
+                this.attachments.Add(attachment);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
 		}
 
-		private bool TryDetachPart(StateChange change)
+		public bool TryDetach(Attachment attachment)
 		{
-			throw new NotImplementedException ();
+            if (attachment == null)
+                throw new ArgumentException("Cannot detach null attachment!");
+            if (!this.attachments.Contains(attachment))
+                throw new ArgumentException("Cannot detach " + attachment.ToString() + " as it is not attached!");
+
+            this.attachments.Remove(attachment);
+            return true;
 		}
 
-		private bool TryTakeDamage(StateChange change)
+		private bool TryTakeDamage()
 		{
 			throw new NotImplementedException ();
-		}
-
-		public virtual bool TryApplyStateChange(StateChange change)
-		{
-			switch (change.ChangeType)
-			{
-			case StateChangeType.PART_ATTACH:
-				return this.TryAttachPart (change);
-			case StateChangeType.PART_DETATCH:
-				return this.TryDetachPart (change);
-			case StateChangeType.TAKE_DAMAGE:
-				return this.TryTakeDamage (change);
-			default:
-				throw new ArgumentOutOfRangeException();
-			}
 		}
 	}
 }

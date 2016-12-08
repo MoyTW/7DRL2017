@@ -36,8 +36,6 @@
     <Compile Include="Mech\Attachment.cs" />
     <Compile Include="Mech\BodyPart.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="StateChange.cs" />
-    <Compile Include="Stateful.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup />
