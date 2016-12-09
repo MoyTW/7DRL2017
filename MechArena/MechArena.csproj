@@ -34,7 +34,9 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="GameObject.cs" />
+    <Compile Include="Component.cs" />
+    <Compile Include="Entity.cs" />
+    <Compile Include="GameEvent.cs" />
     <Compile Include="GameRandom.cs" />
     <Compile Include="Mech\Attachment.cs" />
     <Compile Include="Mech\AttachmentEffect.cs" />

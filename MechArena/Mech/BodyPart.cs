@@ -14,7 +14,7 @@ namespace MechArena.Mech
 		RIGHT_LEG
 	}
 
-	public class BodyPart : GameObject
+	public class BodyPart
 	{
 		#region Variables & Properties
 

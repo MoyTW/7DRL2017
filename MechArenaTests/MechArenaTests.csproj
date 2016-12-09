@@ -60,6 +60,7 @@
     <Compile Include="Mech\MechTestUtils.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="GameRandomTest.cs" />
+    <Compile Include="EntityTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MechArena\MechArena.csproj">
