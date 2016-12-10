@@ -16,5 +16,15 @@ namespace MechArena
         {
             throw new NotImplementedException();
         }
+
+        public GameQuery HandleQuery(GameQuery q)
+        {
+            return this._HandleQuery(q);
+        }
+
+        protected virtual GameQuery _HandleQuery(GameQuery q)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace MechArena
 {
-    public class GameEvent
+    public class GameQuery
     {
         // Initializes as False, should probably be explicit to reduce confusion.
         public bool Completed { get; set; }
