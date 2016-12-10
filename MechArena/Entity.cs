@@ -43,6 +43,7 @@ namespace MechArena
             }
 
             this.orderedComponents.Add(comp);
+            comp.Notify_Added(this);
         }
 
         public void RemoveComponent(Component comp)
@@ -54,6 +55,7 @@ namespace MechArena
             }
 
             this.orderedComponents.Remove(comp);
+            comp.Notify_Removed();
         }
 
         public bool HandleEvent(GameEvent ev)
