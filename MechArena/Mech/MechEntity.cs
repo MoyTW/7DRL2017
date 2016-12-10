@@ -7,6 +7,7 @@ namespace MechArena.Mech
 {
     public class MechEntity
     {
+        /*
         // Should be configurable!
         private static Dictionary<BodyPartLocations, int> MechTemplate = new Dictionary<BodyPartLocations, int>() {
             { BodyPartLocations.HEAD, 5 },
@@ -69,5 +70,6 @@ namespace MechArena.Mech
         }
 
         #endregion
+        */
     }
 }

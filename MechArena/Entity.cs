@@ -9,6 +9,8 @@ namespace MechArena
 		private Guid uuid;
         private List<Component> orderedComponents;
 
+        public Entity() : this(Guid.NewGuid()) { }
+
         public Entity(Guid uuid)
         {
             this.uuid = uuid;
