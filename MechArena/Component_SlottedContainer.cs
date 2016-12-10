@@ -6,10 +6,10 @@ namespace MechArena
 {
     public class Component_SlottedContainer : Component
     {
-        private int slotSpace;
+        private int slotsMax;
         private List<Entity> storedEntities;
         
-        public int SlotSpace { get { return this.slotSpace; } }
+        public int SlotsMax { get { return this.slotsMax; } }
         public int SlotsUsed
         {
             get
@@ -17,11 +17,11 @@ namespace MechArena
                 return this.storedEntities.Sum(c => c.GetComponentOfType<Component_Slottable>().SlotsRequired);
             }
         }
-        public int OpenSlots { get { return this.SlotSpace - this.SlotsUsed; } }
+        public int SlotsRemaining { get { return this.SlotsMax - this.SlotsUsed; } }
 
         public Component_SlottedContainer(int slotSpace)
         {
-            this.slotSpace = slotSpace;
+            this.slotsMax = slotSpace;
             this.storedEntities = new List<Entity>();
         }
 
@@ -33,7 +33,7 @@ namespace MechArena
         public bool CanSlot(Entity en)
         {
             var cs = en.GetComponentOfType<Component_Slottable>();
-            if (cs != null && this.OpenSlots >= cs.SlotsRequired)
+            if (cs != null && this.SlotsRemaining >= cs.SlotsRequired)
                 return true;
             else
                 return false;

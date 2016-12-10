@@ -61,7 +61,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="GameRandomTest.cs" />
     <Compile Include="EntityTest.cs" />
-    <Compile Include="SlottingTest.cs" />
+    <Compile Include="Component_SlottedContainerTest.cs" />
+    <Compile Include="Component_InternalStructureTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MechArena\MechArena.csproj">

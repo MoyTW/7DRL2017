@@ -8,7 +8,7 @@ namespace MechArenaTests
     // I don't know how to design in OO any more! The fact that I have one test class for 4(!) different classes is a
     // serious smell!
     [TestClass]
-    public class SlottingTest
+    public class Component_SlottedContainerTest
     {
         int containerSize = 5;
         Entity slottedContainer;
@@ -34,13 +34,13 @@ namespace MechArenaTests
             var ev = new GameEvent_Slot(small, this.slottedContainer);
             this.slottedContainer.HandleEvent(ev);
             Assert.IsTrue(ev.Completed);
-            Assert.AreEqual(3, this.slottedContainer.GetComponentOfType<Component_SlottedContainer>().OpenSlots);
+            Assert.AreEqual(3, this.slottedContainer.GetComponentOfType<Component_SlottedContainer>().SlotsRemaining);
 
             var perfect = this.SlottableRequiring(3);
             var ev1 = new GameEvent_Slot(perfect, this.slottedContainer);
             this.slottedContainer.HandleEvent(ev1);
             Assert.IsTrue(ev1.Completed);
-            Assert.AreEqual(0, this.slottedContainer.GetComponentOfType<Component_SlottedContainer>().OpenSlots);
+            Assert.AreEqual(0, this.slottedContainer.GetComponentOfType<Component_SlottedContainer>().SlotsRemaining);
         }
 
         [TestMethod]
@@ -51,7 +51,7 @@ namespace MechArenaTests
             this.slottedContainer.HandleEvent(ev);
             Assert.IsFalse(ev.Completed);
             Assert.AreEqual(this.containerSize, 
-                this.slottedContainer.GetComponentOfType<Component_SlottedContainer>().OpenSlots);
+                this.slottedContainer.GetComponentOfType<Component_SlottedContainer>().SlotsRemaining);
         }
 
         [TestMethod]
@@ -76,7 +76,7 @@ namespace MechArenaTests
             this.slottedContainer.HandleEvent(unslot);
             Assert.IsTrue(unslot.Completed);
             Assert.AreEqual(this.containerSize,
-                this.slottedContainer.GetComponentOfType<Component_SlottedContainer>().OpenSlots);
+                this.slottedContainer.GetComponentOfType<Component_SlottedContainer>().SlotsRemaining);
         }
 
         [TestMethod]
@@ -87,7 +87,7 @@ namespace MechArenaTests
             var unslot = new GameEvent_Unslot(small, this.slottedContainer);
             this.slottedContainer.HandleEvent(unslot);
             Assert.IsTrue(unslot.Completed);
-            Assert.AreEqual(5, this.slottedContainer.GetComponentOfType<Component_SlottedContainer>().OpenSlots);
+            Assert.AreEqual(5, this.slottedContainer.GetComponentOfType<Component_SlottedContainer>().SlotsRemaining);
         }
     }
 }
