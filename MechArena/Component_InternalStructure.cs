@@ -12,6 +12,7 @@ namespace MechArena
         public int StructureMax { get; }
         public int StructureDestroyed { get { return this.structureDestroyed; } }
         public int StructureRemaining { get { return this.StructureMax - this.StructureDestroyed; } }
+        public bool Destroyed { get { return this.StructureRemaining == 0; } }
 
         public Component_InternalStructure(int structureMax)
         {

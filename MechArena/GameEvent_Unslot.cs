@@ -12,6 +12,11 @@ namespace MechArena
 
         public GameEvent_Unslot(Entity entityToUnslot, Entity container)
         {
+            if (!container.HasComponentOfType<Component_SlottedContainer>())
+                throw new ArgumentException("Can't slot to item without slots!");
+            if (!entityToUnslot.HasComponentOfType<Component_Slottable>())
+                throw new ArgumentException("Can't slot unslottable item!");
+
             this.EntityToUnslot = entityToUnslot;
             this.EntityContainer = container;
         }

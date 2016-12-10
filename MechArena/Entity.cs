@@ -34,7 +34,7 @@ namespace MechArena
         }
 
         // Note that ordering is controlled *only* by the order in which this is called!
-        public void AddComponent(Component comp)
+        public Entity AddComponent(Component comp)
         {
             if (this.orderedComponents.Contains(comp))
             {
@@ -44,9 +44,10 @@ namespace MechArena
 
             this.orderedComponents.Add(comp);
             comp.Notify_Added(this);
+            return this;
         }
 
-        public void RemoveComponent(Component comp)
+        public Entity RemoveComponent(Component comp)
         {
             if (!this.orderedComponents.Contains(comp))
             {
@@ -56,6 +57,7 @@ namespace MechArena
 
             this.orderedComponents.Remove(comp);
             comp.Notify_Removed();
+            return this;
         }
 
         public bool HandleEvent(GameEvent ev)
