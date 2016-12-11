@@ -14,5 +14,11 @@ namespace MechArena
                 .AddComponent(new Component_SlottedContainer(slotSpace))
                 .AddComponent(new Component_InternalStructure(internalStructure));
         }
+
+        public static Entity BuildMech()
+        {
+            return new Entity()
+                .AddComponent(new Component_MechSkeleton());
+        }
     }
 }
