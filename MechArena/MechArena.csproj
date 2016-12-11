@@ -56,6 +56,7 @@
     <Compile Include="Component_BodyPartLocation.cs" />
     <Compile Include="Component_InternalStructure.cs" />
     <Compile Include="Component_MechSkeleton.cs" />
+    <Compile Include="Component_Position.cs" />
     <Compile Include="Component_SlottedContainer.cs" />
     <Compile Include="Component_Slottable.cs" />
     <Compile Include="Component_SlottedStructure.cs" />
@@ -64,11 +65,13 @@
     <Compile Include="EntityAttributeModifier.cs" />
     <Compile Include="EntityBuilder.cs" />
     <Compile Include="GameEvent.cs" />
+    <Compile Include="GameEvent_MoveSingle.cs" />
     <Compile Include="GameEvent_Slot.cs" />
     <Compile Include="GameEvent_TakeDamage.cs" />
     <Compile Include="GameEvent_Unslot.cs" />
     <Compile Include="GameQuery.cs" />
     <Compile Include="GameQuery_EntityAttribute.cs" />
+    <Compile Include="GameQuery_Position.cs" />
     <Compile Include="GameRandom.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
