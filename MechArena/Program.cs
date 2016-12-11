@@ -1,6 +1,8 @@
 ﻿using RLNET;
 using RogueSharp;
 
+using System.Collections.Generic;
+
 namespace MechArena
 {
     public class Program
@@ -10,16 +12,42 @@ namespace MechArena
         private static readonly int _screenHeight = 50;
         // The starting position for the player
         private static Entity player;
+        private static Entity enemy;
+        // Will be tricky to track the state here (take or drop) - instead track ALL and iterate through?
+        private static List<Entity> mapEntities;
  
         private static RLRootConsole _rootConsole;
         private static IMap _map;
 
+        private static Entity PlaceEntityNear(Entity en, IMap m, int x, int y)
+        {
+            for(int nx = x - 1; nx <= x + 1; nx++)
+            {
+                for (int ny = y - 1; ny <= y + 1; ny++)
+                {
+                    if (m.IsWalkableAndOpen(nx, ny, mapEntities))
+                    {
+                        if (!mapEntities.Contains(en))
+                            mapEntities.Add(en);
+                        return en.AddComponent(new Component_Position(nx, ny, true));
+                    }
+                }
+            }
+            return null;
+        }
+
         public static void Main()
         {
-            player = new Entity().AddComponent(new Component_Position(25, 25));
+            mapEntities = new List<Entity>();
+            player = new Entity();
+            enemy = new Entity();
 
             // Use RogueSharp to create a new cave map the same size as the screen.
             _map = Map.Create(new RogueSharp.MapCreation.CaveMapCreationStrategy<Map>(_screenWidth, _screenHeight, 45, 4, 3));
+
+            PlaceEntityNear(player, _map, 25, 25);
+            PlaceEntityNear(enemy, _map, 25, 25);
+
             // This must be the exact name of the bitmap font file we are using or it will error.
             string fontFileName = "terminal8x8.png";
             // The title will appear at the top of the console window
@@ -37,7 +65,7 @@ namespace MechArena
         private static void TryMove(int dx, int dy)
         {
             var position = (GameQuery_Position)player.HandleQuery(new GameQuery_Position());
-            if (_map.GetCell(position.X + dx, position.Y + dy).IsWalkable)
+            if (_map.IsWalkableAndOpen(position.X + dx, position.Y + dy, mapEntities))
             {
                 player.HandleEvent(new GameEvent_MoveSingle((XDirection)dx, (YDirection)dy));
             }
@@ -98,6 +126,8 @@ namespace MechArena
         {
             _rootConsole.Clear();
 
+            var enemyPosition = (GameQuery_Position)enemy.HandleQuery(new GameQuery_Position());
+
             // Use RogueSharp to calculate the current field-of-view for the player
             var position = (GameQuery_Position)player.HandleQuery(new GameQuery_Position());
             _map.ComputeFov(position.X, position.Y, 50, true);
@@ -133,6 +163,7 @@ namespace MechArena
 
             // Set the player's symbol after the map symbol to make sure it is draw
             _rootConsole.Set(position.X, position.Y, RLColor.LightGreen, null, '@');
+            _rootConsole.Set(enemyPosition.X, enemyPosition.Y, RLColor.LightGreen, null, 'E');
 
             // Tell RLNET to draw the console that we set
             _rootConsole.Draw();
