@@ -9,7 +9,7 @@ namespace MechArenaTests
     [TestClass]
     public class EntityTest
     {
-        private Entity ent = new Entity(Guid.NewGuid());
+        private Entity ent = new Entity();
         private Component cmp = new Component();
 
         [TestMethod]

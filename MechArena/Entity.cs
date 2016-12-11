@@ -6,14 +6,19 @@ namespace MechArena
 {
 	public class Entity
 	{
-		private Guid uuid;
         private List<Component> orderedComponents;
 
-        public Entity() : this(Guid.NewGuid()) { }
+        public string EntityID { get; }
+        public string Label { get; }
+        public string TypeLabel { get; }
 
-        public Entity(Guid uuid)
+        public Entity(string entityID = null, string label = "", string typeLabel = "")
         {
-            this.uuid = uuid;
+            if (entityID == null)
+                this.EntityID = Guid.NewGuid().ToString();
+            this.Label = label;
+            this.TypeLabel = TypeLabel;
+
             this.orderedComponents = new List<Component>();
         }
 

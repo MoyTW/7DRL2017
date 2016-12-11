@@ -13,7 +13,7 @@ namespace MechArenaTests
 
         private Entity SlottableRequiring(int slotsRequired)
         {
-            Entity e = new Entity(Guid.NewGuid());
+            Entity e = new Entity();
             e.AddComponent(new Component_Slottable(slotsRequired));
             return e;
         }
@@ -21,7 +21,7 @@ namespace MechArenaTests
         [TestInitialize()]
         public void Initialize()
         {
-            this.internalStructure = new Entity(Guid.NewGuid());
+            this.internalStructure = new Entity();
             this.internalStructure.AddComponent(new Component_InternalStructure(this.structureMax));
         }
 

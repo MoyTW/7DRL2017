@@ -14,7 +14,7 @@ namespace MechArenaTests
 
         private Entity SlotEntityWithStructure(Entity container, int structure, int slotsRequired=1)
         {
-            var en = new Entity(Guid.NewGuid());
+            var en = new Entity();
             en.AddComponent(new Component_Slottable(slotsRequired));
             en.AddComponent(new Component_InternalStructure(structure));
 
@@ -27,7 +27,7 @@ namespace MechArenaTests
         [TestInitialize()]
         public void Initialize()
         {
-            this.bodyPart = new Entity(Guid.NewGuid());
+            this.bodyPart = new Entity();
             this.bodyPart
                 .AddComponent(new Component_SlottedContainer(this.slotSpace))
                 .AddComponent(new Component_SlottedStructure())
