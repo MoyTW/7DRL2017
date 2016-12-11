@@ -9,15 +9,17 @@ namespace MechArena
     // Assumes that slotted items have Componenet_InternalStructure! Ugh, TERRIBLE!
     public class Component_SlottedStructure : Component
     {
+        
         private int GetRemainingInternalStructure(Entity e)
         {
-            return e.GetComponentOfType<Component_InternalStructure>().StructureRemaining;
+            GameQuery q = new GameQuery_EntityAttribute(EntityAttributeType.STRUCTURE);
+            return ((GameQuery_EntityAttribute)e.HandleQuery(q)).Value;
         }
 
         private int GetRemainingSlottedStructure(Component_SlottedContainer slottedContainer)
         {
-            return slottedContainer.InspectStoredEntities()
-                .Sum(e => this.GetRemainingInternalStructure(e));
+            GameQuery q = new GameQuery_EntityAttribute(EntityAttributeType.STRUCTURE);
+            return ((GameQuery_EntityAttribute)slottedContainer.HandleQuery(q)).Value;
         }
 
         private void AssignDamagePoint(Component_SlottedContainer slottedContainer)

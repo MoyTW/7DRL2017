@@ -42,5 +42,21 @@ namespace MechArena
 
             return ev;
         }
+
+        private void HandleQueryEntityAttribute(GameQuery_EntityAttribute q)
+        {
+            if (q.AttributeType == EntityAttributeType.STRUCTURE)
+            {
+                q.AddModifier(this.StructureRemaining, this.Parent);
+            }
+        }
+
+        protected override GameQuery _HandleQuery(GameQuery q)
+        {
+            if (q is GameQuery_EntityAttribute)
+                this.HandleQueryEntityAttribute((GameQuery_EntityAttribute)q);
+
+            return q;
+        }
     }
 }

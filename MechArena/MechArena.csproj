@@ -38,20 +38,21 @@
     <Compile Include="Component.cs" />
     <Compile Include="Component_BodyPartLocation.cs" />
     <Compile Include="Component_InternalStructure.cs" />
+    <Compile Include="Component_MechSkeleton.cs" />
     <Compile Include="Component_SlottedContainer.cs" />
     <Compile Include="Component_Slottable.cs" />
     <Compile Include="Component_SlottedStructure.cs" />
     <Compile Include="Entity.cs" />
+    <Compile Include="EntityAttributeType.cs" />
+    <Compile Include="EntityAttributeModifier.cs" />
+    <Compile Include="EntityBuilder.cs" />
     <Compile Include="GameEvent.cs" />
     <Compile Include="GameEvent_Slot.cs" />
     <Compile Include="GameEvent_TakeDamage.cs" />
     <Compile Include="GameEvent_Unslot.cs" />
     <Compile Include="GameQuery.cs" />
+    <Compile Include="GameQuery_EntityAttribute.cs" />
     <Compile Include="GameRandom.cs" />
-    <Compile Include="Mech\Attachment.cs" />
-    <Compile Include="Mech\AttachmentEffect.cs" />
-    <Compile Include="Mech\BodyPart.cs" />
-    <Compile Include="Mech\MechEntity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

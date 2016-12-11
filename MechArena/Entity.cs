@@ -72,6 +72,17 @@ namespace MechArena
             }
             return false;
         }
+
+        public GameQuery HandleQuery(GameQuery q)
+        {
+            foreach (Component c in this.orderedComponents)
+            {
+                c.HandleQuery(q);
+                if (q.Completed)
+                    return q;
+            }
+            return q;
+        }
 	}
 }
 
