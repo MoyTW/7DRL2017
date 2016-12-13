@@ -53,6 +53,7 @@
   <ItemGroup>
     <Compile Include="BodyPartLocation.cs" />
     <Compile Include="Component.cs" />
+    <Compile Include="Component_Attacker.cs" />
     <Compile Include="Component_BodyPartLocation.cs" />
     <Compile Include="Component_InternalStructure.cs" />
     <Compile Include="Component_MechSkeleton.cs" />
@@ -60,11 +61,13 @@
     <Compile Include="Component_SlottedContainer.cs" />
     <Compile Include="Component_Slottable.cs" />
     <Compile Include="Component_SlottedStructure.cs" />
+    <Compile Include="Component_Weapon.cs" />
     <Compile Include="Entity.cs" />
     <Compile Include="EntityAttributeType.cs" />
     <Compile Include="EntityAttributeModifier.cs" />
     <Compile Include="EntityBuilder.cs" />
     <Compile Include="GameEvent.cs" />
+    <Compile Include="GameEvent_Attack.cs" />
     <Compile Include="GameEvent_MoveSingle.cs" />
     <Compile Include="GameEvent_Slot.cs" />
     <Compile Include="GameEvent_TakeDamage.cs" />

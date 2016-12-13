@@ -123,6 +123,11 @@ namespace MechArena
         }
 
         #endregion
+
+        public override string ToString()
+        {
+            return this.Label + " [" + this.TypeLabel + "]";
+        }
     }
 }
 

@@ -34,8 +34,10 @@ namespace MechArena
 
         public static Entity BuildPlayer()
         {
+            // MechSkeletons should always have Attacker?
             var player = new Entity(label: "PlayerMech", typeLabel: MechTypeLabel)
-                .AddComponent(new Component_MechSkeleton());
+                .AddComponent(new Component_MechSkeleton())
+                .AddComponent(new Component_Attacker());
             var bodyParts = player.HandleQuery(new GameQuery_SubEntities(SubEntitiesSelector.BODY_PART));
             foreach(var part in bodyParts.SubEntities)
             {

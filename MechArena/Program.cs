@@ -1,6 +1,7 @@
 ﻿using RLNET;
 using RogueSharp;
 
+using System;
 using System.Collections.Generic;
 
 namespace MechArena
@@ -40,7 +41,7 @@ namespace MechArena
         {
             mapEntities = new List<Entity>();
             player = EntityBuilder.BuildPlayer();
-            enemy = new Entity();
+            enemy = EntityBuilder.BuildMech("Test Enemy");
 
             // Use RogueSharp to create a new cave map the same size as the screen.
             _map = Map.Create(new RogueSharp.MapCreation.CaveMapCreationStrategy<Map>(_screenWidth, _screenHeight, 45, 4, 3));
@@ -62,6 +63,16 @@ namespace MechArena
             _rootConsole.Run();
         }
 
+        // TODO: Testing!
+        private static void TryPlayerAttack()
+        {
+            var guns = player.HandleQuery(new GameQuery_SubEntities(SubEntitiesSelector.WEAPON)).SubEntities;
+            foreach(var gun in guns)
+            {
+                player.HandleEvent(new GameEvent_Attack(player, enemy, gun, _map));
+            }
+        }
+
         private static void TryMove(int dx, int dy)
         {
             var position = (GameQuery_Position)player.HandleQuery(new GameQuery_Position());
@@ -79,6 +90,9 @@ namespace MechArena
             {
                 switch(keyPress.Key)
                 {
+                    case RLKey.F:
+                        TryPlayerAttack();
+                        break;
                     case RLKey.Up:
                         TryMove(0, -1);
                         break;
