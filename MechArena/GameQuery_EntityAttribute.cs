@@ -5,7 +5,7 @@ using System.Text;
 
 namespace MechArena
 {
-    class GameQuery_EntityAttribute : GameQuery
+    public class GameQuery_EntityAttribute : GameQuery
     {
         private List<EntityAttributeModifier> modifiers;
 

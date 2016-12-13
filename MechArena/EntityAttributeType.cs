@@ -7,6 +7,12 @@ namespace MechArena
 {
     public enum EntityAttributeType
     {
-        STRUCTURE = 0
+        STRUCTURE = 0,
+
+        // Weapon Attribute Types
+        TO_HIT,
+        DAMAGE,
+        MAX_RANGE,
+        REFIRE_TICKS
     }
 }

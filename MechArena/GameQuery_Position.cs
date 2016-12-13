@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MechArena
 {
-    class GameQuery_Position : GameQuery
+    public class GameQuery_Position : GameQuery
     {
         private int x, y;
         private bool blocksMovement;

@@ -6,11 +6,17 @@ namespace MechArena
 {
 	public class Entity
 	{
+        #region Vars and Properties
+
         private List<Component> orderedComponents;
 
         public string EntityID { get; }
         public string Label { get; }
         public string TypeLabel { get; }
+
+        #endregion
+
+        #region Constructors
 
         public Entity(string entityID = null, string label = "", string typeLabel = "")
         {
@@ -21,6 +27,24 @@ namespace MechArena
 
             this.orderedComponents = new List<Component>();
         }
+
+        #endregion
+
+        #region Convenience Queries
+
+        public GameQuery_Position TryGetPosition()
+        {
+            return this.HandleQuery(new GameQuery_Position());
+        }
+
+        public GameQuery_EntityAttribute TryGetAttribute(EntityAttributeType attributeType)
+        {
+            return this.HandleQuery(new GameQuery_EntityAttribute(attributeType));
+        }
+
+        #endregion
+
+        #region Component Functions
 
         public IList<Component> InspectComponents()
         {
@@ -67,6 +91,10 @@ namespace MechArena
             return this;
         }
 
+        #endregion
+
+        #region Event/Query Handlers
+
         public bool HandleEvent(GameEvent ev)
         {
             foreach (Component c in this.orderedComponents)
@@ -78,7 +106,7 @@ namespace MechArena
             return false;
         }
 
-        public GameQuery HandleQuery(GameQuery q)
+        public TQuery HandleQuery<TQuery>(TQuery q) where TQuery : GameQuery
         {
             foreach (Component c in this.orderedComponents)
             {
@@ -88,6 +116,8 @@ namespace MechArena
             }
             return q;
         }
-	}
+
+        #endregion
+    }
 }
 
