@@ -51,5 +51,37 @@ namespace MechArena
 
             return ev;
         }
+
+        private void HandleQueryEntityAttribute(GameQuery_EntityAttribute q)
+        {
+            foreach(var part in this.bodyParts.Values)
+            {
+                if (part != null)
+                    part.HandleQuery(q);
+            }
+        }
+
+        private void HandleQuerySubEntities(GameQuery_SubEntities q)
+        {
+            foreach(var part in this.bodyParts.Values)
+            {
+                if (part != null)
+                {
+                    if (q.MatchesSelectors(part))
+                        q.RegisterEntity(part);
+                    part.HandleQuery(q);
+                }
+            }
+        }
+
+        protected override GameQuery _HandleQuery(GameQuery q)
+        {
+            if (q is GameQuery_EntityAttribute)
+                this.HandleQueryEntityAttribute((GameQuery_EntityAttribute)q);
+            else if (q is GameQuery_SubEntities)
+                this.HandleQuerySubEntities((GameQuery_SubEntities)q);
+
+            return q;
+        }
     }
 }

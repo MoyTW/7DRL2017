@@ -57,6 +57,11 @@ namespace MechArena
             return this.orderedComponents.Any(c => typeof(TComponent) == c.GetType());
         }
 
+        public bool HasComponentOfType(Type tComponent)
+        {
+            return this.orderedComponents.Any(c => tComponent == c.GetType());
+        }
+
         // I mean...I'm basically porting a Python thing I wrote so. That doesn't make it okay I guess.
         // Write now figure out sanity later! Gotta make it by end-of-month!
         public TComponent GetComponentOfType<TComponent>() where TComponent : Component

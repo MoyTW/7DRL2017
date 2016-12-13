@@ -39,7 +39,7 @@ namespace MechArena
         public static void Main()
         {
             mapEntities = new List<Entity>();
-            player = new Entity();
+            player = EntityBuilder.BuildPlayer();
             enemy = new Entity();
 
             // Use RogueSharp to create a new cave map the same size as the screen.

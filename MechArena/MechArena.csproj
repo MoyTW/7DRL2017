@@ -72,6 +72,7 @@
     <Compile Include="GameQuery.cs" />
     <Compile Include="GameQuery_EntityAttribute.cs" />
     <Compile Include="GameQuery_Position.cs" />
+    <Compile Include="GameQuery_SubEntities.cs" />
     <Compile Include="GameRandom.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -76,6 +76,19 @@ namespace MechArena
             return ev;
         }
 
+        private void HandleQuerySubEntities(GameQuery_SubEntities q)
+        {
+            foreach (var stored in this.storedEntities)
+            {
+                if (stored != null)
+                {
+                    if (q.MatchesSelectors(stored))
+                        q.RegisterEntity(stored);
+                    stored.HandleQuery(q);
+                }
+            }
+        }
+
         private void HandleQueryEntityAttribute(GameQuery_EntityAttribute q)
         {
             foreach (Entity e in this.storedEntities)
@@ -88,6 +101,8 @@ namespace MechArena
         {
             if (q is GameQuery_EntityAttribute)
                 this.HandleQueryEntityAttribute((GameQuery_EntityAttribute)q);
+            else if (q is GameQuery_SubEntities)
+                this.HandleQuerySubEntities((GameQuery_SubEntities)q);
 
             return q;
         }
