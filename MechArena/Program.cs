@@ -66,6 +66,7 @@ namespace MechArena
         // TODO: Testing!
         private static void TryPlayerAttack()
         {
+            Console.WriteLine("########## ATTACK INFO ##########");
             var guns = player.HandleQuery(new GameQuery_SubEntities(SubEntitiesSelector.WEAPON)).SubEntities;
             foreach(var gun in guns)
             {

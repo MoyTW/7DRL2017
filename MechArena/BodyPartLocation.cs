@@ -7,7 +7,8 @@ namespace MechArena
 {
     public enum BodyPartLocation
     {
-        HEAD = 0,
+        ANY = 0,
+        HEAD,
         TORSO,
         LEFT_ARM,
         RIGHT_ARM,

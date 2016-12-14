@@ -23,7 +23,7 @@ namespace MechArena
             if (entityID == null)
                 this.EntityID = Guid.NewGuid().ToString();
             this.Label = label;
-            this.TypeLabel = TypeLabel;
+            this.TypeLabel = typeLabel;
 
             this.orderedComponents = new List<Component>();
         }

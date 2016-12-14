@@ -37,7 +37,10 @@ namespace MechArena
                 // Forward the attack to the target
                 ev.Target.HandleEvent(ev);
                 if (!ev.Completed)
+                {
                     Console.WriteLine("Could not resolve attack against " + ev.Target.ToString());
+                    ev.Completed = true;
+                }
             }
         }
 

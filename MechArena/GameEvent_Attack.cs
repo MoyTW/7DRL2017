@@ -8,15 +8,18 @@ namespace MechArena
     {
         public Entity Attacker { get; }
         public Entity Target { get; }
+        public BodyPartLocation SubTarget { get; set; }
         public Entity Weapon { get; }
         public IMap GameMap { get; }
 
         private GameQuery_EntityAttribute attackerToHit, attackerDamage;
 
-        public GameEvent_Attack(Entity attacker, Entity target, Entity weapon, IMap gameMap)
+        public GameEvent_Attack(Entity attacker, Entity target, Entity weapon, IMap gameMap,
+            BodyPartLocation subTarget=BodyPartLocation.ANY)
         {
             this.Attacker = attacker;
             this.Target = target;
+            this.SubTarget = subTarget;
             this.Weapon = weapon;
             this.GameMap = gameMap;
         }

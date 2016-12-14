@@ -9,6 +9,9 @@ namespace MechArena
     {
         STRUCTURE = 0,
 
+        // Mech Attribute Types
+        DODGE,
+
         // Weapon Attribute Types
         TO_HIT,
         DAMAGE,

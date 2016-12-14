@@ -21,23 +21,82 @@ namespace MechArena
         {
             this.bodyParts = new Dictionary<BodyPartLocation, Entity>();
 
-            foreach(var bp in Enum.GetValues(typeof(BodyPartLocation)).Cast<BodyPartLocation>())
+            foreach(var bp in MechTemplate.Keys)
             {
                 this.bodyParts[bp] = EntityBuilder.BuildBodyPart(bp, MechTemplate[bp], MechTemplate[bp]);
             }
         }
 
+        #region Event Handlers
+
         // We have NO DAMAGE TRANSFER! A mech with no arm is just harder to hit.
-        private Entity FindBodyPartToDamage()
+        private BodyPartLocation FindBodyPartLocationByWeight()
         {
-            BodyPartLocation damagedLocation = GameRandom.RandomByWeight(MechTemplate, (a => a.Value)).Key;
-            return this.bodyParts[damagedLocation];
+            return GameRandom.RandomByWeight(MechTemplate, (a => a.Value)).Key;
+        }
+
+        // All Attack logic currently handled here; might want to put it into its own class for explicit-ness.
+        private void HandleAttack(GameEvent_Attack ev)
+        {
+            if (ev.Target != this.Parent)
+                return;
+
+            int attackerBaseToHit = ev.Attacker.TryGetAttribute(EntityAttributeType.TO_HIT).Value;
+            int attackerBaseDamage = ev.Attacker.TryGetAttribute(EntityAttributeType.DAMAGE).Value;
+
+            // Resolve pilot skills here
+            // Get pilot skill modifiers for attacker
+            // Get pilot skill modifiers for defender
+
+            int targetDodge = ev.Target.TryGetAttribute(EntityAttributeType.DODGE).Value;
+
+            int roll = GameRandom.Next(1, 20);
+            int toHit = attackerBaseToHit;
+            int dodge = targetDodge;
+
+            if (roll + toHit > 10 + dodge)
+            {
+                int damage = attackerBaseDamage; // Possible damage modifiers
+                Console.WriteLine(String.Format("Attack by {0} hit {1} for {2} damage!", ev.Attacker, ev.Target,
+                    attackerBaseDamage));
+
+                // Retarget on appropriate body part
+                if (ev.SubTarget == BodyPartLocation.ANY)
+                    ev.SubTarget = this.FindBodyPartLocationByWeight();
+
+                Entity subTargetEntity = this.bodyParts[ev.SubTarget];
+
+                // This is all damage handling
+                if (subTargetEntity == null)
+                {
+                    Console.WriteLine(
+                        String.Format("Attack by {0} missed - the {1} of the target was already destroyed!",
+                        ev.Attacker, ev.SubTarget));
+                }
+                else
+                {
+                    subTargetEntity.HandleEvent(new GameEvent_TakeDamage(attackerBaseDamage));
+
+                    // Detach body part from mech if destroyed
+                    if (0 >= subTargetEntity.TryGetAttribute(EntityAttributeType.STRUCTURE).Value)
+                    {
+                        Console.WriteLine(String.Format("Part {0} was destroyed!", ev.SubTarget));
+                        this.bodyParts[ev.SubTarget] = null;
+                    }
+                }
+            }
+            else
+            {
+                Console.WriteLine(String.Format("Attack by {0} missed {1}!", ev.Attacker, ev.Target));
+            }
+
+            ev.Completed = true;
         }
 
         // Since there is no damage transfer, will *always* complete the event!
         private void HandleTakeDamage(GameEvent_TakeDamage ev)
         {
-            Entity damagedPart = this.FindBodyPartToDamage();
+            Entity damagedPart = this.bodyParts[this.FindBodyPartLocationByWeight()];
             if (damagedPart != null)
                 damagedPart.HandleEvent(ev);
 
@@ -46,11 +105,17 @@ namespace MechArena
 
         protected override GameEvent _HandleEvent(GameEvent ev)
         {
+            if (ev is GameEvent_Attack)
+                this.HandleAttack((GameEvent_Attack)ev);
             if (ev is GameEvent_TakeDamage)
                 this.HandleTakeDamage((GameEvent_TakeDamage)ev);
 
             return ev;
         }
+
+        #endregion
+
+        #region Query Handlers
 
         private void HandleQueryEntityAttribute(GameQuery_EntityAttribute q)
         {
@@ -83,5 +148,7 @@ namespace MechArena
 
             return q;
         }
+
+        #endregion
     }
 }
