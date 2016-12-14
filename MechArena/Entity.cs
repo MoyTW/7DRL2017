@@ -42,6 +42,11 @@ namespace MechArena
             return this.HandleQuery(new GameQuery_EntityAttribute(attributeType));
         }
 
+        public GameQuery_Destroyed TryGetDestroyed()
+        {
+            return this.HandleQuery(new GameQuery_Destroyed());
+        }
+
         #endregion
 
         #region Component Functions

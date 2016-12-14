@@ -42,7 +42,7 @@ namespace MechArena
                 return;
 
             int attackerBaseToHit = ev.Attacker.TryGetAttribute(EntityAttributeType.TO_HIT).Value;
-            int attackerBaseDamage = ev.Attacker.TryGetAttribute(EntityAttributeType.DAMAGE).Value;
+            int weaponBaseDamage = ev.Weapon.TryGetAttribute(EntityAttributeType.DAMAGE).Value;
 
             // Resolve pilot skills here
             // Get pilot skill modifiers for attacker
@@ -56,9 +56,9 @@ namespace MechArena
 
             if (roll + toHit > 10 + dodge)
             {
-                int damage = attackerBaseDamage; // Possible damage modifiers
+                int damage = weaponBaseDamage; // Possible damage modifiers
                 Console.WriteLine(String.Format("Attack by {0} hit {1} for {2} damage!", ev.Attacker, ev.Target,
-                    attackerBaseDamage));
+                    damage));
 
                 // Retarget on appropriate body part
                 if (ev.SubTarget == BodyPartLocation.ANY)
@@ -67,7 +67,7 @@ namespace MechArena
                 Entity subTargetEntity = this.bodyParts[ev.SubTarget];
 
                 // This is all damage handling
-                if (subTargetEntity == null)
+                if (subTargetEntity.TryGetDestroyed().Destroyed)
                 {
                     Console.WriteLine(
                         String.Format("Attack by {0} missed - the {1} of the target was already destroyed!",
@@ -75,13 +75,12 @@ namespace MechArena
                 }
                 else
                 {
-                    subTargetEntity.HandleEvent(new GameEvent_TakeDamage(attackerBaseDamage));
+                    subTargetEntity.HandleEvent(new GameEvent_TakeDamage(damage));
 
                     // Detach body part from mech if destroyed
                     if (0 >= subTargetEntity.TryGetAttribute(EntityAttributeType.STRUCTURE).Value)
                     {
                         Console.WriteLine(String.Format("Part {0} was destroyed!", ev.SubTarget));
-                        this.bodyParts[ev.SubTarget] = null;
                     }
                 }
             }
@@ -139,12 +138,20 @@ namespace MechArena
             }
         }
 
+        // A mech is only considered "Destroyed" when its torso is gone!
+        private void HandleQueryDestroyed(GameQuery_Destroyed q)
+        {
+            this.bodyParts[BodyPartLocation.TORSO].HandleQuery(q);
+        }
+
         protected override GameQuery _HandleQuery(GameQuery q)
         {
             if (q is GameQuery_EntityAttribute)
                 this.HandleQueryEntityAttribute((GameQuery_EntityAttribute)q);
             else if (q is GameQuery_SubEntities)
                 this.HandleQuerySubEntities((GameQuery_SubEntities)q);
+            else if (q is GameQuery_Destroyed)
+                this.HandleQueryDestroyed((GameQuery_Destroyed)q);
 
             return q;
         }

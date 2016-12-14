@@ -178,7 +178,11 @@ namespace MechArena
 
             // Set the player's symbol after the map symbol to make sure it is draw
             _rootConsole.Set(position.X, position.Y, RLColor.LightGreen, null, '@');
-            _rootConsole.Set(enemyPosition.X, enemyPosition.Y, RLColor.LightGreen, null, 'E');
+
+            if (enemy.TryGetDestroyed().Destroyed)
+                _rootConsole.Set(enemyPosition.X, enemyPosition.Y, RLColor.LightGreen, null, 'D');
+            else
+                _rootConsole.Set(enemyPosition.X, enemyPosition.Y, RLColor.LightGreen, null, 'E');
 
             // Tell RLNET to draw the console that we set
             _rootConsole.Draw();

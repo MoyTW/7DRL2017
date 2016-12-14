@@ -73,6 +73,7 @@
     <Compile Include="GameEvent_TakeDamage.cs" />
     <Compile Include="GameEvent_Unslot.cs" />
     <Compile Include="GameQuery.cs" />
+    <Compile Include="GameQuery_Destroyed.cs" />
     <Compile Include="GameQuery_EntityAttribute.cs" />
     <Compile Include="GameQuery_Position.cs" />
     <Compile Include="GameQuery_SubEntities.cs" />

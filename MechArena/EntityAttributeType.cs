@@ -7,7 +7,8 @@ namespace MechArena
 {
     public enum EntityAttributeType
     {
-        STRUCTURE = 0,
+        DESTROYED = 0,
+        STRUCTURE,
 
         // Mech Attribute Types
         DODGE,

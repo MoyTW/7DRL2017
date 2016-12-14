@@ -51,10 +51,18 @@ namespace MechArena
             }
         }
 
+        private void HandleQueryDestroyed(GameQuery_Destroyed q)
+        {
+            if (this.Destroyed)
+                q.RegisterDestroyed();
+        }
+
         protected override GameQuery _HandleQuery(GameQuery q)
         {
             if (q is GameQuery_EntityAttribute)
                 this.HandleQueryEntityAttribute((GameQuery_EntityAttribute)q);
+            if (q is GameQuery_Destroyed)
+                this.HandleQueryDestroyed((GameQuery_Destroyed)q);
 
             return q;
         }

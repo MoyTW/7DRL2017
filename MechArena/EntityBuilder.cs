@@ -45,7 +45,7 @@ namespace MechArena
                 var weapon = new Entity(label: "TestWeapon", typeLabel: "Weapon")
                     .AddComponent(new Component_Slottable(1))
                     .AddComponent(new Component_InternalStructure(1))
-                    .AddComponent(new Component_Weapon(WeaponSize.SMALL, 0, 10, 5, 25));
+                    .AddComponent(new Component_Weapon(WeaponSize.SMALL, 0, 10, 3, 25));
                 part.HandleEvent(new GameEvent_Slot(weapon, part));
             }
 
