@@ -30,5 +30,10 @@ namespace MechArena
 
             return default(T);
         }
+
+        public static int Next(int lowerInclusive, int upperInclusive)
+        {
+            return rand.Next(lowerInclusive, upperInclusive);
+        }
     }
 }
