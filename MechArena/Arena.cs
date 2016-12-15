@@ -62,8 +62,39 @@ namespace MechArena
             }
         }
 
-        // I don't know if "blit" is the term to use for this.
-        public void Blit(RLConsole console)
+        private void DrawMechStatus(Entity mech, RLConsole console)
+        {
+            int line = 1;
+
+            console.Print(1, line, mech.ToString(), RLColor.Red);
+            line++;
+
+            var bodyParts = mech.HandleQuery(new GameQuery_SubEntities(SubEntitiesSelector.BODY_PART)).SubEntities;
+            foreach (var bodyPart in bodyParts)
+            {
+                console.Print(1, line, " -" + bodyPart.ToString(), RLColor.Black);
+                line++;
+
+                var mountedParts = bodyPart.HandleQuery(new GameQuery_SubEntities(SubEntitiesSelector.ALL)).SubEntities;
+                foreach (var mountedPart in mountedParts)
+                {
+                    console.Print(1, line, "   +" + mountedPart.ToString(), RLColor.Black);
+                    line++;
+                }
+            }
+        }
+
+        public void DrawMech1Status(RLConsole console)
+        {
+            this.DrawMechStatus(this.player, console);
+        }
+
+        public void DrawMech2Status(RLConsole console)
+        {
+            this.DrawMechStatus(this.enemy, console);
+        }
+
+        public void DrawArena(RLConsole console)
         {
             var enemyPosition = (GameQuery_Position)enemy.HandleQuery(new GameQuery_Position());
 

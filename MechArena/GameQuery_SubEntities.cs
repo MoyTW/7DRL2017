@@ -8,7 +8,8 @@ namespace MechArena
 {
     public enum SubEntitiesSelector
     {
-        WEAPON = 0,
+        ALL = 0,
+        WEAPON,
         BODY_PART
     }
 
@@ -17,13 +18,17 @@ namespace MechArena
     {
         public static readonly Dictionary<SubEntitiesSelector, List<Type>> SelectorsToComponents =
             new Dictionary<SubEntitiesSelector, List<Type>>() {
+                { SubEntitiesSelector.ALL, null },
                 { SubEntitiesSelector.WEAPON, new List<Type>() { typeof(Component_Weapon) } },
                 { SubEntitiesSelector.BODY_PART, new List<Type>() { typeof(Component_BodyPartLocation) } }
             };
 
         public static bool MatchesSelector(Entity en, SubEntitiesSelector s)
         {
-            return !SelectorsToComponents[s].Any(t => !en.HasComponentOfType(t));
+            if (s == SubEntitiesSelector.ALL)
+                return true;
+            else
+                return !SelectorsToComponents[s].Any(t => !en.HasComponentOfType(t));
         }
 
         private SubEntitiesSelector[] selectors;
@@ -33,6 +38,8 @@ namespace MechArena
 
         public GameQuery_SubEntities(params SubEntitiesSelector [] selectors)
         {
+            if (selectors.Count() == 0)
+                throw new ArgumentException("No selectors sent to GameQuery_SubEntities! What'cha doin?");
             this.subEntities = new List<Entity>();
             this.selectors = selectors;
         }
