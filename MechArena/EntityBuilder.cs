@@ -19,7 +19,7 @@ namespace MechArena
                 .AddComponent(new Component_InternalStructure(internalStructure));
         }
 
-        public static Entity BuildMech(string label)
+        public static Entity BuildNakedMech(string label)
         {
             return new Entity(label: label, typeLabel: MechTypeLabel)
                 .AddComponent(new Component_MechSkeleton());
@@ -50,6 +50,26 @@ namespace MechArena
             }
 
             return player;
+        }
+
+        public static Entity BuildArmoredMech(string label)
+        {
+            // MechSkeletons should always have Attacker?
+            var mech = new Entity(label: "PlayerMech", typeLabel: MechTypeLabel)
+                .AddComponent(new Component_MechSkeleton())
+                .AddComponent(new Component_Attacker());
+            var bodyParts = mech.HandleQuery(new GameQuery_SubEntities(SubEntitiesSelector.BODY_PART));
+            foreach (var part in bodyParts.SubEntities)
+            {
+                var container = part.GetComponentOfType<Component_SlottedContainer>();
+                while (container.SlotsRemaining > 0)
+                {
+                    var armor = BuildArmorPart();
+                    part.HandleEvent(new GameEvent_Slot(armor, part));
+                }
+            }
+
+            return mech;
         }
     }
 }

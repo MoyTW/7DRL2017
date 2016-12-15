@@ -9,16 +9,16 @@ namespace MechArena
     public class Program
     {
         // The screen height and width are in number of tiles
-        private static readonly int _screenWidth = 80;
-        private static readonly int _screenHeight = 50;
+        private static readonly int _screenWidth = 205;
+        private static readonly int _screenHeight = 80;
         private static RLRootConsole _rootConsole;
 
         private static readonly int _arenaWidth = 50;
         private static readonly int _arenaHeight = 50;
         private static RLConsole _arenaConsole;
 
-        private static readonly int _statusWidth = 30;
-        private static readonly int _statusHeight = 25;
+        private static readonly int _statusWidth = 155;
+        private static readonly int _statusHeight = 40;
         private static RLConsole _status1Console;
         private static RLConsole _status2Console;
 
@@ -28,7 +28,7 @@ namespace MechArena
         {
             // Set up a Arena (move this later)
             Entity player = EntityBuilder.BuildPlayer();
-            Entity enemy = EntityBuilder.BuildMech("Test Enemy");
+            Entity enemy = EntityBuilder.BuildArmoredMech("Heavily Armored Test Enemy");
             IMap arenaMap = Map.Create(
                 new RogueSharp.MapCreation.CaveMapCreationStrategy<Map>(_arenaWidth, _arenaHeight, 45, 4, 3));
             arena = new Arena(player, enemy, arenaMap);

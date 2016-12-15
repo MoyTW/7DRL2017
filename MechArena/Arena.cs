@@ -62,25 +62,45 @@ namespace MechArena
             }
         }
 
+        private void DrawBodyPartStatus(Entity bodyPart, int x, int y, bool mechDestroyed, RLConsole console)
+        {
+            var bodyPartDestroyed = bodyPart.TryGetDestroyed().Destroyed;
+            if (mechDestroyed || bodyPartDestroyed)
+                console.Print(y, x, "  - " + bodyPart.ToString(), RLColor.Red);
+            else
+                console.Print(y, x, "  - " + bodyPart.ToString(), RLColor.Black);
+            x += 2;
+
+            var mountedParts = bodyPart.HandleQuery(new GameQuery_SubEntities(SubEntitiesSelector.ALL)).SubEntities;
+            foreach (var mountedPart in mountedParts)
+            {
+                var mountedPartDestroyed = mountedPart.TryGetDestroyed().Destroyed;
+                if (mechDestroyed || bodyPartDestroyed || mountedPartDestroyed)
+                    console.Print(y, x, "    + " + mountedPart.ToString(), RLColor.Red);
+                else
+                    console.Print(y, x, "    + " + mountedPart.ToString(), RLColor.Black);
+                x += 2;
+            }
+        }
+
         private void DrawMechStatus(Entity mech, RLConsole console)
         {
             int line = 1;
 
-            console.Print(1, line, mech.ToString(), RLColor.Red);
+            var mechDestroyed = mech.TryGetDestroyed().Destroyed;
+            if (mechDestroyed)
+                console.Print(1, line, mech.ToString(), RLColor.Red);
+            else
+                console.Print(1, line, mech.ToString(), RLColor.Black);
+            line++;
             line++;
 
             var bodyParts = mech.HandleQuery(new GameQuery_SubEntities(SubEntitiesSelector.BODY_PART)).SubEntities;
+            int y = 1;
             foreach (var bodyPart in bodyParts)
             {
-                console.Print(1, line, " -" + bodyPart.ToString(), RLColor.Black);
-                line++;
-
-                var mountedParts = bodyPart.HandleQuery(new GameQuery_SubEntities(SubEntitiesSelector.ALL)).SubEntities;
-                foreach (var mountedPart in mountedParts)
-                {
-                    console.Print(1, line, "   +" + mountedPart.ToString(), RLColor.Black);
-                    line++;
-                }
+                this.DrawBodyPartStatus(bodyPart, line, y, mechDestroyed, console);
+                y += 25;
             }
         }
 
