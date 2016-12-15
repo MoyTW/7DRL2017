@@ -51,6 +51,7 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Arena.cs" />
     <Compile Include="BodyPartLocation.cs" />
     <Compile Include="Component.cs" />
     <Compile Include="Component_Attacker.cs" />
