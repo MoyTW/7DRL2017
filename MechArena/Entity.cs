@@ -131,7 +131,7 @@ namespace MechArena
 
         public override string ToString()
         {
-            return this.Label + " [" + this.TypeLabel + "]";
+            return this.Label;
         }
     }
 }

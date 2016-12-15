@@ -16,6 +16,7 @@ namespace MechArena
             return new Entity(label: location.ToString(), typeLabel: "BodyPart")
                 .AddComponent(new Component_BodyPartLocation(location))
                 .AddComponent(new Component_SlottedContainer(slotSpace))
+                .AddComponent(new Component_SlottedStructure())
                 .AddComponent(new Component_InternalStructure(internalStructure));
         }
 
@@ -39,6 +40,15 @@ namespace MechArena
                 .AddComponent(new Component_MechSkeleton())
                 .AddComponent(new Component_Attacker());
             var bodyParts = player.HandleQuery(new GameQuery_SubEntities(SubEntitiesSelector.BODY_PART));
+
+            var weapon = new Entity(label: "Headlight", typeLabel: "Weapon")
+                .AddComponent(new Component_Slottable(1))
+                .AddComponent(new Component_InternalStructure(1))
+                .AddComponent(new Component_Weapon(WeaponSize.SMALL, 9999, 10, 9, 25));
+            var head = bodyParts.SubEntities[0];
+            head.HandleEvent(new GameEvent_Slot(weapon, head));
+
+            /*
             foreach(var part in bodyParts.SubEntities)
             {
                 // Normally you should not be able to directly slot weapons - they should be mounted/holstered!
@@ -48,6 +58,7 @@ namespace MechArena
                     .AddComponent(new Component_Weapon(WeaponSize.SMALL, 0, 10, 3, 25));
                 part.HandleEvent(new GameEvent_Slot(weapon, part));
             }
+            */
 
             return player;
         }

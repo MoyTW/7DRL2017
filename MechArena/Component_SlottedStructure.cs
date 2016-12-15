@@ -32,14 +32,6 @@ namespace MechArena
 
             if (!damageEvent.Completed)
                 throw new ArgumentException("Target didn't take damage when it should have!");
-
-            if (target.GetComponentOfType<Component_InternalStructure>().Destroyed)
-            {
-                var unslotEvent = new GameEvent_Unslot(target, this.Parent);
-                slottedContainer.Parent.HandleEvent(unslotEvent);
-                if (!unslotEvent.Completed)
-                    throw new ArgumentException("Target was destroyed but couldn't unslot from container!");
-            }
         }
 
         private void HandleTakeDamage(GameEvent_TakeDamage ev)

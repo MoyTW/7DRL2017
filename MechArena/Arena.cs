@@ -65,20 +65,23 @@ namespace MechArena
         private void DrawBodyPartStatus(Entity bodyPart, int x, int y, bool mechDestroyed, RLConsole console)
         {
             var bodyPartDestroyed = bodyPart.TryGetDestroyed().Destroyed;
+            var bodyPartStructure = bodyPart.TryGetAttribute(EntityAttributeType.STRUCTURE).Value;
+
             if (mechDestroyed || bodyPartDestroyed)
-                console.Print(y, x, "  - " + bodyPart.ToString(), RLColor.Red);
+                console.Print(y, x, "  - " + bodyPart.ToString() + ":" + bodyPartStructure + " ", RLColor.Red);
             else
-                console.Print(y, x, "  - " + bodyPart.ToString(), RLColor.Black);
+                console.Print(y, x, "  - " + bodyPart.ToString()+ ":" + bodyPartStructure + " ", RLColor.Black);
             x += 2;
 
             var mountedParts = bodyPart.HandleQuery(new GameQuery_SubEntities(SubEntitiesSelector.ALL)).SubEntities;
             foreach (var mountedPart in mountedParts)
             {
                 var mountedPartDestroyed = mountedPart.TryGetDestroyed().Destroyed;
+                var structure = mountedPart.TryGetAttribute(EntityAttributeType.STRUCTURE).Value;
                 if (mechDestroyed || bodyPartDestroyed || mountedPartDestroyed)
-                    console.Print(y, x, "    + " + mountedPart.ToString(), RLColor.Red);
+                    console.Print(y, x, "    + " + mountedPart.ToString() + ":" + structure + " ", RLColor.Red);
                 else
-                    console.Print(y, x, "    + " + mountedPart.ToString(), RLColor.Black);
+                    console.Print(y, x, "    + " + mountedPart.ToString() + ":" + structure + " ", RLColor.Black);
                 x += 2;
             }
         }
