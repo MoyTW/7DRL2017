@@ -16,11 +16,13 @@
 
     public class GameEvent_MoveSingle : GameEvent
     {
+        public int CurrentTick { get; }
         public XDirection X { get; }
         public YDirection Y { get; }
 
-        public GameEvent_MoveSingle(XDirection x, YDirection y)
+        public GameEvent_MoveSingle(int currentTick, XDirection x, YDirection y)
         {
+            this.CurrentTick = currentTick;
             this.X = x;
             this.Y = y;
         }

@@ -11,6 +11,7 @@ namespace MechArena
         STRUCTURE,
 
         // Mech Attribute Types
+        SPEED,
         DODGE,
 
         // Weapon Attribute Types

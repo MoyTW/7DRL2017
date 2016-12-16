@@ -8,6 +8,8 @@ namespace MechArena
 {
     public class Arena
     {
+        private int currentTick;
+
         // TODO: Don't literally have Player/Enemy, as two AIs can fight each other!
         private Entity player;
         private Entity enemy;
@@ -17,10 +19,20 @@ namespace MechArena
         // TODO: Create a "Mech/Map Blueprint" so you don't pass a literal Entity/IMap instance in!
         public Arena(Entity player, Entity enemy, IMap arenaMap)
         {
+            this.currentTick = 0;
             this.player = player;
             this.enemy = enemy;
             this.mapEntities = new List<Entity>();
             this.arenaMap = arenaMap;
+        }
+
+        private void ForwardToNextAction()
+        {
+            var playerTicksToLive = player.HandleQuery(new GameQuery_TicksToLive(this.currentTick));
+            // TODO: Enemy actions!
+            // var enemyTicksToLive = enemy.HandleQuery(new GameQuery_TicksToLive(this.currentTick));
+            Console.WriteLine("Current Tick: " + this.currentTick + " Player TTL: " + playerTicksToLive.TicksToLive);
+            this.currentTick += playerTicksToLive.TicksToLive;
         }
 
         public bool PlaceEntityNear(Entity en, int x, int y)
@@ -58,8 +70,9 @@ namespace MechArena
             var position = this.player.HandleQuery(new GameQuery_Position());
             if (this.arenaMap.IsWalkableAndOpen(position.X + dx, position.Y + dy, mapEntities))
             {
-                this.player.HandleEvent(new GameEvent_MoveSingle((XDirection)dx, (YDirection)dy));
+                this.player.HandleEvent(new GameEvent_MoveSingle(this.currentTick, (XDirection)dx, (YDirection)dy));
             }
+            this.ForwardToNextAction();
         }
 
         private void DrawBodyPartStatus(Entity bodyPart, int x, int y, bool mechDestroyed, RLConsole console)

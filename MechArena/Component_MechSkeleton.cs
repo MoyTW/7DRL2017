@@ -5,7 +5,7 @@ using System.Text;
 
 namespace MechArena
 {
-    class Component_MechSkeleton : Component
+    class Component_MechSkeleton : Component_TracksTime
     {
         private static Dictionary<BodyPartLocation, int> MechTemplate = new Dictionary<BodyPartLocation, int>() {
             { BodyPartLocation.HEAD, 5 },
@@ -17,7 +17,7 @@ namespace MechArena
         };
         private Dictionary<BodyPartLocation, Entity> bodyParts;
 
-        public Component_MechSkeleton()
+        public Component_MechSkeleton() : base(EntityAttributeType.SPEED)
         {
             this.bodyParts = new Dictionary<BodyPartLocation, Entity>();
 
@@ -102,12 +102,21 @@ namespace MechArena
             ev.Completed = true;
         }
 
+        private void HandleMoveSingle(GameEvent_MoveSingle ev)
+        {
+            this.RegisterActivated(ev.CurrentTick);
+        }
+
         protected override GameEvent _HandleEvent(GameEvent ev)
         {
+            // TODO: Move off inheritance
+            base._HandleEvent(ev);
             if (ev is GameEvent_Attack)
                 this.HandleAttack((GameEvent_Attack)ev);
             if (ev is GameEvent_TakeDamage)
                 this.HandleTakeDamage((GameEvent_TakeDamage)ev);
+            if (ev is GameEvent_MoveSingle)
+                this.HandleMoveSingle((GameEvent_MoveSingle)ev);
 
             return ev;
         }
@@ -122,6 +131,11 @@ namespace MechArena
             {
                 if (part != null)
                     part.HandleQuery(q);
+            }
+            if (q.AttributeType == EntityAttributeType.SPEED)
+            {
+                // TOOD: Base speed not hardcoded to 50!
+                q.AddModifier(50, this.Parent);
             }
         }
 
@@ -146,6 +160,8 @@ namespace MechArena
 
         protected override GameQuery _HandleQuery(GameQuery q)
         {
+            // TODO: Move off inheritance
+            base._HandleQuery(q);
             if (q is GameQuery_EntityAttribute)
                 this.HandleQueryEntityAttribute((GameQuery_EntityAttribute)q);
             else if (q is GameQuery_SubEntities)

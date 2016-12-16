@@ -54,6 +54,7 @@
     <Compile Include="Arena.cs" />
     <Compile Include="BodyPartLocation.cs" />
     <Compile Include="Component.cs" />
+    <Compile Include="Component_TracksTime.cs" />
     <Compile Include="Component_Attacker.cs" />
     <Compile Include="Component_BodyPartLocation.cs" />
     <Compile Include="Component_InternalStructure.cs" />
@@ -78,6 +79,7 @@
     <Compile Include="GameQuery_EntityAttribute.cs" />
     <Compile Include="GameQuery_Position.cs" />
     <Compile Include="GameQuery_SubEntities.cs" />
+    <Compile Include="GameQuery_TicksToLive.cs" />
     <Compile Include="GameRandom.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
