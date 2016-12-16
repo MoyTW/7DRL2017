@@ -59,19 +59,22 @@ namespace MechArena
         // Screw it I'm doin' it! RUNTIME TYPE CHECKS AHOY
         public bool HasComponentOfType<TComponent>() where TComponent : Component
         {
-            return this.orderedComponents.Any(c => typeof(TComponent) == c.GetType());
+            return this.orderedComponents.Any(c => this.HasComponentOfType(typeof(TComponent)));
         }
 
         public bool HasComponentOfType(Type tComponent)
         {
-            return this.orderedComponents.Any(c => tComponent == c.GetType());
+            // TODO: When switching out of Inheritance for subcomponents, this will need to be changed!
+            // If instead you build a "resolver" this does not need to be changed.
+            return this.orderedComponents.Any(c => c.GetType().IsSubclassOf(tComponent) || c.GetType() == tComponent);
         }
 
         // I mean...I'm basically porting a Python thing I wrote so. That doesn't make it okay I guess.
         // Write now figure out sanity later! Gotta make it by end-of-month!
         public TComponent GetComponentOfType<TComponent>() where TComponent : Component
         {
-            return (TComponent)this.orderedComponents.FirstOrDefault(c => typeof(TComponent) == c.GetType());
+            return (TComponent)this.orderedComponents
+                .FirstOrDefault(c => c.GetType().IsSubclassOf(typeof(TComponent)) || c.GetType() == typeof(TComponent));
         }
 
         // Note that ordering is controlled *only* by the order in which this is called!

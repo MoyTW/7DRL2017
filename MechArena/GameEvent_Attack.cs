@@ -6,6 +6,7 @@ namespace MechArena
 {
     class GameEvent_Attack : GameEvent
     {
+        public int CurrentTick { get; }
         public Entity Attacker { get; }
         public Entity Target { get; }
         public BodyPartLocation SubTarget { get; set; }
@@ -14,9 +15,10 @@ namespace MechArena
 
         private GameQuery_EntityAttribute attackerToHit, attackerDamage;
 
-        public GameEvent_Attack(Entity attacker, Entity target, Entity weapon, IMap gameMap,
+        public GameEvent_Attack(int currentTick, Entity attacker, Entity target, Entity weapon, IMap gameMap,
             BodyPartLocation subTarget=BodyPartLocation.ANY)
         {
+            this.CurrentTick = currentTick;
             this.Attacker = attacker;
             this.Target = target;
             this.SubTarget = subTarget;

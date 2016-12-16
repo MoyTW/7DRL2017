@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MechArena
 {
-    class Component_TracksTime : Component
+    public class Component_TracksTime : Component
     {
         private int lastActivationTick;
         private EntityAttributeType CooldownAttribute { get; }

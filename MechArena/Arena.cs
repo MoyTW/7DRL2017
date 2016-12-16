@@ -3,6 +3,7 @@ using RogueSharp;
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace MechArena
 {
@@ -16,6 +17,9 @@ namespace MechArena
         private List<Entity> mapEntities;
         private IMap arenaMap;
 
+        // Turn state
+        private Entity nextEntity;
+
         // TODO: Create a "Mech/Map Blueprint" so you don't pass a literal Entity/IMap instance in!
         public Arena(Entity player, Entity enemy, IMap arenaMap)
         {
@@ -24,15 +28,24 @@ namespace MechArena
             this.enemy = enemy;
             this.mapEntities = new List<Entity>();
             this.arenaMap = arenaMap;
+
+            ForwardToNextAction();
         }
 
         private void ForwardToNextAction()
         {
-            var playerTicksToLive = player.HandleQuery(new GameQuery_TicksToLive(this.currentTick));
-            // TODO: Enemy actions!
-            // var enemyTicksToLive = enemy.HandleQuery(new GameQuery_TicksToLive(this.currentTick));
-            Console.WriteLine("Current Tick: " + this.currentTick + " Player TTL: " + playerTicksToLive.TicksToLive);
-            this.currentTick += playerTicksToLive.TicksToLive;
+            List<Entity> allTimeTrackers = new List<Entity>();
+            allTimeTrackers.Add(player);
+            // TODO: Comically long line!
+            allTimeTrackers.AddRange(player.HandleQuery(new GameQuery_SubEntities(SubEntitiesSelector.TRACKS_TIME)).SubEntities);
+
+            this.nextEntity = allTimeTrackers.Where(e => !e.TryGetDestroyed().Destroyed)
+                .OrderBy(e => e.HandleQuery(new GameQuery_TicksToLive(this.currentTick)).TicksToLive)
+                .FirstOrDefault();
+            int nextTicks = nextEntity.HandleQuery(new GameQuery_TicksToLive(this.currentTick)).TicksToLive;
+            this.currentTick += nextTicks;
+
+            Console.WriteLine("Ticks: " + this.currentTick + " Next Entity: " + nextEntity.ToString() + " Next Ticks: " + nextTicks);
         }
 
         public bool PlaceEntityNear(Entity en, int x, int y)
@@ -56,23 +69,38 @@ namespace MechArena
         // TODO: Testing! Don't directly call!
         public void TryPlayerAttack()
         {
-            Console.WriteLine("########## ATTACK INFO ##########");
-            var guns = this.player.HandleQuery(new GameQuery_SubEntities(SubEntitiesSelector.WEAPON)).SubEntities;
-            foreach (var gun in guns)
+            if (this.nextEntity.HasComponentOfType<Component_Weapon>())
             {
-                this.player.HandleEvent(new GameEvent_Attack(player, enemy, gun, this.arenaMap));
+                Console.WriteLine("########## ATTACK INFO ##########");
+                var guns = this.player.HandleQuery(new GameQuery_SubEntities(SubEntitiesSelector.WEAPON)).SubEntities;
+                foreach (var gun in guns)
+                {
+                    this.player.HandleEvent(new GameEvent_Attack(this.currentTick, player, enemy, gun, this.arenaMap));
+                }
+                this.ForwardToNextAction();
+            }
+            else
+            {
+                Console.WriteLine("CANNOT ATTACK GUNS NOT NEXT!");
             }
         }
 
         // TODO: Testing! Don't directly call!
         public void TryPlayerMove(int dx, int dy)
         {
-            var position = this.player.HandleQuery(new GameQuery_Position());
-            if (this.arenaMap.IsWalkableAndOpen(position.X + dx, position.Y + dy, mapEntities))
+            if (this.nextEntity == player)
             {
-                this.player.HandleEvent(new GameEvent_MoveSingle(this.currentTick, (XDirection)dx, (YDirection)dy));
+                var position = this.player.HandleQuery(new GameQuery_Position());
+                if (this.arenaMap.IsWalkableAndOpen(position.X + dx, position.Y + dy, mapEntities))
+                {
+                    this.player.HandleEvent(new GameEvent_MoveSingle(this.currentTick, (XDirection)dx, (YDirection)dy));
+                }
+                this.ForwardToNextAction();
             }
-            this.ForwardToNextAction();
+            else
+            {
+                Console.WriteLine("CANNOT MOVE MOVE NOT NEXT!");
+            }
         }
 
         private void DrawBodyPartStatus(Entity bodyPart, int x, int y, bool mechDestroyed, RLConsole console)

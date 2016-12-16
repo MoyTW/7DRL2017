@@ -89,6 +89,7 @@ namespace MechArena
                 Console.WriteLine(String.Format("Attack by {0} missed {1}!", ev.Attacker, ev.Target));
             }
 
+            ev.Weapon.GetComponentOfType<Component_TracksTime>().RegisterActivated(ev.CurrentTick);
             ev.Completed = true;
         }
 

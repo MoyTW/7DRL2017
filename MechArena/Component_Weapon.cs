@@ -13,7 +13,7 @@ namespace MechArena
         LARGE
     }
 
-    public class Component_Weapon : Component
+    public class Component_Weapon : Component_TracksTime
     {
         public WeaponSize Size { get; }
         private readonly Dictionary<EntityAttributeType, int> WeaponAttributes;
@@ -21,6 +21,7 @@ namespace MechArena
         // TODO: I would like to define a construct which can be read from a file to construct these!
         // Right now I'll just hard-code them all and feel bad about it.
         public Component_Weapon(WeaponSize size, int toHit, int maxRange, int damage, int refireTicks)
+            : base(EntityAttributeType.REFIRE_TICKS)
         {
             this.Size = size;
             this.WeaponAttributes = new Dictionary<EntityAttributeType, int>() {
@@ -39,6 +40,7 @@ namespace MechArena
 
         protected override GameQuery _HandleQuery(GameQuery q)
         {
+            base._HandleQuery(q);
             if (q is GameQuery_EntityAttribute)
                 this.HandleQueryEntityAttribute((GameQuery_EntityAttribute)q);
 
