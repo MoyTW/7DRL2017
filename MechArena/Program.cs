@@ -76,6 +76,9 @@ namespace MechArena
             {
                 switch(keyPress.Key)
                 {
+                    case RLKey.Space:
+                        arena.PlayerPassAction();
+                        break;
                     case RLKey.F:
                         arena.TryPlayerAttack();
                         break;

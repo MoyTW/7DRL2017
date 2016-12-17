@@ -32,16 +32,21 @@ namespace MechArena
             ForwardToNextAction();
         }
 
-        private void ForwardToNextAction()
+        private void ForwardToNextAction(bool pass=false)
         {
             List<Entity> allTimeTrackers = new List<Entity>();
             allTimeTrackers.Add(player);
             // TODO: Comically long line!
             allTimeTrackers.AddRange(player.HandleQuery(new GameQuery_SubEntities(SubEntitiesSelector.TRACKS_TIME)).SubEntities);
 
-            this.nextEntity = allTimeTrackers.Where(e => !e.TryGetDestroyed().Destroyed)
-                .OrderBy(e => e.HandleQuery(new GameQuery_TicksToLive(this.currentTick)).TicksToLive)
-                .FirstOrDefault();
+            var orderedEntities = allTimeTrackers.Where(e => !e.TryGetDestroyed().Destroyed)
+                .OrderBy(e => e.HandleQuery(new GameQuery_TicksToLive(this.currentTick)).TicksToLive);
+
+            if (pass && this.nextEntity == orderedEntities.FirstOrDefault())
+                this.nextEntity = orderedEntities.ElementAtOrDefault(1);
+            else
+                this.nextEntity = orderedEntities.FirstOrDefault();
+
             int nextTicks = nextEntity.HandleQuery(new GameQuery_TicksToLive(this.currentTick)).TicksToLive;
             this.currentTick += nextTicks;
 
@@ -101,6 +106,11 @@ namespace MechArena
             {
                 Console.WriteLine("CANNOT MOVE MOVE NOT NEXT!");
             }
+        }
+
+        public void PlayerPassAction()
+        {
+            this.ForwardToNextAction(pass: true);
         }
 
         private void DrawBodyPartStatus(Entity bodyPart, int x, int y, bool mechDestroyed, RLConsole console)
