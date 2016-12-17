@@ -17,6 +17,10 @@ namespace MechArena
         private static readonly int _arenaHeight = 50;
         private static RLConsole _arenaConsole;
 
+        private static readonly int _hudWidth = 50;
+        private static readonly int _hudHeight = 30;
+        private static RLConsole _hudConsole;
+
         private static readonly int _statusWidth = 155;
         private static readonly int _statusHeight = 40;
         private static RLConsole _status1Console;
@@ -44,6 +48,7 @@ namespace MechArena
             // Tell RLNet to use the bitmap font that we specified and that each tile is 8 x 8 pixels
             _rootConsole = new RLRootConsole(fontFileName, _screenWidth, _screenHeight, 8, 8, 1f, consoleTitle);
             _arenaConsole = new RLConsole(_arenaWidth, _arenaHeight);
+            _hudConsole = new RLConsole(_hudWidth, _hudHeight);
             _status1Console = new RLConsole(_statusWidth, _statusHeight);
             _status2Console = new RLConsole(_statusWidth, _statusHeight);
 
@@ -60,6 +65,8 @@ namespace MechArena
         {
             _arenaConsole.SetBackColor(0, 0, _arenaWidth, _arenaHeight, RLColor.Black);
             _arenaConsole.Print(1, 1, "Arena", RLColor.White);
+
+            _hudConsole.SetBackColor(0, 0, _hudWidth, _hudHeight, RLColor.LightGray);
 
             _status1Console.SetBackColor(0, 0, _statusWidth, _statusHeight, RLColor.LightBlue);
             _status2Console.SetBackColor(0, 0, _statusWidth, _statusHeight, RLColor.LightCyan);
@@ -121,6 +128,9 @@ namespace MechArena
 
             arena.DrawArena(_arenaConsole);
             RLConsole.Blit(_arenaConsole, 0, 0, _arenaWidth, _arenaHeight, _rootConsole, 0, 0);
+
+            arena.DrawHUD(_hudConsole);
+            RLConsole.Blit(_hudConsole, 0, 0, _hudWidth, _hudHeight, _rootConsole, 0, _arenaHeight);
 
             arena.DrawMech1Status(_status1Console);
             RLConsole.Blit(_status1Console, 0, 0, _statusWidth, _statusHeight, _rootConsole, _arenaWidth, 0);

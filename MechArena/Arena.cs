@@ -158,6 +158,34 @@ namespace MechArena
             this.DrawMechStatus(this.enemy, console);
         }
 
+        public void DrawHUD(RLConsole console)
+        {
+            int line = 1;
+
+            // HUD line
+            console.Print(1, line, "##### HUD #####", RLColor.Black);
+            line+=2;
+
+            // Current turn status
+            console.Print(1, line, "Next Action: " + this.nextEntity.ToString() + "          ", RLColor.Black);
+            line += 2;
+
+            var playerTicksToLive = player.HandleQuery(new GameQuery_TicksToLive(this.currentTick)).TicksToLive;
+            console.Print(1, line, "Ticks to next move: " + playerTicksToLive + "    ", RLColor.Black);
+            line += 2;
+
+            var playerTimeTrackers = player.HandleQuery(new GameQuery_SubEntities(SubEntitiesSelector.TRACKS_TIME)).SubEntities;
+            foreach (var subTimeTracker in playerTimeTrackers)
+            {
+                var ticksToLive = subTimeTracker.HandleQuery(new GameQuery_TicksToLive(this.currentTick)).TicksToLive;
+                console.Print(1, line, subTimeTracker.ToString() + " active in: " + ticksToLive + "    ", RLColor.Black);
+                line += 2;
+            }
+
+            console.Print(1, line, "Current Tick: " + this.currentTick + "           ",  RLColor.Black);
+            line += 2;
+        }
+
         public void DrawArena(RLConsole console)
         {
             var enemyPosition = (GameQuery_Position)enemy.HandleQuery(new GameQuery_Position());
