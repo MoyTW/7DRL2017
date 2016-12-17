@@ -1,6 +1,8 @@
 ﻿using RLNET;
 using RogueSharp;
 
+using MechArena.UI;
+
 using System;
 using System.Collections.Generic;
 
@@ -13,20 +15,8 @@ namespace MechArena
         private static readonly int _screenHeight = 80;
         private static RLRootConsole _rootConsole;
 
-        private static readonly int _arenaWidth = 50;
-        private static readonly int _arenaHeight = 50;
-        private static RLConsole _arenaConsole;
-
-        private static readonly int _hudWidth = 50;
-        private static readonly int _hudHeight = 30;
-        private static RLConsole _hudConsole;
-
-        private static readonly int _statusWidth = 155;
-        private static readonly int _statusHeight = 40;
-        private static RLConsole _status1Console;
-        private static RLConsole _status2Console;
-
-        private static Arena arena;
+        private static Arena _arena;
+        private static ArenaDrawer _arenaDrawer;
 
         public static void Main()
         {
@@ -34,11 +24,12 @@ namespace MechArena
             Entity player = EntityBuilder.BuildPlayer();
             Entity enemy = EntityBuilder.BuildArmoredMech("Heavily Armored Test Enemy");
             IMap arenaMap = Map.Create(
-                new RogueSharp.MapCreation.CaveMapCreationStrategy<Map>(_arenaWidth, _arenaHeight, 45, 4, 3));
-            arena = new Arena(player, enemy, arenaMap);
+                new RogueSharp.MapCreation.CaveMapCreationStrategy<Map>(
+                    ArenaDrawer.arenaWidth, ArenaDrawer.arenaHeight, 45, 4, 3));
+            _arena = new Arena(player, enemy, arenaMap);
 
-            arena.PlaceEntityNear(player, 25, 25);
-            arena.PlaceEntityNear(enemy, 25, 25);
+            _arena.PlaceEntityNear(player, 25, 25);
+            _arena.PlaceEntityNear(enemy, 25, 25);
 
             // This must be the exact name of the bitmap font file we are using or it will error.
             string fontFileName = "terminal8x8.png";
@@ -47,10 +38,7 @@ namespace MechArena
 
             // Tell RLNet to use the bitmap font that we specified and that each tile is 8 x 8 pixels
             _rootConsole = new RLRootConsole(fontFileName, _screenWidth, _screenHeight, 8, 8, 1f, consoleTitle);
-            _arenaConsole = new RLConsole(_arenaWidth, _arenaHeight);
-            _hudConsole = new RLConsole(_hudWidth, _hudHeight);
-            _status1Console = new RLConsole(_statusWidth, _statusHeight);
-            _status2Console = new RLConsole(_statusWidth, _statusHeight);
+            _arenaDrawer = new ArenaDrawer(_arena);
 
             // Set up a handler for RLNET's Update event
             _rootConsole.Update += OnRootConsoleUpdate;
@@ -63,13 +51,7 @@ namespace MechArena
         // Event handler for RLNET's Update event
         private static void OnRootConsoleUpdate(object sender, UpdateEventArgs e)
         {
-            _arenaConsole.SetBackColor(0, 0, _arenaWidth, _arenaHeight, RLColor.Black);
-            _arenaConsole.Print(1, 1, "Arena", RLColor.White);
-
-            _hudConsole.SetBackColor(0, 0, _hudWidth, _hudHeight, RLColor.LightGray);
-
-            _status1Console.SetBackColor(0, 0, _statusWidth, _statusHeight, RLColor.LightBlue);
-            _status2Console.SetBackColor(0, 0, _statusWidth, _statusHeight, RLColor.LightCyan);
+            _arenaDrawer.OnRootConsoleUpdate(_rootConsole);
 
             RLKeyPress keyPress = _rootConsole.Keyboard.GetKeyPress();
             if (keyPress != null)
@@ -77,46 +59,46 @@ namespace MechArena
                 switch(keyPress.Key)
                 {
                     case RLKey.Space:
-                        arena.PlayerPassAction();
+                        _arena.PlayerPassAction();
                         break;
                     case RLKey.F:
-                        arena.TryPlayerAttack();
+                        _arena.TryPlayerAttack();
                         break;
                     case RLKey.Up:
-                        arena.TryPlayerMove(0, -1);
+                        _arena.TryPlayerMove(0, -1);
                         break;
                     case RLKey.Down:
-                        arena.TryPlayerMove(0, 1);
+                        _arena.TryPlayerMove(0, 1);
                         break;
                     case RLKey.Left:
-                        arena.TryPlayerMove(-1, 0);
+                        _arena.TryPlayerMove(-1, 0);
                         break;
                     case RLKey.Right:
-                        arena.TryPlayerMove(1, 0);
+                        _arena.TryPlayerMove(1, 0);
                         break;
                     case RLKey.Keypad1:
-                        arena.TryPlayerMove(-1, 1);
+                        _arena.TryPlayerMove(-1, 1);
                         break;
                     case RLKey.Keypad2:
-                        arena.TryPlayerMove(0, 1);
+                        _arena.TryPlayerMove(0, 1);
                         break;
                     case RLKey.Keypad3:
-                        arena.TryPlayerMove(1, 1);
+                        _arena.TryPlayerMove(1, 1);
                         break;
                     case RLKey.Keypad4:
-                        arena.TryPlayerMove(-1, 0);
+                        _arena.TryPlayerMove(-1, 0);
                         break;
                     case RLKey.Keypad6:
-                        arena.TryPlayerMove(1, 0);
+                        _arena.TryPlayerMove(1, 0);
                         break;
                     case RLKey.Keypad7:
-                        arena.TryPlayerMove(-1, -1);
+                        _arena.TryPlayerMove(-1, -1);
                         break;
                     case RLKey.Keypad8:
-                        arena.TryPlayerMove(0, -1);
+                        _arena.TryPlayerMove(0, -1);
                         break;
                     case RLKey.Keypad9:
-                        arena.TryPlayerMove(1, -1);
+                        _arena.TryPlayerMove(1, -1);
                         break;
                     default:
                         break;
@@ -128,19 +110,7 @@ namespace MechArena
         private static void OnRootConsoleRender(object sender, UpdateEventArgs e)
         {
             _rootConsole.Clear();
-
-            arena.DrawArena(_arenaConsole);
-            RLConsole.Blit(_arenaConsole, 0, 0, _arenaWidth, _arenaHeight, _rootConsole, 0, 0);
-
-            arena.DrawHUD(_hudConsole);
-            RLConsole.Blit(_hudConsole, 0, 0, _hudWidth, _hudHeight, _rootConsole, 0, _arenaHeight);
-
-            arena.DrawMech1Status(_status1Console);
-            RLConsole.Blit(_status1Console, 0, 0, _statusWidth, _statusHeight, _rootConsole, _arenaWidth, 0);
-
-            arena.DrawMech2Status(_status2Console);
-            RLConsole.Blit(_status2Console, 0, 0, _statusWidth, _statusHeight, _rootConsole, _arenaWidth, _statusHeight);
-
+            _arenaDrawer.Blit(_rootConsole);
             _rootConsole.Draw();
         }
     }

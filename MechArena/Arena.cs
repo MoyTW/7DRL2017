@@ -20,6 +20,13 @@ namespace MechArena
         // Turn state
         private Entity nextEntity;
 
+        // TODO: lol at exposing literally everything
+        public int CurrentTick { get { return this.currentTick; } }
+        public Entity Mech1 { get { return this.player; } }
+        public Entity Mech2 { get { return this.enemy; } }
+        public Entity NextEntity { get { return this.nextEntity; } }
+        public IMap ArenaMap { get { return this.arenaMap; } }
+
         // TODO: Create a "Mech/Map Blueprint" so you don't pass a literal Entity/IMap instance in!
         public Arena(Entity player, Entity enemy, IMap arenaMap)
         {
@@ -32,7 +39,7 @@ namespace MechArena
             ForwardToNextAction();
         }
 
-        private void ForwardToNextAction(bool pass=false)
+        private void ForwardToNextAction(bool pass = false)
         {
             List<Entity> allTimeTrackers = new List<Entity>();
             allTimeTrackers.Add(player);
@@ -111,135 +118,6 @@ namespace MechArena
         public void PlayerPassAction()
         {
             this.ForwardToNextAction(pass: true);
-        }
-
-        private void DrawBodyPartStatus(Entity bodyPart, int x, int y, bool mechDestroyed, RLConsole console)
-        {
-            var bodyPartDestroyed = bodyPart.TryGetDestroyed().Destroyed;
-            var bodyPartStructure = bodyPart.TryGetAttribute(EntityAttributeType.STRUCTURE).Value;
-
-            if (mechDestroyed || bodyPartDestroyed)
-                console.Print(y, x, "  - " + bodyPart.ToString() + ":" + bodyPartStructure + " ", RLColor.Red);
-            else
-                console.Print(y, x, "  - " + bodyPart.ToString()+ ":" + bodyPartStructure + " ", RLColor.Black);
-            x += 2;
-
-            var mountedParts = bodyPart.HandleQuery(new GameQuery_SubEntities(SubEntitiesSelector.ALL)).SubEntities;
-            foreach (var mountedPart in mountedParts)
-            {
-                var mountedPartDestroyed = mountedPart.TryGetDestroyed().Destroyed;
-                var structure = mountedPart.TryGetAttribute(EntityAttributeType.STRUCTURE).Value;
-                if (mechDestroyed || bodyPartDestroyed || mountedPartDestroyed)
-                    console.Print(y, x, "    + " + mountedPart.ToString() + ":" + structure + " ", RLColor.Red);
-                else
-                    console.Print(y, x, "    + " + mountedPart.ToString() + ":" + structure + " ", RLColor.Black);
-                x += 2;
-            }
-        }
-
-        private void DrawMechStatus(Entity mech, RLConsole console)
-        {
-            int line = 1;
-
-            var mechDestroyed = mech.TryGetDestroyed().Destroyed;
-            if (mechDestroyed)
-                console.Print(1, line, mech.ToString(), RLColor.Red);
-            else
-                console.Print(1, line, mech.ToString(), RLColor.Black);
-            line++;
-            line++;
-
-            var bodyParts = mech.HandleQuery(new GameQuery_SubEntities(SubEntitiesSelector.BODY_PART)).SubEntities;
-            int y = 1;
-            foreach (var bodyPart in bodyParts)
-            {
-                this.DrawBodyPartStatus(bodyPart, line, y, mechDestroyed, console);
-                y += 25;
-            }
-        }
-
-        public void DrawMech1Status(RLConsole console)
-        {
-            this.DrawMechStatus(this.player, console);
-        }
-
-        public void DrawMech2Status(RLConsole console)
-        {
-            this.DrawMechStatus(this.enemy, console);
-        }
-
-        public void DrawHUD(RLConsole console)
-        {
-            int line = 1;
-
-            // HUD line
-            console.Print(1, line, "##### HUD #####", RLColor.Black);
-            line+=2;
-
-            // Current turn status
-            console.Print(1, line, "Next Action: " + this.nextEntity.ToString() + "          ", RLColor.Black);
-            line += 2;
-
-            var playerTicksToLive = player.HandleQuery(new GameQuery_TicksToLive(this.currentTick)).TicksToLive;
-            console.Print(1, line, "Ticks to next move: " + playerTicksToLive + "    ", RLColor.Black);
-            line += 2;
-
-            var playerTimeTrackers = player.HandleQuery(new GameQuery_SubEntities(SubEntitiesSelector.TRACKS_TIME)).SubEntities;
-            foreach (var subTimeTracker in playerTimeTrackers)
-            {
-                var ticksToLive = subTimeTracker.HandleQuery(new GameQuery_TicksToLive(this.currentTick)).TicksToLive;
-                console.Print(1, line, subTimeTracker.ToString() + " active in: " + ticksToLive + "    ", RLColor.Black);
-                line += 2;
-            }
-
-            console.Print(1, line, "Current Tick: " + this.currentTick + "           ",  RLColor.Black);
-            line += 2;
-        }
-
-        public void DrawArena(RLConsole console)
-        {
-            var enemyPosition = (GameQuery_Position)enemy.HandleQuery(new GameQuery_Position());
-
-            // Use RogueSharp to calculate the current field-of-view for the player
-            var position = (GameQuery_Position)player.HandleQuery(new GameQuery_Position());
-            this.arenaMap.ComputeFov(position.X, position.Y, 50, true);
-
-            foreach (var cell in this.arenaMap.GetAllCells())
-            {
-                // When a Cell is in the field-of-view set it to a brighter color
-                if (cell.IsInFov)
-                {
-                    this.arenaMap.SetCellProperties(cell.X, cell.Y, cell.IsTransparent, cell.IsWalkable, true);
-                    if (cell.IsWalkable)
-                    {
-                        console.Set(cell.X, cell.Y, RLColor.Gray, null, '.');
-                    }
-                    else
-                    {
-                        console.Set(cell.X, cell.Y, RLColor.LightGray, null, '#');
-                    }
-                }
-                // If the Cell is not in the field-of-view but has been explored set it darker
-                else if (cell.IsExplored)
-                {
-                    if (cell.IsWalkable)
-                    {
-                        console.Set(cell.X, cell.Y, new RLColor(30, 30, 30), null, '.');
-                    }
-                    else
-                    {
-                        console.Set(cell.X, cell.Y, RLColor.Gray, null, '#');
-                    }
-                }
-            }
-
-            // Set the player's symbol after the map symbol to make sure it is draw
-            console.Set(position.X, position.Y, RLColor.LightGreen, null, '@');
-
-            if (enemy.TryGetDestroyed().Destroyed)
-                console.Set(enemyPosition.X, enemyPosition.Y, RLColor.LightGreen, null, 'D');
-            else
-                console.Set(enemyPosition.X, enemyPosition.Y, RLColor.LightGreen, null, 'E');
         }
     }
 }
