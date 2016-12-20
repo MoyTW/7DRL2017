@@ -20,16 +20,7 @@ namespace MechArena
 
         public static void Main()
         {
-            // Set up a Arena (move this later)
-            Entity player = EntityBuilder.BuildPlayer();
-            Entity enemy = EntityBuilder.BuildArmoredMech("Heavily Armored Test Enemy");
-            IMap arenaMap = Map.Create(
-                new RogueSharp.MapCreation.CaveMapCreationStrategy<Map>(
-                    ArenaDrawer.arenaWidth, ArenaDrawer.arenaHeight, 45, 4, 3));
-            _arena = new Arena(player, enemy, arenaMap);
-
-            _arena.PlaceEntityNear(player, 25, 25);
-            _arena.PlaceEntityNear(enemy, 25, 25);
+            _arena = ArenaBuilder.BuildTestArena(ArenaDrawer.arenaWidth, ArenaDrawer.arenaHeight);
 
             // This must be the exact name of the bitmap font file we are using or it will error.
             string fontFileName = "terminal8x8.png";

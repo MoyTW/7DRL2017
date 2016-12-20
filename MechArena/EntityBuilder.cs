@@ -48,6 +48,13 @@ namespace MechArena
             var head = bodyParts.SubEntities[0];
             head.HandleEvent(new GameEvent_Slot(weapon, head));
 
+            var largeWeaponMount = new Entity(label: "L.Wpn.Mnt.", typeLabel: "Weapon")
+                .AddComponent(new Component_Slottable(8))
+                .AddComponent(new Component_InternalStructure(8));
+            var torso = bodyParts.SubEntities[1];
+            torso.HandleEvent(new GameEvent_Slot(largeWeaponMount, torso));
+
+
             /*
             foreach(var part in bodyParts.SubEntities)
             {
