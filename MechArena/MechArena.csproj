@@ -52,6 +52,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Arena.cs" />
+    <Compile Include="ArenaBuilder.cs" />
     <Compile Include="BodyPartLocation.cs" />
     <Compile Include="Component.cs" />
     <Compile Include="Component_TracksTime.cs" />

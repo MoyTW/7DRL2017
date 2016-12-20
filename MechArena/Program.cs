@@ -8,6 +8,12 @@ using System.Collections.Generic;
 
 namespace MechArena
 {
+    public enum GameState
+    {
+        MAIN_MENU = 0,
+        ARENA
+    }
+
     public class Program
     {
         // The screen height and width are in number of tiles
@@ -15,12 +21,14 @@ namespace MechArena
         private static readonly int _screenHeight = 80;
         private static RLRootConsole _rootConsole;
 
+        private static GameState gameState;
+
         private static Arena _arena;
         private static ArenaDrawer _arenaDrawer;
 
         public static void Main()
         {
-            _arena = ArenaBuilder.BuildTestArena(ArenaDrawer.arenaWidth, ArenaDrawer.arenaHeight);
+            gameState = GameState.MAIN_MENU;
 
             // This must be the exact name of the bitmap font file we are using or it will error.
             string fontFileName = "terminal8x8.png";
@@ -29,7 +37,6 @@ namespace MechArena
 
             // Tell RLNet to use the bitmap font that we specified and that each tile is 8 x 8 pixels
             _rootConsole = new RLRootConsole(fontFileName, _screenWidth, _screenHeight, 8, 8, 1f, consoleTitle);
-            _arenaDrawer = new ArenaDrawer(_arena);
 
             // Set up a handler for RLNET's Update event
             _rootConsole.Update += OnRootConsoleUpdate;
@@ -39,16 +46,23 @@ namespace MechArena
             _rootConsole.Run();
         }
 
-        // Event handler for RLNET's Update event
-        private static void OnRootConsoleUpdate(object sender, UpdateEventArgs e)
+        private static void GotoMainMenu()
+        {
+            gameState = GameState.MAIN_MENU;
+        }
+
+        private static void OnRootConsoleUpdateForArena(object sender, UpdateEventArgs e)
         {
             _arenaDrawer.OnRootConsoleUpdate(_rootConsole);
 
             RLKeyPress keyPress = _rootConsole.Keyboard.GetKeyPress();
             if (keyPress != null)
             {
-                switch(keyPress.Key)
+                switch (keyPress.Key)
                 {
+                    case RLKey.Escape:
+                        GotoMainMenu();
+                        break;
                     case RLKey.Space:
                         _arena.PlayerPassAction();
                         break;
@@ -97,11 +111,83 @@ namespace MechArena
             }
         }
 
+        private static void GotoNewArena()
+        {
+            _arena = ArenaBuilder.BuildTestArena(ArenaDrawer.arenaWidth, ArenaDrawer.arenaHeight);
+            _arenaDrawer = new ArenaDrawer(_arena);
+            gameState = GameState.ARENA;
+        }
+
+        private static void GotoToArena()
+        {
+            if (_arena != null)
+                gameState = GameState.ARENA;
+            else
+                GotoNewArena();
+        }
+
+        private static void OnRootConsoleUpdateForMainMeu(object sender, UpdateEventArgs e)
+        {
+            RLKeyPress keyPress = _rootConsole.Keyboard.GetKeyPress();
+            if (keyPress != null)
+            {
+                switch (keyPress.Key)
+                {
+                    case RLKey.N:
+                        GotoNewArena();
+                        break;
+                    case RLKey.R:
+                        GotoToArena();
+                        break;
+                    case RLKey.Escape:
+                        Environment.Exit(0);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
+        // Event handler for RLNET's Update event
+        private static void OnRootConsoleUpdate(object sender, UpdateEventArgs e)
+        {
+            switch (gameState)
+            {
+                case GameState.MAIN_MENU:
+                    OnRootConsoleUpdateForMainMeu(sender, e);
+                    break;
+                case GameState.ARENA:
+                    OnRootConsoleUpdateForArena(sender, e);
+                    break;
+                default:
+                    OnRootConsoleUpdateForMainMeu(sender, e);
+                    break;
+            }
+        }
+
         // Event handler for RLNET's Render event
+        // TODO: Have a "Should re-render" - in theory, unsure if drawing every time actually hurts perf
         private static void OnRootConsoleRender(object sender, UpdateEventArgs e)
         {
             _rootConsole.Clear();
-            _arenaDrawer.Blit(_rootConsole);
+
+            switch (gameState)
+            {
+                case GameState.MAIN_MENU:
+                    _rootConsole.SetBackColor(0, 0, _screenWidth, _screenHeight, RLColor.Black);
+                    _rootConsole.Print(_screenWidth / 2 - 4, _screenHeight / 2 - 3, "Main Menu", RLColor.White);
+                    _rootConsole.Print(_screenWidth / 2 - 4, _screenHeight / 2 - 1, "Options", RLColor.White);
+                    _rootConsole.Print(_screenWidth / 2 - 2, _screenHeight / 2, "N) New Game", RLColor.White);
+                    _rootConsole.Print(_screenWidth / 2 - 2, _screenHeight / 2 + 1, "R) Return To Game", RLColor.White);
+                    _rootConsole.Print(_screenWidth / 2 - 2, _screenHeight / 2 + 2, "Esc) Quit", RLColor.White);
+                    break;
+                case GameState.ARENA:
+                    _arenaDrawer.Blit(_rootConsole);
+                    break;
+                default:
+                    break;
+            }
+
             _rootConsole.Draw();
         }
     }
