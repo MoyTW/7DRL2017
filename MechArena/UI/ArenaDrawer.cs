@@ -21,7 +21,7 @@ namespace MechArena.UI
         private readonly int hudHeight = 30;
         private RLConsole hudConsole;
 
-        private readonly int statusWidth = 155;
+        private readonly int statusWidth = 125;
         private readonly int statusHeight = 40;
         private RLConsole status1Console;
         private RLConsole status2Console;
@@ -116,7 +116,7 @@ namespace MechArena.UI
             foreach (var bodyPart in bodyParts)
             {
                 this.DrawBodyPartStatus(bodyPart, line, y, mechDestroyed, console);
-                y += 25;
+                y += 20;
             }
         }
 
