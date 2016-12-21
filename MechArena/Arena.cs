@@ -34,6 +34,8 @@ namespace MechArena
             this.player = player;
             this.enemy = enemy;
             this.mapEntities = new List<Entity>();
+            this.mapEntities.Add(player);
+            this.mapEntities.Add(enemy);
             this.arenaMap = arenaMap;
 
             ForwardToNextAction();
@@ -42,9 +44,14 @@ namespace MechArena
         private void ForwardToNextAction(bool pass = false)
         {
             List<Entity> allTimeTrackers = new List<Entity>();
-            allTimeTrackers.Add(player);
-            // TODO: Comically long line!
-            allTimeTrackers.AddRange(player.HandleQuery(new GameQuery_SubEntities(SubEntitiesSelector.TRACKS_TIME)).SubEntities);
+            foreach(var entity in this.mapEntities)
+            {
+                if (entity.HasComponentOfType<Component_TracksTime>())
+                    allTimeTrackers.Add(entity);
+                var subQuery = new GameQuery_SubEntities(SubEntitiesSelector.TRACKS_TIME);
+                var subTimeTrackers = entity.HandleQuery(subQuery).SubEntities;
+                allTimeTrackers.AddRange(subTimeTrackers);
+            }
 
             var orderedEntities = allTimeTrackers.Where(e => !e.TryGetDestroyed().Destroyed)
                 .OrderBy(e => e.HandleQuery(new GameQuery_TicksToLive(this.currentTick)).TicksToLive);
