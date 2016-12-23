@@ -89,6 +89,9 @@ namespace MechArena
         public static Entity BuildPlayer()
         {
             var player = BuildNakedMech("Player Mech");
+            player.AddComponent(new Component_Player());
+
+            // Attach player weapons & equipment
             var bodyParts = player.HandleQuery(new GameQuery_SubEntities(SubEntitiesSelector.BODY_PART));
 
             var weapon = new Entity(label: "Headlight", typeLabel: "Weapon")
@@ -120,9 +123,10 @@ namespace MechArena
             return player;
         }
 
-        public static Entity BuildArmoredMech(string label)
+        public static Entity BuildArmoredAIMech(string label)
         {
             var mech = BuildNakedMech("Armored Mech").AddComponent(new Component_Attacker());
+            mech.AddComponent(new Component_AI());
 
             var bodyParts = mech.HandleQuery(new GameQuery_SubEntities(SubEntitiesSelector.BODY_PART));
             foreach (var part in bodyParts.SubEntities)

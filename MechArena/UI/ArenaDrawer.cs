@@ -160,7 +160,7 @@ namespace MechArena.UI
 
         public void DrawArena(RLConsole console)
         {
-            var enemyPosition = arena.Mech2.TryGetPosition();
+            var mech2Position = arena.Mech2.TryGetPosition();
 
             // Use RogueSharp to calculate the current field-of-view for the player
             var position = arena.Mech1.TryGetPosition();
@@ -199,9 +199,9 @@ namespace MechArena.UI
             console.Set(position.X, position.Y, RLColor.LightGreen, null, '@');
 
             if (arena.Mech2.TryGetDestroyed().Destroyed)
-                console.Set(enemyPosition.X, enemyPosition.Y, RLColor.LightGreen, null, 'D');
+                console.Set(mech2Position.X, mech2Position.Y, RLColor.LightGreen, null, 'D');
             else
-                console.Set(enemyPosition.X, enemyPosition.Y, RLColor.LightGreen, null, 'E');
+                console.Set(mech2Position.X, mech2Position.Y, RLColor.LightGreen, null, 'E');
         }
     }
 

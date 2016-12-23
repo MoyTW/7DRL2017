@@ -12,8 +12,8 @@ namespace MechArena
         private int currentTick;
 
         // TODO: Don't literally have Player/Enemy, as two AIs can fight each other!
-        private Entity player;
-        private Entity enemy;
+        private Entity mech1;
+        private Entity mech2;
         private List<Entity> mapEntities;
         private IMap arenaMap;
 
@@ -22,20 +22,25 @@ namespace MechArena
 
         // TODO: lol at exposing literally everything
         public int CurrentTick { get { return this.currentTick; } }
-        public Entity Mech1 { get { return this.player; } }
-        public Entity Mech2 { get { return this.enemy; } }
+        public Entity Mech1 { get { return this.mech1; } }
+        public Entity Mech2 { get { return this.mech2; } }
         public Entity NextEntity { get { return this.nextEntity; } }
         public IMap ArenaMap { get { return this.arenaMap; } }
 
         // TODO: Create a "Mech/Map Blueprint" so you don't pass a literal Entity/IMap instance in!
-        public Arena(Entity player, Entity enemy, IMap arenaMap)
+        public Arena(Entity mech1, Entity mech2, IMap arenaMap)
         {
+            if (!mech1.HasComponentOfType<Component_Player>() && !mech1.HasComponentOfType<Component_AI>())
+                throw new ArgumentException("Can't initialize Arena: Mech 1 has no player or AI!");
+            else if (!mech2.HasComponentOfType<Component_AI>())
+                throw new ArgumentNullException("Can't initialize Arena: Mech 2 has no AI!");
+
             this.currentTick = 0;
-            this.player = player;
-            this.enemy = enemy;
+            this.mech1 = mech1;
+            this.mech2 = mech2;
             this.mapEntities = new List<Entity>();
-            this.mapEntities.Add(player);
-            this.mapEntities.Add(enemy);
+            this.mapEntities.Add(mech1);
+            this.mapEntities.Add(mech2);
             this.arenaMap = arenaMap;
 
             ForwardToNextAction();
@@ -91,10 +96,10 @@ namespace MechArena
             if (this.nextEntity.HasComponentOfType<Component_Weapon>())
             {
                 Console.WriteLine("########## ATTACK INFO ##########");
-                var guns = this.player.HandleQuery(new GameQuery_SubEntities(SubEntitiesSelector.WEAPON)).SubEntities;
+                var guns = this.mech1.HandleQuery(new GameQuery_SubEntities(SubEntitiesSelector.WEAPON)).SubEntities;
                 foreach (var gun in guns)
                 {
-                    this.player.HandleEvent(new GameEvent_Attack(this.currentTick, player, enemy, gun, this.arenaMap));
+                    this.mech1.HandleEvent(new GameEvent_Attack(this.currentTick, mech1, mech2, gun, this.arenaMap));
                 }
                 this.ForwardToNextAction();
             }
@@ -107,12 +112,12 @@ namespace MechArena
         // TODO: Testing! Don't directly call!
         public void TryPlayerMove(int dx, int dy)
         {
-            if (this.nextEntity == player)
+            if (this.nextEntity == mech1)
             {
-                var position = this.player.HandleQuery(new GameQuery_Position());
+                var position = this.mech1.HandleQuery(new GameQuery_Position());
                 if (this.arenaMap.IsWalkableAndOpen(position.X + dx, position.Y + dy, mapEntities))
                 {
-                    this.player.HandleEvent(new GameEvent_MoveSingle(this.currentTick, (XDirection)dx, (YDirection)dy));
+                    this.mech1.HandleEvent(new GameEvent_MoveSingle(this.currentTick, (XDirection)dx, (YDirection)dy));
                 }
                 this.ForwardToNextAction();
             }
