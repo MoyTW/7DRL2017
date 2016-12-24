@@ -128,8 +128,13 @@ namespace MechArena
             }
         }
 
-        public void PlayerPassAction()
+        public void PlayerDelayAction()
         {
+            if (this.nextEntity == mech1 ||
+                mech1.TryGetSubEntities(SubEntitiesSelector.TRACKS_TIME).Contains(this.NextEntity))
+            {
+                this.mech1.HandleEvent(new GameEvent_Delay(mech1, this.nextEntity));
+            }
             this.ForwardToNextAction(pass: true);
         }
     }

@@ -13,13 +13,27 @@ namespace MechArena
 
         public Component_TracksTime(EntityAttributeType cooldownAttribute)
         {
-            this.lastActivationTick = -9999;
+            this.lastActivationTick = 0;
             this.CooldownAttribute = cooldownAttribute;
         }
 
         public void RegisterActivated(int activationTick)
         {
             this.lastActivationTick = activationTick;
+        }
+
+        private void HandleDelay(GameEvent_Delay ev)
+        {
+            this.lastActivationTick += ev.DelayTicks;
+            ev.Completed = true;
+        }
+
+        protected override GameEvent _HandleEvent(GameEvent ev)
+        {
+            if (ev is GameEvent_Delay)
+                this.HandleDelay((GameEvent_Delay)ev);
+
+            return ev;
         }
 
         private void HandleQueryTicksToLive(GameQuery_TicksToLive q)
