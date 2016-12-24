@@ -31,13 +31,13 @@ namespace MechArenaTests
         public void CanSlot()
         {
             var small = this.SlottableRequiring(2);
-            var ev = new GameEvent_Slot(small, this.slottedContainer);
+            var ev = new GameEvent_Slot(null, this.slottedContainer, small);
             this.slottedContainer.HandleEvent(ev);
             Assert.IsTrue(ev.Completed);
             Assert.AreEqual(3, this.slottedContainer.GetComponentOfType<Component_SlottedContainer>().SlotsRemaining);
 
             var perfect = this.SlottableRequiring(3);
-            var ev1 = new GameEvent_Slot(perfect, this.slottedContainer);
+            var ev1 = new GameEvent_Slot(null, this.slottedContainer, perfect);
             this.slottedContainer.HandleEvent(ev1);
             Assert.IsTrue(ev1.Completed);
             Assert.AreEqual(0, this.slottedContainer.GetComponentOfType<Component_SlottedContainer>().SlotsRemaining);
@@ -47,7 +47,7 @@ namespace MechArenaTests
         public void CanGracefullyPassIfHuge()
         {
             var huge = this.SlottableRequiring(999);
-            var ev = new GameEvent_Slot(huge, this.slottedContainer);
+            var ev = new GameEvent_Slot(null, this.slottedContainer, huge);
             this.slottedContainer.HandleEvent(ev);
             Assert.IsFalse(ev.Completed);
             Assert.AreEqual(this.containerSize, 
@@ -59,9 +59,9 @@ namespace MechArenaTests
         public void CannotDoubleSlot()
         {
             var small = this.SlottableRequiring(2);
-            var ev = new GameEvent_Slot(small, this.slottedContainer);
+            var ev = new GameEvent_Slot(null, this.slottedContainer, small);
             this.slottedContainer.HandleEvent(ev);
-            this.slottedContainer.HandleEvent(new GameEvent_Slot(small, this.slottedContainer));
+            this.slottedContainer.HandleEvent(new GameEvent_Slot(null, this.slottedContainer, small));
 
         }
 
@@ -69,10 +69,10 @@ namespace MechArenaTests
         public void CanUnslot()
         {
             var small = this.SlottableRequiring(2);
-            var ev = new GameEvent_Slot(small, this.slottedContainer);
+            var ev = new GameEvent_Slot(null, this.slottedContainer, small);
             this.slottedContainer.HandleEvent(ev);
             
-            var unslot = new GameEvent_Unslot(small, this.slottedContainer);
+            var unslot = new GameEvent_Unslot(null, this.slottedContainer, small);
             this.slottedContainer.HandleEvent(unslot);
             Assert.IsTrue(unslot.Completed);
             Assert.AreEqual(this.containerSize,
@@ -84,7 +84,7 @@ namespace MechArenaTests
         public void CannotUnslotIfUnattached()
         {
             var small = this.SlottableRequiring(2);
-            var unslot = new GameEvent_Unslot(small, this.slottedContainer);
+            var unslot = new GameEvent_Unslot(null, this.slottedContainer, small);
             this.slottedContainer.HandleEvent(unslot);
             Assert.IsTrue(unslot.Completed);
             Assert.AreEqual(5, this.slottedContainer.GetComponentOfType<Component_SlottedContainer>().SlotsRemaining);

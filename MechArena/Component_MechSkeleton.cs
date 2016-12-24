@@ -41,8 +41,8 @@ namespace MechArena
             if (ev.Target != this.Parent)
                 return;
 
-            int attackerBaseToHit = ev.Attacker.TryGetAttribute(EntityAttributeType.TO_HIT).Value;
-            int weaponBaseDamage = ev.Weapon.TryGetAttribute(EntityAttributeType.DAMAGE).Value;
+            int attackerBaseToHit = ev.CommandEntity.TryGetAttribute(EntityAttributeType.TO_HIT).Value;
+            int weaponBaseDamage = ev.ExecutorEntity.TryGetAttribute(EntityAttributeType.DAMAGE).Value;
 
             // Resolve pilot skills here
             // Get pilot skill modifiers for attacker
@@ -57,7 +57,7 @@ namespace MechArena
             if (roll + toHit > 10 + dodge)
             {
                 int damage = weaponBaseDamage; // Possible damage modifiers
-                Console.WriteLine(String.Format("Attack by {0} hit {1} for {2} damage!", ev.Attacker, ev.Target,
+                Console.WriteLine(String.Format("Attack by {0} hit {1} for {2} damage!", ev.CommandEntity, ev.Target,
                     damage));
 
                 // Retarget on appropriate body part
@@ -71,7 +71,7 @@ namespace MechArena
                 {
                     Console.WriteLine(
                         String.Format("Attack by {0} missed - the {1} of the target was already destroyed!",
-                        ev.Attacker, ev.SubTarget));
+                        ev.CommandEntity, ev.SubTarget));
                 }
                 else
                 {
@@ -86,10 +86,10 @@ namespace MechArena
             }
             else
             {
-                Console.WriteLine(String.Format("Attack by {0} missed {1}!", ev.Attacker, ev.Target));
+                Console.WriteLine(String.Format("Attack by {0} missed {1}!", ev.CommandEntity, ev.Target));
             }
 
-            ev.Weapon.GetComponentOfType<Component_TracksTime>().RegisterActivated(ev.CurrentTick);
+            ev.ExecutorEntity.GetComponentOfType<Component_TracksTime>().RegisterActivated(ev.CurrentTick);
             ev.Completed = true;
         }
 

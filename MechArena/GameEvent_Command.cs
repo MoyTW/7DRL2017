@@ -8,15 +8,22 @@ namespace MechArena
 {
     public class GameEvent_Command : GameEvent
     {
-        public Entity MapEntity { get; }
-        public Entity ActionEntity { get; }
-        public GameEvent Action { get; }
+        public Entity CommandEntity { get; }
+        public Entity ExecutorEntity { get; }
 
-        public GameEvent_Command(Entity mapEntity, Entity actionEntity, GameEvent action)
+        public GameEvent_Command(Entity commandEntity) : this(commandEntity, commandEntity) { }
+
+        public GameEvent_Command(Entity commandEntity, Entity executorEntity)
         {
-            this.MapEntity = mapEntity;
-            this.ActionEntity = actionEntity;
-            this.Action = action;
+            if (CommandEntity != ExecutorEntity &&
+                !commandEntity.TryGetSubEntities(SubEntitiesSelector.ALL).Contains(executorEntity))
+            {
+                throw new ArgumentException("Cannot construct command, commandEntity " + commandEntity +
+                    " doesn't contain executorEntity " + executorEntity);
+            }
+
+            this.CommandEntity = commandEntity;
+            this.ExecutorEntity = executorEntity;
         }
     }
 }

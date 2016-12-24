@@ -41,7 +41,7 @@ namespace MechArena
 
         private void HandleSlot(GameEvent_Slot ev)
         {
-            if (ev.EntityContainer == this.Parent)
+            if (ev.ExecutorEntity == this.Parent)
             {
                 if (this.storedEntities.Contains(ev.EntityToSlot))
                     throw new ArgumentException("Cannot attach attached item " + ev.EntityToSlot.ToString());
@@ -56,7 +56,7 @@ namespace MechArena
 
         private void HandleUnslot(GameEvent_Unslot ev)
         {
-            if (ev.EntityContainer == this.Parent)
+            if (ev.ExecutorEntity == this.Parent)
             {
                 if (!this.storedEntities.Contains(ev.EntityToUnslot))
                     throw new ArgumentException("Cannot detach unattached item " + ev.EntityToUnslot.ToString() + "!");

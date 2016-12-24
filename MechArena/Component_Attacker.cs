@@ -11,11 +11,11 @@ namespace MechArena
     {
         private void HandleAttack(GameEvent_Attack ev)
         {
-            if (ev.Attacker == this.Parent)
+            if (ev.CommandEntity == this.Parent)
             {
                 // Get all intervening modifiers (Inspect map for LOS & Terrain Bonuses)
                 var targetPos = ev.Target.TryGetPosition();
-                var attackerPos = ev.Attacker.TryGetPosition();
+                var attackerPos = ev.CommandEntity.TryGetPosition();
                 var lineCells = ev.GameMap.GetCellsAlongLine(attackerPos.X, attackerPos.Y, targetPos.X, targetPos.Y);
 
                 // If any of the cells isn't walkable, then your shot is blocked and the attack stops
@@ -26,7 +26,7 @@ namespace MechArena
                     return;
                 }
                 // If it's out of range, then the attack misses
-                var weaponRange = ev.Weapon.TryGetAttribute(EntityAttributeType.MAX_RANGE);
+                var weaponRange = ev.ExecutorEntity.TryGetAttribute(EntityAttributeType.MAX_RANGE);
                 if (lineCells.Count() > weaponRange.Value)
                 {
                     Console.WriteLine("Attack missed due to range!");

@@ -14,13 +14,13 @@
         NONE = 0
     }
 
-    public class GameEvent_MoveSingle : GameEvent
+    public class GameEvent_MoveSingle : GameEvent_Command
     {
         public int CurrentTick { get; }
         public XDirection X { get; }
         public YDirection Y { get; }
 
-        public GameEvent_MoveSingle(int currentTick, XDirection x, YDirection y)
+        public GameEvent_MoveSingle(Entity mover, int currentTick, XDirection x, YDirection y) : base(mover)
         {
             this.CurrentTick = currentTick;
             this.X = x;

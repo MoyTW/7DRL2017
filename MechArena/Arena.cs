@@ -117,7 +117,8 @@ namespace MechArena
                 var position = this.mech1.HandleQuery(new GameQuery_Position());
                 if (this.arenaMap.IsWalkableAndOpen(position.X + dx, position.Y + dy, mapEntities))
                 {
-                    this.mech1.HandleEvent(new GameEvent_MoveSingle(this.currentTick, (XDirection)dx, (YDirection)dy));
+                    this.mech1.HandleEvent(
+                        new GameEvent_MoveSingle(mech1, this.currentTick, (XDirection)dx, (YDirection)dy));
                 }
                 this.ForwardToNextAction();
             }

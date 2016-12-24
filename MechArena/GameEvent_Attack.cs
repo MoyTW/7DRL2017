@@ -4,28 +4,24 @@ using System;
 
 namespace MechArena
 {
-    class GameEvent_Attack : GameEvent
+    class GameEvent_Attack : GameEvent_Command
     {
         public int CurrentTick { get; }
-        public Entity Attacker { get; }
         public Entity Target { get; }
         public BodyPartLocation SubTarget { get; set; }
-        public Entity Weapon { get; }
         public IMap GameMap { get; }
 
         private GameQuery_EntityAttribute attackerToHit, attackerDamage;
 
         public GameEvent_Attack(int currentTick, Entity attacker, Entity target, Entity weapon, IMap gameMap,
-            BodyPartLocation subTarget=BodyPartLocation.ANY)
+            BodyPartLocation subTarget=BodyPartLocation.ANY) : base(attacker, weapon)
         {
             if (!weapon.HasComponentOfType<Component_Weapon>())
                 throw new ArgumentException("Can't build attack event - weapon has no Weapon component!");
 
             this.CurrentTick = currentTick;
-            this.Attacker = attacker;
             this.Target = target;
             this.SubTarget = subTarget;
-            this.Weapon = weapon;
             this.GameMap = gameMap;
         }
 

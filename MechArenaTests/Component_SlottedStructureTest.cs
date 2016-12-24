@@ -18,7 +18,7 @@ namespace MechArenaTests
             en.AddComponent(new Component_Slottable(slotsRequired));
             en.AddComponent(new Component_InternalStructure(structure));
 
-            var ev = new GameEvent_Slot(en, container);
+            var ev = new GameEvent_Slot(null, container, en);
             container.HandleEvent(ev);
 
             return en;

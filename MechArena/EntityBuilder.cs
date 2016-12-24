@@ -63,17 +63,17 @@ namespace MechArena
 
             var bodyParts = mech.HandleQuery(new GameQuery_SubEntities(SubEntitiesSelector.BODY_PART)).SubEntities;
             GetBodyPart(BodyPartLocation.HEAD, bodyParts).HandleEvent(
-                new GameEvent_Slot(BuildSensorPackage(), GetBodyPart(BodyPartLocation.HEAD, bodyParts)));
+                new GameEvent_Slot(mech, GetBodyPart(BodyPartLocation.HEAD, bodyParts), BuildSensorPackage()));
             GetBodyPart(BodyPartLocation.TORSO, bodyParts).HandleEvent(
-                new GameEvent_Slot(BuildPowerPlant(), GetBodyPart(BodyPartLocation.TORSO, bodyParts)));
+                new GameEvent_Slot(mech, GetBodyPart(BodyPartLocation.TORSO, bodyParts), BuildPowerPlant()));
             GetBodyPart(BodyPartLocation.LEFT_ARM, bodyParts).HandleEvent(
-                new GameEvent_Slot(BuildArmActuator(), GetBodyPart(BodyPartLocation.LEFT_ARM, bodyParts)));
+                new GameEvent_Slot(mech, GetBodyPart(BodyPartLocation.LEFT_ARM, bodyParts), BuildArmActuator()));
             GetBodyPart(BodyPartLocation.RIGHT_ARM, bodyParts).HandleEvent(
-                new GameEvent_Slot(BuildArmActuator(), GetBodyPart(BodyPartLocation.RIGHT_ARM, bodyParts)));
+                new GameEvent_Slot(mech, GetBodyPart(BodyPartLocation.RIGHT_ARM, bodyParts), BuildArmActuator()));
             GetBodyPart(BodyPartLocation.LEFT_LEG, bodyParts).HandleEvent(
-                new GameEvent_Slot(BuildLegActuator(), GetBodyPart(BodyPartLocation.LEFT_LEG, bodyParts)));
+                new GameEvent_Slot(mech, GetBodyPart(BodyPartLocation.LEFT_LEG, bodyParts), BuildLegActuator()));
             GetBodyPart(BodyPartLocation.RIGHT_LEG, bodyParts).HandleEvent(
-                new GameEvent_Slot(BuildLegActuator(), GetBodyPart(BodyPartLocation.RIGHT_LEG, bodyParts)));
+                new GameEvent_Slot(mech, GetBodyPart(BodyPartLocation.RIGHT_LEG, bodyParts), BuildLegActuator()));
 
             // Slot in all the required components
             return mech;
@@ -99,13 +99,13 @@ namespace MechArena
                 .AddComponent(new Component_InternalStructure(1))
                 .AddComponent(new Component_Weapon(WeaponSize.SMALL, 9999, 10, 9, 25));
             var head = bodyParts.SubEntities[0];
-            head.HandleEvent(new GameEvent_Slot(weapon, head));
+            head.HandleEvent(new GameEvent_Slot(player, head, weapon));
 
             var largeWeaponMount = new Entity(label: "L.Wpn.Mnt.", typeLabel: "Weapon")
                 .AddComponent(new Component_Slottable(8))
                 .AddComponent(new Component_InternalStructure(8));
             var torso = bodyParts.SubEntities[1];
-            torso.HandleEvent(new GameEvent_Slot(largeWeaponMount, torso));
+            torso.HandleEvent(new GameEvent_Slot(player, torso, largeWeaponMount));
 
 
             /*
@@ -135,7 +135,7 @@ namespace MechArena
                 while (container.SlotsRemaining > 0)
                 {
                     var armor = BuildArmorPart();
-                    part.HandleEvent(new GameEvent_Slot(armor, part));
+                    part.HandleEvent(new GameEvent_Slot(mech, part, armor));
                 }
             }
 
