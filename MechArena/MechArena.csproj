@@ -73,6 +73,7 @@
     <Compile Include="EntityBuilder.cs" />
     <Compile Include="GameEvent.cs" />
     <Compile Include="GameEvent_Attack.cs" />
+    <Compile Include="GameEvent_Command.cs" />
     <Compile Include="GameEvent_MoveSingle.cs" />
     <Compile Include="GameEvent_Slot.cs" />
     <Compile Include="GameEvent_TakeDamage.cs" />

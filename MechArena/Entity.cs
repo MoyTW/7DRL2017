@@ -47,6 +47,11 @@ namespace MechArena
             return this.HandleQuery(new GameQuery_Destroyed());
         }
 
+        public IEnumerable<Entity> TryGetSubEntities(params SubEntitiesSelector[] selectors)
+        {
+            return this.HandleQuery(new GameQuery_SubEntities(selectors)).SubEntities;
+        }
+
         #endregion
 
         #region Component Functions

@@ -18,6 +18,9 @@ namespace MechArena
         public GameEvent_Attack(int currentTick, Entity attacker, Entity target, Entity weapon, IMap gameMap,
             BodyPartLocation subTarget=BodyPartLocation.ANY)
         {
+            if (!weapon.HasComponentOfType<Component_Weapon>())
+                throw new ArgumentException("Can't build attack event - weapon has no Weapon component!");
+
             this.CurrentTick = currentTick;
             this.Attacker = attacker;
             this.Target = target;
