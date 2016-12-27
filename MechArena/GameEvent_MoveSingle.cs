@@ -26,5 +26,12 @@
             this.X = x;
             this.Y = y;
         }
+
+        public GameEvent_MoveSingle(Entity mover, int currentTick, int x, int y) : base(mover)
+        {
+            this.CurrentTick = currentTick;
+            this.X = (XDirection)x;
+            this.Y = (YDirection)y;
+        }
     }
 }
