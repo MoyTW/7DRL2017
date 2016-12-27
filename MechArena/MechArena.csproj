@@ -90,7 +90,6 @@
     <Compile Include="GameRandom.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RS_Extensions.cs" />
     <Compile Include="UI\ArenaDrawer.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

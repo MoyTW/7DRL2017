@@ -24,8 +24,11 @@ namespace MechArena
 
         private void HandleMove(GameEvent_MoveSingle ev)
         {
-            this.x += (int)ev.X;
-            this.y += (int)ev.Y;
+            if (ev.GameArena.IsWalkableAndOpen(this.x + (int)ev.X, this.y + (int)ev.Y))
+            {
+                this.x += (int)ev.X;
+                this.y += (int)ev.Y;
+            }
             ev.Completed = true;
         }
 

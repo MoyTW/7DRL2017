@@ -36,6 +36,17 @@ namespace MechArena
             }
         }
 
+        public bool IsWalkableAndOpen(int x, int y)
+        {
+            foreach (var en in mapEntities)
+            {
+                var position = (GameQuery_Position)en.HandleQuery(new GameQuery_Position());
+                if (position != null && position.BlocksMovement && position.X == x && position.Y == y)
+                    return false;
+            }
+            return this.ArenaMap.IsWalkable(x, y);
+        }
+
         // TODO: Create a "Mech/Map Blueprint" so you don't pass a literal Entity/IMap instance in!
         public Arena(Entity mech1, Entity mech2, IMap arenaMap)
         {
@@ -87,7 +98,7 @@ namespace MechArena
             {
                 for (int ny = y - 1; ny <= y + 1; ny++)
                 {
-                    if (this.arenaMap.IsWalkableAndOpen(nx, ny, this.mapEntities))
+                    if (this.IsWalkableAndOpen(nx, ny))
                     {
                         if (!this.mapEntities.Contains(en))
                             this.mapEntities.Add(en);
@@ -139,10 +150,9 @@ namespace MechArena
             if (this.nextEntity == mech1)
             {
                 var position = this.mech1.HandleQuery(new GameQuery_Position());
-                if (this.arenaMap.IsWalkableAndOpen(position.X + dx, position.Y + dy, mapEntities))
+                if (this.IsWalkableAndOpen(position.X + dx, position.Y + dy))
                 {
-                    this.mech1.HandleEvent(
-                        new GameEvent_MoveSingle(mech1, this.currentTick, (XDirection)dx, (YDirection)dy));
+                    this.mech1.HandleEvent(new GameEvent_MoveSingle(mech1, this.currentTick, dx, dy, this));
                 }
                 this.ForwardToNextAction();
             }

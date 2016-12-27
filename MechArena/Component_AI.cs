@@ -22,7 +22,7 @@ namespace MechArena
                     .Take(2)
                     .Last();
                 var moveCommand = new GameEvent_MoveSingle(q.CommandEntity, q.ArenaState.CurrentTick,
-                    nextCell.X - attackerPos.X, nextCell.Y - attackerPos.Y);
+                    nextCell.X - attackerPos.X, nextCell.Y - attackerPos.Y, q.ArenaState);
                 q.RegisterCommand(moveCommand);
             }
             else if (q.ExecutorEntity.HasComponentOfType<Component_Weapon>())
