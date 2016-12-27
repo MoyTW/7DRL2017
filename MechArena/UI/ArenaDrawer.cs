@@ -75,16 +75,16 @@ namespace MechArena.UI
 
         #region Drawing
 
-        private void DrawBodyPartStatus(Entity bodyPart, int x, int y, bool mechDestroyed, RLConsole console)
+        private int DrawBodyPartStatus(Entity bodyPart, int x, int y, bool mechDestroyed, RLConsole console)
         {
             var bodyPartDestroyed = bodyPart.TryGetDestroyed().Destroyed;
             var bodyPartStructure = bodyPart.TryGetAttribute(EntityAttributeType.STRUCTURE).Value;
 
             if (mechDestroyed || bodyPartDestroyed)
-                console.Print(y, x, "  - " + bodyPart.ToString() + ":" + bodyPartStructure + " ", RLColor.Red);
+                console.Print(x, y, "- " + bodyPart.ToString() + ":" + bodyPartStructure + " ", RLColor.Red);
             else
-                console.Print(y, x, "  - " + bodyPart.ToString() + ":" + bodyPartStructure + " ", RLColor.Black);
-            x += 2;
+                console.Print(x, y, "- " + bodyPart.ToString() + ":" + bodyPartStructure + " ", RLColor.Black);
+            y += 2;
 
             var mountedParts = bodyPart.HandleQuery(new GameQuery_SubEntities(SubEntitiesSelector.ALL)).SubEntities;
             foreach (var mountedPart in mountedParts)
@@ -92,11 +92,13 @@ namespace MechArena.UI
                 var mountedPartDestroyed = mountedPart.TryGetDestroyed().Destroyed;
                 var structure = mountedPart.TryGetAttribute(EntityAttributeType.STRUCTURE).Value;
                 if (mechDestroyed || bodyPartDestroyed || mountedPartDestroyed)
-                    console.Print(y, x, "    + " + mountedPart.ToString() + ":" + structure + " ", RLColor.Red);
+                    console.Print(x, y, "  + " + mountedPart.ToString() + ":" + structure + " ", RLColor.Red);
                 else
-                    console.Print(y, x, "    + " + mountedPart.ToString() + ":" + structure + " ", RLColor.Black);
-                x += 2;
+                    console.Print(x, y, "  + " + mountedPart.ToString() + ":" + structure + " ", RLColor.Black);
+                y += 2;
             }
+
+            return y - 3;
         }
 
         private void DrawMechStatus(Entity mech, RLConsole console)
@@ -112,11 +114,21 @@ namespace MechArena.UI
             line++;
 
             var bodyParts = mech.HandleQuery(new GameQuery_SubEntities(SubEntitiesSelector.BODY_PART)).SubEntities;
-            int y = 1;
+            int x = 1;
+            int y = line;
             foreach (var bodyPart in bodyParts)
             {
-                this.DrawBodyPartStatus(bodyPart, line, y, mechDestroyed, console);
-                y += 20;
+                if (y == line)
+                {
+                    y += this.DrawBodyPartStatus(bodyPart, x, y, mechDestroyed, console);
+                }
+                else
+                {
+                    this.DrawBodyPartStatus(bodyPart, x, y, mechDestroyed, console);
+                    y = line;
+                    x += 20;
+                }
+
             }
         }
 
