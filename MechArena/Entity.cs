@@ -52,6 +52,11 @@ namespace MechArena
             return this.HandleQuery(new GameQuery_SubEntities(selectors)).SubEntities;
         }
 
+        public int TryGetTicksToLive(int currentTick)
+        {
+            return this.HandleQuery(new GameQuery_TicksToLive(currentTick)).TicksToLive;
+        }
+
         #endregion
 
         #region Component Functions

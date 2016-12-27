@@ -86,6 +86,7 @@
     <Compile Include="GameQuery_EntityAttribute.cs" />
     <Compile Include="GameQuery_Position.cs" />
     <Compile Include="GameQuery_SubEntities.cs" />
+    <Compile Include="GameQuery_TicksCooldown.cs" />
     <Compile Include="GameQuery_TicksToLive.cs" />
     <Compile Include="GameRandom.cs" />
     <Compile Include="Program.cs" />

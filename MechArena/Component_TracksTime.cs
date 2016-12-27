@@ -52,10 +52,17 @@ namespace MechArena
             }
         }
 
+        private void HandleQueryTicksCooldown(GameQuery_TicksCooldown q)
+        {
+            q.RegisterTicksCooldown(this.Parent.TryGetAttribute(this.CooldownAttribute).Value);
+        }
+
         protected override GameQuery _HandleQuery(GameQuery q)
         {
             if (q is GameQuery_TicksToLive)
                 this.HandleQueryTicksToLive((GameQuery_TicksToLive)q);
+            if (q is GameQuery_TicksCooldown)
+                this.HandleQueryTicksCooldown((GameQuery_TicksCooldown)q);
 
             return q;
         }

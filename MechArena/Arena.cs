@@ -162,11 +162,22 @@ namespace MechArena
             }
         }
 
-        public void PlayerDelayAction()
+        public void PlayerDelayActionSingle()
         {
             if (this.IsPlayerTurn)
             {
-                this.nextEntity.HandleEvent(new GameEvent_Delay(this.mech1, this.nextEntity));
+                this.nextEntity.HandleEvent(
+                    new GameEvent_Delay(this.nextEntity, DelayDuration.SINGLE_TICK));
+            }
+            this.ForwardToNextAction(pass: true);
+        }
+
+        public void PlayerDelayActionUntilNext()
+        {
+            if (this.IsPlayerTurn)
+            {
+                this.nextEntity.HandleEvent(
+                    new GameEvent_Delay(this.nextEntity, DelayDuration.FULL_INTERVAL));
             }
             this.ForwardToNextAction(pass: true);
         }
