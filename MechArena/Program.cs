@@ -109,6 +109,10 @@ namespace MechArena
                         break;
                 }
             }
+            else
+            {
+                _arena.TryFindAndExecuteNextCommand();
+            }
         }
 
         private static void GotoNewArena()

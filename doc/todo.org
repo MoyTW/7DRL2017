@@ -2,10 +2,13 @@
 ** AI (Non-Learning)
 
 + Hard-coded AI can move and fight
+  - Arena fn which executes a Command (used by player)
+  - Arena fn which "executes non-player"
+    - Calls out to AI Component for a Command
+    - Executes the Command on the Arena
 
 ** Full Arena Loop
 
-+ Arena class reacts only to Commands
 + Add ability to delay until next friendly action
 + Win condition to exit Arena
 + Ability to replay Arena /w AIs
@@ -36,6 +39,10 @@
 | Dagger           | Small  | High     | Fast   | Low    | Melee  |
 | Sword            | Medium | Medium   | Medium | Medium | Melee  |
 | Hammer           | Large  | Low      | Slow   | High   | Melee  |
+
+** Pilot Skills
+
++ Adds bonuses to selected stats
 
 ** Tournament
 

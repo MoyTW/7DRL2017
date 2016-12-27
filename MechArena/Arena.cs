@@ -27,6 +27,15 @@ namespace MechArena
         public Entity NextEntity { get { return this.nextEntity; } }
         public IMap ArenaMap { get { return this.arenaMap; } }
 
+        // TODO: Don't hard-code to mech 1!
+        public bool IsPlayerTurn {
+            get
+            {
+                return this.nextEntity == mech1 ||
+                    mech1.TryGetSubEntities(SubEntitiesSelector.TRACKS_TIME).Contains(this.NextEntity);
+            }
+        }
+
         // TODO: Create a "Mech/Map Blueprint" so you don't pass a literal Entity/IMap instance in!
         public Arena(Entity mech1, Entity mech2, IMap arenaMap)
         {
@@ -90,10 +99,25 @@ namespace MechArena
             return false;
         }
 
+        public void TryFindAndExecuteNextCommand()
+        {
+            // If it's the player's turn we must wait on input!
+            if (this.IsPlayerTurn)
+                return;
+
+            var queryCommand = this.Mech2.HandleQuery(new GameQuery_Command(this.Mech2, this.NextEntity, this));
+            if (!queryCommand.Completed)
+                throw new ArgumentException("Didn't register AI move, something malfunctioned really bad in your AI!");
+            else
+                this.Mech2.HandleEvent(queryCommand.Command);
+
+            this.ForwardToNextAction();
+        }
+
         // TODO: Testing! Don't directly call!
         public void TryPlayerAttack()
         {
-            if (this.nextEntity.HasComponentOfType<Component_Weapon>())
+            if (this.IsPlayerTurn && this.nextEntity.HasComponentOfType<Component_Weapon>())
             {
                 Console.WriteLine("########## ATTACK INFO ##########");
                 var guns = this.mech1.HandleQuery(new GameQuery_SubEntities(SubEntitiesSelector.WEAPON)).SubEntities;
@@ -130,8 +154,7 @@ namespace MechArena
 
         public void PlayerDelayAction()
         {
-            if (this.nextEntity == mech1 ||
-                mech1.TryGetSubEntities(SubEntitiesSelector.TRACKS_TIME).Contains(this.NextEntity))
+            if (this.IsPlayerTurn)
             {
                 this.nextEntity.HandleEvent(new GameEvent_Delay(this.mech1, this.nextEntity));
             }
