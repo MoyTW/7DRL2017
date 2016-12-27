@@ -133,7 +133,7 @@ namespace MechArena
             if (this.nextEntity == mech1 ||
                 mech1.TryGetSubEntities(SubEntitiesSelector.TRACKS_TIME).Contains(this.NextEntity))
             {
-                this.mech1.HandleEvent(new GameEvent_Delay(mech1, this.nextEntity));
+                this.nextEntity.HandleEvent(new GameEvent_Delay(this.mech1, this.nextEntity));
             }
             this.ForwardToNextAction(pass: true);
         }

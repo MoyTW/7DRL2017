@@ -21,6 +21,14 @@ namespace MechArena
                 .AddComponent(new Component_InternalStructure(internalStructure));
         }
 
+        public static Entity BuildAccelerator()
+        {
+            return new Entity(label: "Accel.", typeLabel: SlottablePartTypeLabel)
+                .AddComponent(new Component_AttributeModifierMult(EntityAttributeType.SPEED, .9))
+                .AddComponent(new Component_Slottable(1))
+                .AddComponent(new Component_InternalStructure(1));
+        }
+
         public static Entity BuildPowerPlant()
         {
             return new Entity(label: "Pwr.Plnt.", typeLabel: SlottablePartTypeLabel)
@@ -86,27 +94,49 @@ namespace MechArena
                 .AddComponent(new Component_InternalStructure(4));
         }
 
+        private static void SlotAt(Entity mech, BodyPartLocation location, Entity slottable)
+        {
+            var bodyPart = GetBodyPart(location,
+                mech.HandleQuery(new GameQuery_SubEntities(SubEntitiesSelector.BODY_PART)).SubEntities);
+            bodyPart.HandleEvent(new GameEvent_Slot(mech, bodyPart, slottable));
+        }
+
         public static Entity BuildPlayer()
         {
             var player = BuildNakedMech("Player Mech");
             player.AddComponent(new Component_Player());
 
             // Attach player weapons & equipment
-            var bodyParts = player.HandleQuery(new GameQuery_SubEntities(SubEntitiesSelector.BODY_PART));
+            var bodyParts = player.HandleQuery(new GameQuery_SubEntities(SubEntitiesSelector.BODY_PART)).SubEntities;
 
             var weapon = new Entity(label: "Headlight", typeLabel: "Weapon")
                 .AddComponent(new Component_Slottable(1))
                 .AddComponent(new Component_InternalStructure(1))
                 .AddComponent(new Component_Weapon(WeaponSize.SMALL, 9999, 10, 9, 25));
-            var head = bodyParts.SubEntities[0];
+            var head = bodyParts[0];
             head.HandleEvent(new GameEvent_Slot(player, head, weapon));
 
             var largeWeaponMount = new Entity(label: "L.Wpn.Mnt.", typeLabel: "Weapon")
                 .AddComponent(new Component_Slottable(8))
                 .AddComponent(new Component_InternalStructure(8));
-            var torso = bodyParts.SubEntities[1];
+            var torso = bodyParts[1];
             torso.HandleEvent(new GameEvent_Slot(player, torso, largeWeaponMount));
 
+            SlotAt(player, BodyPartLocation.LEFT_LEG, BuildAccelerator());
+            SlotAt(player, BodyPartLocation.LEFT_LEG, BuildAccelerator());
+            SlotAt(player, BodyPartLocation.LEFT_LEG, BuildAccelerator());
+            SlotAt(player, BodyPartLocation.LEFT_LEG, BuildAccelerator());
+            SlotAt(player, BodyPartLocation.LEFT_LEG, BuildAccelerator());
+            SlotAt(player, BodyPartLocation.LEFT_LEG, BuildAccelerator());
+            SlotAt(player, BodyPartLocation.LEFT_LEG, BuildAccelerator());
+
+            SlotAt(player, BodyPartLocation.RIGHT_LEG, BuildAccelerator());
+            SlotAt(player, BodyPartLocation.RIGHT_LEG, BuildAccelerator());
+            SlotAt(player, BodyPartLocation.RIGHT_LEG, BuildAccelerator());
+            SlotAt(player, BodyPartLocation.RIGHT_LEG, BuildAccelerator());
+            SlotAt(player, BodyPartLocation.RIGHT_LEG, BuildAccelerator());
+            SlotAt(player, BodyPartLocation.RIGHT_LEG, BuildAccelerator());
+            SlotAt(player, BodyPartLocation.RIGHT_LEG, BuildAccelerator());
 
             /*
             foreach(var part in bodyParts.SubEntities)

@@ -13,7 +13,7 @@ namespace MechArena
 
         public Component_TracksTime(EntityAttributeType cooldownAttribute)
         {
-            this.lastActivationTick = 0;
+            this.lastActivationTick = -9999;
             this.CooldownAttribute = cooldownAttribute;
         }
 
@@ -40,7 +40,16 @@ namespace MechArena
         {
             var cooldown = this.Parent.TryGetAttribute(this.CooldownAttribute).Value;
             var ticksToLive = this.lastActivationTick + cooldown - q.CurrentTick;
-            q.RegisterTicksToLive(ticksToLive);
+
+            if (q.CurrentTick == 0 && this.lastActivationTick == -9999)
+            {
+                this.lastActivationTick -= ticksToLive;
+                q.RegisterTicksToLive(0);
+            }
+            else
+            {
+                q.RegisterTicksToLive(ticksToLive);
+            }
         }
 
         protected override GameQuery _HandleQuery(GameQuery q)
