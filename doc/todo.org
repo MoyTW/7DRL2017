@@ -1,17 +1,15 @@
 * Core
-** AI (Non-Learning)
-
-+ Hard-coded AI can move and fight
+** DONE AI (Non-Learning)
+*** DONE Hard-coded AI can move and fight
   - Arena fn which executes a Command (used by player)
   - Arena fn which "executes non-player"
     - Calls out to AI Component for a Command
     - Executes the Command on the Arena
 
-** Full Arena Loop
-
-+ Add ability to delay until next friendly action
-+ Win condition to exit Arena
-+ Ability to replay Arena /w AIs
+** TODO Full Arena Loop
+*** TODO Ability to delay until next friendly action
+*** TODO Win condition to exit Arena
+*** TODO Ability to replay Arena /w AIs
 
 ** Mech Construction
 *** Remaining Parts

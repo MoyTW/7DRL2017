@@ -158,8 +158,16 @@ namespace MechArena
             var mech = BuildNakedMech("Armored Mech").AddComponent(new Component_Attacker());
             mech.AddComponent(new Component_AI());
 
-            var bodyParts = mech.HandleQuery(new GameQuery_SubEntities(SubEntitiesSelector.BODY_PART));
-            foreach (var part in bodyParts.SubEntities)
+            var bodyParts = mech.HandleQuery(new GameQuery_SubEntities(SubEntitiesSelector.BODY_PART)).SubEntities;
+
+            var weapon = new Entity(label: "Headlight", typeLabel: "Weapon")
+                .AddComponent(new Component_Slottable(1))
+                .AddComponent(new Component_InternalStructure(1))
+                .AddComponent(new Component_Weapon(WeaponSize.SMALL, 9999, 10, 9, 25));
+            var head = bodyParts[0];
+            head.HandleEvent(new GameEvent_Slot(mech, head, weapon));
+
+            foreach (var part in bodyParts)
             {
                 var container = part.GetComponentOfType<Component_SlottedContainer>();
                 while (container.SlotsRemaining > 0)
