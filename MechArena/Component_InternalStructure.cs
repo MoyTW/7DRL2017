@@ -47,7 +47,7 @@ namespace MechArena
         {
             if (q.AttributeType == EntityAttributeType.STRUCTURE)
             {
-                q.AddModifier(this.StructureRemaining, this.Parent);
+                q.AddFlatModifier(this.StructureRemaining, this.Parent);
             }
         }
 

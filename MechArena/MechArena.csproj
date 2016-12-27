@@ -56,6 +56,8 @@
     <Compile Include="BodyPartLocation.cs" />
     <Compile Include="Component.cs" />
     <Compile Include="Component_AI.cs" />
+    <Compile Include="Component_AttributeModifierFlat.cs" />
+    <Compile Include="Component_AttributeModifierMult.cs" />
     <Compile Include="Component_Player.cs" />
     <Compile Include="Component_TracksTime.cs" />
     <Compile Include="Component_Attacker.cs" />
@@ -69,7 +71,6 @@
     <Compile Include="Component_Weapon.cs" />
     <Compile Include="Entity.cs" />
     <Compile Include="EntityAttributeType.cs" />
-    <Compile Include="EntityAttributeModifier.cs" />
     <Compile Include="EntityBuilder.cs" />
     <Compile Include="GameEvent.cs" />
     <Compile Include="GameEvent_Attack.cs" />

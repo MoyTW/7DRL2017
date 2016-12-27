@@ -7,26 +7,37 @@ namespace MechArena
 {
     public class GameQuery_EntityAttribute : GameQuery
     {
-        private List<EntityAttributeModifier> modifiers;
+        private List<Tuple<int, Entity>> additiveModifiers = new List<Tuple<int, Entity>>();
+        private List<Tuple<double, Entity>> multiplicativeModifiers = new List<Tuple<double, Entity>>();
 
         public EntityAttributeType AttributeType { get; }
+        // TODO: Do we want to round up, round down, or round nearest? Right now rounds down.
         public int Value
         {
             get
             {
-                return this.modifiers.Sum(m => m.Value);
+                double value = this.additiveModifiers.Sum(v => v.Item1);
+                foreach(var multiplier in multiplicativeModifiers)
+                {
+                    value *= multiplier.Item1;
+                }
+                return (int)value;
             }
         }
 
         public GameQuery_EntityAttribute(EntityAttributeType attributeType)
         {
             this.AttributeType = attributeType;
-            this.modifiers = new List<EntityAttributeModifier>();
         }
 
-        public void AddModifier(int value, Entity source)
+        public void AddFlatModifier(int value, Entity source)
         {
-            this.modifiers.Add(new EntityAttributeModifier(this.AttributeType, value, source));
+            this.additiveModifiers.Add(new Tuple<int, Entity>(value, source));
+        }
+
+        public void AddMultModifier(double value, Entity source)
+        {
+            this.multiplicativeModifiers.Add(new Tuple<double, Entity>(value, source));
         }
     }
 }

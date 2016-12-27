@@ -136,7 +136,7 @@ namespace MechArena
             if (q.AttributeType == EntityAttributeType.SPEED)
             {
                 // TOOD: Base speed not hardcoded to 50!
-                q.AddModifier(50, this.Parent);
+                q.AddFlatModifier(50, this.Parent);
             }
         }
 
