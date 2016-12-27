@@ -1,0 +1,241 @@
+* Summary
+You're a mech pilot in a tournament. Many of the other opponents
+have long histories, and in order to defeat them you have to
+watch their matches and derive their strategies to counter
+them. The emphasis of this game is on predicting the strategies
+of the AI. Each round should be not more than a couple minutes of
+play time, but the prep time might be up to ten.
+
+* Game Flow
+** Sketch
++ Ready Room (start)
+  - View prior recordings
+  - View upcoming matches
+  - Equip mech (possibly limited)
+  - Enter battle
++ Battle until win/loss/death
+  - Can die by damage to torso
+  - Can surrender at any time
+
+* Pilot perks
+** Goals
++ Perks do not change the action set
++ Perks are competitive with each other
++ Choosing different bonuses will alter playstyle
+
+** Sketch
+All pilot perks are simply flat bonuses to actions. For example,
+a pilot might have "+3 to targeted shots" and "+2 to dodge". They
+are bought on a point-buy system at the start of the game, and
+are constant afterwards. AI pilots also have the same point-buy
+system.
+
+* Opponents
+** Goals
++ You can watch an AI and predict how it will act
++ AI will occasionally surprise you with new behaviour
++ AI has a viewable 'strategy' and acts consistently within it
++ AI improves over training runs
++ The AI's strategy matches its pilot's bonuses
+
+** Sketch
+Opponents use trigger-based AI on conditions. Basically, a bunch
+of "If/then" statements which evaluate in order. It will however
+be a flat structure with no complex boolean logic.
+
+The ability to 'optimize' the AI will come an evolutionary
+algorithm, which is the real meat and potatoes of the
+game. Enemies will be generated with random strong bonuses and
+penalties, and then will be run through a not-yet-refined genetic
+algorithm whose fitness function is the win time in a series of
+simulated matches.
+
+This should hopefully lead to each AI pilot having a unique and
+distinct playstyle and mech. If it ends up converging on every
+pilot always having the same playstyle and mech, despite a
+diverse starting set, then I will know I need to rebalance.
+
+*** Evolutionary Algorithm Sketch
+Uses a genetic algorithm. Since I don't know much about genetic
+algorithms and this is supposed to be a week-long thing, it will
+be relatively simple.
+
++ Genes will be defined as if/else statements
++ Two types of genes, builder genes and pilot genes
++ Chromosomes fixed length
++ Selects with tournament; additionally, keeps best
++ Utilizies two-point crossover and mutation
+
+This will produce the series of if/else statements that will
+build a mech and pilot it.
+
+I have no idea how this will work out at all and I'm not sure I
+can accomplish it during the time period, so I'll focus on
+building the game first. If there isn't time left I'll hand-roll
+the AI instead of attempting to set this up.
+
+* Combat Flow
+** Goals
++ All possible actions clearly laid out
++ No unfair surprise cases
++ Allows for tactical positioning and fire
++ Encourages degrading functionality over direct destruction
+
+** Sketch
+*** Battlefield
+For simplicity, battlefield is 8-directional. If there's somehow
+leftover time it can be converted into a hex-based system, which
+is preferable but I'm less familiar so I'll pass for
+now. Movement is devoid of momentum.
+
+*** Movement Actions
++ Activate boosters
++ Move
+
+*** Weapon Actions
++ Pick up weapon (ends turn)
++ Drop weapon
++ Quick Draw (convenience swap+fire)
++ Swap weapon
++ Fire weapon
+
+*** Turns
+Combat is divided using Time Units. Each action takes a fixed
+amount of Time Units. There are two phases - Movement and Fire,
+which resolve in that order. Mechs have a Speed, which is time
+between movement phases. Weapons have a Cooldown, which is time
+between firings.
+
+Movement and Fire phases are asynchronous, but if a weapon is not
+fired during its fire phase it comes up during the next Movement
+phase.
+
+*** Turn Example
+Alice: Speed=25, Shotgun Cooldown=50
+Bob: Speed=20, AR Cooldown=12
+Initiative roll gives Alice the advantage.
+| Time | Pilot | Moved? | Fired? | Next Move At | Next Fire At |
+|------+-------+--------+--------+--------------+--------------|
+|    0 | A     | Y      | N      |           25 |           25 |
+|    0 | B     | Y      | N      |           20 |           20 |
+|   20 | B     | Y      | Y      |           40 |           32 |
+|   25 | A     | N      | Y      |           50 |           75 |
+|   32 | B     | -      | Y      |           40 |           44 |
+|   40 | B     | Y      | -      |           60 |           44 |
+|   44 | B     | -      | Y      |           60 |           56 |
+|   50 | A     | Y      | -      |           75 |           75 |
+...
+
+*** Accuracy
+Roll 1d10 + bonii - penalties to hit v. 5 (default around 50%
+chance to hit)
+
+Possible firing modifiers:
+| Description                        | Modifier     |
+|------------------------------------+--------------|
+| Movement in previous move phase    | -small       |
+| Enemy moved in previous move phase | -small       |
+| Enemy pilot dodge skill            | -SkillVal    |
+| Weapons switched                   | -SwitchPen   |
+| Target in obscured                 | -medium      |
+| Target in cover                    | -large       |
+| Targeting specific body parts      | -small       |
+| Range penalty                      | -small       |
+| Range bonus                        | +small       |
+| Gunnery skill                      | +SkillVal    |
+| Weapon bonus                       | +WeaponBonus |
+
+*** Switching Weapons/Consumables
+You should be able to switch weapons before or after firing. How
+exactly? Unsure, but you should be able to fire your bazooka and
+then draw pistols and fire. You should *not* be able to 'nade and
+then switch back to your other weapon.
+
+* Mech Design
+** Goals
++ Allows for clearly 'strategy-based' builds
++ Allows for a wide variety of strategies
++ Builds can be optimized over training runs
++ Allows for strategy counters
+
+** Sketch
+Mechs have 5/6 parts - head, torso, arms, legs. It would be nice
+to have different types of legs, but that's definitely an extra
+thing.
+
+Each part has two types of HP - external and internal
+HP. Internal HP is just normal HP, external is slot-based. So
+it's inverse of BT's system.
+
+Different areas will have different amounts of exterior slot
+space.
+
+Filling up slots will slow down the mech, beyond some arbitrary
+threshold. A fully loaded mech should be slower than a
+lightly-loaded one.
+
+For first-pass, mechs will be custom-built.
+
+*** Slots & Taking Damage
+Slots are the method of mounting items and equipment. Slots are
+used also in taking damage. If an item in a slot is hit, it is
+rendered inoperable.
+
+Items mounted in slots have a size attribute. When body parts
+take hits, all the items in the area are translated into an
+imaginary line with the sizes as the number of points on the
+line. Then a random point is chosen to be damaged.
+
+For example, given an arm with a medium holster, arm actuators,
+and four armor pieces, you would have the following:
+| Holster | Actuators | Armor | Armor | Armor | Armor |
+| ..      | ..        | ....  | ....  | ....  | ....  |
+Then a random number from 0-19 would be chosen, and that index
+would take the damage.
+
+Internals have a number of hit points equal to half their slots
+(round up) and will be destroyed when their hit points reach
+zero.
+
+**** Part Slots
+| Location | Slots |
+|----------+-------|
+| Head     |     3 |
+| Torso    |    15 |
+| Arms     |     8 |
+| Legs     |    10 |
+
+**** Mounting Costs
+| Item                | Slots | Size |
+|---------------------+-------+------|
+| Head sensors        |     1 |    1 |
+| Torso power plant   |     4 |    4 |
+| Arm actuators       |     2 |    2 |
+| Leg actuators       |     2 |    2 |
+| Small utiliy        |     1 |    1 |
+| Large utility       |     2 |    2 |
+| Small holster       |     1 |    1 |
+| Med holster         |     2 |    2 |
+| Large holster       |     3 |    3 |
+| Small weapon mount  |     4 |    4 |
+| Medium weapon mount |     6 |    6 |
+| Large weapon mount  |     8 |    8 |
+| Armor               |     1 |    4 |
+| Booster             |     2 |    2 |
+| Accelerator         |     2 |    2 |
+
+**** Mountables
+| Item             | Size   | Accuracy | Refire | Damage | Range  |
+|------------------+--------+----------+--------+--------+--------|
+| Missile          | Medium | Medium   | Medium | Medium | Long   |
+| Sniper Rifle     | Large  | High     | Slow   | High   | Long   |
+| Mini-Missile     | Small  | Medium   | Fast   | Low    | Medium |
+| Rifle            | Medium | Medium   | Medium | Medium | Medium |
+| Machinegun       | Large  | Low      | Fast   | Medium | Medium |
+| Grenade Launcher | Large  | Medium   | Medium | High   | Medium |
+| Shotgun          | Medium | High     | Medium | High   | Short  |
+| Pistol           | Small  | Medium   | Fast   | Low    | Short  |
+| Rockets          | Small  | Low      | Fast   | Medium | Short  |
+| Dagger           | Small  | High     | Fast   | Low    | Melee  |
+| Sword            | Medium | Medium   | Medium | Medium | Melee  |
+| Hammer           | Large  | Low      | Slow   | High   | Melee  |

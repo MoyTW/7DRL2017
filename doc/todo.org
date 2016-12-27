@@ -1,0 +1,49 @@
+* Core
+** AI (Non-Learning)
+
++ Hard-coded AI can move and fight
+
+** Full Arena Loop
+
++ Arena class reacts only to Commands
++ Add ability to delay until next friendly action
++ Win condition to exit Arena
++ Ability to replay Arena /w AIs
+
+** Mech Construction
+*** Remaining Parts
+
++ Head sensors: increase LOS
++ Power Plant: provide cooldown penalties if damaged
++ Arm actuators: hold weapons, fire weapons
++ Leg actuators: move speed bonus
++ Holster (small, medium, large): hold weapons
++ Weapon mount (small, medium, large): fire weapons
++ Booster: increase speed for short period of time
+
+*** Remaining Weapons
+| Item             | Size   | Accuracy | Refire | Damage | Range  |
+|------------------+--------+----------+--------+--------+--------|
+| Missile          | Medium | Medium   | Medium | Medium | Long   |
+| Sniper Rifle     | Large  | High     | Slow   | High   | Long   |
+| Mini-Missile     | Small  | Medium   | Fast   | Low    | Medium |
+| Rifle            | Medium | Medium   | Medium | Medium | Medium |
+| Machinegun       | Large  | Low      | Fast   | Medium | Medium |
+| Grenade Launcher | Large  | Medium   | Medium | High   | Medium |
+| Shotgun          | Medium | High     | Medium | High   | Short  |
+| Pistol           | Small  | Medium   | Fast   | Low    | Short  |
+| Rockets          | Small  | Low      | Fast   | Medium | Short  |
+| Dagger           | Small  | High     | Fast   | Low    | Melee  |
+| Sword            | Medium | Medium   | Medium | Medium | Melee  |
+| Hammer           | Large  | Low      | Slow   | High   | Melee  |
+
+** Tournament
+
++ AIs can play each other
++ You can watch AIs play each other
++ You play your matches in order
+
+** UI
+
++ Combat log
++ Less atrocious UI
