@@ -10,7 +10,7 @@
 *** DONE Ability to delay until next friendly action
 *** DONE Win condition to exit Arena
 *** DONE AI v. AI matches
-*** TODO Ability to replay Arena /w AIs
+*** Ability to replay Arena /w AIs
 **** DONE Replaying the combat between two AIs
 
 We will require:
@@ -22,7 +22,7 @@ For now, we assume that the AI + Mech are immutable over the duration of the
 game. Therefore, we only need the RNG Seed. We can construct the specified map
 with the specified Pilot and Mechs, and simply replay.
 
-**** TODO Replaying the combat between player + AI
+**** Replaying the combat between player + AI
 
 We will require:
 
@@ -68,11 +68,39 @@ This will come after, however.
 
 + Adds bonuses to selected stats
 
-** Tournament
+** TODO Tournament
 
 + AIs can play each other
 + You can watch AIs play each other
 + You play your matches in order
+
+*** TODO Competitors
+
+The concept of a "Competitor" is a Pilot + Mech, though players may customize
+their mech between matches.
+
+*** TODO Format
+
+The tournament is a group-stages->elimination tournament. The lower rounds of
+the tournament are round robin, highest scorer progresses. The higher rounds of
+the tournament are a 32-player double elimination tournament.
+
+There are 256 initial combatants, divided into 32 groups of 8. The 32 groups of
+8 each play a round robin series, and the top player progresses. Each of the 32
+groups plays all their matches fully before the next plays any (this is for
+simplicity, no other reason). Ties are settled by a reduced round robin.
+
+*** TODO Implementation
+
+**** TODO Class Tournament
+Tracks tournament state 
+
+API
++ Given a list of Combatants, generate a schedule
++ Register match played + Winner
++ Query for "Next Match Given Round"
++ View all of the above
++ Ability to save and load (?)
 
 ** UI
 
