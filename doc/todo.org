@@ -8,7 +8,7 @@
 
 ** TODO Full Arena Loop
 *** DONE Ability to delay until next friendly action
-*** TODO Win condition to exit Arena
+*** DONE Win condition to exit Arena
 *** TODO Ability to replay Arena /w AIs
 
 ** Mech Construction

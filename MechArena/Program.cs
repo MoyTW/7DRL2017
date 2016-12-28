@@ -53,6 +53,13 @@ namespace MechArena
 
         private static void OnRootConsoleUpdateForArena(object sender, UpdateEventArgs e)
         {
+            if (_arena.IsMatchEnded())
+            {
+                Console.WriteLine("Match has ended!");
+                GotoMainMenu();
+                return;
+            }
+
             _arenaDrawer.OnRootConsoleUpdate(_rootConsole);
 
             RLKeyPress keyPress = _rootConsole.Keyboard.GetKeyPress();
@@ -128,7 +135,7 @@ namespace MechArena
             gameState = GameState.ARENA;
         }
 
-        private static void GotoToArena()
+        private static void GotoCurrentArena()
         {
             if (_arena != null)
                 gameState = GameState.ARENA;
@@ -147,7 +154,7 @@ namespace MechArena
                         GotoNewArena();
                         break;
                     case RLKey.R:
-                        GotoToArena();
+                        GotoCurrentArena();
                         break;
                     case RLKey.Escape:
                         Environment.Exit(0);

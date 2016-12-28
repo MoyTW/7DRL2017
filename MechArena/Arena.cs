@@ -66,6 +66,33 @@ namespace MechArena
             ForwardToNextAction();
         }
 
+        // Pilot is killed when the head is destroyed
+        // TODO: This is a really awkward way of looking up "Does it have ahead or not?"
+        private bool IsPilotKilled(Entity mech)
+        {
+            return mech.TryGetSubEntities(SubEntitiesSelector.BODY_PART)
+                .Where(e => e.GetComponentOfType<Component_BodyPartLocation>().Location == BodyPartLocation.HEAD)
+                .First()
+                .TryGetDestroyed();
+        }
+
+        // You're considered unable to fight if your torso goes down or you run out of weapons
+        private bool IsMechUnableToFight(Entity mech)
+        {
+            var torsoDestroyed = mech.TryGetSubEntities(SubEntitiesSelector.BODY_PART)
+                .Where(e => e.GetComponentOfType<Component_BodyPartLocation>().Location == BodyPartLocation.TORSO)
+                .First()
+                .TryGetDestroyed();
+            var noWeapons = mech.TryGetSubEntities(SubEntitiesSelector.WEAPON).Count() == 0;
+            return torsoDestroyed || noWeapons;
+        }
+
+        public bool IsMatchEnded()
+        {
+            return this.IsPilotKilled(this.Mech1) || this.IsMechUnableToFight(this.Mech1) ||
+                this.IsPilotKilled(this.Mech2) || this.IsMechUnableToFight(this.Mech2);
+        }
+
         private void ForwardToNextAction()
         {
             List<Entity> allTimeTrackers = new List<Entity>();

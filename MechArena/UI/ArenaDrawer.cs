@@ -159,8 +159,7 @@ namespace MechArena.UI
             console.Print(1, line, "Ticks to next move: " + playerTicksToLive + " [" + playerCooldown + "]    ", RLColor.Black);
             line += 2;
 
-            var playerTimeTrackers = arena.Mech1.HandleQuery(new GameQuery_SubEntities(SubEntitiesSelector.TRACKS_TIME)).SubEntities;
-            foreach (var subTimeTracker in playerTimeTrackers)
+            foreach (var subTimeTracker in arena.Mech1.TryGetSubEntities(SubEntitiesSelector.TRACKS_TIME))
             {
                 var ticksToLive = subTimeTracker.HandleQuery(new GameQuery_TicksToLive(arena.CurrentTick)).TicksToLive;
                 console.Print(1, line, subTimeTracker.ToString() + " active in: " + ticksToLive + "    ", RLColor.Black);
