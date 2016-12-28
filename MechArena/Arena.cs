@@ -27,12 +27,12 @@ namespace MechArena
         public Entity NextEntity { get { return this.nextEntity; } }
         public IMap ArenaMap { get { return this.arenaMap; } }
 
-        // TODO: Don't hard-code to mech 1!
-        public bool IsPlayerTurn {
+        public bool ShouldWaitForPlayerInput {
             get
             {
-                return this.nextEntity == mech1 ||
-                    mech1.TryGetSubEntities(SubEntitiesSelector.TRACKS_TIME).Contains(this.NextEntity);
+                return !this.Mech1.HasComponentOfType<Component_AI>() &&
+                    (this.NextEntity == this.Mech1 ||
+                    Mech1.TryGetSubEntities(SubEntitiesSelector.TRACKS_TIME).Contains(this.NextEntity));
             }
         }
 
@@ -136,7 +136,7 @@ namespace MechArena
         public void TryFindAndExecuteNextCommand()
         {
             // If it's the player's turn we must wait on input!
-            if (this.IsPlayerTurn)
+            if (this.ShouldWaitForPlayerInput)
                 return;
 
             var queryCommand = this.Mech2.HandleQuery(new GameQuery_Command(this.Mech2, this.NextEntity, this));
@@ -151,7 +151,7 @@ namespace MechArena
         // TODO: Testing! Don't directly call!
         public void TryPlayerAttack()
         {
-            if (this.IsPlayerTurn && this.nextEntity.HasComponentOfType<Component_Weapon>())
+            if (this.ShouldWaitForPlayerInput && this.nextEntity.HasComponentOfType<Component_Weapon>())
             {
                 Console.WriteLine("########## ATTACK INFO ##########");
                 var guns = this.mech1.HandleQuery(new GameQuery_SubEntities(SubEntitiesSelector.WEAPON)).SubEntities;
@@ -187,7 +187,7 @@ namespace MechArena
 
         public void PlayerDelayAction(DelayDuration duration)
         {
-            if (this.IsPlayerTurn)
+            if (this.ShouldWaitForPlayerInput)
             {
                 this.nextEntity.HandleEvent(
                     new GameEvent_Delay(this.CurrentTick, this.Mech1, this.nextEntity, duration));

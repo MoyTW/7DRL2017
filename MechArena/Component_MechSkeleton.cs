@@ -114,10 +114,12 @@ namespace MechArena
             base._HandleEvent(ev);
             if (ev is GameEvent_Attack)
                 this.HandleAttack((GameEvent_Attack)ev);
-            if (ev is GameEvent_TakeDamage)
+            else if (ev is GameEvent_TakeDamage)
                 this.HandleTakeDamage((GameEvent_TakeDamage)ev);
-            if (ev is GameEvent_MoveSingle)
+            else if (ev is GameEvent_MoveSingle)
                 this.HandleMoveSingle((GameEvent_MoveSingle)ev);
+            else if (ev is GameEvent_Command)
+                throw new ArgumentException("Command could not be handled!");
 
             return ev;
         }

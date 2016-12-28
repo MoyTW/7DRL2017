@@ -11,6 +11,32 @@
 *** DONE Win condition to exit Arena
 *** TODO Ability to replay Arena /w AIs
 
+**** TODO Replaying the combat between two AIs
+
+We will require:
+
++ RNG Seed
++ Initial AI + Mech states
+
+For now, we assume that the AI + Mech are immutable over the duration of the
+game. Therefore, we only need the RNG Seed. We can construct the specified map
+with the specified Pilot and Mechs, and simply replay.
+
+**** TODO Replaying the combat between player + AI
+
+We will require:
+
++ RNG Seed
++ Command list from player (Mech 1)
++ Initial AI + Mech state (Mech 2)
+
+Instead of blocking on player input, we will feed the player command into the
+game. In order for this to be sane, we should actually *invert* the control so
+that the Arena calls out to a Player (conceptually the same as the AI) for a
+command, instead of the player inputs directly hitting the state of the Arena.
+
+This will come after, however.
+
 ** Mech Construction
 *** Remaining Parts
 
