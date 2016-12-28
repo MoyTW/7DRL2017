@@ -85,7 +85,7 @@ namespace MechArena
                 .Where(e => e.GetComponentOfType<Component_BodyPartLocation>().Location == BodyPartLocation.TORSO)
                 .First()
                 .TryGetDestroyed();
-            var noWeapons = mech.TryGetSubEntities(SubEntitiesSelector.WEAPON).Count() == 0;
+            var noWeapons = !mech.TryGetSubEntities(SubEntitiesSelector.WEAPON).Any(e => !e.TryGetDestroyed());
             return torsoDestroyed || noWeapons;
         }
 

@@ -23,6 +23,9 @@ namespace MechArena
 
         public void RegisterEntity(Entity registeredEntity)
         {
+            if (registeredEntity.TryGetDestroyed())
+                return;
+
             var registeredTicksTolive = registeredEntity.TryGetTicksToLive(this.currentTick);
 
             // Note that CommandEntities are always first in a tie - hence only override on greater than!
