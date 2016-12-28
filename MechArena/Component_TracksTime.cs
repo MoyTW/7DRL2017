@@ -57,12 +57,22 @@ namespace MechArena
             q.RegisterTicksCooldown(this.Parent.TryGetAttribute(this.CooldownAttribute).Value);
         }
 
+        private void HandleQueryNextTimeTracker(GameQuery_NextTimeTracker q)
+        {
+            if (!this.Parent.TryGetDestroyed())
+            {
+                q.RegisterEntity(this.Parent);
+            }
+        }
+
         protected override GameQuery _HandleQuery(GameQuery q)
         {
             if (q is GameQuery_TicksToLive)
                 this.HandleQueryTicksToLive((GameQuery_TicksToLive)q);
             if (q is GameQuery_TicksCooldown)
                 this.HandleQueryTicksCooldown((GameQuery_TicksCooldown)q);
+            if (q is GameQuery_NextTimeTracker)
+                this.HandleQueryNextTimeTracker((GameQuery_NextTimeTracker)q);
 
             return q;
         }

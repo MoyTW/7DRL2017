@@ -118,8 +118,6 @@ namespace MechArena
                 this.HandleTakeDamage((GameEvent_TakeDamage)ev);
             else if (ev is GameEvent_MoveSingle)
                 this.HandleMoveSingle((GameEvent_MoveSingle)ev);
-            else if (ev is GameEvent_Command)
-                throw new ArgumentException("Command could not be handled!");
 
             return ev;
         }
@@ -155,6 +153,15 @@ namespace MechArena
             }
         }
 
+        private void HandleQueryNextTimeTracker(GameQuery_NextTimeTracker q)
+        {
+            var timeTrackers = this.Parent.TryGetSubEntities(SubEntitiesSelector.TRACKS_TIME);
+            foreach(var tracker in timeTrackers)
+            {
+                q.RegisterEntity(tracker);
+            }
+        }
+
         // A mech is only considered "Destroyed" when its torso is gone!
         private void HandleQueryDestroyed(GameQuery_Destroyed q)
         {
@@ -169,6 +176,8 @@ namespace MechArena
                 this.HandleQueryEntityAttribute((GameQuery_EntityAttribute)q);
             else if (q is GameQuery_SubEntities)
                 this.HandleQuerySubEntities((GameQuery_SubEntities)q);
+            else if (q is GameQuery_NextTimeTracker)
+                this.HandleQueryNextTimeTracker((GameQuery_NextTimeTracker)q);
             else if (q is GameQuery_Destroyed)
                 this.HandleQueryDestroyed((GameQuery_Destroyed)q);
 

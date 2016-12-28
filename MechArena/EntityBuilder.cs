@@ -109,7 +109,7 @@ namespace MechArena
             // Attach player weapons & equipment
             var bodyParts = player.HandleQuery(new GameQuery_SubEntities(SubEntitiesSelector.BODY_PART)).SubEntities;
 
-            var weapon = new Entity(label: "Headlight", typeLabel: "Weapon")
+            var weapon = new Entity(label: "P.HL", typeLabel: "Weapon")
                 .AddComponent(new Component_Slottable(1))
                 .AddComponent(new Component_InternalStructure(1))
                 .AddComponent(new Component_Weapon(WeaponSize.SMALL, 9999, 10, 9, 25));
@@ -155,12 +155,12 @@ namespace MechArena
 
         public static Entity BuildArmoredAIMech(string label)
         {
-            var mech = BuildNakedMech("Armored Mech").AddComponent(new Component_Attacker());
+            var mech = BuildNakedMech(label).AddComponent(new Component_Attacker());
             mech.AddComponent(new Component_AI());
 
             var bodyParts = mech.HandleQuery(new GameQuery_SubEntities(SubEntitiesSelector.BODY_PART)).SubEntities;
 
-            var weapon = new Entity(label: "Headlight", typeLabel: "Weapon")
+            var weapon = new Entity(label: "AIIM.HL", typeLabel: "Weapon")
                 .AddComponent(new Component_Slottable(1))
                 .AddComponent(new Component_InternalStructure(1))
                 .AddComponent(new Component_Weapon(WeaponSize.SMALL, 9999, 10, 9, 25));

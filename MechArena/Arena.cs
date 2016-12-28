@@ -11,28 +11,28 @@ namespace MechArena
     {
         private int currentTick;
 
-        // TODO: Don't literally have Player/Enemy, as two AIs can fight each other!
         private Entity mech1;
         private Entity mech2;
         private List<Entity> mapEntities;
         private IMap arenaMap;
 
         // Turn state
-        private Entity nextEntity;
+        // TODO: Don't have Command + Executor, it's awkard as heck!
+        private Entity nextCommandEntity;
+        private Entity nextExecutorEntity;
 
         // TODO: lol at exposing literally everything
         public int CurrentTick { get { return this.currentTick; } }
         public Entity Mech1 { get { return this.mech1; } }
         public Entity Mech2 { get { return this.mech2; } }
-        public Entity NextEntity { get { return this.nextEntity; } }
+        public Entity NextCommandEntity { get { return this.nextCommandEntity; } }
+        public Entity NextExecutorEntity { get { return this.nextExecutorEntity; } }
         public IMap ArenaMap { get { return this.arenaMap; } }
 
         public bool ShouldWaitForPlayerInput {
             get
             {
-                return !this.Mech1.HasComponentOfType<Component_AI>() &&
-                    (this.NextEntity == this.Mech1 ||
-                    Mech1.TryGetSubEntities(SubEntitiesSelector.TRACKS_TIME).Contains(this.NextEntity));
+                return !this.Mech1.HasComponentOfType<Component_AI>() && this.NextCommandEntity == this.Mech1;
             }
         }
 
@@ -95,24 +95,21 @@ namespace MechArena
 
         private void ForwardToNextAction()
         {
-            List<Entity> allTimeTrackers = new List<Entity>();
-            foreach(var entity in this.mapEntities)
+            // Mech1 always moves fully before mech2 if possible! First player advantage.
+            var mech1Query = mech1.HandleQuery(new GameQuery_NextTimeTracker(this.CurrentTick));
+            var mech2Query = mech2.HandleQuery(new GameQuery_NextTimeTracker(this.CurrentTick));
+            if (mech1Query.NextEntityTicksToLive <= mech2Query.NextEntityTicksToLive)
             {
-                if (entity.HasComponentOfType<Component_TracksTime>())
-                    allTimeTrackers.Add(entity);
-                var subQuery = new GameQuery_SubEntities(SubEntitiesSelector.TRACKS_TIME);
-                var subTimeTrackers = entity.HandleQuery(subQuery).SubEntities;
-                allTimeTrackers.AddRange(subTimeTrackers);
+                this.nextCommandEntity = this.Mech1;
+                this.nextExecutorEntity = mech1Query.NextEntity;
+                this.currentTick += mech1Query.NextEntityTicksToLive;
             }
-
-            this.nextEntity = allTimeTrackers.Where(e => !e.TryGetDestroyed())
-                .OrderBy(e => e.TryGetTicksToLive(this.CurrentTick))
-                .FirstOrDefault();
-
-            int nextTicks = nextEntity.HandleQuery(new GameQuery_TicksToLive(this.currentTick)).TicksToLive;
-            this.currentTick += nextTicks;
-
-            Console.WriteLine("Ticks: " + this.currentTick + " Next Entity: " + nextEntity.ToString() + " Next Ticks: " + nextTicks);
+            else
+            {
+                this.nextCommandEntity = this.Mech2;
+                this.nextExecutorEntity = mech2Query.NextEntity;
+                this.currentTick += mech2Query.NextEntityTicksToLive;
+            }
         }
 
         public bool PlaceEntityNear(Entity en, int x, int y)
@@ -139,7 +136,7 @@ namespace MechArena
             if (this.ShouldWaitForPlayerInput)
                 return;
 
-            var queryCommand = this.Mech2.HandleQuery(new GameQuery_Command(this.Mech2, this.NextEntity, this));
+            var queryCommand = this.Mech2.HandleQuery(new GameQuery_Command(this.Mech2, this.NextExecutorEntity, this));
             if (!queryCommand.Completed)
                 throw new ArgumentException("Didn't register AI move, something malfunctioned really bad in your AI!");
             else
@@ -151,7 +148,7 @@ namespace MechArena
         // TODO: Testing! Don't directly call!
         public void TryPlayerAttack()
         {
-            if (this.ShouldWaitForPlayerInput && this.nextEntity.HasComponentOfType<Component_Weapon>())
+            if (this.ShouldWaitForPlayerInput && this.NextExecutorEntity.HasComponentOfType<Component_Weapon>())
             {
                 Console.WriteLine("########## ATTACK INFO ##########");
                 var guns = this.mech1.HandleQuery(new GameQuery_SubEntities(SubEntitiesSelector.WEAPON)).SubEntities;
@@ -170,7 +167,7 @@ namespace MechArena
         // TODO: Testing! Don't directly call!
         public void TryPlayerMove(int dx, int dy)
         {
-            if (this.nextEntity == mech1)
+            if (this.NextExecutorEntity == mech1)
             {
                 var position = this.mech1.HandleQuery(new GameQuery_Position());
                 if (this.IsWalkableAndOpen(position.X + dx, position.Y + dy))
@@ -189,8 +186,8 @@ namespace MechArena
         {
             if (this.ShouldWaitForPlayerInput)
             {
-                this.nextEntity.HandleEvent(
-                    new GameEvent_Delay(this.CurrentTick, this.Mech1, this.nextEntity, duration));
+                this.NextExecutorEntity.HandleEvent(
+                    new GameEvent_Delay(this.CurrentTick, this.Mech1, this.NextExecutorEntity, duration));
                 this.ForwardToNextAction();
             }
         }
