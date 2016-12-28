@@ -9,8 +9,8 @@
 ** TODO Full Arena Loop
 *** DONE Ability to delay until next friendly action
 *** DONE Win condition to exit Arena
+*** DONE AI v. AI matches
 *** TODO Ability to replay Arena /w AIs
-
 **** TODO Replaying the combat between two AIs
 
 We will require:

@@ -112,7 +112,7 @@ namespace MechArena
             var weapon = new Entity(label: "P.HL", typeLabel: "Weapon")
                 .AddComponent(new Component_Slottable(1))
                 .AddComponent(new Component_InternalStructure(1))
-                .AddComponent(new Component_Weapon(WeaponSize.SMALL, 9999, 10, 9, 25));
+                .AddComponent(new Component_Weapon(WeaponSize.SMALL, 9999, 10, 3, 25));
             var head = bodyParts[0];
             head.HandleEvent(new GameEvent_Slot(player, head, weapon));
 
@@ -163,7 +163,7 @@ namespace MechArena
             var weapon = new Entity(label: "AIIM.HL", typeLabel: "Weapon")
                 .AddComponent(new Component_Slottable(1))
                 .AddComponent(new Component_InternalStructure(1))
-                .AddComponent(new Component_Weapon(WeaponSize.SMALL, 9999, 10, 9, 25));
+                .AddComponent(new Component_Weapon(WeaponSize.SMALL, 9999, 10, 3, 25));
             var head = bodyParts[0];
             head.HandleEvent(new GameEvent_Slot(mech, head, weapon));
 

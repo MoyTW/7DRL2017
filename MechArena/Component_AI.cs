@@ -10,8 +10,11 @@ namespace MechArena
     {
         private void HandleQueryCommand(GameQuery_Command q)
         {
-            // TODO: Do not hard-code to Mech1, have a TargetOf or OpponentOf or something!
-            Entity target = q.ArenaState.Mech1;
+            Entity target;
+            if (q.CommandEntity == q.ArenaState.Mech1)
+                target = q.ArenaState.Mech2;
+            else
+                target = q.ArenaState.Mech1;
 
             if (q.ExecutorEntity.HasComponentOfType<Component_MechSkeleton>())
             {

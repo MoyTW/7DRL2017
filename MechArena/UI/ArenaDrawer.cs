@@ -151,7 +151,7 @@ namespace MechArena.UI
             line += 2;
 
             // Current turn status
-            console.Print(1, line, "Next Action: " + arena.NextEntity.ToString() + "          ", RLColor.Black);
+            console.Print(1, line, "Next Action: " + arena.NextExecutorEntity.ToString() + "          ", RLColor.Black);
             line += 2;
 
             var playerTicksToLive = arena.Mech1.TryGetTicksToLive(arena.CurrentTick);

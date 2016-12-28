@@ -1,10 +1,9 @@
 ﻿using RLNET;
-using RogueSharp;
 
 using MechArena.UI;
 
 using System;
-using System.Collections.Generic;
+using System.Threading;
 
 namespace MechArena
 {
@@ -125,12 +124,20 @@ namespace MechArena
             else
             {
                 _arena.TryFindAndExecuteNextCommand();
+                Thread.Sleep(100); // inelegant way of forcing games to display slow enough to spectate
             }
+        }
+
+        private static void GotoNewAIVersusAIArena()
+        {
+            _arena = ArenaBuilder.BuildFixedAIVersusAIArena(ArenaDrawer.arenaWidth, ArenaDrawer.arenaHeight);
+            _arenaDrawer = new ArenaDrawer(_arena);
+            gameState = GameState.ARENA;
         }
 
         private static void GotoNewArena()
         {
-            _arena = ArenaBuilder.BuildTestArena(ArenaDrawer.arenaWidth, ArenaDrawer.arenaHeight);
+            _arena = ArenaBuilder.BuildFixedTestArena(ArenaDrawer.arenaWidth, ArenaDrawer.arenaHeight);
             _arenaDrawer = new ArenaDrawer(_arena);
             gameState = GameState.ARENA;
         }
@@ -150,6 +157,9 @@ namespace MechArena
             {
                 switch (keyPress.Key)
                 {
+                    case RLKey.S:
+                        GotoNewAIVersusAIArena();
+                        break;
                     case RLKey.N:
                         GotoNewArena();
                         break;
@@ -194,9 +204,10 @@ namespace MechArena
                     _rootConsole.SetBackColor(0, 0, _screenWidth, _screenHeight, RLColor.Black);
                     _rootConsole.Print(_screenWidth / 2 - 4, _screenHeight / 2 - 3, "Main Menu", RLColor.White);
                     _rootConsole.Print(_screenWidth / 2 - 4, _screenHeight / 2 - 1, "Options", RLColor.White);
-                    _rootConsole.Print(_screenWidth / 2 - 2, _screenHeight / 2, "N) New Game", RLColor.White);
-                    _rootConsole.Print(_screenWidth / 2 - 2, _screenHeight / 2 + 1, "R) Return To Game", RLColor.White);
-                    _rootConsole.Print(_screenWidth / 2 - 2, _screenHeight / 2 + 2, "Esc) Quit", RLColor.White);
+                    _rootConsole.Print(_screenWidth / 2 - 2, _screenHeight / 2, "S) Spectate AI Game", RLColor.White);
+                    _rootConsole.Print(_screenWidth / 2 - 2, _screenHeight / 2 + 1, "N) New Game", RLColor.White);
+                    _rootConsole.Print(_screenWidth / 2 - 2, _screenHeight / 2 + 2, "R) Return To Game", RLColor.White);
+                    _rootConsole.Print(_screenWidth / 2 - 2, _screenHeight / 2 + 3, "Esc) Quit", RLColor.White);
                     break;
                 case GameState.ARENA:
                     _arenaDrawer.Blit(_rootConsole);

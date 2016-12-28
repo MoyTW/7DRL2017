@@ -25,14 +25,14 @@ namespace MechArena
         public int CurrentTick { get { return this.currentTick; } }
         public Entity Mech1 { get { return this.mech1; } }
         public Entity Mech2 { get { return this.mech2; } }
-        public Entity NextCommandEntity { get { return this.nextCommandEntity; } }
         public Entity NextExecutorEntity { get { return this.nextExecutorEntity; } }
         public IMap ArenaMap { get { return this.arenaMap; } }
+
 
         public bool ShouldWaitForPlayerInput {
             get
             {
-                return !this.Mech1.HasComponentOfType<Component_AI>() && this.NextCommandEntity == this.Mech1;
+                return !this.Mech1.HasComponentOfType<Component_AI>() && this.nextCommandEntity == this.Mech1;
             }
         }
 
@@ -136,11 +136,12 @@ namespace MechArena
             if (this.ShouldWaitForPlayerInput)
                 return;
 
-            var queryCommand = this.Mech2.HandleQuery(new GameQuery_Command(this.Mech2, this.NextExecutorEntity, this));
+            var queryCommand = this.nextCommandEntity.HandleQuery(
+                new GameQuery_Command(this.nextCommandEntity, this.NextExecutorEntity, this));
             if (!queryCommand.Completed)
                 throw new ArgumentException("Didn't register AI move, something malfunctioned really bad in your AI!");
             else
-                this.Mech2.HandleEvent(queryCommand.Command);
+                this.nextCommandEntity.HandleEvent(queryCommand.Command);
 
             this.ForwardToNextAction();
         }
