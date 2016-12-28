@@ -66,7 +66,7 @@ namespace MechArena
             ForwardToNextAction();
         }
 
-        private void ForwardToNextAction(bool pass = false)
+        private void ForwardToNextAction()
         {
             List<Entity> allTimeTrackers = new List<Entity>();
             foreach(var entity in this.mapEntities)
@@ -78,13 +78,9 @@ namespace MechArena
                 allTimeTrackers.AddRange(subTimeTrackers);
             }
 
-            var orderedEntities = allTimeTrackers.Where(e => !e.TryGetDestroyed().Destroyed)
-                .OrderBy(e => e.HandleQuery(new GameQuery_TicksToLive(this.currentTick)).TicksToLive);
-
-            if (pass && this.nextEntity == orderedEntities.FirstOrDefault())
-                this.nextEntity = orderedEntities.ElementAtOrDefault(1);
-            else
-                this.nextEntity = orderedEntities.FirstOrDefault();
+            this.nextEntity = allTimeTrackers.Where(e => !e.TryGetDestroyed().Destroyed)
+                .OrderBy(e => e.TryGetTicksToLive(this.CurrentTick))
+                .FirstOrDefault();
 
             int nextTicks = nextEntity.HandleQuery(new GameQuery_TicksToLive(this.currentTick)).TicksToLive;
             this.currentTick += nextTicks;
@@ -162,24 +158,14 @@ namespace MechArena
             }
         }
 
-        public void PlayerDelayActionSingle()
+        public void PlayerDelayAction(DelayDuration duration)
         {
             if (this.IsPlayerTurn)
             {
                 this.nextEntity.HandleEvent(
-                    new GameEvent_Delay(this.nextEntity, DelayDuration.SINGLE_TICK));
+                    new GameEvent_Delay(this.CurrentTick, this.Mech1, this.nextEntity, duration));
+                this.ForwardToNextAction();
             }
-            this.ForwardToNextAction(pass: true);
-        }
-
-        public void PlayerDelayActionUntilNext()
-        {
-            if (this.IsPlayerTurn)
-            {
-                this.nextEntity.HandleEvent(
-                    new GameEvent_Delay(this.nextEntity, DelayDuration.FULL_INTERVAL));
-            }
-            this.ForwardToNextAction(pass: true);
         }
     }
 }

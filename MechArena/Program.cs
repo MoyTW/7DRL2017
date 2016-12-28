@@ -63,11 +63,14 @@ namespace MechArena
                     case RLKey.Escape:
                         GotoMainMenu();
                         break;
+                    case RLKey.P:
+                        _arena.PlayerDelayAction(DelayDuration.SINGLE_TICK);
+                        break;
                     case RLKey.Space:
-                        _arena.PlayerDelayActionSingle();
+                        _arena.PlayerDelayAction(DelayDuration.NEXT_ACTION);
                         break;
                     case RLKey.Enter:
-                        _arena.PlayerDelayActionUntilNext();
+                        _arena.PlayerDelayAction(DelayDuration.FULL_INTERVAL);
                         break;
                     case RLKey.F:
                         _arena.TryPlayerAttack();

@@ -7,7 +7,7 @@
     - Executes the Command on the Arena
 
 ** TODO Full Arena Loop
-*** TODO Ability to delay until next friendly action
+*** DONE Ability to delay until next friendly action
 *** TODO Win condition to exit Arena
 *** TODO Ability to replay Arena /w AIs
 
