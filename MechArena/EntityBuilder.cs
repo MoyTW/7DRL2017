@@ -163,9 +163,21 @@ namespace MechArena
             var weapon = new Entity(label: "AIIM.HL", typeLabel: "Weapon")
                 .AddComponent(new Component_Slottable(1))
                 .AddComponent(new Component_InternalStructure(1))
-                .AddComponent(new Component_Weapon(WeaponSize.SMALL, 9999, 10, 3, 25));
+                .AddComponent(new Component_Weapon(WeaponSize.SMALL, 9999, 10, 1, 25));
             var head = bodyParts[0];
-            head.HandleEvent(new GameEvent_Slot(mech, head, weapon));
+            bodyParts[0].HandleEvent(new GameEvent_Slot(mech, bodyParts[0], weapon));
+
+            var leftArmWeapon = new Entity(label: "AIIM.LAW", typeLabel: "Weapon")
+                .AddComponent(new Component_Slottable(1))
+                .AddComponent(new Component_InternalStructure(1))
+                .AddComponent(new Component_Weapon(WeaponSize.SMALL, 9999, 10, 3, 25));
+            bodyParts[2].HandleEvent(new GameEvent_Slot(mech, bodyParts[2], leftArmWeapon));
+
+            var rightArmWeapon = new Entity(label: "AIIM.RAW", typeLabel: "Weapon")
+                .AddComponent(new Component_Slottable(1))
+                .AddComponent(new Component_InternalStructure(1))
+                .AddComponent(new Component_Weapon(WeaponSize.SMALL, 9999, 10, 3, 25));
+            bodyParts[3].HandleEvent(new GameEvent_Slot(mech, bodyParts[3], rightArmWeapon));
 
             foreach (var part in bodyParts)
             {

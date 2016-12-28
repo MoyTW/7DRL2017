@@ -15,7 +15,7 @@ namespace MechArena
             Entity enemy = EntityBuilder.BuildArmoredAIMech("Heavily Armored Test Enemy");
             IMap arenaMap = Map.Create(
                 new RogueSharp.MapCreation.CaveMapCreationStrategy<Map>(width, height, 45, 4, 3, seededRand));
-            Arena arena = new Arena(player, enemy, arenaMap, seededRand);
+            Arena arena = new Arena(player, enemy, arenaMap, seed);
 
             arena.PlaceEntityNear(player, 25, 25);
             arena.PlaceEntityNear(enemy, 25, 25);
@@ -31,7 +31,7 @@ namespace MechArena
             Entity mech2 = EntityBuilder.BuildArmoredAIMech("Abrams Elephant");
             IMap arenaMap = Map.Create(
                 new RogueSharp.MapCreation.CaveMapCreationStrategy<Map>(width, height, 45, 4, 3, seededRand));
-            Arena arena = new Arena(mech1, mech2, arenaMap, seededRand);
+            Arena arena = new Arena(mech1, mech2, arenaMap, seed);
 
             arena.PlaceEntityNear(mech1, 25, 25);
             arena.PlaceEntityNear(mech2, 25, 25);
