@@ -42,9 +42,9 @@ namespace MechArena
             return this.HandleQuery(new GameQuery_EntityAttribute(attributeType));
         }
 
-        public GameQuery_Destroyed TryGetDestroyed()
+        public bool TryGetDestroyed()
         {
-            return this.HandleQuery(new GameQuery_Destroyed());
+            return this.HandleQuery(new GameQuery_Destroyed()).Destroyed;
         }
 
         public IEnumerable<Entity> TryGetSubEntities(params SubEntitiesSelector[] selectors)

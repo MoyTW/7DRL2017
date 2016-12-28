@@ -77,7 +77,7 @@ namespace MechArena.UI
 
         private int DrawBodyPartStatus(Entity bodyPart, int x, int y, bool mechDestroyed, RLConsole console)
         {
-            var bodyPartDestroyed = bodyPart.TryGetDestroyed().Destroyed;
+            var bodyPartDestroyed = bodyPart.TryGetDestroyed();
             var bodyPartStructure = bodyPart.TryGetAttribute(EntityAttributeType.STRUCTURE).Value;
 
             if (mechDestroyed || bodyPartDestroyed)
@@ -89,7 +89,7 @@ namespace MechArena.UI
             var mountedParts = bodyPart.HandleQuery(new GameQuery_SubEntities(SubEntitiesSelector.ALL)).SubEntities;
             foreach (var mountedPart in mountedParts)
             {
-                var mountedPartDestroyed = mountedPart.TryGetDestroyed().Destroyed;
+                var mountedPartDestroyed = mountedPart.TryGetDestroyed();
                 var structure = mountedPart.TryGetAttribute(EntityAttributeType.STRUCTURE).Value;
                 if (mechDestroyed || bodyPartDestroyed || mountedPartDestroyed)
                     console.Print(x, y, "  + " + mountedPart.ToString() + ":" + structure + " ", RLColor.Red);
@@ -105,7 +105,7 @@ namespace MechArena.UI
         {
             int line = 1;
 
-            var mechDestroyed = mech.TryGetDestroyed().Destroyed;
+            var mechDestroyed = mech.TryGetDestroyed();
             if (mechDestroyed)
                 console.Print(1, line, mech.ToString(), RLColor.Red);
             else
@@ -154,8 +154,9 @@ namespace MechArena.UI
             console.Print(1, line, "Next Action: " + arena.NextEntity.ToString() + "          ", RLColor.Black);
             line += 2;
 
-            var playerTicksToLive = arena.Mech1.HandleQuery(new GameQuery_TicksToLive(arena.CurrentTick)).TicksToLive;
-            console.Print(1, line, "Ticks to next move: " + playerTicksToLive + "    ", RLColor.Black);
+            var playerTicksToLive = arena.Mech1.TryGetTicksToLive(arena.CurrentTick);
+            var playerCooldown = arena.Mech1.HandleQuery(new GameQuery_TicksCooldown()).Value;
+            console.Print(1, line, "Ticks to next move: " + playerTicksToLive + " [" + playerCooldown + "]    ", RLColor.Black);
             line += 2;
 
             var playerTimeTrackers = arena.Mech1.HandleQuery(new GameQuery_SubEntities(SubEntitiesSelector.TRACKS_TIME)).SubEntities;
@@ -210,7 +211,7 @@ namespace MechArena.UI
             // Set the player's symbol after the map symbol to make sure it is draw
             console.Set(position.X, position.Y, RLColor.LightGreen, null, '@');
 
-            if (arena.Mech2.TryGetDestroyed().Destroyed)
+            if (arena.Mech2.TryGetDestroyed())
                 console.Set(mech2Position.X, mech2Position.Y, RLColor.LightGreen, null, 'D');
             else
                 console.Set(mech2Position.X, mech2Position.Y, RLColor.LightGreen, null, 'E');

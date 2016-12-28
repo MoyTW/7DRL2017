@@ -78,7 +78,7 @@ namespace MechArena
                 allTimeTrackers.AddRange(subTimeTrackers);
             }
 
-            this.nextEntity = allTimeTrackers.Where(e => !e.TryGetDestroyed().Destroyed)
+            this.nextEntity = allTimeTrackers.Where(e => !e.TryGetDestroyed())
                 .OrderBy(e => e.TryGetTicksToLive(this.CurrentTick))
                 .FirstOrDefault();
 

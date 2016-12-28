@@ -67,7 +67,7 @@ namespace MechArena
                 Entity subTargetEntity = this.bodyParts[ev.SubTarget];
 
                 // This is all damage handling
-                if (subTargetEntity.TryGetDestroyed().Destroyed)
+                if (subTargetEntity.TryGetDestroyed())
                 {
                     Console.WriteLine(
                         String.Format("Attack by {0} missed - the {1} of the target was already destroyed!",
@@ -130,7 +130,7 @@ namespace MechArena
         {
             foreach(var part in this.bodyParts.Values)
             {
-                if (part != null)
+                if (part != null && !part.TryGetDestroyed())
                     part.HandleQuery(q);
             }
             if (q.AttributeType == EntityAttributeType.SPEED)

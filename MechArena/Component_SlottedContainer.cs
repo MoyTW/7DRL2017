@@ -91,7 +91,7 @@ namespace MechArena
 
         private void HandleQueryEntityAttribute(GameQuery_EntityAttribute q)
         {
-            foreach (Entity e in this.storedEntities)
+            foreach (Entity e in this.storedEntities.Where(e => !e.TryGetDestroyed()))
             {
                 e.HandleQuery(q);
             }
