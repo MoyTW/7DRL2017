@@ -32,7 +32,7 @@ namespace MechArena
             {
                 // TODO: Ability to query for LOS/Distance?
                 var attackCommand = new GameEvent_Attack(q.ArenaState.CurrentTick, q.CommandEntity, target,
-                    q.ExecutorEntity, q.ArenaState.ArenaMap);
+                    q.ExecutorEntity, q.ArenaState.ArenaMap, q.Rand);
                 q.RegisterCommand(attackCommand);
             }
             else

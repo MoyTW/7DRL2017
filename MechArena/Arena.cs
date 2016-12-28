@@ -1,5 +1,5 @@
-﻿using RLNET;
-using RogueSharp;
+﻿using RogueSharp;
+using RogueSharp.Random;
 
 using System;
 using System.Collections.Generic;
@@ -15,6 +15,7 @@ namespace MechArena
         private Entity mech2;
         private List<Entity> mapEntities;
         private IMap arenaMap;
+        private IRandom seededRand;
 
         // Turn state
         // TODO: Don't have Command + Executor, it's awkard as heck!
@@ -27,7 +28,7 @@ namespace MechArena
         public Entity Mech2 { get { return this.mech2; } }
         public Entity NextExecutorEntity { get { return this.nextExecutorEntity; } }
         public IMap ArenaMap { get { return this.arenaMap; } }
-
+        public IRandom SeededRand { get { return this.seededRand; } }
 
         public bool ShouldWaitForPlayerInput {
             get
@@ -48,7 +49,7 @@ namespace MechArena
         }
 
         // TODO: Create a "Mech/Map Blueprint" so you don't pass a literal Entity/IMap instance in!
-        public Arena(Entity mech1, Entity mech2, IMap arenaMap)
+        public Arena(Entity mech1, Entity mech2, IMap arenaMap, IRandom seededRand)
         {
             if (!mech1.HasComponentOfType<Component_Player>() && !mech1.HasComponentOfType<Component_AI>())
                 throw new ArgumentException("Can't initialize Arena: Mech 1 has no player or AI!");
@@ -62,6 +63,7 @@ namespace MechArena
             this.mapEntities.Add(mech1);
             this.mapEntities.Add(mech2);
             this.arenaMap = arenaMap;
+            this.seededRand = seededRand;
 
             ForwardToNextAction();
         }
@@ -155,7 +157,8 @@ namespace MechArena
                 var guns = this.mech1.HandleQuery(new GameQuery_SubEntities(SubEntitiesSelector.WEAPON)).SubEntities;
                 foreach (var gun in guns)
                 {
-                    this.mech1.HandleEvent(new GameEvent_Attack(this.currentTick, mech1, mech2, gun, this.arenaMap));
+                    this.mech1.HandleEvent(
+                        new GameEvent_Attack(this.currentTick, mech1, mech2, gun, this.arenaMap, this.SeededRand));
                 }
                 this.ForwardToNextAction();
             }

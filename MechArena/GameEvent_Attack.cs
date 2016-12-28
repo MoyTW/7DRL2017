@@ -1,4 +1,5 @@
 ﻿using RogueSharp;
+using RogueSharp.Random;
 
 using System;
 
@@ -10,11 +11,12 @@ namespace MechArena
         public Entity Target { get; }
         public BodyPartLocation SubTarget { get; set; }
         public IMap GameMap { get; }
+        public IRandom Rand { get; }
 
         private GameQuery_EntityAttribute attackerToHit, attackerDamage;
 
         public GameEvent_Attack(int currentTick, Entity attacker, Entity target, Entity weapon, IMap gameMap,
-            BodyPartLocation subTarget=BodyPartLocation.ANY) : base(attacker, weapon)
+            IRandom rand, BodyPartLocation subTarget=BodyPartLocation.ANY) : base(attacker, weapon)
         {
             if (!weapon.HasComponentOfType<Component_Weapon>())
                 throw new ArgumentException("Can't build attack event - weapon has no Weapon component!");
@@ -23,6 +25,7 @@ namespace MechArena
             this.Target = target;
             this.SubTarget = subTarget;
             this.GameMap = gameMap;
+            this.Rand = rand;
         }
 
         public void RegisterAttackerAttributes(GameQuery_EntityAttribute toHit, GameQuery_EntityAttribute damage)

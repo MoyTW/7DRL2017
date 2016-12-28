@@ -1,4 +1,5 @@
-﻿using MechArena;
+﻿using RogueSharp.Random;
+using MechArena;
 
 using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -8,6 +9,7 @@ namespace MechArenaTests
     [TestClass]
     public class Component_InternalStructureTest
     {
+        IRandom rand = new DotNetRandom();
         int structureMax = 10;
         Entity internalStructure;
 
@@ -28,14 +30,14 @@ namespace MechArenaTests
         [TestMethod]
         public void CanTakeDamage()
         {
-            var ev = new GameEvent_TakeDamage(3);
+            var ev = new GameEvent_TakeDamage(3, this.rand);
             this.internalStructure.HandleEvent(ev);
             Assert.AreEqual(0, ev.DamageRemaining);
             Assert.IsTrue(ev.Completed);
             Assert.AreEqual(7,
                 this.internalStructure.GetComponentOfType<Component_InternalStructure>().StructureRemaining);
 
-            var ev1 = new GameEvent_TakeDamage(5);
+            var ev1 = new GameEvent_TakeDamage(5, this.rand);
             this.internalStructure.HandleEvent(ev1);
             Assert.AreEqual(0, ev1.DamageRemaining);
             Assert.IsTrue(ev1.Completed);
@@ -46,7 +48,7 @@ namespace MechArenaTests
         [TestMethod]
         public void CanTakeExactDamage()
         {
-            var ev = new GameEvent_TakeDamage(10);
+            var ev = new GameEvent_TakeDamage(10, this.rand);
             this.internalStructure.HandleEvent(ev);
             Assert.AreEqual(0, ev.DamageRemaining);
             Assert.IsTrue(ev.Completed);
@@ -57,7 +59,7 @@ namespace MechArenaTests
         [TestMethod]
         public void CanTakeDamageOverflowsProperly()
         {
-            var ev = new GameEvent_TakeDamage(20);
+            var ev = new GameEvent_TakeDamage(20, this.rand);
             this.internalStructure.HandleEvent(ev);
             Assert.AreEqual(10, ev.DamageRemaining);
             Assert.IsFalse(ev.Completed);

@@ -1,4 +1,6 @@
-﻿using MechArena;
+﻿using RogueSharp.Random;
+
+using MechArena;
 
 using System;
 using System.Collections.Generic;
@@ -9,6 +11,8 @@ namespace MechArenaTests
     [TestClass]
     public class GameRandomTest
     {
+        IRandom rand = new DotNetRandom();
+
         // Probibalistic failures possible.
         [TestMethod]
         public void TestRandomByWeight()
@@ -22,7 +26,7 @@ namespace MechArenaTests
 
             for (int i = 0; i < 5000; i++)
             {
-                String result = GameRandom.RandomByWeight<String>(items, (c => c.Length));
+                String result = this.rand.RandomByWeight<String>(items, (c => c.Length));
                 resultCounts[result]++;
             }
 

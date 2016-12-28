@@ -1,4 +1,6 @@
-﻿using System;
+﻿using RogueSharp.Random;
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -30,9 +32,9 @@ namespace MechArena
         #region Event Handlers
 
         // We have NO DAMAGE TRANSFER! A mech with no arm is just harder to hit.
-        private BodyPartLocation FindBodyPartLocationByWeight()
+        private BodyPartLocation FindBodyPartLocationByWeight(IRandom rand)
         {
-            return GameRandom.RandomByWeight(MechTemplate, (a => a.Value)).Key;
+            return rand.RandomByWeight(MechTemplate, (a => a.Value)).Key;
         }
 
         // All Attack logic currently handled here; might want to put it into its own class for explicit-ness.
@@ -50,7 +52,7 @@ namespace MechArena
 
             int targetDodge = ev.Target.TryGetAttribute(EntityAttributeType.DODGE).Value;
 
-            int roll = GameRandom.Next(1, 20);
+            int roll = ev.Rand.Next(1, 20);
             int toHit = attackerBaseToHit;
             int dodge = targetDodge;
 
@@ -62,7 +64,7 @@ namespace MechArena
 
                 // Retarget on appropriate body part
                 if (ev.SubTarget == BodyPartLocation.ANY)
-                    ev.SubTarget = this.FindBodyPartLocationByWeight();
+                    ev.SubTarget = this.FindBodyPartLocationByWeight(ev.Rand);
 
                 Entity subTargetEntity = this.bodyParts[ev.SubTarget];
 
@@ -75,7 +77,7 @@ namespace MechArena
                 }
                 else
                 {
-                    subTargetEntity.HandleEvent(new GameEvent_TakeDamage(damage));
+                    subTargetEntity.HandleEvent(new GameEvent_TakeDamage(damage, ev.Rand));
 
                     // Detach body part from mech if destroyed
                     if (0 >= subTargetEntity.TryGetAttribute(EntityAttributeType.STRUCTURE).Value)
@@ -96,7 +98,7 @@ namespace MechArena
         // Since there is no damage transfer, will *always* complete the event!
         private void HandleTakeDamage(GameEvent_TakeDamage ev)
         {
-            Entity damagedPart = this.bodyParts[this.FindBodyPartLocationByWeight()];
+            Entity damagedPart = this.bodyParts[this.FindBodyPartLocationByWeight(ev.Rand)];
             if (damagedPart != null)
                 damagedPart.HandleEvent(ev);
 

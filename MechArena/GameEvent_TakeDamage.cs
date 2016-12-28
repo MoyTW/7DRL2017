@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using RogueSharp.Random;
+
+using System;
 
 namespace MechArena
 {
@@ -11,11 +10,13 @@ namespace MechArena
 
         public int TotalDamage { get; }
         public int DamageRemaining { get { return this.damageRemaining; } }
+        public IRandom Rand { get; }
 
-        public GameEvent_TakeDamage(int totalDamage)
+        public GameEvent_TakeDamage(int totalDamage, IRandom rand)
         {
             this.TotalDamage = totalDamage;
             this.damageRemaining = totalDamage;
+            this.Rand = rand;
         }
 
         public void Notify_DamageTaken(int applied)

@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using RogueSharp.Random;
+
+using System;
 
 namespace MechArena
 {
@@ -22,12 +21,11 @@ namespace MechArena
             return ((GameQuery_EntityAttribute)slottedContainer.HandleQuery(q)).Value;
         }
 
-        private void AssignDamagePoint(Component_SlottedContainer slottedContainer)
+        private void AssignDamagePoint(Component_SlottedContainer slottedContainer, IRandom rand)
         {
-            var target = GameRandom.RandomByWeight<Entity>(slottedContainer.InspectStoredEntities(),
+            var target = rand.RandomByWeight<Entity>(slottedContainer.InspectStoredEntities(),
                 (e => this.GetRemainingInternalStructure(e)));
-
-            var damageEvent = new GameEvent_TakeDamage(1);
+            var damageEvent = new GameEvent_TakeDamage(1, rand);
             target.HandleEvent(damageEvent);
 
             if (!damageEvent.Completed)
@@ -50,7 +48,7 @@ namespace MechArena
                 ev.Notify_DamageTaken(remainingSlottedStructure);
                 for (int i = 0; i < remainingSlottedStructure; i++)
                 {
-                    this.AssignDamagePoint(slottedContainer);
+                    this.AssignDamagePoint(slottedContainer, ev.Rand);
                 }
             }
             else
@@ -58,7 +56,7 @@ namespace MechArena
                 int damageToTake = ev.DamageRemaining;
                 for (int i = 0; i < damageToTake; i++)
                 {
-                    this.AssignDamagePoint(slottedContainer);
+                    this.AssignDamagePoint(slottedContainer, ev.Rand);
                 }
                 ev.Notify_DamageTaken(damageToTake);
             }

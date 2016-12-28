@@ -1,4 +1,6 @@
-﻿using MechArena;
+﻿using RogueSharp.Random;
+
+using MechArena;
 
 using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -8,6 +10,7 @@ namespace MechArenaTests
     [TestClass]
     public class Component_SlottedStructureTest
     {
+        IRandom rand = new DotNetRandom();
         int slotSpace = 5;
         int structureMax = 10;
         Entity bodyPart;
@@ -39,7 +42,7 @@ namespace MechArenaTests
         [TestMethod]
         public void TestTakeDamageWithNoSlottedEntities()
         {
-            var ev = new GameEvent_TakeDamage(3);
+            var ev = new GameEvent_TakeDamage(3, this.rand);
             this.bodyPart.HandleEvent(ev);
             Assert.AreEqual(0, ev.DamageRemaining);
             Assert.IsTrue(ev.Completed);
@@ -52,7 +55,7 @@ namespace MechArenaTests
         {
             Entity slotted = this.SlotEntityWithStructure(this.bodyPart, 5);
 
-            var ev = new GameEvent_TakeDamage(3);
+            var ev = new GameEvent_TakeDamage(3, this.rand);
             this.bodyPart.HandleEvent(ev);
             Assert.AreEqual(0, ev.DamageRemaining);
             Assert.IsTrue(ev.Completed);
@@ -68,7 +71,7 @@ namespace MechArenaTests
             Entity tinySlotted = this.SlotEntityWithStructure(this.bodyPart, 3);
             Entity hugeSlotted = this.SlotEntityWithStructure(this.bodyPart, 9999);
 
-            var ev = new GameEvent_TakeDamage(100);
+            var ev = new GameEvent_TakeDamage(100, this.rand);
             this.bodyPart.HandleEvent(ev);
             Assert.AreEqual(0, ev.DamageRemaining);
             Assert.IsTrue(ev.Completed);
@@ -84,7 +87,7 @@ namespace MechArenaTests
         {
             Entity tinySlotted = this.SlotEntityWithStructure(this.bodyPart, 5);
 
-            var ev = new GameEvent_TakeDamage(100);
+            var ev = new GameEvent_TakeDamage(100, this.rand);
             this.bodyPart.HandleEvent(ev);
             Assert.AreEqual(85, ev.DamageRemaining);
             Assert.IsFalse(ev.Completed);
