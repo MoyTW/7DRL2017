@@ -74,10 +74,15 @@ namespace MechArena
         // TODO: This is a really awkward way of looking up "Does it have ahead or not?"
         private bool IsPilotKilled(Entity mech)
         {
-            return mech.TryGetSubEntities(SubEntitiesSelector.BODY_PART)
+            var isKilled = mech.TryGetSubEntities(SubEntitiesSelector.BODY_PART)
                 .Where(e => e.GetComponentOfType<Component_BodyPartLocation>().Location == BodyPartLocation.HEAD)
                 .First()
                 .TryGetDestroyed();
+
+            if (isKilled)
+                Console.WriteLine("Pilot of " + mech + " was killed!");
+
+            return isKilled;
         }
 
         // You're considered unable to fight if your torso goes down or you run out of weapons
@@ -88,6 +93,12 @@ namespace MechArena
                 .First()
                 .TryGetDestroyed();
             var noWeapons = !mech.TryGetSubEntities(SubEntitiesSelector.WEAPON).Any(e => !e.TryGetDestroyed());
+
+            if (noWeapons)
+                Console.WriteLine("Mech " + mech + " has no weapons!");
+            else if (torsoDestroyed)
+                Console.WriteLine("The torso of " + mech + " has been destroyed!");
+
             return torsoDestroyed || noWeapons;
         }
 

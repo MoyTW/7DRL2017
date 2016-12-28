@@ -22,6 +22,7 @@ namespace MechArena
 
         private static GameState gameState;
 
+        private static int _seed = -1;
         private static Arena _arena;
         private static ArenaDrawer _arenaDrawer;
 
@@ -130,7 +131,21 @@ namespace MechArena
 
         private static void GotoNewAIVersusAIArena()
         {
-            _arena = ArenaBuilder.BuildFixedAIVersusAIArena(ArenaDrawer.arenaWidth, ArenaDrawer.arenaHeight);
+            _seed = new Random().Next(500);
+            _arena = ArenaBuilder.BuildFixedAIVersusAIArena(ArenaDrawer.arenaWidth, ArenaDrawer.arenaHeight, _seed);
+            _arenaDrawer = new ArenaDrawer(_arena);
+            gameState = GameState.ARENA;
+        }
+
+        private static void GotoNewAIVersusAIReplay()
+        {
+            if (_seed == -1)
+            {
+                Console.WriteLine("Can't replay no such game!");
+                return;
+            }
+
+            _arena = ArenaBuilder.BuildFixedAIVersusAIArena(ArenaDrawer.arenaWidth, ArenaDrawer.arenaHeight, _seed);
             _arenaDrawer = new ArenaDrawer(_arena);
             gameState = GameState.ARENA;
         }
@@ -165,6 +180,9 @@ namespace MechArena
                         break;
                     case RLKey.R:
                         GotoCurrentArena();
+                        break;
+                    case RLKey.P:
+                        GotoNewAIVersusAIReplay();
                         break;
                     case RLKey.Escape:
                         Environment.Exit(0);
@@ -205,9 +223,10 @@ namespace MechArena
                     _rootConsole.Print(_screenWidth / 2 - 4, _screenHeight / 2 - 3, "Main Menu", RLColor.White);
                     _rootConsole.Print(_screenWidth / 2 - 4, _screenHeight / 2 - 1, "Options", RLColor.White);
                     _rootConsole.Print(_screenWidth / 2 - 2, _screenHeight / 2, "S) Spectate AI Game", RLColor.White);
-                    _rootConsole.Print(_screenWidth / 2 - 2, _screenHeight / 2 + 1, "N) New Game", RLColor.White);
-                    _rootConsole.Print(_screenWidth / 2 - 2, _screenHeight / 2 + 2, "R) Return To Game", RLColor.White);
-                    _rootConsole.Print(_screenWidth / 2 - 2, _screenHeight / 2 + 3, "Esc) Quit", RLColor.White);
+                    _rootConsole.Print(_screenWidth / 2 - 2, _screenHeight / 2 + 1, "P) Replay Last AI Game", RLColor.White);
+                    _rootConsole.Print(_screenWidth / 2 - 2, _screenHeight / 2 + 2, "N) New Game", RLColor.White);
+                    _rootConsole.Print(_screenWidth / 2 - 2, _screenHeight / 2 + 3, "R) Return To Game", RLColor.White);
+                    _rootConsole.Print(_screenWidth / 2 - 2, _screenHeight / 2 + 4, "Esc) Quit", RLColor.White);
                     break;
                 case GameState.ARENA:
                     _arenaDrawer.Blit(_rootConsole);

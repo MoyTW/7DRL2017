@@ -59,8 +59,6 @@ namespace MechArena
             if (roll + toHit > 10 + dodge)
             {
                 int damage = weaponBaseDamage; // Possible damage modifiers
-                Console.WriteLine(String.Format("Attack by {0} hit {1} for {2} damage!", ev.CommandEntity, ev.Target,
-                    damage));
 
                 // Retarget on appropriate body part
                 if (ev.SubTarget == BodyPartLocation.ANY)
@@ -72,11 +70,13 @@ namespace MechArena
                 if (subTargetEntity.TryGetDestroyed())
                 {
                     Console.WriteLine(
-                        String.Format("Attack by {0} missed - the {1} of the target was already destroyed!",
-                        ev.CommandEntity, ev.SubTarget));
+                        String.Format("{0} ({1}) missed - the {2} of the target was already destroyed!",
+                        ev.ExecutorEntity, ev.CommandEntity, ev.SubTarget));
                 }
                 else
                 {
+                    Console.WriteLine(String.Format("{0} ({1}) hit {2} in the {3} for {4}!", ev.ExecutorEntity,
+                        ev.CommandEntity, ev.Target, subTargetEntity, damage));
                     subTargetEntity.HandleEvent(new GameEvent_TakeDamage(damage, ev.Rand));
 
                     // Detach body part from mech if destroyed
@@ -88,7 +88,8 @@ namespace MechArena
             }
             else
             {
-                Console.WriteLine(String.Format("Attack by {0} missed {1}!", ev.CommandEntity, ev.Target));
+                Console.WriteLine(String.Format("{0} ({1}) missed {2}!", ev.ExecutorEntity, ev.CommandEntity,
+                    ev.Target));
             }
 
             ev.ExecutorEntity.GetComponentOfType<Component_TracksTime>().RegisterActivated(ev.CurrentTick);
