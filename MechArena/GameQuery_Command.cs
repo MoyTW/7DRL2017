@@ -8,12 +8,12 @@ namespace MechArena
 
         public Entity CommandEntity { get; }
         public Entity ExecutorEntity { get; }
-        public Arena ArenaState { get; }
+        public ArenaState ArenaState { get; }
         public IRandom Rand { get { return this.ArenaState.SeededRand; } }
 
         public GameEvent_Command Command { get { return this.command; } }
 
-        public GameQuery_Command(Entity commandEntity, Entity executorEntity, Arena arenaState)
+        public GameQuery_Command(Entity commandEntity, Entity executorEntity, ArenaState arenaState)
         {
             this.CommandEntity = commandEntity;
             this.ExecutorEntity = executorEntity;

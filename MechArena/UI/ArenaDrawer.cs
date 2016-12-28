@@ -11,7 +11,7 @@ namespace MechArena.UI
 {
     class ArenaDrawer
     {
-        private readonly Arena arena;
+        private readonly ArenaState arena;
 
         public const int arenaWidth = 50;
         public const int arenaHeight = 50;
@@ -26,7 +26,7 @@ namespace MechArena.UI
         private RLConsole status1Console;
         private RLConsole status2Console;
 
-        public ArenaDrawer(Arena arena)
+        public ArenaDrawer(ArenaState arena)
         {
             this.arena = arena;
             arenaConsole = new RLConsole(ArenaDrawer.arenaWidth, ArenaDrawer.arenaHeight);

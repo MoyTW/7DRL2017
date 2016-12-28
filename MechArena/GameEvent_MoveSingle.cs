@@ -19,9 +19,9 @@
         public int CurrentTick { get; }
         public XDirection X { get; }
         public YDirection Y { get; }
-        public Arena GameArena { get; }
+        public ArenaState GameArena { get; }
 
-        public GameEvent_MoveSingle(Entity mover, int currentTick, XDirection x, YDirection y, Arena gameArena)
+        public GameEvent_MoveSingle(Entity mover, int currentTick, XDirection x, YDirection y, ArenaState gameArena)
             : base(mover)
         {
             this.CurrentTick = currentTick;
@@ -30,7 +30,7 @@
             this.GameArena = gameArena;
         }
 
-        public GameEvent_MoveSingle(Entity mover, int currentTick, int x, int y, Arena gameArena)
+        public GameEvent_MoveSingle(Entity mover, int currentTick, int x, int y, ArenaState gameArena)
             : this(mover, currentTick, (XDirection)x, (YDirection)y, gameArena) { }
     }
 }

@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace MechArena
 {
-    public class Arena
+    public class ArenaState
     {
         private int currentTick;
 
@@ -50,7 +50,7 @@ namespace MechArena
         }
 
         // TODO: Create a "Mech/Map Blueprint" so you don't pass a literal Entity/IMap instance in!
-        public Arena(Entity mech1, Entity mech2, IMap arenaMap, int seed)
+        public ArenaState(Entity mech1, Entity mech2, IMap arenaMap, int seed)
         {
             if (!mech1.HasComponentOfType<Component_Player>() && !mech1.HasComponentOfType<Component_AI>())
                 throw new ArgumentException("Can't initialize Arena: Mech 1 has no player or AI!");

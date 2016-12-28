@@ -23,7 +23,7 @@ namespace MechArena
         private static GameState gameState;
 
         private static int _seed = -1;
-        private static Arena _arena;
+        private static ArenaState _arena;
         private static ArenaDrawer _arenaDrawer;
 
         public static void Main()
