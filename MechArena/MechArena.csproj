@@ -95,6 +95,7 @@
     <Compile Include="Tournament\Competitor.cs" />
     <Compile Include="Tournament\Match.cs" />
     <Compile Include="Tournament\MatchResult.cs" />
+    <Compile Include="Tournament\Schedule_RoundRobin.cs" />
     <Compile Include="Tournament\Schedule.cs" />
     <Compile Include="UI\ArenaDrawer.cs" />
   </ItemGroup>

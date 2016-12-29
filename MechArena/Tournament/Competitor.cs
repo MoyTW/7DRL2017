@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MechArena.Tournament
 {
-    class Competitor
+    public class Competitor
     {
         public string PilotLabel { get; }
         public string MechLabel { get; }
@@ -16,6 +16,11 @@ namespace MechArena.Tournament
         {
             this.PilotLabel = pilotLabel;
             this.MechLabel = mechLabel;
+        }
+
+        public override string ToString()
+        {
+            return this.Label;
         }
     }
 }
