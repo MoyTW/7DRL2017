@@ -6,13 +6,9 @@ using System.Threading.Tasks;
 
 namespace MechArena.Tournament
 {
-    public class Schedule_RoundRobin
+    public static class Scheduler
     {
-        private List<Match> matches;
-        public IList<Match> ScheduledMatches { get { return matches.AsReadOnly(); } }
-
-        // The implementation here is kind of silly!
-        public static List<Match> ScheduleCompetitors(List<Competitor> originalCompetitors)
+        public static List<Match> ScheduleRoundRobin(List<Competitor> originalCompetitors)
         {
             var competitors = new List<Competitor>(originalCompetitors);
 
@@ -47,11 +43,6 @@ namespace MechArena.Tournament
             }
 
             return matches.Where(m => !m.HasCompetitor(bye)).ToList();
-        }
-
-        public Schedule_RoundRobin(List<Competitor> competitors)
-        {
-            this.matches = ScheduleCompetitors(competitors);
         }
     }
 }
