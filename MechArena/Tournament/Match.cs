@@ -10,11 +10,13 @@ namespace MechArena.Tournament
     {
         public Competitor Competitor1 { get; }
         public Competitor Competitor2 { get; }
+        public bool IsTieBreaker { get; }
 
-        public Match(Competitor competitor1, Competitor competitor2)
+        public Match(Competitor competitor1, Competitor competitor2, bool isTieBreaker=false)
         {
             this.Competitor1 = competitor1;
             this.Competitor2 = competitor2;
+            this.IsTieBreaker = isTieBreaker;
         }
 
         public bool HasCompetitor(Competitor c)
@@ -24,7 +26,10 @@ namespace MechArena.Tournament
 
         public override string ToString()
         {
-            return "[" + Competitor1.Label + " : " + Competitor2.Label + "]";
+            if (this.IsTieBreaker)
+                return "[" + Competitor1.Label + " : " + Competitor2.Label + "] (TB)";
+            else
+                return "[" + Competitor1.Label + " : " + Competitor2.Label + "]";
         }
     }
 }

@@ -6,18 +6,29 @@ using System.Threading.Tasks;
 
 namespace MechArena.Tournament
 {
-    class Schedule_RoundRobin : Schedule
+    public class Schedule_RoundRobin : Schedule
     {
+        public int NumWinners { get; }
+
         private HashSet<Competitor> remainingEntreants;
+        private HashSet<Competitor> winningEntreants;
         private HashSet<Competitor> eliminatedEntreants;
 
         private List<Match> upcomingMatches;
         private List<MatchResult> matchResults;
 
         // TODO: Possibly rename competitor->entreants because it's easier for me to spell
-        public Schedule_RoundRobin(IEnumerable<Competitor> entreants)
+        public Schedule_RoundRobin(int numWinners, IEnumerable<Competitor> entreants)
         {
+            if (numWinners >= entreants.Count())
+                throw new ArgumentException("Num winners is equal to or greater to the number of entreants!");
+            else if (numWinners <= 0)
+                throw new ArgumentException("Num winners must be a non-zero, positive integer!");
+
+            this.NumWinners = numWinners;
+
             this.remainingEntreants = new HashSet<Competitor>(entreants);
+            this.winningEntreants = new HashSet<Competitor>();
             this.eliminatedEntreants = new HashSet<Competitor>();
 
             this.upcomingMatches = Scheduler.ScheduleRoundRobin(entreants.ToList());
@@ -26,41 +37,69 @@ namespace MechArena.Tournament
 
         public bool IsEliminated(Competitor c)
         {
-            if (this.upcomingMatches.Count > 0)
-            {
-                Console.WriteLine("Should not call this until it's done!");
-                throw new InvalidOperationException("Can't call when matches still running, this is bad desgin!");
-            }
-            else
-            {
-                throw new NotImplementedException();
-            }
+            return this.eliminatedEntreants.Contains(c);
         }
 
         public Match NextMatch()
         {
-            return upcomingMatches.First();
+            return this.upcomingMatches.FirstOrDefault();
+        }
+
+        public Tuple<int, int> WinsLosses(Competitor c)
+        {
+            var history = MatchHistory(c);
+            return new Tuple<int, int>(history.Where(m => m.Winner == c).Count(),
+                history.Where(m => m.Winner != c).Count());
+        }
+
+        public int Wins(Competitor c)
+        {
+            return MatchHistory(c).Where(m => m.Winner == c).Count();
+        }
+
+        private void ResolveTopScorers()
+        {
+            if (this.upcomingMatches.Count > 0)
+                throw new InvalidOperationException("Can't resolve scores when not done!");
+
+            int numTopScorers = 0;
+
+            // TODO: This logic is hard to understand from the code!
+            var walker = this.remainingEntreants.GroupBy(this.Wins).OrderByDescending(kv => kv.Key).GetEnumerator();
+            while (numTopScorers < this.NumWinners && walker.MoveNext())
+            {
+                numTopScorers += walker.Current.Count();
+
+                if (numTopScorers <= this.NumWinners)
+                {
+                    foreach (var c in walker.Current)
+                    {
+                        this.remainingEntreants.Remove(c);
+                        this.winningEntreants.Add(c);
+                    }
+                }
+            }
+            while (walker.MoveNext())
+            {
+                foreach (var c in walker.Current)
+                {
+                    this.remainingEntreants.Remove(c);
+                    this.eliminatedEntreants.Add(c);
+                }
+            }
         }
 
         public List<Competitor> Winners()
         {
-            if (this.upcomingMatches.Count > 0)
-            {
-                Console.WriteLine("Should not call this until it's done!");
+            if (this.remainingEntreants.Count() != 0)
                 return null;
-            }
-            {
-                throw new NotImplementedException();
-            }
+            else
+                return this.winningEntreants.ToList();
         }
 
-        public void ReportResult(MatchResult result)
+        public IList<Match> ScheduledMatches()
         {
-            if (!this.upcomingMatches.Contains(result.OriginalMatch))
-                throw new InvalidOperationException("Cannot report result of non-upcoming match!");
-
-            this.upcomingMatches.Remove(result.OriginalMatch);
-            this.matchResults.Add(result);
+            return this.upcomingMatches.AsReadOnly();
         }
 
         public IList<Match> ScheduledMatches(Competitor c)
@@ -71,6 +110,27 @@ namespace MechArena.Tournament
         public IList<MatchResult> MatchHistory(Competitor c)
         {
             return this.matchResults.Where(r => r.OriginalMatch.HasCompetitor(c)).ToList().AsReadOnly();
+        }
+
+        public void ReportResult(MatchResult result)
+        {
+            if (!this.upcomingMatches.Contains(result.OriginalMatch))
+                throw new InvalidOperationException("Cannot report result of non-upcoming match!");
+
+            this.upcomingMatches.Remove(result.OriginalMatch);
+            this.matchResults.Add(result);
+
+            if (this.upcomingMatches.Count == 0)
+            {
+                // Calculate winners
+                this.ResolveTopScorers();
+                // If there's a tie, you need to re-generate with your remaining entreants
+                if (this.remainingEntreants.Count != 0)
+                {
+                    Console.WriteLine("Tiebreaker match!");
+                    this.upcomingMatches = Scheduler.ScheduleRoundRobin(this.remainingEntreants.ToList(), true);
+                }
+            }
         }
     }
 }
