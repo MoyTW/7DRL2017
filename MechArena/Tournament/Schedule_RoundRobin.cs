@@ -12,41 +12,41 @@ namespace MechArena.Tournament
         public IList<Match> ScheduledMatches { get { return matches.AsReadOnly(); } }
 
         // The implementation here is kind of silly!
-        public static List<Match> ScheduleCompetitors(List<Competitor> competitors)
+        public static List<Match> ScheduleCompetitors(List<Competitor> originalCompetitors)
         {
-            List<Match> matches = new List<Match>();
-            Dictionary<Competitor, HashSet<Competitor>> played = new Dictionary<Competitor, HashSet<Competitor>>();
-            foreach (var c in competitors)
+            var competitors = new List<Competitor>(originalCompetitors);
+
+            if (competitors.Count < 2)
+                throw new ArgumentException("Can't schedule if only 1 competitor!");
+
+            var bye = new Competitor("TOURNAMENT_BYE", "TOURNAMENT_BYE");
+            if (competitors.Count % 2 != 0)
             {
-                played[c] = new HashSet<Competitor>();
+                competitors.Add(bye);
             }
 
-            HashSet<Competitor> playingThisRound = new HashSet<Competitor>();
-            for (int i = 0; i < competitors.Count - 1; i++)
+            List<Match> matches = new List<Match>();
+
+            List<Competitor> teams = new List<Competitor>(competitors);
+            teams.RemoveAt(0);
+
+            int teamsSize = teams.Count;
+
+            for (int day = 0; day < competitors.Count - 1; day++)
             {
-                playingThisRound.Clear();
+                int teamIdx = day % teamsSize;
 
-                foreach (var c in competitors)
+                matches.Add(new Match(competitors[0], teams[teamIdx]));
+
+                for (int idx = 1; idx < competitors.Count / 2; idx++)
                 {
-                    if (!playingThisRound.Contains(c))
-                    {
-                        var unplayed = competitors.Where(o => o != c)
-                            .Where(o => !playingThisRound.Contains(o))
-                            .Where(o => !played[c].Contains(o))
-                            .First();
-
-                        matches.Add(new Match(c, unplayed));
-
-                        played[c].Add(unplayed);
-                        played[unplayed].Add(c);
-
-                        playingThisRound.Add(c);
-                        playingThisRound.Add(unplayed);
-                    }
-
+                    var match = new Match(teams[(day + idx) % teamsSize],
+                        teams[(day + teamsSize - idx) % teamsSize]);
+                    matches.Add(match);
                 }
             }
-            return matches;
+
+            return matches.Where(m => !m.HasCompetitor(bye)).ToList();
         }
 
         public Schedule_RoundRobin(List<Competitor> competitors)
