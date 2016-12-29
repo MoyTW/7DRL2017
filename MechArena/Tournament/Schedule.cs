@@ -8,9 +8,14 @@ namespace MechArena.Tournament
 {
     public interface Schedule
     {
-        void ReportResult(MatchResult result);
-        bool IsEliminated(Competitor c);
+        // Match Info & Reporting
         Match NextMatch();
+        void ReportResult(MatchResult result);
+        IList<Competitor> Winners();
+
+        // Competitor Info
+        bool IsEliminated(Competitor c);
+        IList<Match> ScheduledMatches();
         IList<Match> ScheduledMatches(Competitor c);
         IList<MatchResult> MatchHistory(Competitor c);
     }

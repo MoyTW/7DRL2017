@@ -59,7 +59,7 @@ namespace MechArena.Tournament
 
         private void ResolveTopScorers()
         {
-            if (this.upcomingMatches.Count > 0)
+            if (this.NextMatch() != null)
                 throw new InvalidOperationException("Can't resolve scores when not done!");
 
             int numTopScorers = 0;
@@ -89,12 +89,12 @@ namespace MechArena.Tournament
             }
         }
 
-        public List<Competitor> Winners()
+        public IList<Competitor> Winners()
         {
             if (this.remainingEntreants.Count() != 0)
-                return null;
+                throw new InvalidOperationException("Can't call winners before round resolved!");
             else
-                return this.winningEntreants.ToList();
+                return this.winningEntreants.ToList().AsReadOnly();
         }
 
         public IList<Match> ScheduledMatches()

@@ -70,6 +70,7 @@
     <Compile Include="Component_SlottedStructureTest.cs" />
     <Compile Include="Tournament\SchedulerTest.cs" />
     <Compile Include="Tournament\Schedule_RoundRobinTest.cs" />
+    <Compile Include="Tournament\Schedule_GroupStageTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MechArena\MechArena.csproj">
