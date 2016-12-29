@@ -8,6 +8,7 @@ namespace MechArena.Tournament
 {
     public class MatchResult
     {
+        public Match OriginalMatch { get; }
         public Competitor Winner { get { throw new NotImplementedException(); } }
     }
 }

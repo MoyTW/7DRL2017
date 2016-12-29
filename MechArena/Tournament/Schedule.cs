@@ -6,28 +6,12 @@ using System.Threading.Tasks;
 
 namespace MechArena.Tournament
 {
-    class Schedule
+    public interface Schedule
     {
-        private List<Competitor> allCompetitors;
-
-        private Schedule(List<Competitor> allCompetitors)
-        {
-            this.allCompetitors = allCompetitors;
-        }
-
-        public static Schedule ScheduleTournament(IEnumerable<Competitor> competitors)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void ReportResult(MatchResult result)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Match NextMatch()
-        {
-            throw new NotImplementedException();
-        }
+        void ReportResult(MatchResult result);
+        bool IsEliminated(Competitor c);
+        Match NextMatch();
+        IList<Match> ScheduledMatches(Competitor c);
+        IList<MatchResult> MatchHistory(Competitor c);
     }
 }
