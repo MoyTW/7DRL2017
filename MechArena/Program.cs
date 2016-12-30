@@ -62,33 +62,38 @@ namespace MechArena
             gameState = GameState.MAIN_MENU;
         }
 
+        private static void HandleArenaEnded()
+        {
+            Console.WriteLine("Match has ended!");
+
+            if (_match != null)
+            {
+                Console.WriteLine("Attempting to register match results with the Tournament!");
+                var winner = _match.CompetitorByID(_arena.WinnerID());
+                if (winner != null)
+                {
+                    _tournament.ReportResult(new MatchResult(_match, winner));
+                    _match = null;
+                    Console.WriteLine("Reported winner of match!");
+                }
+                else
+                {
+                    Console.WriteLine("Something's gone wrong! Can't get winner from ended match!");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Match was not an official tournament match or was a replay, not registering!");
+            }
+
+            GotoMainMenu();
+        }
+
         private static void OnRootConsoleUpdateForArena(object sender, UpdateEventArgs e)
         {
             if (_arena.IsMatchEnded())
             {
-                Console.WriteLine("Match has ended!");
-
-                if (_match != null)
-                {
-                    Console.WriteLine("Attempting to register match results with the Tournament!");
-                    var winner = _match.CompetitorByID(_arena.WinnerID());
-                    if (winner != null)
-                    {
-                        _tournament.ReportResult(new MatchResult(_match, winner));
-                        _match = null;
-                        Console.WriteLine("Reported winner of match!");
-                    }
-                    else
-                    {
-                        Console.WriteLine("Something's gone wrong! Can't get winner from ended match!");
-                    }
-                }
-                else
-                {
-                    Console.WriteLine("Match was not an official tournament match or was a replay, not registering!");
-                }
-
-                GotoMainMenu();
+                HandleArenaEnded();
                 return;
             }
 
@@ -218,20 +223,31 @@ namespace MechArena
                         break;
                     case RLKey.T:
                         Console.WriteLine("T Pressed!");
+                        Console.WriteLine("Round: " + _tournament.RoundNum());
                         _match = _tournament.NextMatch();
                         while(_match != null && !_match.HasCompetitor(_player))
                         {
-                            MatchResult result;
-                            if(_tournamentRandom.Next(1) == 0)
-                                result = new MatchResult(_match, _match.Competitor1);
-                            else
-                                result = new MatchResult(_match, _match.Competitor2);
+                            // TODO: Silly cast, use interface v. actual class!
+                            var matchArena = ArenaBuilder.BuildArena(ArenaDrawer.arenaWidth, ArenaDrawer.arenaHeight,
+                                _tournamentRandom.Next(Int16.MaxValue), (CompetitorEntity)_match.Competitor1,
+                                (CompetitorEntity)_match.Competitor2);
+                            while (!matchArena.IsMatchEnded())
+                            {
+                                matchArena.TryFindAndExecuteNextCommand();
+                            }
+                            var result =  new MatchResult(_match, _match.CompetitorByID(matchArena.WinnerID()));
+
                             Console.WriteLine("Winner of " + _match + " is " + result.Winner);
                             _tournament.ReportResult(result);
                             _match = _tournament.NextMatch();
                         }
                         if (_match != null)
                             Console.WriteLine("Next match is player!");
+                        else
+                        {
+                            Console.WriteLine("===== WINNER IS =====");
+                            Console.WriteLine("Winner is " + _tournament.Winners()[0]);
+                        }
                         break;
                     case RLKey.S:
                         GotoNewAIVersusAIArena();
