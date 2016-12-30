@@ -113,9 +113,9 @@ namespace MechArena
             if (this.IsMatchEnded())
             {
                 if (this.IsPilotKilled(this.Mech1) || this.IsMechUnableToFight(this.Mech1))
-                    return this.Mech1.EntityID;
-                else
                     return this.Mech2.EntityID;
+                else
+                    return this.Mech1.EntityID;
             }
             else
             {
