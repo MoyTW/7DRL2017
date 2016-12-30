@@ -1,51 +1,25 @@
 ﻿using RogueSharp;
 using RogueSharp.Random;
 
+using System.Collections.Generic;
+
 namespace MechArena
 {
     public static class ArenaBuilder
     {
-        // Push the RNG into the Arena
-        public static ArenaState BuildFixedTestArena(int width, int height, int seed = 100)
-        {
-            var seededRand = new DotNetRandom(seed);
-
-            // Set up a Arena (move this later)
-            Entity player = EntityBuilder.BuildPlayer();
-            Entity enemy = EntityBuilder.BuildArmoredAIMech("Heavily Armored Test Enemy");
-            IMap arenaMap = Map.Create(
-                new RogueSharp.MapCreation.CaveMapCreationStrategy<Map>(width, height, 45, 4, 3, seededRand));
-            ArenaState arena = new ArenaState(player, enemy, arenaMap, seed);
-
-            arena.PlaceEntityNear(player, 25, 25);
-            arena.PlaceEntityNear(enemy, 25, 25);
-
-            return arena;
-        }
-
-        public static ArenaState BuildFixedAIVersusAIArena(int width, int height, int seed = 50)
-        {
-            var seededRand = new DotNetRandom(seed);
-
-            Entity mech1 = EntityBuilder.BuildArmoredAIMech("Sherman Lynx");
-            Entity mech2 = EntityBuilder.BuildArmoredAIMech("Abrams Elephant");
-            IMap arenaMap = Map.Create(
-                new RogueSharp.MapCreation.CaveMapCreationStrategy<Map>(width, height, 45, 4, 3, seededRand));
-            ArenaState arena = new ArenaState(mech1, mech2, arenaMap, seed);
-
-            arena.PlaceEntityNear(mech1, 25, 25);
-            arena.PlaceEntityNear(mech2, 25, 25);
-
-            return arena;
-        }
+        private static Dictionary<int, IMap> seedsToMaps = new Dictionary<int, IMap>();
 
         public static ArenaState BuildArena(int width, int height, int seed, CompetitorEntity entreant1,
             CompetitorEntity entreant2)
         {
-            var seededRand = new DotNetRandom(seed);
+            IMap arenaMap = new Map(width, height);
+            if (!seedsToMaps.ContainsKey(seed))
+            {
+                seedsToMaps[seed] = Map.Create(new RogueSharp.MapCreation.CaveMapCreationStrategy<Map>(width, height,
+                    45, 4, 3, new DotNetRandom(seed)));
+            }
+            arenaMap.Copy(seedsToMaps[seed]);
 
-            IMap arenaMap = Map.Create(
-                new RogueSharp.MapCreation.CaveMapCreationStrategy<Map>(width, height, 45, 4, 3, seededRand));
             var mech1 = entreant1.Mech.DeepCopy();
             var mech2 = entreant2.Mech.DeepCopy();
             ArenaState arena = new ArenaState(mech1, mech2, arenaMap, seed);
