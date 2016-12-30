@@ -23,10 +23,10 @@ namespace MechArena
         private static readonly int _screenHeight = 80;
         private static RLRootConsole _rootConsole;
 
-        private static GameState gameState;
+        private static GameState _gameState;
 
-        // History Console
-        private static string _historySelection;
+        // History
+        private static CompetitorMenu _competitorMenu;
 
         // Tournament
         private static Competitor _player;
@@ -44,7 +44,7 @@ namespace MechArena
             _tournament = TournamentBuilder.BuildTournament(_player, _tournamentRandom);
             _match = _tournament.NextMatch();
 
-            gameState = GameState.MAIN_MENU;
+            _gameState = GameState.MAIN_MENU;
 
             // This must be the exact name of the bitmap font file we are using or it will error.
             string fontFileName = "terminal8x8.png";
@@ -64,7 +64,7 @@ namespace MechArena
 
         private static void GotoMainMenu()
         {
-            gameState = GameState.MAIN_MENU;
+            _gameState = GameState.MAIN_MENU;
         }
 
         private static void HandleArenaEnded()
@@ -178,91 +178,15 @@ namespace MechArena
             _arena = ArenaBuilder.BuildArena(ArenaDrawer.arenaWidth, ArenaDrawer.arenaHeight, 100,
                 (CompetitorEntity)_match.Competitor1, (CompetitorEntity)_match.Competitor2);
             _arenaDrawer = new ArenaDrawer(_arena);
-            gameState = GameState.ARENA;
+            _gameState = GameState.ARENA;
         }
 
         private static void GotoCurrentArena()
         {
             if (_arena != null)
-                gameState = GameState.ARENA;
+                _gameState = GameState.ARENA;
             else
                 GotoNextMatchArena();
-        }
-
-        private static void OnRootConsoleUpdateForHistoryMenu(object sender, UpdateEventArgs e)
-        {
-            RLKeyPress keyPress = _rootConsole.Keyboard.GetKeyPress();
-            if (keyPress != null)
-            {
-                switch (keyPress.Key)
-                {
-                    case RLKey.Number0:
-                    case RLKey.Keypad0:
-                        _historySelection += "0";
-                        break;
-                    case RLKey.Number1:
-                    case RLKey.Keypad1:
-                        _historySelection += "1";
-                        break;
-                    case RLKey.Number2:
-                    case RLKey.Keypad2:
-                        _historySelection += "2";
-                        break;
-                    case RLKey.Number3:
-                    case RLKey.Keypad3:
-                        _historySelection += "3";
-                        break;
-                    case RLKey.Number4:
-                    case RLKey.Keypad4:
-                        _historySelection += "4";
-                        break;
-                    case RLKey.Number5:
-                    case RLKey.Keypad5:
-                        _historySelection += "5";
-                        break;
-                    case RLKey.Number6:
-                    case RLKey.Keypad6:
-                        _historySelection += "6";
-                        break;
-                    case RLKey.Number7:
-                    case RLKey.Keypad7:
-                        _historySelection += "7";
-                        break;
-                    case RLKey.Number8:
-                    case RLKey.Keypad8:
-                        _historySelection += "8";
-                        break;
-                    case RLKey.Number9:
-                    case RLKey.Keypad9:
-                        _historySelection += "9";
-                        break;
-                    case RLKey.BackSpace:
-                        if (_historySelection.Length > 0)
-                            _historySelection = _historySelection.Substring(0, _historySelection.Length - 1);
-                        break;
-                    case RLKey.Enter:
-                    case RLKey.KeypadEnter:
-                        int index = (Int32.Parse(_historySelection) - 1);
-                        var comps = _tournament.AllCompetitors();
-                        if (index >= 0 && index < comps.Count)
-                        {
-                            var selection = _tournament.AllCompetitors()[index];
-                            Console.WriteLine("Selected " + selection);
-                        }
-                        else
-                        {
-                            Console.WriteLine("No such competitor #" + index);
-                        }
-
-                        _historySelection = "";
-                        break;
-                    case RLKey.Escape:
-                        gameState = GameState.MAIN_MENU;
-                        break;
-                    default:
-                        break;
-                }
-            }
         }
 
         private static void OnRootConsoleUpdateForMainMenu(object sender, UpdateEventArgs e)
@@ -278,8 +202,8 @@ namespace MechArena
                     // TODO: Don't just dump the info onto the console, actually display it
                     // argh UI work is the *worst*!
                     case RLKey.H:
-                        gameState = GameState.COMPETITOR_MENU;
-                        _historySelection = "";
+                        _gameState = GameState.COMPETITOR_MENU;
+                        _competitorMenu = new CompetitorMenu();
                         break;
                     case RLKey.M:
                         Console.WriteLine("########## UPCOMING PLAYER MATCHES ##########");
@@ -347,7 +271,7 @@ namespace MechArena
         // Event handler for RLNET's Update event
         private static void OnRootConsoleUpdate(object sender, UpdateEventArgs e)
         {
-            switch (gameState)
+            switch (_gameState)
             {
                 case GameState.MAIN_MENU:
                     OnRootConsoleUpdateForMainMenu(sender, e);
@@ -356,7 +280,9 @@ namespace MechArena
                     OnRootConsoleUpdateForArena(sender, e);
                     break;
                 case GameState.COMPETITOR_MENU:
-                    OnRootConsoleUpdateForHistoryMenu(sender, e);
+                    _competitorMenu.OnRootConsoleUpdate(_rootConsole, _tournament);
+                    if (_competitorMenu.GotoMainMenu)
+                        _gameState = GameState.MAIN_MENU;
                     break;
                 default:
                     OnRootConsoleUpdateForMainMenu(sender, e);
@@ -370,7 +296,7 @@ namespace MechArena
         {
             _rootConsole.Clear();
 
-            switch (gameState)
+            switch (_gameState)
             {
                 case GameState.MAIN_MENU:
                     _rootConsole.SetBackColor(0, 0, _screenWidth, _screenHeight, RLColor.Black);
@@ -387,33 +313,7 @@ namespace MechArena
                     _arenaDrawer.Blit(_rootConsole);
                     break;
                 case GameState.COMPETITOR_MENU:
-                    int tableWidth = 30;
-                    int currentX = 1;
-                    int lineStart = 3;
-                    int line = lineStart;
-
-                    _rootConsole.SetBackColor(0, 0, _screenWidth, _screenHeight, RLColor.Black);
-                    _rootConsole.Print(_screenWidth / 2 - 4, 1, "HISTORY MENU", RLColor.White);
-
-                    foreach (var c in _tournament.AllCompetitors())
-                    {
-                        if (_tournament.IsEliminated(c.CompetitorID))
-                            _rootConsole.Print(currentX, line, c.Label, RLColor.Red);
-                        else
-                            _rootConsole.Print(currentX, line, c.Label, RLColor.White);
-
-                        line++;
-                        if (line > _screenHeight - 3)
-                        {
-                            line = lineStart;
-                            currentX += tableWidth;
-                        }
-                    }
-
-                    line += 3;
-                    _rootConsole.Print(currentX, line, "Inspect", RLColor.White);
-                    line += 1;
-                    _rootConsole.Print(currentX, line, "# " + _historySelection, RLColor.White);
+                    _competitorMenu.Blit(_rootConsole, _tournament);
                     break;
                 default:
                     break;
