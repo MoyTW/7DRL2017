@@ -24,7 +24,6 @@ namespace MechArena
 
         private static GameState gameState;
 
-        private static int _seed = -1;
         private static Competitor _player;
         private static IRandom _tournamentRandom;
         private static Schedule_Tournament _tournament;
@@ -166,27 +165,6 @@ namespace MechArena
             }
         }
 
-        private static void GotoNewAIVersusAIArena()
-        {
-            _seed = new Random().Next(500);
-            _arena = ArenaBuilder.BuildFixedAIVersusAIArena(ArenaDrawer.arenaWidth, ArenaDrawer.arenaHeight, _seed);
-            _arenaDrawer = new ArenaDrawer(_arena);
-            gameState = GameState.ARENA;
-        }
-
-        private static void GotoNewAIVersusAIReplay()
-        {
-            if (_seed == -1)
-            {
-                Console.WriteLine("Can't replay no such game!");
-                return;
-            }
-
-            _arena = ArenaBuilder.BuildFixedAIVersusAIArena(ArenaDrawer.arenaWidth, ArenaDrawer.arenaHeight, _seed);
-            _arenaDrawer = new ArenaDrawer(_arena);
-            gameState = GameState.ARENA;
-        }
-
         private static void GotoNextMatchArena()
         {
             _match = _tournament.NextMatch();
@@ -249,17 +227,11 @@ namespace MechArena
                             Console.WriteLine("Winner is " + _tournament.Winners()[0]);
                         }
                         break;
-                    case RLKey.S:
-                        GotoNewAIVersusAIArena();
-                        break;
                     case RLKey.N:
                         GotoNextMatchArena();
                         break;
                     case RLKey.R:
                         GotoCurrentArena();
-                        break;
-                    case RLKey.P:
-                        GotoNewAIVersusAIReplay();
                         break;
                     case RLKey.Escape:
                         Environment.Exit(0);
@@ -299,13 +271,11 @@ namespace MechArena
                     _rootConsole.SetBackColor(0, 0, _screenWidth, _screenHeight, RLColor.Black);
                     _rootConsole.Print(_screenWidth / 2 - 4, _screenHeight / 2 - 3, "Main Menu", RLColor.White);
                     _rootConsole.Print(_screenWidth / 2 - 4, _screenHeight / 2 - 1, "Options", RLColor.White);
-                    _rootConsole.Print(_screenWidth / 2 - 2, _screenHeight / 2, "S) Spectate AI Game", RLColor.White);
-                    _rootConsole.Print(_screenWidth / 2 - 2, _screenHeight / 2 + 1, "P) Replay Last AI Game", RLColor.White);
-                    _rootConsole.Print(_screenWidth / 2 - 2, _screenHeight / 2 + 2, "N) Play Next Match", RLColor.White);
-                    _rootConsole.Print(_screenWidth / 2 - 2, _screenHeight / 2 + 3, "R) Return To Game", RLColor.White);
-                    _rootConsole.Print(_screenWidth / 2 - 2, _screenHeight / 2 + 4, "T) Fast-Forward Tournament", RLColor.White);
-                    _rootConsole.Print(_screenWidth / 2 - 2, _screenHeight / 2 + 5, "M) View Upcoming Matches", RLColor.White);
-                    _rootConsole.Print(_screenWidth / 2 - 2, _screenHeight / 2 + 6, "Esc) Quit", RLColor.White);
+                    _rootConsole.Print(_screenWidth / 2 - 2, _screenHeight / 2 + 0, "N) Play Next Match", RLColor.White);
+                    _rootConsole.Print(_screenWidth / 2 - 2, _screenHeight / 2 + 1, "R) Return To Game", RLColor.White);
+                    _rootConsole.Print(_screenWidth / 2 - 2, _screenHeight / 2 + 2, "T) Fast-Forward Tournament", RLColor.White);
+                    _rootConsole.Print(_screenWidth / 2 - 2, _screenHeight / 2 + 3, "M) View Upcoming Matches", RLColor.White);
+                    _rootConsole.Print(_screenWidth / 2 - 2, _screenHeight / 2 + 4, "Esc) Quit", RLColor.White);
                     break;
                 case GameState.ARENA:
                     _arenaDrawer.Blit(_rootConsole);
