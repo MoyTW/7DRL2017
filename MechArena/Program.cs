@@ -1,5 +1,6 @@
 ﻿using RLNET;
 
+using MechArena.Tournament;
 using MechArena.UI;
 
 using System;
@@ -23,11 +24,16 @@ namespace MechArena
         private static GameState gameState;
 
         private static int _seed = -1;
+        private static Competitor _player;
+        private static Schedule_Tournament _tournament;
         private static ArenaState _arena;
         private static ArenaDrawer _arenaDrawer;
 
         public static void Main()
         {
+            _player = new Competitor("Player", "Player Mech");
+            _tournament = TournamentBuilder.BuildTournament(_player, new RogueSharp.Random.DotNetRandom());
+
             gameState = GameState.MAIN_MENU;
 
             // This must be the exact name of the bitmap font file we are using or it will error.
@@ -172,6 +178,15 @@ namespace MechArena
             {
                 switch (keyPress.Key)
                 {
+                    // TODO: Don't just dump the info onto the console, actually display it
+                    // argh UI work is the *worst*!
+                    case RLKey.M:
+                        Console.WriteLine("########## UPCOMING PLAYER MATCHES ##########");
+                        foreach(var m in _tournament.ScheduledMatches(_player))
+                        {
+                            Console.WriteLine(m);
+                        }
+                        break;
                     case RLKey.S:
                         GotoNewAIVersusAIArena();
                         break;
@@ -226,7 +241,8 @@ namespace MechArena
                     _rootConsole.Print(_screenWidth / 2 - 2, _screenHeight / 2 + 1, "P) Replay Last AI Game", RLColor.White);
                     _rootConsole.Print(_screenWidth / 2 - 2, _screenHeight / 2 + 2, "N) New Game", RLColor.White);
                     _rootConsole.Print(_screenWidth / 2 - 2, _screenHeight / 2 + 3, "R) Return To Game", RLColor.White);
-                    _rootConsole.Print(_screenWidth / 2 - 2, _screenHeight / 2 + 4, "Esc) Quit", RLColor.White);
+                    _rootConsole.Print(_screenWidth / 2 - 2, _screenHeight / 2 + 4, "M) View Upcoming Matches", RLColor.White);
+                    _rootConsole.Print(_screenWidth / 2 - 2, _screenHeight / 2 + 5, "Esc) Quit", RLColor.White);
                     break;
                 case GameState.ARENA:
                     _arenaDrawer.Blit(_rootConsole);

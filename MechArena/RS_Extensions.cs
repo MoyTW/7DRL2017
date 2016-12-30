@@ -9,6 +9,14 @@ namespace MechArena
     // TODO: Wrap instead of extend! Good general policy for you deps, yea?
     public static class RS_Extensions
     {
+        public static T RandomElement<T>(this IRandom _this, IEnumerable<T> items)
+        {
+            if (items.Count() > 0)
+                return items.ElementAt(_this.Next(items.Count() - 1));
+            else
+                return default(T);
+        }
+
         public static T RandomByWeight<T>(this IRandom _this, IEnumerable<T> items, Func<T, int> weight)
         {
             int totalweight = items.Sum(weight);

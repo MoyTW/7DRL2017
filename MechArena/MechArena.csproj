@@ -51,9 +51,10 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Arena.cs" />
+    <Compile Include="ArenaState.cs" />
     <Compile Include="ArenaBuilder.cs" />
     <Compile Include="BodyPartLocation.cs" />
+    <Compile Include="TournamentBuilder.cs" />
     <Compile Include="Component.cs" />
     <Compile Include="Component_AI.cs" />
     <Compile Include="Component_AttributeModifierFlat.cs" />
@@ -108,6 +109,12 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Resources\Adjectives.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Cities.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="terminal8x8.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
