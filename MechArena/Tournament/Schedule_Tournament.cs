@@ -38,7 +38,7 @@ namespace MechArena.Tournament
 
         public bool IsEliminated(string competitorID)
         {
-            return rounds.Last().IsEliminated(competitorID);
+            return rounds.Any(r => r.IsEliminated(competitorID));
         }
 
         public IList<Competitor> Winners()
