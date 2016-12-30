@@ -56,7 +56,10 @@ namespace MechArena.Tournament
 
         public bool IsEliminated(string competitorID)
         {
-            return this.entreantsToSchedules[competitorID].IsEliminated(competitorID);
+            if (this.entreantsToSchedules.ContainsKey(competitorID))
+                return this.entreantsToSchedules[competitorID].IsEliminated(competitorID);
+            else
+                return true;
         }
 
         public IList<Competitor> Winners()

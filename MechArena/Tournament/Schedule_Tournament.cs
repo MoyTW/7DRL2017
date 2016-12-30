@@ -26,6 +26,11 @@ namespace MechArena.Tournament
             rounds.Add(new Schedule_GroupStage(groupStageSize, numFirstStageWinners, entreants));
         }
 
+        public IList<Competitor> AllCompetitors()
+        {
+            return this.entreants.ToList().AsReadOnly();
+        }
+
         public int RoundNum()
         {
             return this.rounds.Count;

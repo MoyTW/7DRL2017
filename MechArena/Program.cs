@@ -12,7 +12,8 @@ namespace MechArena
     public enum GameState
     {
         MAIN_MENU = 0,
-        ARENA
+        ARENA,
+        COMPETITOR_MENU
     }
 
     public class Program
@@ -183,6 +184,22 @@ namespace MechArena
                 GotoNextMatchArena();
         }
 
+        private static void OnRootConsoleUpdateForHistoryMenu(object sender, UpdateEventArgs e)
+        {
+            RLKeyPress keyPress = _rootConsole.Keyboard.GetKeyPress();
+            if (keyPress != null)
+            {
+                switch (keyPress.Key)
+                {
+                    case RLKey.Escape:
+                        gameState = GameState.MAIN_MENU;
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
         private static void OnRootConsoleUpdateForMainMenu(object sender, UpdateEventArgs e)
         {
             RLKeyPress keyPress = _rootConsole.Keyboard.GetKeyPress();
@@ -192,6 +209,9 @@ namespace MechArena
                 {
                     // TODO: Don't just dump the info onto the console, actually display it
                     // argh UI work is the *worst*!
+                    case RLKey.H:
+                        gameState = GameState.COMPETITOR_MENU;
+                        break;
                     case RLKey.M:
                         Console.WriteLine("########## UPCOMING PLAYER MATCHES ##########");
                         foreach(var m in _tournament.ScheduledMatches(_player.CompetitorID))
@@ -253,6 +273,9 @@ namespace MechArena
                 case GameState.ARENA:
                     OnRootConsoleUpdateForArena(sender, e);
                     break;
+                case GameState.COMPETITOR_MENU:
+                    OnRootConsoleUpdateForHistoryMenu(sender, e);
+                    break;
                 default:
                     OnRootConsoleUpdateForMainMenu(sender, e);
                     break;
@@ -274,11 +297,36 @@ namespace MechArena
                     _rootConsole.Print(_screenWidth / 2 - 2, _screenHeight / 2 + 0, "N) Play Next Match", RLColor.White);
                     _rootConsole.Print(_screenWidth / 2 - 2, _screenHeight / 2 + 1, "R) Return To Game", RLColor.White);
                     _rootConsole.Print(_screenWidth / 2 - 2, _screenHeight / 2 + 2, "T) Fast-Forward Tournament", RLColor.White);
-                    _rootConsole.Print(_screenWidth / 2 - 2, _screenHeight / 2 + 3, "M) View Upcoming Matches", RLColor.White);
-                    _rootConsole.Print(_screenWidth / 2 - 2, _screenHeight / 2 + 4, "Esc) Quit", RLColor.White);
+                    _rootConsole.Print(_screenWidth / 2 - 2, _screenHeight / 2 + 3, "H) View Match History", RLColor.White);
+                    _rootConsole.Print(_screenWidth / 2 - 2, _screenHeight / 2 + 4, "M) View Upcoming Matches", RLColor.White);
+                    _rootConsole.Print(_screenWidth / 2 - 2, _screenHeight / 2 + 5, "Esc) Quit", RLColor.White);
                     break;
                 case GameState.ARENA:
                     _arenaDrawer.Blit(_rootConsole);
+                    break;
+                case GameState.COMPETITOR_MENU:
+                    int tableWidth = 30;
+                    int currentX = 1;
+                    int lineStart = 3;
+                    int line = lineStart;
+
+                    _rootConsole.SetBackColor(0, 0, _screenWidth, _screenHeight, RLColor.Black);
+                    _rootConsole.Print(_screenWidth / 2 - 4, 1, "HISTORY MENU", RLColor.White);
+
+                    foreach (var c in _tournament.AllCompetitors())
+                    {
+                        if (_tournament.IsEliminated(c.CompetitorID))
+                            _rootConsole.Print(currentX, line, c.Label, RLColor.Red);
+                        else
+                            _rootConsole.Print(currentX, line, c.Label, RLColor.White);
+
+                        line++;
+                        if (line > _screenHeight - 3)
+                        {
+                            line = lineStart;
+                            currentX += tableWidth;
+                        }
+                    }
                     break;
                 default:
                     break;
