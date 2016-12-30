@@ -26,6 +26,7 @@ namespace MechArena
         private static GameState gameState;
 
         private static Competitor _player;
+        private static bool _playPlayerMatches = false;
         private static IRandom _tournamentRandom;
         private static Schedule_Tournament _tournament;
         private static Match _match;
@@ -228,7 +229,8 @@ namespace MechArena
                         _match = _tournament.NextMatch();
                         while(_match != null && !_match.HasCompetitor(_player.CompetitorID))
                         {
-                            int seed = _tournamentRandom.Next(Int16.MaxValue);
+                            int seed = 100;
+                            // int seed = _tournamentRandom.Next(Int16.MaxValue);
                             // TODO: Silly cast, use interface v. actual class!
                             var matchArena = ArenaBuilder.BuildArena(ArenaDrawer.arenaWidth, ArenaDrawer.arenaHeight,
                                 seed, (CompetitorEntity)_match.Competitor1, (CompetitorEntity)_match.Competitor2);
@@ -243,7 +245,19 @@ namespace MechArena
                             _match = _tournament.NextMatch();
                         }
                         if (_match != null)
-                            Console.WriteLine("Next match is player!");
+                        {
+                            if (_playPlayerMatches)
+                            {
+                                Console.WriteLine("Next match is player!");
+                            }
+                            else
+                            {
+                                var result = _match.BuildResult(_player.CompetitorID, 0);
+                                Console.WriteLine("Player wins match!");
+                                _tournament.ReportResult(result);
+                                _match = _tournament.NextMatch();
+                            }
+                        }
                         else
                         {
                             Console.WriteLine("===== WINNER IS =====");
