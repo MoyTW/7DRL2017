@@ -80,7 +80,7 @@ namespace MechArena
                 .TryGetDestroyed();
 
             if (isKilled)
-                Console.WriteLine("Pilot of " + mech + " was killed!");
+                Log.DebugLine("Pilot of " + mech + " was killed!");
 
             return isKilled;
         }
@@ -95,9 +95,9 @@ namespace MechArena
             var noWeapons = !mech.TryGetSubEntities(SubEntitiesSelector.WEAPON).Any(e => !e.TryGetDestroyed());
 
             if (noWeapons)
-                Console.WriteLine("Mech " + mech + " has no weapons!");
+                Log.DebugLine("Mech " + mech + " has no weapons!");
             else if (torsoDestroyed)
-                Console.WriteLine("The torso of " + mech + " has been destroyed!");
+                Log.DebugLine("The torso of " + mech + " has been destroyed!");
 
             return torsoDestroyed || noWeapons;
         }
@@ -181,7 +181,7 @@ namespace MechArena
         {
             if (this.ShouldWaitForPlayerInput && this.NextExecutorEntity.HasComponentOfType<Component_Weapon>())
             {
-                Console.WriteLine("########## ATTACK INFO ##########");
+                Log.DebugLine("########## ATTACK INFO ##########");
                 var guns = this.mech1.HandleQuery(new GameQuery_SubEntities(SubEntitiesSelector.WEAPON)).SubEntities;
                 foreach (var gun in guns)
                 {
@@ -192,7 +192,7 @@ namespace MechArena
             }
             else
             {
-                Console.WriteLine("CANNOT ATTACK GUNS NOT NEXT!");
+                Log.DebugLine("CANNOT ATTACK GUNS NOT NEXT!");
             }
         }
 
@@ -210,7 +210,7 @@ namespace MechArena
             }
             else
             {
-                Console.WriteLine("CANNOT MOVE MOVE NOT NEXT!");
+                Log.DebugLine("CANNOT MOVE MOVE NOT NEXT!");
             }
         }
 

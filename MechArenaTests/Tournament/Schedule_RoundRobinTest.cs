@@ -41,10 +41,6 @@ namespace MechArenaTests.Tournament
             var comps = this.BuildComps(4);
             var srr = new Schedule_RoundRobin(3, comps);
 
-            foreach(var m in srr.ScheduledMatches())
-            {
-                Console.WriteLine(m);
-            }
             // Match ordering: [0:1] [2:3] [0:2] [3:1] [0:3] [1:2]
             // 0 wins 3, 1 wins 1, 2 wins 1, 3 wins 0
             srr.ReportResult(new MatchResult(srr.NextMatch(), comps[0], 0));
@@ -64,10 +60,6 @@ namespace MechArenaTests.Tournament
             var comps = this.BuildComps(5);
             var srr = new Schedule_RoundRobin(2, comps);
 
-            foreach (var m in srr.ScheduledMatches())
-            {
-                Console.WriteLine(m);
-            }
             // Match ordering: [0:1] [3:4] [0:2] [3:1] [0:3] [4:2] [0:4] [1:2] [1:4] [2:3]
             // 0 -> [4 0]
             // 1 -> [2 2]

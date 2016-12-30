@@ -68,26 +68,26 @@ namespace MechArena
                 // This is all damage handling
                 if (subTargetEntity.TryGetDestroyed())
                 {
-                    Console.WriteLine(
+                    Log.DebugLine(
                         String.Format("{0} ({1}) missed - the {2} of the target was already destroyed!",
                         ev.ExecutorEntity, ev.CommandEntity, ev.SubTarget));
                 }
                 else
                 {
-                    Console.WriteLine(String.Format("{0} ({1}) hit {2} in the {3} for {4}!", ev.ExecutorEntity,
+                    Log.DebugLine(String.Format("{0} ({1}) hit {2} in the {3} for {4}!", ev.ExecutorEntity,
                         ev.CommandEntity, ev.Target, subTargetEntity, damage));
                     subTargetEntity.HandleEvent(new GameEvent_TakeDamage(damage, ev.Rand));
 
                     // Detach body part from mech if destroyed
                     if (0 >= subTargetEntity.TryGetAttribute(EntityAttributeType.STRUCTURE).Value)
                     {
-                        Console.WriteLine(String.Format("Part {0} was destroyed!", ev.SubTarget));
+                        Log.DebugLine(String.Format("Part {0} was destroyed!", ev.SubTarget));
                     }
                 }
             }
             else
             {
-                Console.WriteLine(String.Format("{0} ({1}) missed {2}!", ev.ExecutorEntity, ev.CommandEntity,
+                Log.DebugLine(String.Format("{0} ({1}) missed {2}!", ev.ExecutorEntity, ev.CommandEntity,
                     ev.Target));
             }
 

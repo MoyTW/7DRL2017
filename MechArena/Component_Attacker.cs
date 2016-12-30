@@ -18,7 +18,7 @@ namespace MechArena
                 // If any of the cells isn't walkable, then your shot is blocked and the attack stops
                 if (lineCells.Any(c => !c.IsWalkable))
                 {
-                    Console.WriteLine("Attack missed due to intervening terrain!");
+                    Log.DebugLine("Attack missed due to intervening terrain!");
                     ev.Completed = true;
                     return;
                 }
@@ -26,7 +26,7 @@ namespace MechArena
                 var weaponRange = ev.ExecutorEntity.TryGetAttribute(EntityAttributeType.MAX_RANGE);
                 if (lineCells.Count() > weaponRange.Value)
                 {
-                    Console.WriteLine("Attack missed due to range!");
+                    Log.DebugLine("Attack missed due to range!");
                     ev.Completed = true;
                     return;
                 }
@@ -35,7 +35,7 @@ namespace MechArena
                 ev.Target.HandleEvent(ev);
                 if (!ev.Completed)
                 {
-                    Console.WriteLine("Could not resolve attack against " + ev.Target.ToString());
+                    Log.DebugLine("Could not resolve attack against " + ev.Target.ToString());
                     ev.Completed = true;
                 }
             }

@@ -64,26 +64,26 @@ namespace MechArena
 
         private static void HandleArenaEnded()
         {
-            Console.WriteLine("Match has ended!");
+            Log.DebugLine("Match has ended!");
 
             if (_match != null)
             {
-                Console.WriteLine("Attempting to register match results with the Tournament!");
+                Log.DebugLine("Attempting to register match results with the Tournament!");
                 var winner = _match.CompetitorByID(_arena.WinnerID());
                 if (winner != null)
                 {
                     _tournament.ReportResult(_match.BuildResult(winner, _arena.Seed));
                     _match = null;
-                    Console.WriteLine("Reported winner of match!");
+                    Log.DebugLine("Reported winner of match!");
                 }
                 else
                 {
-                    Console.WriteLine("Something's gone wrong! Can't get winner from ended match!");
+                    Log.DebugLine("Something's gone wrong! Can't get winner from ended match!");
                 }
             }
             else
             {
-                Console.WriteLine("Match was not an official tournament match or was a replay, not registering!");
+                Log.DebugLine("Match was not an official tournament match or was a replay, not registering!");
             }
 
             GotoMainMenu();
@@ -207,6 +207,9 @@ namespace MechArena
             {
                 switch (keyPress.Key)
                 {
+                    case RLKey.L:
+                        Log.EnableDebugLog();
+                        break;
                     // TODO: Don't just dump the info onto the console, actually display it
                     // argh UI work is the *worst*!
                     case RLKey.H:
@@ -220,8 +223,8 @@ namespace MechArena
                         }
                         break;
                     case RLKey.T:
-                        Console.WriteLine("T Pressed!");
-                        Console.WriteLine("Round: " + _tournament.RoundNum());
+                        Log.DebugLine("T Pressed!");
+                        Log.DebugLine("Round: " + _tournament.RoundNum());
                         _match = _tournament.NextMatch();
                         while(_match != null && !_match.HasCompetitor(_player.CompetitorID))
                         {

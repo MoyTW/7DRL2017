@@ -61,7 +61,7 @@ namespace MechArena.Tournament
             var walker = this.remainingEntreants.GroupBy(c => this.Wins(c.CompetitorID)).OrderByDescending(kv => kv.Key).GetEnumerator();
             while (numTopScorers < this.NumWinners && walker.MoveNext())
             {
-                Console.WriteLine("Walker current count" + walker.Current.Count());
+                Log.DebugLine("Walker current count" + walker.Current.Count());
                 numTopScorers += walker.Current.Count();
 
                 if (numTopScorers <= this.NumWinners)
@@ -121,7 +121,7 @@ namespace MechArena.Tournament
                 // If there's a tie, you need to re-generate with your remaining entreants
                 if (this.remainingEntreants.Count != 0)
                 {
-                    Console.WriteLine("Tiebreaker match!");
+                    Log.DebugLine("Tiebreaker match!");
                     this.upcomingMatches = Scheduler.ScheduleRoundRobin(this.remainingEntreants.ToList(), true);
                 }
             }

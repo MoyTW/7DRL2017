@@ -55,6 +55,7 @@
     <Compile Include="ArenaBuilder.cs" />
     <Compile Include="BodyPartLocation.cs" />
     <Compile Include="CompetitorEntity.cs" />
+    <Compile Include="Log.cs" />
     <Compile Include="TournamentBuilder.cs" />
     <Compile Include="Component.cs" />
     <Compile Include="Component_AI.cs" />
