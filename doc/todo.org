@@ -79,20 +79,16 @@ This will come after, however.
 The concept of a "Competitor" is a Pilot + Mech, though players may customize
 their mech between matches.
 
-*** TODO Format
+*** DONE Format
 
-The tournament is a group-stages->elimination tournament. The lower rounds of
-the tournament are round robin, highest scorer progresses. The higher rounds of
-the tournament are a 32-player double elimination tournament.
+Hard-coded to have 1 round robin group stage of 256 in 32 groups of 8, single
+winner advances, then 4 groups of 8, top two advances, then 1 round-robin
+of 8. I was hoping to do double-elim but this took a WHOLE DAY so I'll drop
+that.
 
-There are 256 initial combatants, divided into 32 groups of 8. The 32 groups of
-8 each play a round robin series, and the top player progresses. Each of the 32
-groups plays all their matches fully before the next plays any (this is for
-simplicity, no other reason). Ties are settled by a reduced round robin.
+*** DONE Implementation
 
-*** TODO Implementation
-
-**** TODO Class Tournament
+**** DONE Class Tournament
 Tracks tournament state 
 
 API

@@ -62,7 +62,7 @@ namespace MechArena.Tournament
             if (this.NextMatch() != null)
                 throw new InvalidOperationException("Can't resolve scores when not done!");
 
-            int numTopScorers = 0;
+            int numTopScorers = this.winningEntreants.Count;
 
             // TODO: This logic is hard to understand from the code!
             var walker = this.remainingEntreants.GroupBy(this.Wins).OrderByDescending(kv => kv.Key).GetEnumerator();

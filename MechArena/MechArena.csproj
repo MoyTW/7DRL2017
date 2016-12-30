@@ -99,6 +99,7 @@
     <Compile Include="Tournament\Schedule_RoundRobin.cs" />
     <Compile Include="Tournament\Scheduler.cs" />
     <Compile Include="Tournament\Schedule.cs" />
+    <Compile Include="Tournament\Schedule_Tournament.cs" />
     <Compile Include="UI\ArenaDrawer.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
