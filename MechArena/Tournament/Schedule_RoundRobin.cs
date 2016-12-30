@@ -35,9 +35,9 @@ namespace MechArena.Tournament
             this.matchResults = new List<MatchResult>();
         }
 
-        public bool IsEliminated(Competitor c)
+        public bool IsEliminated(string competitorID)
         {
-            return this.eliminatedEntreants.Contains(c);
+            return this.eliminatedEntreants.Where(c => c.CompetitorID == competitorID).Count() != 0;
         }
 
         public Match NextMatch()
@@ -45,16 +45,9 @@ namespace MechArena.Tournament
             return this.upcomingMatches.FirstOrDefault();
         }
 
-        public Tuple<int, int> WinsLosses(Competitor c)
+        public int Wins(string competitorID)
         {
-            var history = MatchHistory(c);
-            return new Tuple<int, int>(history.Where(m => m.Winner == c).Count(),
-                history.Where(m => m.Winner != c).Count());
-        }
-
-        public int Wins(Competitor c)
-        {
-            return MatchHistory(c).Where(m => m.Winner == c).Count();
+            return MatchHistory(competitorID).Where(m => m.Winner.CompetitorID == competitorID).Count();
         }
 
         private void ResolveTopScorers()
@@ -65,9 +58,10 @@ namespace MechArena.Tournament
             int numTopScorers = this.winningEntreants.Count;
 
             // TODO: This logic is hard to understand from the code!
-            var walker = this.remainingEntreants.GroupBy(this.Wins).OrderByDescending(kv => kv.Key).GetEnumerator();
+            var walker = this.remainingEntreants.GroupBy(c => this.Wins(c.CompetitorID)).OrderByDescending(kv => kv.Key).GetEnumerator();
             while (numTopScorers < this.NumWinners && walker.MoveNext())
             {
+                Console.WriteLine("Walker current count" + walker.Current.Count());
                 numTopScorers += walker.Current.Count();
 
                 if (numTopScorers <= this.NumWinners)
@@ -102,14 +96,14 @@ namespace MechArena.Tournament
             return this.upcomingMatches.AsReadOnly();
         }
 
-        public IList<Match> ScheduledMatches(Competitor c)
+        public IList<Match> ScheduledMatches(string competitorID)
         {
-            return this.upcomingMatches.Where(m => m.HasCompetitor(c)).ToList().AsReadOnly();
+            return this.upcomingMatches.Where(m => m.HasCompetitor(competitorID)).ToList().AsReadOnly();
         }
 
-        public IList<MatchResult> MatchHistory(Competitor c)
+        public IList<MatchResult> MatchHistory(string competitorID)
         {
-            return this.matchResults.Where(r => r.OriginalMatch.HasCompetitor(c)).ToList().AsReadOnly();
+            return this.matchResults.Where(r => r.OriginalMatch.HasCompetitor(competitorID)).ToList().AsReadOnly();
         }
 
         public void ReportResult(MatchResult result)

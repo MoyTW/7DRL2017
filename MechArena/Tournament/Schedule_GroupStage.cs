@@ -12,7 +12,7 @@ namespace MechArena.Tournament
         public int WinnersPerGroup { get; }
 
         private IEnumerable<Competitor> allEntreants;
-        private Dictionary<Competitor, Schedule> entreantsToSchedules;
+        private Dictionary<string, Schedule> entreantsToSchedules;
         private List<Schedule> groupStagesSchedules;
 
         private void ScheduleGroupStages()
@@ -31,7 +31,7 @@ namespace MechArena.Tournament
                     groupStagesSchedules.Add(newSchedule);
                     foreach(var groupEntreant in groupList)
                     {
-                        this.entreantsToSchedules.Add(groupEntreant, newSchedule);
+                        this.entreantsToSchedules.Add(groupEntreant.CompetitorID, newSchedule);
                     }
                     groupList.Clear();
                 }
@@ -48,15 +48,15 @@ namespace MechArena.Tournament
             this.WinnersPerGroup = winnersPerGroup;
 
             this.allEntreants = entreants;
-            this.entreantsToSchedules = new Dictionary<Competitor, Schedule>();
+            this.entreantsToSchedules = new Dictionary<string, Schedule>();
             this.groupStagesSchedules = new List<Schedule>();
 
             this.ScheduleGroupStages();
         }
 
-        public bool IsEliminated(Competitor c)
+        public bool IsEliminated(string competitorID)
         {
-            return this.entreantsToSchedules[c].IsEliminated(c);
+            return this.entreantsToSchedules[competitorID].IsEliminated(competitorID);
         }
 
         public IList<Competitor> Winners()
@@ -79,9 +79,9 @@ namespace MechArena.Tournament
             return allScheduledMatches;
         }
 
-        public IList<Match> ScheduledMatches(Competitor c)
+        public IList<Match> ScheduledMatches(string competitorID)
         {
-            return this.entreantsToSchedules[c].ScheduledMatches(c);
+            return this.entreantsToSchedules[competitorID].ScheduledMatches(competitorID);
         }
 
         // Matches are retrieved one group at a time
@@ -95,14 +95,14 @@ namespace MechArena.Tournament
             return null;
         }
 
-        public IList<MatchResult> MatchHistory(Competitor c)
+        public IList<MatchResult> MatchHistory(string competitorID)
         {
-            return this.entreantsToSchedules[c].MatchHistory(c);
+            return this.entreantsToSchedules[competitorID].MatchHistory(competitorID);
         }
 
         public void ReportResult(MatchResult result)
         {
-            this.entreantsToSchedules[result.Winner].ReportResult(result);
+            this.entreantsToSchedules[result.Winner.CompetitorID].ReportResult(result);
         }
     }
 }

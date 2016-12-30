@@ -14,9 +14,9 @@ namespace MechArena.Tournament
         IList<Competitor> Winners();
 
         // Competitor Info
-        bool IsEliminated(Competitor c);
+        bool IsEliminated(string competitorID);
         IList<Match> ScheduledMatches();
-        IList<Match> ScheduledMatches(Competitor c);
-        IList<MatchResult> MatchHistory(Competitor c);
+        IList<Match> ScheduledMatches(string competitorID);
+        IList<MatchResult> MatchHistory(string competitorID);
     }
 }

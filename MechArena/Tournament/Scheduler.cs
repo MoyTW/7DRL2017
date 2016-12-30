@@ -15,7 +15,7 @@ namespace MechArena.Tournament
             if (competitors.Count < 2)
                 throw new ArgumentException("Can't schedule if only 1 competitor!");
 
-            var bye = new Competitor("TOURNAMENT_BYE", "TOURNAMENT_BYE");
+            var bye = new CompetitorPlaceholder("TOURNAMENT_BYE", "TOURNAMENT_BYE");
             if (competitors.Count % 2 != 0)
             {
                 competitors.Add(bye);
@@ -42,7 +42,7 @@ namespace MechArena.Tournament
                 }
             }
 
-            return matches.Where(m => !m.HasCompetitor(bye)).ToList();
+            return matches.Where(m => !m.HasCompetitor(bye.CompetitorID)).ToList();
         }
     }
 }

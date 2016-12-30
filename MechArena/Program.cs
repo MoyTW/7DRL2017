@@ -72,7 +72,7 @@ namespace MechArena
                 var winner = _match.CompetitorByID(_arena.WinnerID());
                 if (winner != null)
                 {
-                    _tournament.ReportResult(new MatchResult(_match, winner));
+                    _tournament.ReportResult(_match.BuildResult(winner, _arena.Seed));
                     _match = null;
                     Console.WriteLine("Reported winner of match!");
                 }
@@ -216,7 +216,7 @@ namespace MechArena
                     // argh UI work is the *worst*!
                     case RLKey.M:
                         Console.WriteLine("########## UPCOMING PLAYER MATCHES ##########");
-                        foreach(var m in _tournament.ScheduledMatches(_player))
+                        foreach(var m in _tournament.ScheduledMatches(_player.CompetitorID))
                         {
                             Console.WriteLine(m);
                         }
@@ -225,17 +225,17 @@ namespace MechArena
                         Console.WriteLine("T Pressed!");
                         Console.WriteLine("Round: " + _tournament.RoundNum());
                         _match = _tournament.NextMatch();
-                        while(_match != null && !_match.HasCompetitor(_player))
+                        while(_match != null && !_match.HasCompetitor(_player.CompetitorID))
                         {
+                            int seed = _tournamentRandom.Next(Int16.MaxValue);
                             // TODO: Silly cast, use interface v. actual class!
                             var matchArena = ArenaBuilder.BuildArena(ArenaDrawer.arenaWidth, ArenaDrawer.arenaHeight,
-                                _tournamentRandom.Next(Int16.MaxValue), (CompetitorEntity)_match.Competitor1,
-                                (CompetitorEntity)_match.Competitor2);
+                                seed, (CompetitorEntity)_match.Competitor1, (CompetitorEntity)_match.Competitor2);
                             while (!matchArena.IsMatchEnded())
                             {
                                 matchArena.TryFindAndExecuteNextCommand();
                             }
-                            var result =  new MatchResult(_match, _match.CompetitorByID(matchArena.WinnerID()));
+                            var result =  _match.BuildResult(matchArena.WinnerID(), seed);
 
                             Console.WriteLine("Winner of " + _match + " is " + result.Winner);
                             _tournament.ReportResult(result);

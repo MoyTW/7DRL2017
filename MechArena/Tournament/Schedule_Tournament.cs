@@ -31,9 +31,9 @@ namespace MechArena.Tournament
             return this.rounds.Count;
         }
 
-        public bool IsEliminated(Competitor c)
+        public bool IsEliminated(string competitorID)
         {
-            return rounds.Last().IsEliminated(c);
+            return rounds.Last().IsEliminated(competitorID);
         }
 
         public IList<Competitor> Winners()
@@ -51,9 +51,9 @@ namespace MechArena.Tournament
             return rounds.Last().ScheduledMatches();
         }
 
-        public IList<Match> ScheduledMatches(Competitor c)
+        public IList<Match> ScheduledMatches(string competitorID)
         {
-            return rounds.Last().ScheduledMatches(c);
+            return rounds.Last().ScheduledMatches(competitorID);
         }
 
         public Match NextMatch()
@@ -62,12 +62,12 @@ namespace MechArena.Tournament
         }
 
         // Earliest first
-        public IList<MatchResult> MatchHistory(Competitor c)
+        public IList<MatchResult> MatchHistory(string competitorID)
         {
             var results = new List<MatchResult>();
             foreach(var round in this.rounds)
             {
-                results.AddRange(round.MatchHistory(c));
+                results.AddRange(round.MatchHistory(competitorID));
             }
             return results.AsReadOnly();
         }

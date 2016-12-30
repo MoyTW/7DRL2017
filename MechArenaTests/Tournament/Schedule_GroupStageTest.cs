@@ -15,7 +15,7 @@ namespace MechArenaTests.Tournament
             List<Competitor> comps = new List<Competitor>();
             for (int i = 0; i < numComps; i++)
             {
-                comps.Add(new Competitor(i.ToString(), i.ToString()));
+                comps.Add(new CompetitorPlaceholder(i.ToString(), i.ToString()));
             }
             return comps;
         }
@@ -27,11 +27,16 @@ namespace MechArenaTests.Tournament
             var sgs = new Schedule_GroupStage(8, 1, comps);
             
             Assert.AreEqual(84, sgs.ScheduledMatches().Count);
-            int breaker = 9999;
+            int breaker = 9995;
+            Random r = new Random();
             while(breaker > 0 && sgs.NextMatch() != null)
             {
-                sgs.ReportResult(new MatchResult(sgs.NextMatch(), sgs.NextMatch().Competitor1));
-                breaker++;
+                if (r.Next(100) % 2 == 0)
+                    sgs.ReportResult(new MatchResult(sgs.NextMatch(), sgs.NextMatch().Competitor1, 0));
+                else
+                    sgs.ReportResult(new MatchResult(sgs.NextMatch(), sgs.NextMatch().Competitor2, 0));
+
+                breaker--;
             }
             Assert.AreEqual(3, sgs.Winners().Count);
         }

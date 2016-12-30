@@ -15,16 +15,16 @@ namespace MechArenaTests.Tournament
             List<Competitor> comps = new List<Competitor>();
             for (int i = 0; i < numComps; i++)
             {
-                comps.Add(new Competitor(i.ToString(), i.ToString()));
+                comps.Add(new CompetitorPlaceholder(i.ToString(), i.ToString()));
             }
 
             var scheduled = Scheduler.ScheduleRoundRobin(comps);
 
             Assert.AreEqual(countMatches, scheduled.Count);
-            foreach (var c in comps)
+            foreach (var c in comps.Select(c => c.CompetitorID))
             {
                 Assert.AreEqual(countMatchesPerComp, scheduled.Where(m => m.HasCompetitor(c)).Count());
-                foreach (var o in comps.Where(o => o != c))
+                foreach (var o in comps.Where(o => o.CompetitorID != c).Select(o => o.CompetitorID))
                 {
                     Assert.AreEqual(1, scheduled.Where(m => m.HasCompetitor(c) && m.HasCompetitor(o))
                         .Count());

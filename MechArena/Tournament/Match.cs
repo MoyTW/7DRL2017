@@ -14,8 +14,11 @@ namespace MechArena.Tournament
 
         public Match(Competitor competitor1, Competitor competitor2, bool isTieBreaker=false)
         {
-            this.Competitor1 = competitor1;
-            this.Competitor2 = competitor2;
+            // We don't want the competitors to get changed - for example, if the player later swaps out his mech, we
+            // want to ensure that when we replay the Match he still has the original mech for the history. I don't
+            // think there will be memory issues, but we'll see!
+            this.Competitor1 = competitor1.DeepCopy();
+            this.Competitor2 = competitor2.DeepCopy();
             this.IsTieBreaker = isTieBreaker;
         }
 
@@ -29,9 +32,20 @@ namespace MechArena.Tournament
                 return null;
         }
 
-        public bool HasCompetitor(Competitor c)
+        public bool HasCompetitor(string competitorID)
         {
-            return this.Competitor1 == c || this.Competitor2 == c;
+            return this.Competitor1.CompetitorID == competitorID ||
+                this.Competitor2.CompetitorID == competitorID;
+        }
+
+        public MatchResult BuildResult(Competitor winner, int seed)
+        {
+            return new MatchResult(this, winner, seed);
+        }
+
+        public MatchResult BuildResult(string winnerID, int seed)
+        {
+            return this.BuildResult(this.CompetitorByID(winnerID), seed);
         }
 
         public override string ToString()
