@@ -108,6 +108,21 @@ namespace MechArena
                 this.IsPilotKilled(this.Mech2) || this.IsMechUnableToFight(this.Mech2);
         }
 
+        public string WinnerID()
+        {
+            if (this.IsMatchEnded())
+            {
+                if (this.IsPilotKilled(this.Mech1) || this.IsMechUnableToFight(this.Mech1))
+                    return this.Mech1.EntityID;
+                else
+                    return this.Mech2.EntityID;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
         private void ForwardToNextAction()
         {
             // Mech1 always moves fully before mech2 if possible! First player advantage.

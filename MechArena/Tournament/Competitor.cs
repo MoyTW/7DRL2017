@@ -11,11 +11,12 @@ namespace MechArena.Tournament
         public string PilotLabel { get; }
         public string MechLabel { get; }
         public string Label { get { return this.PilotLabel + " (" + this.MechLabel + ")"; } }
-        public Guid CompetitorID { get; }
+        public string CompetitorID { get; }
 
-        public Competitor(string pilotLabel, string mechLabel) : this(pilotLabel, mechLabel, Guid.NewGuid()) { }
+        public Competitor(string pilotLabel, string mechLabel) : this(pilotLabel, mechLabel, Guid.NewGuid().ToString())
+        { }
 
-        public Competitor(string pilotLabel, string mechLabel, Guid competitorID)
+        public Competitor(string pilotLabel, string mechLabel, string competitorID)
         {
             this.PilotLabel = pilotLabel;
             this.MechLabel = mechLabel;

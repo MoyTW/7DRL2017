@@ -1,4 +1,5 @@
 ﻿using RLNET;
+using RogueSharp.Random;
 
 using MechArena.Tournament;
 using MechArena.UI;
@@ -25,14 +26,18 @@ namespace MechArena
 
         private static int _seed = -1;
         private static Competitor _player;
+        private static IRandom _tournamentRandom;
         private static Schedule_Tournament _tournament;
+        private static Match _match;
         private static ArenaState _arena;
         private static ArenaDrawer _arenaDrawer;
 
         public static void Main()
         {
             _player = new CompetitorEntity(new Entity(label: "Player"), EntityBuilder.BuildPlayer());
-            _tournament = TournamentBuilder.BuildTournament(_player, new RogueSharp.Random.DotNetRandom(1));
+            _tournamentRandom = new DotNetRandom(1);
+            _tournament = TournamentBuilder.BuildTournament(_player, _tournamentRandom);
+            _match = _tournament.NextMatch();
 
             gameState = GameState.MAIN_MENU;
 
@@ -62,6 +67,27 @@ namespace MechArena
             if (_arena.IsMatchEnded())
             {
                 Console.WriteLine("Match has ended!");
+
+                if (_match != null)
+                {
+                    Console.WriteLine("Attempting to register match results with the Tournament!");
+                    var winner = _match.CompetitorByID(_arena.WinnerID());
+                    if (winner != null)
+                    {
+                        _tournament.ReportResult(new MatchResult(_match, winner));
+                        _match = null;
+                        Console.WriteLine("Reported winner of match!");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Something's gone wrong! Can't get winner from ended match!");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Match was not an official tournament match or was a replay, not registering!");
+                }
+
                 GotoMainMenu();
                 return;
             }
@@ -156,9 +182,12 @@ namespace MechArena
             gameState = GameState.ARENA;
         }
 
-        private static void GotoNewArena()
+        private static void GotoNextMatchArena()
         {
-            _arena = ArenaBuilder.BuildFixedTestArena(ArenaDrawer.arenaWidth, ArenaDrawer.arenaHeight);
+            _match = _tournament.NextMatch();
+            // TODO: The casting here is silly!
+            _arena = ArenaBuilder.BuildArena(ArenaDrawer.arenaWidth, ArenaDrawer.arenaHeight, 100,
+                (CompetitorEntity)_match.Competitor1, (CompetitorEntity)_match.Competitor2);
             _arenaDrawer = new ArenaDrawer(_arena);
             gameState = GameState.ARENA;
         }
@@ -168,10 +197,10 @@ namespace MechArena
             if (_arena != null)
                 gameState = GameState.ARENA;
             else
-                GotoNewArena();
+                GotoNextMatchArena();
         }
 
-        private static void OnRootConsoleUpdateForMainMeu(object sender, UpdateEventArgs e)
+        private static void OnRootConsoleUpdateForMainMenu(object sender, UpdateEventArgs e)
         {
             RLKeyPress keyPress = _rootConsole.Keyboard.GetKeyPress();
             if (keyPress != null)
@@ -187,11 +216,28 @@ namespace MechArena
                             Console.WriteLine(m);
                         }
                         break;
+                    case RLKey.T:
+                        Console.WriteLine("T Pressed!");
+                        _match = _tournament.NextMatch();
+                        while(_match != null && !_match.HasCompetitor(_player))
+                        {
+                            MatchResult result;
+                            if(_tournamentRandom.Next(1) == 0)
+                                result = new MatchResult(_match, _match.Competitor1);
+                            else
+                                result = new MatchResult(_match, _match.Competitor2);
+                            Console.WriteLine("Winner of " + _match + " is " + result.Winner);
+                            _tournament.ReportResult(result);
+                            _match = _tournament.NextMatch();
+                        }
+                        if (_match != null)
+                            Console.WriteLine("Next match is player!");
+                        break;
                     case RLKey.S:
                         GotoNewAIVersusAIArena();
                         break;
                     case RLKey.N:
-                        GotoNewArena();
+                        GotoNextMatchArena();
                         break;
                     case RLKey.R:
                         GotoCurrentArena();
@@ -214,13 +260,13 @@ namespace MechArena
             switch (gameState)
             {
                 case GameState.MAIN_MENU:
-                    OnRootConsoleUpdateForMainMeu(sender, e);
+                    OnRootConsoleUpdateForMainMenu(sender, e);
                     break;
                 case GameState.ARENA:
                     OnRootConsoleUpdateForArena(sender, e);
                     break;
                 default:
-                    OnRootConsoleUpdateForMainMeu(sender, e);
+                    OnRootConsoleUpdateForMainMenu(sender, e);
                     break;
             }
         }
@@ -239,10 +285,11 @@ namespace MechArena
                     _rootConsole.Print(_screenWidth / 2 - 4, _screenHeight / 2 - 1, "Options", RLColor.White);
                     _rootConsole.Print(_screenWidth / 2 - 2, _screenHeight / 2, "S) Spectate AI Game", RLColor.White);
                     _rootConsole.Print(_screenWidth / 2 - 2, _screenHeight / 2 + 1, "P) Replay Last AI Game", RLColor.White);
-                    _rootConsole.Print(_screenWidth / 2 - 2, _screenHeight / 2 + 2, "N) New Game", RLColor.White);
+                    _rootConsole.Print(_screenWidth / 2 - 2, _screenHeight / 2 + 2, "N) Play Next Match", RLColor.White);
                     _rootConsole.Print(_screenWidth / 2 - 2, _screenHeight / 2 + 3, "R) Return To Game", RLColor.White);
-                    _rootConsole.Print(_screenWidth / 2 - 2, _screenHeight / 2 + 4, "M) View Upcoming Matches", RLColor.White);
-                    _rootConsole.Print(_screenWidth / 2 - 2, _screenHeight / 2 + 5, "Esc) Quit", RLColor.White);
+                    _rootConsole.Print(_screenWidth / 2 - 2, _screenHeight / 2 + 4, "T) Fast-Forward Tournament", RLColor.White);
+                    _rootConsole.Print(_screenWidth / 2 - 2, _screenHeight / 2 + 5, "M) View Upcoming Matches", RLColor.White);
+                    _rootConsole.Print(_screenWidth / 2 - 2, _screenHeight / 2 + 6, "Esc) Quit", RLColor.White);
                     break;
                 case GameState.ARENA:
                     _arenaDrawer.Blit(_rootConsole);

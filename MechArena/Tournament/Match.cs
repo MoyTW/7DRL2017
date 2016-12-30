@@ -19,6 +19,16 @@ namespace MechArena.Tournament
             this.IsTieBreaker = isTieBreaker;
         }
 
+        public Competitor CompetitorByID(string id)
+        {
+            if (this.Competitor1.CompetitorID == id)
+                return this.Competitor1;
+            else if (this.Competitor2.CompetitorID == id)
+                return this.Competitor2;
+            else
+                return null;
+        }
+
         public bool HasCompetitor(Competitor c)
         {
             return this.Competitor1 == c || this.Competitor2 == c;

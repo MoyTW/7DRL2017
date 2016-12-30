@@ -122,6 +122,12 @@ namespace MechArena
             var torso = bodyParts[1];
             torso.HandleEvent(new GameEvent_Slot(player, torso, largeWeaponMount));
 
+            var doomCannon = new Entity(label: "DM.CNNN.", typeLabel: "Weapon")
+                .AddComponent(new Component_Slottable(4))
+                .AddComponent(new Component_InternalStructure(32))
+                .AddComponent(new Component_Weapon(WeaponSize.LARGE, 9999, 9999, 9999, 1));
+            SlotAt(player, BodyPartLocation.RIGHT_ARM, doomCannon);
+
             SlotAt(player, BodyPartLocation.LEFT_LEG, BuildAccelerator());
             SlotAt(player, BodyPartLocation.LEFT_LEG, BuildAccelerator());
             SlotAt(player, BodyPartLocation.LEFT_LEG, BuildAccelerator());
