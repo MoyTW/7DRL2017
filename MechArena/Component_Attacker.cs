@@ -1,12 +1,9 @@
-﻿using RogueSharp;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MechArena
 {
+    [Serializable()]
     class Component_Attacker : Component
     {
         private void HandleAttack(GameEvent_Attack ev)

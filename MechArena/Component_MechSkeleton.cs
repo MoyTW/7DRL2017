@@ -2,11 +2,10 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace MechArena
 {
+    [Serializable()]
     class Component_MechSkeleton : Component_TracksTime
     {
         private static Dictionary<BodyPartLocation, int> MechTemplate = new Dictionary<BodyPartLocation, int>() {

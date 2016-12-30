@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MechArena
 {
+    [Serializable()]
     class Component_AttributeModifierMult : Component
     {
         public EntityAttributeType AttributeType { get; }

@@ -2,6 +2,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace MechArenaTests
@@ -41,6 +44,22 @@ namespace MechArenaTests
             var a = new List<String>();
             this.ent.AddComponent(this.cmp);
             this.ent.RemoveComponent(this.cmp);
+        }
+
+        [TestMethod]
+        public void TestDeepCopy()
+        {
+            var mech = EntityBuilder.BuildArmoredAIMech("test");
+            Entity deepCopy = mech.DeepCopy();
+
+            Assert.AreEqual(mech.EntityID, deepCopy.EntityID);
+
+            Assert.AreEqual(mech.TryGetAttribute(EntityAttributeType.STRUCTURE).Value,
+                deepCopy.TryGetAttribute(EntityAttributeType.STRUCTURE).Value);
+
+            mech.HandleEvent(new GameEvent_TakeDamage(9999, new RogueSharp.Random.DotNetRandom()));
+            Assert.AreNotEqual(mech.TryGetAttribute(EntityAttributeType.STRUCTURE).Value,
+                deepCopy.TryGetAttribute(EntityAttributeType.STRUCTURE).Value);
         }
     }
 }

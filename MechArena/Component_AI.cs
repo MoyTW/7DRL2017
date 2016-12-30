@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MechArena
 {
+    [Serializable()]
     class Component_AI : Component
     {
         private void HandleQueryCommand(GameQuery_Command q)

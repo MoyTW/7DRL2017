@@ -1,5 +1,8 @@
-﻿namespace MechArena
+﻿using System;
+
+namespace MechArena
 {
+    [Serializable()]
     public class Component
     {
         private Entity parent;

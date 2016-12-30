@@ -1,10 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace MechArena
 {
-	public class Entity
+    [Serializable()]
+    public class Entity
 	{
         #region Vars and Properties
 
@@ -26,6 +29,17 @@ namespace MechArena
             this.TypeLabel = typeLabel;
 
             this.orderedComponents = new List<Component>();
+        }
+
+        public Entity DeepCopy()
+        {
+            using (MemoryStream stream = new MemoryStream())
+            {
+                BinaryFormatter formatter = new BinaryFormatter();
+                formatter.Serialize(stream, this);
+                stream.Position = 0;
+                return (Entity)formatter.Deserialize(stream);
+            }
         }
 
         #endregion

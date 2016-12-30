@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MechArena
 {
+    [Serializable()]
     public class Component_TracksTime : Component
     {
         private int lastActivationTick;

@@ -4,6 +4,7 @@ using System.Linq;
 
 namespace MechArena
 {
+    [Serializable()]
     public class Component_SlottedContainer : Component
     {
         private int slotsMax;

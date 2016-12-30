@@ -6,6 +6,7 @@ namespace MechArena
 {
     // Depends on Component_SlottedContainer! Find some way to codify this in your EC system!
     // Assumes that slotted items have Componenet_InternalStructure! Ugh, TERRIBLE!
+    [Serializable()]
     public class Component_SlottedStructure : Component
     {
         

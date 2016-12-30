@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MechArena
 {
@@ -13,6 +10,7 @@ namespace MechArena
         LARGE
     }
 
+    [Serializable()]
     public class Component_Weapon : Component_TracksTime
     {
         public WeaponSize Size { get; }

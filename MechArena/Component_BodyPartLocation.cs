@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace MechArena
 {
+    [Serializable()]
     class Component_BodyPartLocation : Component
     {
         public BodyPartLocation Location { get; }
