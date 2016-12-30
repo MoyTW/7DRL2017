@@ -25,6 +25,10 @@ namespace MechArena
 
         private static GameState gameState;
 
+        // History Console
+        private static string _historySelection;
+
+        // Tournament
         private static Competitor _player;
         private static bool _playPlayerMatches = false;
         private static IRandom _tournamentRandom;
@@ -192,6 +196,66 @@ namespace MechArena
             {
                 switch (keyPress.Key)
                 {
+                    case RLKey.Number0:
+                    case RLKey.Keypad0:
+                        _historySelection += "0";
+                        break;
+                    case RLKey.Number1:
+                    case RLKey.Keypad1:
+                        _historySelection += "1";
+                        break;
+                    case RLKey.Number2:
+                    case RLKey.Keypad2:
+                        _historySelection += "2";
+                        break;
+                    case RLKey.Number3:
+                    case RLKey.Keypad3:
+                        _historySelection += "3";
+                        break;
+                    case RLKey.Number4:
+                    case RLKey.Keypad4:
+                        _historySelection += "4";
+                        break;
+                    case RLKey.Number5:
+                    case RLKey.Keypad5:
+                        _historySelection += "5";
+                        break;
+                    case RLKey.Number6:
+                    case RLKey.Keypad6:
+                        _historySelection += "6";
+                        break;
+                    case RLKey.Number7:
+                    case RLKey.Keypad7:
+                        _historySelection += "7";
+                        break;
+                    case RLKey.Number8:
+                    case RLKey.Keypad8:
+                        _historySelection += "8";
+                        break;
+                    case RLKey.Number9:
+                    case RLKey.Keypad9:
+                        _historySelection += "9";
+                        break;
+                    case RLKey.BackSpace:
+                        if (_historySelection.Length > 0)
+                            _historySelection = _historySelection.Substring(0, _historySelection.Length - 1);
+                        break;
+                    case RLKey.Enter:
+                    case RLKey.KeypadEnter:
+                        int index = (Int32.Parse(_historySelection) - 1);
+                        var comps = _tournament.AllCompetitors();
+                        if (index >= 0 && index < comps.Count)
+                        {
+                            var selection = _tournament.AllCompetitors()[index];
+                            Console.WriteLine("Selected " + selection);
+                        }
+                        else
+                        {
+                            Console.WriteLine("No such competitor #" + index);
+                        }
+
+                        _historySelection = "";
+                        break;
                     case RLKey.Escape:
                         gameState = GameState.MAIN_MENU;
                         break;
@@ -215,6 +279,7 @@ namespace MechArena
                     // argh UI work is the *worst*!
                     case RLKey.H:
                         gameState = GameState.COMPETITOR_MENU;
+                        _historySelection = "";
                         break;
                     case RLKey.M:
                         Console.WriteLine("########## UPCOMING PLAYER MATCHES ##########");
@@ -344,6 +409,11 @@ namespace MechArena
                             currentX += tableWidth;
                         }
                     }
+
+                    line += 3;
+                    _rootConsole.Print(currentX, line, "Inspect", RLColor.White);
+                    line += 1;
+                    _rootConsole.Print(currentX, line, "# " + _historySelection, RLColor.White);
                     break;
                 default:
                     break;
