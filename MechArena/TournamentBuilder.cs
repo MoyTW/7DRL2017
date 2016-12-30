@@ -46,11 +46,13 @@ namespace MechArena
             return cities;
         }
 
-        public static Competitor BuildCompetitor(IRandom rand)
+        public static CompetitorEntity BuildCompetitor(IRandom rand)
         {
             var adjective = rand.RandomElement(GetAdjectives());
             var city = rand.RandomElement(GetCities());
-            return new Competitor(adjective, city);
+            Entity pilot = new Entity(label: adjective);
+            Entity mech = EntityBuilder.BuildArmoredAIMech(city);
+            return new CompetitorEntity(pilot, mech);
         }
 
         public static Schedule_Tournament BuildTournament(Competitor player, IRandom rand)

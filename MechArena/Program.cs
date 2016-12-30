@@ -31,8 +31,8 @@ namespace MechArena
 
         public static void Main()
         {
-            _player = new Competitor("Player", "Player Mech");
-            _tournament = TournamentBuilder.BuildTournament(_player, new RogueSharp.Random.DotNetRandom());
+            _player = new CompetitorEntity(new Entity(label: "Player"), EntityBuilder.BuildPlayer());
+            _tournament = TournamentBuilder.BuildTournament(_player, new RogueSharp.Random.DotNetRandom(1));
 
             gameState = GameState.MAIN_MENU;
 
