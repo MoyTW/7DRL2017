@@ -1,4 +1,6 @@
-﻿using System;
+﻿using RogueSharp.Random;
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -241,6 +243,25 @@ namespace MechArena
             }
 
             return mech;
+        }
+
+        public static Entity BuildRandomMech(string label, bool player, IRandom rand)
+        {
+            // DoomCannonMech is reserved for the Player
+            var choice = rand.Next(3);
+            switch (choice)
+            {
+                case 0:
+                    return BuildArmoredMech(label, player);
+                case 1:
+                    return BuildKnifeMech(label, player);
+                case 2:
+                    return BuildPaladinMech(label, player);
+                case 3:
+                    return BuildAlphaStrikerMech(label, player);
+                default:
+                    return BuildNakedMech(label, player);
+            }
         }
 
         #endregion
