@@ -105,6 +105,7 @@
     <Compile Include="Tournament\Schedule.cs" />
     <Compile Include="Tournament\Schedule_Tournament.cs" />
     <Compile Include="UI\ArenaDrawer.cs" />
+    <Compile Include="UI\CompetitorHistory.cs" />
     <Compile Include="UI\CompetitorMenu.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

@@ -32,6 +32,14 @@ namespace MechArena.Tournament
                 return null;
         }
 
+        public Competitor OpponentOf(string competitorID)
+        {
+            if (this.Competitor1.CompetitorID == competitorID)
+                return this.Competitor2;
+            else
+                return this.Competitor1;
+        }
+
         public bool HasCompetitor(string competitorID)
         {
             return this.Competitor1.CompetitorID == competitorID ||

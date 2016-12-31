@@ -18,5 +18,10 @@ namespace MechArena.Tournament
             this.Winner = winner;
             this.Seed = seed;
         }
+
+        public Competitor OpponentOf(string competitorID)
+        {
+            return this.OriginalMatch.OpponentOf(competitorID);
+        }
     }
 }

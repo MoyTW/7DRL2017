@@ -13,7 +13,8 @@ namespace MechArena
     {
         MAIN_MENU = 0,
         ARENA,
-        COMPETITOR_MENU
+        COMPETITOR_MENU,
+        COMPETITOR_HISTORY
     }
 
     public class Program
@@ -27,6 +28,7 @@ namespace MechArena
 
         // History
         private static CompetitorMenu _competitorMenu;
+        private static CompetitorHistory _competitorHistory;
 
         // Tournament
         private static Competitor _player;
@@ -268,6 +270,12 @@ namespace MechArena
             }
         }
 
+        private static void GotoCompetitorHistory(Competitor selectedCompetitor)
+        {
+            _competitorHistory = new CompetitorHistory(selectedCompetitor);
+            _gameState = GameState.COMPETITOR_HISTORY;
+        }
+
         // Event handler for RLNET's Update event
         private static void OnRootConsoleUpdate(object sender, UpdateEventArgs e)
         {
@@ -283,6 +291,17 @@ namespace MechArena
                     _competitorMenu.OnRootConsoleUpdate(_rootConsole, _tournament);
                     if (_competitorMenu.GotoMainMenu)
                         _gameState = GameState.MAIN_MENU;
+                    else if (_competitorMenu.Transition != null)
+                        GotoCompetitorHistory(_competitorMenu.Transition.SelectedCompetitor);
+                    break;
+                case GameState.COMPETITOR_HISTORY:
+                    _competitorHistory.OnRootConsoleUpdate(_rootConsole, _tournament);
+                    if (_competitorHistory.GotoCompetitorMenu)
+                    {
+                        // TODO: Write transition fn
+                        _competitorMenu = new CompetitorMenu();
+                        _gameState = GameState.COMPETITOR_MENU;
+                    }
                     break;
                 default:
                     OnRootConsoleUpdateForMainMenu(sender, e);
@@ -314,6 +333,9 @@ namespace MechArena
                     break;
                 case GameState.COMPETITOR_MENU:
                     _competitorMenu.Blit(_rootConsole, _tournament);
+                    break;
+                case GameState.COMPETITOR_HISTORY:
+                    _competitorHistory.Blit(_rootConsole, _tournament);
                     break;
                 default:
                     break;
