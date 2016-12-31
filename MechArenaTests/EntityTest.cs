@@ -49,7 +49,7 @@ namespace MechArenaTests
         [TestMethod]
         public void TestDeepCopy()
         {
-            var mech = EntityBuilder.BuildArmoredAIMech("test");
+            var mech = EntityBuilder.BuildArmoredMech("test", false);
             Entity deepCopy = mech.DeepCopy();
 
             Assert.AreEqual(mech.EntityID, deepCopy.EntityID);

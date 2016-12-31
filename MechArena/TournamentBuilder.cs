@@ -51,7 +51,7 @@ namespace MechArena
             var adjective = rand.RandomElement(GetAdjectives());
             var city = rand.RandomElement(GetCities());
             Entity pilot = new Entity(label: adjective);
-            Entity mech = EntityBuilder.BuildArmoredAIMech(city);
+            Entity mech = EntityBuilder.BuildArmoredMech(city, false);
             return new CompetitorEntity(pilot, mech);
         }
 

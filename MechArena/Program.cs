@@ -41,7 +41,8 @@ namespace MechArena
 
         public static void Main()
         {
-            _player = new CompetitorEntity(new Entity(label: "Player"), EntityBuilder.BuildPlayer());
+            _player = new CompetitorEntity(new Entity(label: "Player"),
+                EntityBuilder.BuildDoomCannonMech("Doom Cannon Mech", true));
             _tournamentRandom = new DotNetRandom(1);
             _tournament = TournamentBuilder.BuildTournament(_player, _tournamentRandom);
             _match = _tournament.NextMatch();
