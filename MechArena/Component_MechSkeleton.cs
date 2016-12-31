@@ -55,8 +55,8 @@ namespace MechArena
             int toHit = attackerBaseToHit;
             int dodge = targetDodge;
 
-            Log.Debug(String.Format("{0} attacked {1} - {2} roll+toHit v. {3} dodge", ev.ExecutorEntity, ev.SubTarget,
-                roll + toHit, 10 + dodge));
+            Log.DebugLine(String.Format("{0} attacked {1} - {2} roll+toHit v. {3} dodge, hit? {4}", ev.ExecutorEntity,
+                ev.SubTarget, roll + toHit, 10 + dodge, roll + toHit > 10 + dodge));
 
             if (roll + toHit > 10 + dodge)
             {
@@ -87,11 +87,6 @@ namespace MechArena
                         Log.DebugLine(String.Format("Part {0} was destroyed!", ev.SubTarget));
                     }
                 }
-            }
-            else
-            {
-                Log.DebugLine(String.Format("{0} ({1}) missed {2}!", ev.ExecutorEntity, ev.CommandEntity,
-                    ev.Target));
             }
 
             ev.Completed = true;
