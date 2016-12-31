@@ -42,8 +42,10 @@ namespace MechArena
             if (ev.Target != this.Parent)
                 return;
 
-            int attackerBaseToHit = ev.CommandEntity.TryGetAttribute(EntityAttributeType.TO_HIT).Value;
-            int weaponBaseDamage = ev.ExecutorEntity.TryGetAttribute(EntityAttributeType.DAMAGE).Value;
+            int attackerBaseToHit = ev.CommandEntity.TryGetAttribute(EntityAttributeType.TO_HIT, ev.ExecutorEntity)
+                .Value;
+            int weaponBaseDamage = ev.ExecutorEntity.TryGetAttribute(EntityAttributeType.DAMAGE, ev.ExecutorEntity)
+                .Value;
 
             // Resolve pilot skills here
             // Get pilot skill modifiers for attacker
@@ -135,7 +137,7 @@ namespace MechArena
             if (q.AttributeType == EntityAttributeType.SPEED)
             {
                 // TOOD: Base speed not hardcoded to 50!
-                q.AddFlatModifier(50, this.Parent);
+                q.RegisterBaseValue(50);
             }
         }
 

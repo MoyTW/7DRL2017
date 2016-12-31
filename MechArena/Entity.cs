@@ -56,6 +56,11 @@ namespace MechArena
             return this.HandleQuery(new GameQuery_EntityAttribute(attributeType));
         }
 
+        public GameQuery_EntityAttribute TryGetAttribute(EntityAttributeType attributeType, Entity baseEntity)
+        {
+            return this.HandleQuery(new GameQuery_EntityAttribute(attributeType, baseEntity));
+        }
+
         public bool TryGetDestroyed()
         {
             return this.HandleQuery(new GameQuery_Destroyed()).Destroyed;

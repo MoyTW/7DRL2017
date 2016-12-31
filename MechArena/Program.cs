@@ -80,6 +80,7 @@ namespace MechArena
             _gameState = GameState.MAIN_MENU;
         }
 
+        // TODO: Will attempt to register replays!
         private static void HandleArenaEnded()
         {
             Log.DebugLine("Match has ended!");

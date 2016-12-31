@@ -32,8 +32,8 @@ namespace MechArena
 
         private void HandleQueryEntityAttribute(GameQuery_EntityAttribute q)
         {
-            if (this.WeaponAttributes.ContainsKey(q.AttributeType))
-                q.AddFlatModifier(this.WeaponAttributes[q.AttributeType], this.Parent);
+            if (this.Parent == q.BaseEntity && this.WeaponAttributes.ContainsKey(q.AttributeType))
+                q.RegisterBaseValue(this.WeaponAttributes[q.AttributeType]);
         }
 
         protected override GameQuery _HandleQuery(GameQuery q)

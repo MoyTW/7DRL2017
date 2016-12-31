@@ -25,7 +25,8 @@ namespace MechArena
                     return;
                 }
                 // If it's out of range, then the attack misses
-                int weaponRange = ev.ExecutorEntity.TryGetAttribute(EntityAttributeType.MAX_RANGE).Value;
+                int weaponRange = ev.ExecutorEntity.TryGetAttribute(EntityAttributeType.MAX_RANGE, ev.ExecutorEntity)
+                    .Value;
                 var distance = lineCells.Count() - 1;
                 if (distance > weaponRange)
                 {
