@@ -278,8 +278,13 @@ namespace MechArena
         {
             if (this.ShouldWaitForPlayerInput)
             {
-                this.NextExecutorEntity.HandleEvent(
-                    new GameEvent_Delay(this.CurrentTick, this.Mech1, this.NextExecutorEntity, duration));
+                var timeTrackers = this.nextCommandEntity.TryGetSubEntities(SubEntitiesSelector.TRACKS_TIME);
+                foreach(var tracker in timeTrackers)
+                {
+                    if (tracker.TryGetTicksToLive(this.CurrentTick) == 0)
+                        tracker.HandleEvent(new GameEvent_Delay(this.CurrentTick, this.Mech1, this.NextExecutorEntity,
+                            duration));
+                }
                 this.ForwardToNextAction();
             }
         }

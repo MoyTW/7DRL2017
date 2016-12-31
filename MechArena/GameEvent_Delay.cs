@@ -33,6 +33,7 @@ namespace MechArena
                 timeTrackers.Remove(delayEntity);
 
                 var nextEntity = timeTrackers.Where(e => !e.TryGetDestroyed())
+                    .Where(e => e.TryGetTicksToLive(currentTick) > 0)
                     .OrderBy(e => e.TryGetTicksToLive(currentTick))
                     .FirstOrDefault();
 
