@@ -107,6 +107,7 @@
     <Compile Include="UI\ArenaDrawer.cs" />
     <Compile Include="UI\CompetitorHistory.cs" />
     <Compile Include="UI\CompetitorMenu.cs" />
+    <Compile Include="UI\IntegerSelectionField.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

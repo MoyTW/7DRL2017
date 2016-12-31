@@ -13,10 +13,11 @@ namespace MechArena.UI
     class CompetitorHistory
     {
         private RLConsole statusConsole;
+        private IntegerSelectionField selectionField;
 
         public Competitor SelectedCompetitor { get; }
+        public string SelectedID { get { return this.SelectedCompetitor.CompetitorID; } }
 
-        private string matchSelection;
         private MatchResult selectedMatch;
         private bool gotoCompetitorMenu = false;
 
@@ -28,83 +29,28 @@ namespace MechArena.UI
             this.statusConsole = new RLConsole(ArenaDrawer.statusWidth, ArenaDrawer.statusHeight);
             this.statusConsole.SetBackColor(0, 0, ArenaDrawer.statusWidth, ArenaDrawer.statusHeight,
                 RLColor.LightBlue);
+            this.selectionField = new IntegerSelectionField();
             this.SelectedCompetitor = selectedCompetitor;
         }
 
         public void ResetCompetitorHistory()
         {
+            this.selectionField.Reset();
             this.selectedMatch = null;
-            this.matchSelection = "";
             this.gotoCompetitorMenu = false;
         }
 
         public void OnRootConsoleUpdate(RLRootConsole rootConsole, Schedule_Tournament tournament)
         {
             RLKeyPress keyPress = rootConsole.Keyboard.GetKeyPress();
+            this.selectedMatch = this.selectionField.HandleKeyPress(keyPress,
+                tournament.MatchHistory(this.SelectedID));
+
             if (keyPress != null)
             {
-                switch (keyPress.Key)
-                {
-                    case RLKey.Number0:
-                    case RLKey.Keypad0:
-                        this.matchSelection += "0";
-                        break;
-                    case RLKey.Number1:
-                    case RLKey.Keypad1:
-                        this.matchSelection += "1";
-                        break;
-                    case RLKey.Number2:
-                    case RLKey.Keypad2:
-                        this.matchSelection += "2";
-                        break;
-                    case RLKey.Number3:
-                    case RLKey.Keypad3:
-                        this.matchSelection += "3";
-                        break;
-                    case RLKey.Number4:
-                    case RLKey.Keypad4:
-                        this.matchSelection += "4";
-                        break;
-                    case RLKey.Number5:
-                    case RLKey.Keypad5:
-                        this.matchSelection += "5";
-                        break;
-                    case RLKey.Number6:
-                    case RLKey.Keypad6:
-                        this.matchSelection += "6";
-                        break;
-                    case RLKey.Number7:
-                    case RLKey.Keypad7:
-                        this.matchSelection += "7";
-                        break;
-                    case RLKey.Number8:
-                    case RLKey.Keypad8:
-                        this.matchSelection += "8";
-                        break;
-                    case RLKey.Number9:
-                    case RLKey.Keypad9:
-                        this.matchSelection += "9";
-                        break;
-                    case RLKey.BackSpace:
-                        if (this.matchSelection.Length > 0)
-                            this.matchSelection = this.matchSelection.Substring(0, this.matchSelection.Length - 1);
-                        break;
-                    case RLKey.Enter:
-                    case RLKey.KeypadEnter:
-                        int index;
-                        Int32.TryParse(this.matchSelection, out index);
-                        index--;
-
-                        var history = tournament.MatchHistory(this.SelectedCompetitor.CompetitorID);
-                        if (index < history.Count)
-                            this.selectedMatch = history[index];
-
-                        this.matchSelection = "";
-                        break;
+                switch (keyPress.Key) {
                     case RLKey.Escape:
                         this.gotoCompetitorMenu = true;
-                        break;
-                    default:
                         break;
                 }
             }
@@ -149,7 +95,7 @@ namespace MechArena.UI
             line += 3;
             console.Print(currentX, line, "Inspect", RLColor.White);
             line += 1;
-            console.Print(currentX, line, "# " + this.matchSelection, RLColor.White);
+            console.Print(currentX, line, "# " + this.selectionField.SelectionString, RLColor.White);
 
             // Status of mech
             ArenaDrawer.DrawMechStatus(((CompetitorEntity)this.SelectedCompetitor).Mech, this.statusConsole);
