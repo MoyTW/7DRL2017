@@ -14,13 +14,15 @@ namespace MechArena.Tournament
 
         public Match OriginalMatch { get; }
         public Competitor Winner { get; }
-        public int Seed { get; }
+        public int MapSeed { get; }
+        public int ArenaSeed { get; }
 
-        public MatchResult(Match originalMatch, Competitor winner, int seed)
+        public MatchResult(Match originalMatch, Competitor winner, int mapSeed, int arenaSeed)
         {
             this.OriginalMatch = originalMatch;
             this.Winner = winner;
-            this.Seed = seed;
+            this.MapSeed = mapSeed;
+            this.ArenaSeed = arenaSeed;
         }
 
         public bool HasCompetitor(string competitorID)

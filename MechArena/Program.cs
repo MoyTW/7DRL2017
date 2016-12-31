@@ -64,6 +64,16 @@ namespace MechArena
             _rootConsole.Run();
         }
 
+        private static int GenMapSeed()
+        {
+            return _tournamentRandom.Next(5);
+        }
+
+        private static int GenArenaSeed()
+        {
+            return _tournamentRandom.Next(Int16.MaxValue);
+        }
+
         private static void GotoMainMenu()
         {
             _gameState = GameState.MAIN_MENU;
@@ -79,7 +89,7 @@ namespace MechArena
                 var winner = _match.CompetitorByID(_arena.WinnerID());
                 if (winner != null)
                 {
-                    _tournament.ReportResult(_match.BuildResult(winner, _arena.Seed));
+                    _tournament.ReportResult(_match.BuildResult(winner, _arena.MapSeed, _arena.ArenaSeed));
                     _match = null;
                     Log.DebugLine("Reported winner of match!");
                 }
@@ -177,8 +187,8 @@ namespace MechArena
         {
             _match = _tournament.NextMatch();
             // TODO: The casting here is silly!
-            _arena = ArenaBuilder.BuildArena(ArenaDrawer.arenaWidth, ArenaDrawer.arenaHeight, 100,
-                (CompetitorEntity)_match.Competitor1, (CompetitorEntity)_match.Competitor2);
+            _arena = ArenaBuilder.BuildArena(ArenaDrawer.arenaWidth, ArenaDrawer.arenaHeight, GenMapSeed(),
+                GenArenaSeed(), (CompetitorEntity)_match.Competitor1, (CompetitorEntity)_match.Competitor2);
             _arenaDrawer = new ArenaDrawer(_arena);
             _gameState = GameState.ARENA;
         }
@@ -193,8 +203,8 @@ namespace MechArena
 
         private static void GotoArenaForMatch(MatchResult result)
         {
-            _arena = ArenaBuilder.BuildArena(ArenaDrawer.arenaWidth, ArenaDrawer.arenaHeight, result.Seed,
-                           (CompetitorEntity)result.Competitor1, (CompetitorEntity)result.Competitor2);
+            _arena = ArenaBuilder.BuildArena(ArenaDrawer.arenaWidth, ArenaDrawer.arenaHeight, result.MapSeed,
+                result.ArenaSeed, (CompetitorEntity)result.Competitor1, (CompetitorEntity)result.Competitor2);
             _arenaDrawer = new ArenaDrawer(_arena);
             _gameState = GameState.ARENA;
         }
@@ -228,16 +238,16 @@ namespace MechArena
                         _match = _tournament.NextMatch();
                         while(_match != null && !_match.HasCompetitor(_player.CompetitorID))
                         {
-                            int seed = 100;
-                            // int seed = _tournamentRandom.Next(Int16.MaxValue);
                             // TODO: Silly cast, use interface v. actual class!
                             var matchArena = ArenaBuilder.BuildArena(ArenaDrawer.arenaWidth, ArenaDrawer.arenaHeight,
-                                seed, (CompetitorEntity)_match.Competitor1, (CompetitorEntity)_match.Competitor2);
+                                GenMapSeed(), GenArenaSeed(), (CompetitorEntity)_match.Competitor1,
+                                (CompetitorEntity)_match.Competitor2);
                             while (!matchArena.IsMatchEnded())
                             {
                                 matchArena.TryFindAndExecuteNextCommand();
                             }
-                            var result =  _match.BuildResult(matchArena.WinnerID(), seed);
+                            var result =  _match.BuildResult(matchArena.WinnerID(), matchArena.MapSeed,
+                                matchArena.ArenaSeed);
 
                             Log.InfoLine("Winner of " + _match + " is " + result.Winner);
                             _tournament.ReportResult(result);
@@ -251,7 +261,7 @@ namespace MechArena
                             }
                             else
                             {
-                                var result = _match.BuildResult(_player.CompetitorID, 0);
+                                var result = _match.BuildResult(_player.CompetitorID, 0, 0);
                                 Log.InfoLine("Player wins match!");
                                 _tournament.ReportResult(result);
                                 _match = _tournament.NextMatch();
