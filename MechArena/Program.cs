@@ -20,7 +20,7 @@ namespace MechArena
     public class Program
     {
         // The screen height and width are in number of tiles
-        private static readonly int _screenWidth = 115;
+        private static readonly int _screenWidth = 110;
         private static readonly int _screenHeight = 80;
         private static RLRootConsole _rootConsole;
 

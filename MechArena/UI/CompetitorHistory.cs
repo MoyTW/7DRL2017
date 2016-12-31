@@ -12,6 +12,8 @@ namespace MechArena.UI
 {
     class CompetitorHistory
     {
+        private RLConsole statusConsole;
+
         public Competitor SelectedCompetitor { get; }
 
         private string matchSelection;
@@ -23,6 +25,9 @@ namespace MechArena.UI
 
         public CompetitorHistory(Competitor selectedCompetitor)
         {
+            this.statusConsole = new RLConsole(ArenaDrawer.statusWidth, ArenaDrawer.statusHeight);
+            this.statusConsole.SetBackColor(0, 0, ArenaDrawer.statusWidth, ArenaDrawer.statusHeight,
+                RLColor.LightBlue);
             this.SelectedCompetitor = selectedCompetitor;
         }
 
@@ -134,7 +139,7 @@ namespace MechArena.UI
                 i++;
 
                 line++;
-                if (line > console.Height - 3)
+                if (line > console.Height - ArenaDrawer.statusHeight - 3)
                 {
                     line = lineStart;
                     currentX += tableWidth;
@@ -145,6 +150,11 @@ namespace MechArena.UI
             console.Print(currentX, line, "Inspect", RLColor.White);
             line += 1;
             console.Print(currentX, line, "# " + this.matchSelection, RLColor.White);
+
+            // Status of mech
+            ArenaDrawer.DrawMechStatus(((CompetitorEntity)this.SelectedCompetitor).Mech, this.statusConsole);
+            RLConsole.Blit(statusConsole, 0, 0, ArenaDrawer.statusWidth, ArenaDrawer.statusHeight, console, 0,
+                console.Height - ArenaDrawer.statusHeight);
         }
 
     }

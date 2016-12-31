@@ -21,8 +21,8 @@ namespace MechArena.UI
         private readonly int hudHeight = 30;
         private RLConsole hudConsole;
 
-        private readonly int statusWidth = 125;
-        private readonly int statusHeight = 40;
+        public const int statusWidth = 60;
+        public const int statusHeight = 40;
         private RLConsole status1Console;
         private RLConsole status2Console;
 
@@ -31,8 +31,8 @@ namespace MechArena.UI
             this.arena = arena;
             arenaConsole = new RLConsole(ArenaDrawer.arenaWidth, ArenaDrawer.arenaHeight);
             hudConsole = new RLConsole(this.hudWidth, this.hudHeight);
-            status1Console = new RLConsole(this.statusWidth, this.statusHeight);
-            status2Console = new RLConsole(this.statusWidth, this.statusHeight);
+            status1Console = new RLConsole(ArenaDrawer.statusWidth, ArenaDrawer.statusHeight);
+            status2Console = new RLConsole(ArenaDrawer.statusWidth, ArenaDrawer.statusHeight);
         }
 
         #region External
@@ -44,8 +44,8 @@ namespace MechArena.UI
 
             this.hudConsole.SetBackColor(0, 0, this.hudWidth, this.hudHeight, RLColor.LightGray);
 
-            this.status1Console.SetBackColor(0, 0, this.statusWidth, this.statusHeight, RLColor.LightBlue);
-            this.status2Console.SetBackColor(0, 0, this.statusWidth, this.statusHeight, RLColor.LightCyan);
+            this.status1Console.SetBackColor(0, 0, ArenaDrawer.statusWidth, ArenaDrawer.statusHeight, RLColor.LightBlue);
+            this.status2Console.SetBackColor(0, 0, ArenaDrawer.statusWidth, ArenaDrawer.statusHeight, RLColor.LightCyan);
         }
 
         public void Blit(RLConsole console)
@@ -55,8 +55,8 @@ namespace MechArena.UI
 
             this.hudConsole.SetBackColor(0, 0, this.hudWidth, this.hudHeight, RLColor.LightGray);
 
-            this.status1Console.SetBackColor(0, 0, this.statusWidth, this.statusHeight, RLColor.LightBlue);
-            this.status2Console.SetBackColor(0, 0, this.statusWidth, this.statusHeight, RLColor.LightCyan);
+            this.status1Console.SetBackColor(0, 0, ArenaDrawer.statusWidth, ArenaDrawer.statusHeight, RLColor.LightBlue);
+            this.status2Console.SetBackColor(0, 0, ArenaDrawer.statusWidth, ArenaDrawer.statusHeight, RLColor.LightCyan);
 
             this.DrawArena(this.arenaConsole);
             RLConsole.Blit(this.arenaConsole, 0, 0, ArenaDrawer.arenaWidth, ArenaDrawer.arenaHeight, console, 0, 0);
@@ -64,18 +64,20 @@ namespace MechArena.UI
             this.DrawHUD(this.hudConsole);
             RLConsole.Blit(this.hudConsole, 0, 0, this.hudWidth, this.hudHeight, console, 0, arenaHeight);
 
-            this.DrawMech1Status(this.status1Console);
-            RLConsole.Blit(this.status1Console, 0, 0, this.statusWidth, this.statusHeight, console, ArenaDrawer.arenaWidth, 0);
+            ArenaDrawer.DrawMechStatus(this.arena.Mech1, this.status1Console);
+            RLConsole.Blit(this.status1Console, 0, 0, ArenaDrawer.statusWidth, ArenaDrawer.statusHeight, console,
+                ArenaDrawer.arenaWidth, 0);
 
-            this.DrawMech2Status(this.status2Console);
-            RLConsole.Blit(this.status2Console, 0, 0, this.statusWidth, this.statusHeight, console, ArenaDrawer.arenaWidth, this.statusHeight);
+            ArenaDrawer.DrawMechStatus(this.arena.Mech2, this.status2Console);
+            RLConsole.Blit(this.status2Console, 0, 0, ArenaDrawer.statusWidth, ArenaDrawer.statusHeight, console,
+                ArenaDrawer.arenaWidth, ArenaDrawer.statusHeight);
         }
 
         #endregion
 
         #region Drawing
 
-        private int DrawBodyPartStatus(Entity bodyPart, int x, int y, bool mechDestroyed, RLConsole console)
+        private static int DrawBodyPartStatus(Entity bodyPart, int x, int y, bool mechDestroyed, RLConsole console)
         {
             var bodyPartDestroyed = bodyPart.TryGetDestroyed();
             var bodyPartStructure = bodyPart.TryGetAttribute(EntityAttributeType.STRUCTURE).Value;
@@ -101,7 +103,7 @@ namespace MechArena.UI
             return y - 3;
         }
 
-        private void DrawMechStatus(Entity mech, RLConsole console)
+        public static void DrawMechStatus(Entity mech, RLConsole console)
         {
             int line = 1;
 
@@ -120,26 +122,16 @@ namespace MechArena.UI
             {
                 if (y == line)
                 {
-                    y += this.DrawBodyPartStatus(bodyPart, x, y, mechDestroyed, console);
+                    y += ArenaDrawer.DrawBodyPartStatus(bodyPart, x, y, mechDestroyed, console);
                 }
                 else
                 {
-                    this.DrawBodyPartStatus(bodyPart, x, y, mechDestroyed, console);
+                    ArenaDrawer.DrawBodyPartStatus(bodyPart, x, y, mechDestroyed, console);
                     y = line;
                     x += 20;
                 }
 
             }
-        }
-
-        public void DrawMech1Status(RLConsole console)
-        {
-            this.DrawMechStatus(this.arena.Mech1, console);
-        }
-
-        public void DrawMech2Status(RLConsole console)
-        {
-            this.DrawMechStatus(this.arena.Mech2, console);
         }
 
         public void DrawHUD(RLConsole console)
