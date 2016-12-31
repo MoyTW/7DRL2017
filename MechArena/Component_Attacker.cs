@@ -15,11 +15,13 @@ namespace MechArena
                 var attackerPos = ev.CommandEntity.TryGetPosition();
                 var lineCells = ev.GameMap.GetCellsAlongLine(attackerPos.X, attackerPos.Y, targetPos.X, targetPos.Y);
 
+                // TODO: This sequence of early exists is crufty because there's a lot of "before-exit-do" stuff here!
                 // If any of the cells isn't walkable, then your shot is blocked and the attack stops
                 if (lineCells.Any(c => !c.IsWalkable))
                 {
                     Log.DebugLine("Attack missed due to intervening terrain!");
                     ev.Completed = true;
+                    ev.ExecutorEntity.GetComponentOfType<Component_TracksTime>().RegisterActivated(ev.CurrentTick);
                     return;
                 }
                 // If it's out of range, then the attack misses
@@ -28,6 +30,7 @@ namespace MechArena
                 {
                     Log.DebugLine("Attack missed due to range!");
                     ev.Completed = true;
+                    ev.ExecutorEntity.GetComponentOfType<Component_TracksTime>().RegisterActivated(ev.CurrentTick);
                     return;
                 }
 
@@ -38,6 +41,8 @@ namespace MechArena
                     Log.DebugLine("Could not resolve attack against " + ev.Target.ToString());
                     ev.Completed = true;
                 }
+
+                ev.ExecutorEntity.GetComponentOfType<Component_TracksTime>().RegisterActivated(ev.CurrentTick);
             }
         }
 

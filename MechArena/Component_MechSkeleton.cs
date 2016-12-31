@@ -91,7 +91,6 @@ namespace MechArena
                     ev.Target));
             }
 
-            ev.ExecutorEntity.GetComponentOfType<Component_TracksTime>().RegisterActivated(ev.CurrentTick);
             ev.Completed = true;
         }
 
