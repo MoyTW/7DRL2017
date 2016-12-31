@@ -191,6 +191,14 @@ namespace MechArena
                 GotoNextMatchArena();
         }
 
+        private static void GotoArenaForMatch(MatchResult result)
+        {
+            _arena = ArenaBuilder.BuildArena(ArenaDrawer.arenaWidth, ArenaDrawer.arenaHeight, result.Seed,
+                           (CompetitorEntity)result.Competitor1, (CompetitorEntity)result.Competitor2);
+            _arenaDrawer = new ArenaDrawer(_arena);
+            _gameState = GameState.ARENA;
+        }
+
         private static void OnRootConsoleUpdateForMainMenu(object sender, UpdateEventArgs e)
         {
             RLKeyPress keyPress = _rootConsole.Keyboard.GetKeyPress();
@@ -301,6 +309,18 @@ namespace MechArena
                         // TODO: Write transition fn
                         _competitorMenu = new CompetitorMenu();
                         _gameState = GameState.COMPETITOR_MENU;
+                    }
+                    else if (_competitorHistory.SelectedMatch != null)
+                    {
+                        if (_competitorHistory.SelectedMatch.HasCompetitor(_player.CompetitorID))
+                        {
+                            Console.WriteLine("Can't replay player matches!");
+                            _competitorHistory.ResetCompetitorHistory();
+                        }
+                        else
+                        {
+                            GotoArenaForMatch(_competitorHistory.SelectedMatch);
+                        }
                     }
                     break;
                 default:

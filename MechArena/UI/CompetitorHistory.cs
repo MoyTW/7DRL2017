@@ -15,13 +15,22 @@ namespace MechArena.UI
         public Competitor SelectedCompetitor { get; }
 
         private string matchSelection;
+        private MatchResult selectedMatch;
         private bool gotoCompetitorMenu = false;
 
         public bool GotoCompetitorMenu { get { return this.gotoCompetitorMenu; } }
+        public MatchResult SelectedMatch { get { return this.selectedMatch; } }
 
         public CompetitorHistory(Competitor selectedCompetitor)
         {
             this.SelectedCompetitor = selectedCompetitor;
+        }
+
+        public void ResetCompetitorHistory()
+        {
+            this.selectedMatch = null;
+            this.matchSelection = "";
+            this.gotoCompetitorMenu = false;
         }
 
         public void OnRootConsoleUpdate(RLRootConsole rootConsole, Schedule_Tournament tournament)
@@ -80,7 +89,10 @@ namespace MechArena.UI
                         int index;
                         Int32.TryParse(this.matchSelection, out index);
                         index--;
-                        Console.WriteLine("Selected match #" + index);
+
+                        var history = tournament.MatchHistory(this.SelectedCompetitor.CompetitorID);
+                        if (index < history.Count)
+                            this.selectedMatch = history[index];
 
                         this.matchSelection = "";
                         break;
