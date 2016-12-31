@@ -55,6 +55,9 @@ namespace MechArena
             int toHit = attackerBaseToHit;
             int dodge = targetDodge;
 
+            Log.Debug(String.Format("{0} attacked {1} - {2} roll+toHit v. {3} dodge", ev.ExecutorEntity, ev.SubTarget,
+                roll + toHit, 10 + dodge));
+
             if (roll + toHit > 10 + dodge)
             {
                 int damage = weaponBaseDamage; // Possible damage modifiers

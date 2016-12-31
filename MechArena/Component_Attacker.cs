@@ -25,10 +25,11 @@ namespace MechArena
                     return;
                 }
                 // If it's out of range, then the attack misses
-                var weaponRange = ev.ExecutorEntity.TryGetAttribute(EntityAttributeType.MAX_RANGE);
-                if (lineCells.Count() > weaponRange.Value)
+                int weaponRange = ev.ExecutorEntity.TryGetAttribute(EntityAttributeType.MAX_RANGE).Value;
+                var distance = lineCells.Count() - 1;
+                if (distance > weaponRange)
                 {
-                    Log.DebugLine("Attack missed due to range!");
+                    Log.DebugLine("Attack missed due to range! Distance: " + distance + " Range: " + weaponRange);
                     ev.Completed = true;
                     ev.ExecutorEntity.GetComponentOfType<Component_TracksTime>().RegisterActivated(ev.CurrentTick);
                     return;
