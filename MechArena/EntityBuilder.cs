@@ -13,16 +13,52 @@ namespace MechArena
         public const string SlottablePartTypeLabel = "Slottable Part";
         public const string BodyPartTypeLabel = "Body Part";
         public const string MechTypeLabel = "Mech";
+        public const string WeaponTypeLabel = "Weapon";
+        public static readonly List<BodyPartLocation> MechLocations = new List<BodyPartLocation> {
+            BodyPartLocation.HEAD,
+            BodyPartLocation.TORSO,
+            BodyPartLocation.LEFT_ARM,
+            BodyPartLocation.RIGHT_ARM,
+            BodyPartLocation.LEFT_LEG,
+            BodyPartLocation.RIGHT_LEG
+        };
 
         #endregion
 
         #region Utilities
 
+        private static Entity GetBodyPart(Entity mech, BodyPartLocation location)
+        {
+            return mech.HandleQuery(new GameQuery_SubEntities(SubEntitiesSelector.BODY_PART))
+                .SubEntities
+                .Where(e => e.GetComponentOfType<Component_BodyPartLocation>().Location == location)
+                .First();
+        }
+
         private static void SlotAt(Entity mech, BodyPartLocation location, Entity slottable)
         {
-            var bodyPart = GetBodyPart(location,
-                mech.HandleQuery(new GameQuery_SubEntities(SubEntitiesSelector.BODY_PART)).SubEntities);
+            var bodyPart = GetBodyPart(mech, location);
             bodyPart.HandleEvent(new GameEvent_Slot(mech, bodyPart, slottable));
+        }
+
+        private static void FillLocationWith(Entity mech, BodyPartLocation location, Func<Entity> buildFn)
+        {
+            var container = GetBodyPart(mech, location).GetComponentOfType<Component_SlottedContainer>();
+            while (container.SlotsRemaining > 0)
+            {
+                SlotAt(mech, location, buildFn());
+            }
+        }
+
+        private static void BuildAndSlotWeapon(Entity mech, BodyPartLocation location, string weaponLabel,
+            int slotsRequired, int internalStructure, WeaponSize size, int toHit, int maxRange, int damage,
+            int refireTicks)
+        {
+            var doomCannon = new Entity(label: weaponLabel, typeLabel: EntityBuilder.WeaponTypeLabel)
+                .AddComponent(new Component_Slottable(slotsRequired))
+                .AddComponent(new Component_InternalStructure(internalStructure))
+                .AddComponent(new Component_Weapon(size, toHit, maxRange, damage, refireTicks));
+            SlotAt(mech, location, doomCannon);
         }
 
         #endregion
@@ -63,12 +99,6 @@ namespace MechArena
             return new Entity(label: "Leg.Actr.", typeLabel: SlottablePartTypeLabel)
                 .AddComponent(new Component_Slottable(3))
                 .AddComponent(new Component_InternalStructure(3));
-        }
-
-        private static Entity GetBodyPart(BodyPartLocation location, IEnumerable<Entity> entities)
-        {
-            return entities.Where(e => e.GetComponentOfType<Component_BodyPartLocation>().Location == location)
-                .First();
         }
 
         public static Entity BuildArmorPart()
@@ -121,38 +151,14 @@ namespace MechArena
         {
             var mech = BuildNakedMech(label, player);
 
-            var weapon = new Entity(label: "P.HL", typeLabel: "Weapon")
-                .AddComponent(new Component_Slottable(1))
-                .AddComponent(new Component_InternalStructure(1))
-                .AddComponent(new Component_Weapon(WeaponSize.SMALL, 9999, 10, 3, 25));
-            SlotAt(mech, BodyPartLocation.HEAD, weapon);
+            BuildAndSlotWeapon(mech, BodyPartLocation.HEAD, "P.HL.", 1, 1, WeaponSize.SMALL, 9999, 10, 3, 25);
+            BuildAndSlotWeapon(mech, BodyPartLocation.LEFT_ARM, "DM.CNNN.", 4, 32, WeaponSize.LARGE, 9999, 9999,
+                9999, 1);
+            BuildAndSlotWeapon(mech, BodyPartLocation.RIGHT_ARM, "DM.CNNN.", 4, 32, WeaponSize.LARGE, 9999, 9999,
+                9999, 1);
 
-            var largeWeaponMount = new Entity(label: "L.Wpn.Mnt.", typeLabel: "Weapon")
-                .AddComponent(new Component_Slottable(8))
-                .AddComponent(new Component_InternalStructure(8));
-            SlotAt(mech, BodyPartLocation.TORSO, largeWeaponMount);
-
-            var doomCannon = new Entity(label: "DM.CNNN.", typeLabel: "Weapon")
-                .AddComponent(new Component_Slottable(4))
-                .AddComponent(new Component_InternalStructure(32))
-                .AddComponent(new Component_Weapon(WeaponSize.LARGE, 9999, 9999, 9999, 1));
-            SlotAt(mech, BodyPartLocation.RIGHT_ARM, doomCannon);
-
-            SlotAt(mech, BodyPartLocation.LEFT_LEG, BuildAccelerator());
-            SlotAt(mech, BodyPartLocation.LEFT_LEG, BuildAccelerator());
-            SlotAt(mech, BodyPartLocation.LEFT_LEG, BuildAccelerator());
-            SlotAt(mech, BodyPartLocation.LEFT_LEG, BuildAccelerator());
-            SlotAt(mech, BodyPartLocation.LEFT_LEG, BuildAccelerator());
-            SlotAt(mech, BodyPartLocation.LEFT_LEG, BuildAccelerator());
-            SlotAt(mech, BodyPartLocation.LEFT_LEG, BuildAccelerator());
-
-            SlotAt(mech, BodyPartLocation.RIGHT_LEG, BuildAccelerator());
-            SlotAt(mech, BodyPartLocation.RIGHT_LEG, BuildAccelerator());
-            SlotAt(mech, BodyPartLocation.RIGHT_LEG, BuildAccelerator());
-            SlotAt(mech, BodyPartLocation.RIGHT_LEG, BuildAccelerator());
-            SlotAt(mech, BodyPartLocation.RIGHT_LEG, BuildAccelerator());
-            SlotAt(mech, BodyPartLocation.RIGHT_LEG, BuildAccelerator());
-            SlotAt(mech, BodyPartLocation.RIGHT_LEG, BuildAccelerator());
+            FillLocationWith(mech, BodyPartLocation.LEFT_LEG, BuildAccelerator);
+            FillLocationWith(mech, BodyPartLocation.RIGHT_LEG, BuildAccelerator);
 
             return mech;
         }
@@ -160,34 +166,14 @@ namespace MechArena
         public static Entity BuildArmoredMech(string label, bool player)
         {
             var mech = BuildNakedMech(label, player);
-            var bodyParts = mech.HandleQuery(new GameQuery_SubEntities(SubEntitiesSelector.BODY_PART)).SubEntities;
 
-            var weapon = new Entity(label: "AIIM.HL", typeLabel: "Weapon")
-                .AddComponent(new Component_Slottable(1))
-                .AddComponent(new Component_InternalStructure(1))
-                .AddComponent(new Component_Weapon(WeaponSize.SMALL, 9999, 10, 1, 25));
-            SlotAt(mech, BodyPartLocation.HEAD, weapon);
+            BuildAndSlotWeapon(mech, BodyPartLocation.HEAD, "AIIM.HL.", 1, 1, WeaponSize.SMALL, 9999, 10, 1, 25);
+            BuildAndSlotWeapon(mech, BodyPartLocation.LEFT_ARM, "AIIM.LAW.", 1, 1, WeaponSize.SMALL, 9999, 10, 3, 25);
+            BuildAndSlotWeapon(mech, BodyPartLocation.RIGHT_ARM, "AIIM.RAW.", 1, 1, WeaponSize.SMALL, 9999, 10, 3, 25);
 
-            var leftArmWeapon = new Entity(label: "AIIM.LAW", typeLabel: "Weapon")
-                .AddComponent(new Component_Slottable(1))
-                .AddComponent(new Component_InternalStructure(1))
-                .AddComponent(new Component_Weapon(WeaponSize.SMALL, 9999, 10, 3, 25));
-            SlotAt(mech, BodyPartLocation.LEFT_ARM, leftArmWeapon);
-
-            var rightArmWeapon = new Entity(label: "AIIM.RAW", typeLabel: "Weapon")
-                .AddComponent(new Component_Slottable(1))
-                .AddComponent(new Component_InternalStructure(1))
-                .AddComponent(new Component_Weapon(WeaponSize.SMALL, 9999, 10, 3, 25));
-            SlotAt(mech, BodyPartLocation.RIGHT_ARM, rightArmWeapon);
-
-            foreach (var part in bodyParts)
+            foreach (var location in EntityBuilder.MechLocations)
             {
-                var container = part.GetComponentOfType<Component_SlottedContainer>();
-                while (container.SlotsRemaining > 0)
-                {
-                    var armor = BuildArmorPart();
-                    part.HandleEvent(new GameEvent_Slot(mech, part, armor));
-                }
+                FillLocationWith(mech, location, BuildArmorPart);
             }
 
             return mech;
