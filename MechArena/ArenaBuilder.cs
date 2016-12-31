@@ -27,8 +27,8 @@ namespace MechArena
             var mech2 = entreant2.Mech.DeepCopy();
             ArenaState arena = new ArenaState(mech1, mech2, mapSeed, seedsToMaps[mapSeed].Item1, seedsToMaps[mapSeed].Item2, arenaSeed);
 
-            arena.PlaceEntityNear(mech1, 25, 25);
-            arena.PlaceEntityNear(mech2, 25, 25);
+            arena.PlaceEntityNear(mech1, width - 15, height - 15);
+            arena.PlaceEntityNear(mech2, 15, 15);
 
             return arena;
         }

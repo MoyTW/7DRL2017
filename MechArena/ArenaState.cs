@@ -142,22 +142,78 @@ namespace MechArena
             }
         }
 
+        public Tuple<int, int> EmptyCellNear(int x, int y)
+        {
+            int round = 0;
+            while (round < 10)
+            {
+                var firstEmptyNear = this.DiamondFirstEmpty(x, y, round);
+                if (firstEmptyNear != null)
+                    return firstEmptyNear;
+                else
+                    round++;
+            }
+            return null;
+        }
+
+        private Tuple<int, int> DiamondFirstEmpty(int x, int y, int round)
+        {
+            int runningX = x;
+            int runningY = y - round;
+            int thisRound = round;
+
+            while (thisRound > 0)
+            {
+                runningX--;
+                runningY++;
+                if (this.IsWalkableAndOpen(runningX, runningY))
+                    return new Tuple<int, int>(runningX, runningY);
+                thisRound--;
+            }
+            thisRound = round;
+            while (thisRound > 0)
+            {
+                runningX++;
+                runningY++;
+                if (this.IsWalkableAndOpen(runningX, runningY))
+                    return new Tuple<int, int>(runningX, runningY);
+                thisRound--;
+            }
+            thisRound = round;
+            while (thisRound > 0)
+            {
+                runningX++;
+                runningY--;
+                if (this.IsWalkableAndOpen(runningX, runningY))
+                    return new Tuple<int, int>(runningX, runningY);
+                thisRound--;
+            }
+            thisRound = round;
+            while (thisRound > 1)
+            {
+                runningX--;
+                runningY--;
+                if (this.IsWalkableAndOpen(runningX, runningY))
+                    return new Tuple<int, int>(runningX, runningY);
+                thisRound--;
+            }
+            return null;
+        }
+
         public bool PlaceEntityNear(Entity en, int x, int y)
         {
-            for (int nx = x - 1; nx <= x + 1; nx++)
+            var emptyCell = this.EmptyCellNear(x, y);
+            if (emptyCell == null)
             {
-                for (int ny = y - 1; ny <= y + 1; ny++)
-                {
-                    if (this.IsWalkableAndOpen(nx, ny))
-                    {
-                        if (!this.mapEntities.Contains(en))
-                            this.mapEntities.Add(en);
-                        en.AddComponent(new Component_Position(nx, ny, true));
-                        return true;
-                    }
-                }
+                return false;
             }
-            return false;
+            else
+            {
+                if (!this.mapEntities.Contains(en))
+                    this.mapEntities.Add(en);
+                en.AddComponent(new Component_Position(emptyCell.Item1, emptyCell.Item2, true));
+                return true;
+            }
         }
 
         #endregion
