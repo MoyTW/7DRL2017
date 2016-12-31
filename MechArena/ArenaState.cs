@@ -29,6 +29,7 @@ namespace MechArena
         public Entity Mech2 { get { return this.mech2; } }
         public Entity NextExecutorEntity { get { return this.nextExecutorEntity; } }
         public IMap ArenaMap { get { return this.arenaMap; } }
+        public PathFinder ArenaPathFinder { get; }
         public IRandom SeededRand { get { return this.seededRand; } }
 
         public bool ShouldWaitForPlayerInput {
@@ -47,27 +48,6 @@ namespace MechArena
                     return false;
             }
             return this.ArenaMap.IsWalkable(x, y);
-        }
-
-        // TODO: Create a "Mech/Map Blueprint" so you don't pass a literal Entity/IMap instance in!
-        public ArenaState(Entity mech1, Entity mech2, IMap arenaMap, int seed)
-        {
-            if (!mech1.HasComponentOfType<Component_Player>() && !mech1.HasComponentOfType<Component_AI>())
-                throw new ArgumentException("Can't initialize Arena: Mech 1 has no player or AI!");
-            else if (!mech2.HasComponentOfType<Component_AI>())
-                throw new ArgumentNullException("Can't initialize Arena: Mech 2 has no AI!");
-
-            this.currentTick = 0;
-            this.mech1 = mech1;
-            this.mech2 = mech2;
-            this.mapEntities = new List<Entity>();
-            this.mapEntities.Add(mech1);
-            this.mapEntities.Add(mech2);
-            this.arenaMap = arenaMap;
-            this.Seed = seed;
-            this.seededRand = new DotNetRandom(seed);
-
-            ForwardToNextAction();
         }
 
         // Pilot is killed when the head is destroyed
@@ -110,18 +90,37 @@ namespace MechArena
 
         public string WinnerID()
         {
-            if (this.IsMatchEnded())
-            {
-                if (this.IsPilotKilled(this.Mech1) || this.IsMechUnableToFight(this.Mech1))
-                    return this.Mech2.EntityID;
-                else
-                    return this.Mech1.EntityID;
-            }
+            if (this.IsPilotKilled(this.Mech1) || this.IsMechUnableToFight(this.Mech1))
+                return this.Mech2.EntityID;
+            else if (this.IsPilotKilled(this.Mech2) || this.IsMechUnableToFight(this.Mech2))
+                return this.Mech1.EntityID;
             else
-            {
                 return null;
-            }
         }
+
+        // TODO: Create a "Mech/Map Blueprint" so you don't pass a literal Entity/IMap instance in!
+        public ArenaState(Entity mech1, Entity mech2, IMap arenaMap, int seed)
+        {
+            if (!mech1.HasComponentOfType<Component_Player>() && !mech1.HasComponentOfType<Component_AI>())
+                throw new ArgumentException("Can't initialize Arena: Mech 1 has no player or AI!");
+            else if (!mech2.HasComponentOfType<Component_AI>())
+                throw new ArgumentNullException("Can't initialize Arena: Mech 2 has no AI!");
+
+            this.currentTick = 0;
+            this.mech1 = mech1;
+            this.mech2 = mech2;
+            this.mapEntities = new List<Entity>();
+            this.mapEntities.Add(mech1);
+            this.mapEntities.Add(mech2);
+            this.arenaMap = arenaMap;
+            this.ArenaPathFinder = new PathFinder(this.arenaMap);
+            this.Seed = seed;
+            this.seededRand = new DotNetRandom(seed);
+
+            ForwardToNextAction();
+        }
+
+        #region State Changes
 
         private void ForwardToNextAction()
         {
@@ -160,6 +159,8 @@ namespace MechArena
             return false;
         }
 
+        #endregion
+
         public void TryFindAndExecuteNextCommand()
         {
             // If it's the player's turn we must wait on input!
@@ -175,6 +176,8 @@ namespace MechArena
 
             this.ForwardToNextAction();
         }
+
+        #region Player Commands
 
         // TODO: Testing! Don't directly call!
         public void TryPlayerAttack()
@@ -223,5 +226,7 @@ namespace MechArena
                 this.ForwardToNextAction();
             }
         }
+
+        #endregion
     }
 }

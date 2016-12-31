@@ -1,4 +1,5 @@
 ﻿using RogueSharp.Random;
+using System;
 
 namespace MechArena
 {
@@ -22,6 +23,9 @@ namespace MechArena
 
         public void RegisterCommand(GameEvent_Command command)
         {
+            if (this.command != null)
+                throw new InvalidOperationException("Can't double-register commands!");
+
             this.command = command;
             this.Completed = true;
         }
