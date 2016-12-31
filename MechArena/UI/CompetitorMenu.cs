@@ -94,7 +94,7 @@ namespace MechArena.UI
                         }
                         else
                         {
-                            Console.WriteLine("No such competitor #" + index);
+                            Log.InfoLine("No such competitor #" + index);
                         }
 
                         this.historySelection = "";

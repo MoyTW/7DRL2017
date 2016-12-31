@@ -207,7 +207,7 @@ namespace MechArena
                 switch (keyPress.Key)
                 {
                     case RLKey.L:
-                        Log.EnableDebugLog();
+                        Log.ToggleDebugLog();
                         break;
                     // TODO: Don't just dump the info onto the console, actually display it
                     // argh UI work is the *worst*!
@@ -216,10 +216,10 @@ namespace MechArena
                         _competitorMenu = new CompetitorMenu();
                         break;
                     case RLKey.M:
-                        Console.WriteLine("########## UPCOMING PLAYER MATCHES ##########");
+                        Log.InfoLine("########## UPCOMING PLAYER MATCHES ##########");
                         foreach(var m in _tournament.ScheduledMatches(_player.CompetitorID))
                         {
-                            Console.WriteLine(m);
+                            Log.InfoLine(m);
                         }
                         break;
                     case RLKey.T:
@@ -239,7 +239,7 @@ namespace MechArena
                             }
                             var result =  _match.BuildResult(matchArena.WinnerID(), seed);
 
-                            Console.WriteLine("Winner of " + _match + " is " + result.Winner);
+                            Log.InfoLine("Winner of " + _match + " is " + result.Winner);
                             _tournament.ReportResult(result);
                             _match = _tournament.NextMatch();
                         }
@@ -247,20 +247,20 @@ namespace MechArena
                         {
                             if (_playPlayerMatches)
                             {
-                                Console.WriteLine("Next match is player!");
+                                Log.InfoLine("Next match is player!");
                             }
                             else
                             {
                                 var result = _match.BuildResult(_player.CompetitorID, 0);
-                                Console.WriteLine("Player wins match!");
+                                Log.InfoLine("Player wins match!");
                                 _tournament.ReportResult(result);
                                 _match = _tournament.NextMatch();
                             }
                         }
                         else
                         {
-                            Console.WriteLine("===== WINNER IS =====");
-                            Console.WriteLine("Winner is " + _tournament.Winners()[0]);
+                            Log.InfoLine("===== WINNER IS =====");
+                            Log.InfoLine("Winner is " + _tournament.Winners()[0]);
                         }
                         break;
                     case RLKey.N:
@@ -314,7 +314,7 @@ namespace MechArena
                     {
                         if (_competitorHistory.SelectedMatch.HasCompetitor(_player.CompetitorID))
                         {
-                            Console.WriteLine("Can't replay player matches!");
+                            Log.InfoLine("Can't replay player matches!");
                             _competitorHistory.ResetCompetitorHistory();
                         }
                         else
