@@ -14,7 +14,6 @@ namespace MechArena
         private Entity mech1;
         private Entity mech2;
         private List<Entity> mapEntities;
-        private IMap arenaMap;
         private IRandom seededRand;
 
         // Turn state
@@ -28,7 +27,7 @@ namespace MechArena
         public Entity Mech1 { get { return this.mech1; } }
         public Entity Mech2 { get { return this.mech2; } }
         public Entity NextExecutorEntity { get { return this.nextExecutorEntity; } }
-        public IMap ArenaMap { get { return this.arenaMap; } }
+        public IMap ArenaMap { get; }
         public PathFinder ArenaPathFinder { get; }
         public IRandom SeededRand { get { return this.seededRand; } }
 
@@ -99,7 +98,7 @@ namespace MechArena
         }
 
         // TODO: Create a "Mech/Map Blueprint" so you don't pass a literal Entity/IMap instance in!
-        public ArenaState(Entity mech1, Entity mech2, IMap arenaMap, int seed)
+        public ArenaState(Entity mech1, Entity mech2, IMap arenaMap, PathFinder arenaPathFinder, int seed)
         {
             if (!mech1.HasComponentOfType<Component_Player>() && !mech1.HasComponentOfType<Component_AI>())
                 throw new ArgumentException("Can't initialize Arena: Mech 1 has no player or AI!");
@@ -112,8 +111,8 @@ namespace MechArena
             this.mapEntities = new List<Entity>();
             this.mapEntities.Add(mech1);
             this.mapEntities.Add(mech2);
-            this.arenaMap = arenaMap;
-            this.ArenaPathFinder = new PathFinder(this.arenaMap);
+            this.ArenaMap = arenaMap;
+            this.ArenaPathFinder = arenaPathFinder;
             this.Seed = seed;
             this.seededRand = new DotNetRandom(seed);
 
@@ -189,7 +188,7 @@ namespace MechArena
                 foreach (var gun in guns)
                 {
                     this.mech1.HandleEvent(
-                        new GameEvent_Attack(this.currentTick, mech1, mech2, gun, this.arenaMap, this.SeededRand));
+                        new GameEvent_Attack(this.currentTick, mech1, mech2, gun, this.ArenaMap, this.SeededRand));
                 }
                 this.ForwardToNextAction();
             }
