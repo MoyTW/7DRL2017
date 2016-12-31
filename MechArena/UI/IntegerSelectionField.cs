@@ -71,7 +71,7 @@ namespace MechArena.UI
 
                         this.selectionString = "";
 
-                        if (index < options.Count)
+                        if (index >= 0 && index < options.Count)
                             return options[index];
                         break;
                     default:
