@@ -84,7 +84,9 @@ namespace MechArena.Tournament
 
         public IList<Match> ScheduledMatches(string competitorID)
         {
-            return this.entreantsToSchedules[competitorID].ScheduledMatches(competitorID);
+            if (this.entreantsToSchedules.ContainsKey(competitorID))
+                return this.entreantsToSchedules[competitorID].ScheduledMatches(competitorID);
+            return new List<Match>();
         }
 
         // Matches are retrieved one group at a time
@@ -100,7 +102,10 @@ namespace MechArena.Tournament
 
         public IList<MatchResult> MatchHistory(string competitorID)
         {
-            return this.entreantsToSchedules[competitorID].MatchHistory(competitorID);
+            if (this.entreantsToSchedules.ContainsKey(competitorID))
+                return this.entreantsToSchedules[competitorID].MatchHistory(competitorID);
+            else
+                return new List<MatchResult>();
         }
 
         public void ReportResult(MatchResult result)
