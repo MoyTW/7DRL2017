@@ -5,7 +5,10 @@ using MechArena.Tournament;
 using MechArena.UI;
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace MechArena
 {
@@ -69,7 +72,7 @@ namespace MechArena
 
         private static int GenMapSeed()
         {
-            return _tournamentRandom.Next(5);
+            return _tournamentRandom.Next(Config.NumMaps() - 1);
         }
 
         private static int GenArenaSeed()
@@ -213,6 +216,25 @@ namespace MechArena
             _gameState = GameState.ARENA;
         }
 
+        private static Tuple<Match, ArenaState> BuildArena(Match m)
+        {
+            var arena = ArenaBuilder.BuildArena(ArenaDrawer.arenaWidth, ArenaDrawer.arenaHeight, GenMapSeed(),
+                GenArenaSeed(), (CompetitorEntity)m.Competitor1, (CompetitorEntity)m.Competitor2);
+            return new Tuple<Match, ArenaState>(m, arena);
+        }
+
+        private static MatchResult RunArena(Tuple<Match, ArenaState> matchAndArena)
+        {
+            var match = matchAndArena.Item1;
+            var matchArena = matchAndArena.Item2;
+
+            while (!matchArena.IsMatchEnded())
+            {
+                matchArena.TryFindAndExecuteNextCommand();
+            }
+            return match.BuildResult(matchArena.WinnerID(), matchArena.MapSeed, matchArena.ArenaSeed);
+        }
+
         private static void OnRootConsoleUpdateForMainMenu(object sender, UpdateEventArgs e)
         {
             RLKeyPress keyPress = _rootConsole.Keyboard.GetKeyPress();
@@ -239,25 +261,24 @@ namespace MechArena
                     case RLKey.T:
                         Log.DebugLine("T Pressed!");
                         Log.DebugLine("Round: " + _tournament.RoundNum());
-                        _match = _tournament.NextMatch();
-                        while(_match != null && !_match.HasCompetitor(_player.CompetitorID))
-                        {
-                            // TODO: Silly cast, use interface v. actual class!
-                            var matchArena = ArenaBuilder.BuildArena(ArenaDrawer.arenaWidth, ArenaDrawer.arenaHeight,
-                                GenMapSeed(), GenArenaSeed(), (CompetitorEntity)_match.Competitor1,
-                                (CompetitorEntity)_match.Competitor2);
-                            while (!matchArena.IsMatchEnded())
-                            {
-                                matchArena.TryFindAndExecuteNextCommand();
-                            }
-                            var result =  _match.BuildResult(matchArena.WinnerID(), matchArena.MapSeed,
-                                matchArena.ArenaSeed);
 
-                            Log.InfoLine("Winner of " + _match + " is " + result.Winner);
-                            _tournament.ReportResult(result);
-                            _match = _tournament.NextMatch();
+                        // Need to ensure submitting doesn't change the scheduled tasks!
+                        var upcomingMatches = new List<Match>(_tournament.ScheduledMatches()
+                            .TakeWhile(m => !m.HasCompetitor(_player.CompetitorID)));
+                        Task<MatchResult>[] matchTasks = upcomingMatches.Select(m => BuildArena(m))
+                            .Select(ma => Task.Run(() => RunArena(ma)))
+                            .ToArray();
+                        Task.WaitAll(matchTasks);
+                        foreach(var task in matchTasks)
+                        {
+                            Log.DebugLine("Winner of " + task.Result.OriginalMatch + " is " + task.Result.Winner);
+                            _tournament.ReportResult(task.Result);
                         }
-                        if (_match != null)
+
+                        // TODO: Get rid of _match!
+                        _match = _tournament.NextMatch();
+                        // If it's a player match, resolve it or stop
+                        if (_match != null && _match.HasCompetitor(_player.CompetitorID))
                         {
                             if (_playPlayerMatches)
                             {
@@ -265,13 +286,14 @@ namespace MechArena
                             }
                             else
                             {
-                                var result = _match.BuildResult(_player.CompetitorID, 0, 0);
+                                var playerResult = _match.BuildResult(_player.CompetitorID, 0, 0);
                                 Log.InfoLine("Player wins match!");
-                                _tournament.ReportResult(result);
+                                _tournament.ReportResult(playerResult);
                                 _match = _tournament.NextMatch();
                             }
                         }
-                        else
+
+                        if (_tournament.NextMatch() == null)
                         {
                             Log.InfoLine("===== WINNER IS =====");
                             Log.InfoLine("Winner is " + _tournament.Winners()[0]);

@@ -2,13 +2,16 @@
 using RogueSharp.Random;
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 
 namespace MechArena
 {
     public static class ArenaBuilder
     {
-        private static Dictionary<int, Tuple<IMap, PathFinder>> seedsToMaps = new Dictionary<int, Tuple<IMap, PathFinder>>();
+        // TODO: Concurrent Dictionary
+        private static ConcurrentDictionary<int, Tuple<IMap, PathFinder>> seedsToMaps =
+            new ConcurrentDictionary<int, Tuple<IMap, PathFinder>>(Config.NumThreads(), Config.NumMaps());
 
         // WE ASSUME THE MAP, ONCE GENERATED, NEVER CHANGES!
         // THIS MEANS NO TERRAIN DEFORMATION WITHOUT CACHING EDITS!
