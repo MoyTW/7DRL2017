@@ -21,8 +21,11 @@ namespace MechArena
 
         private void HandleDelay(GameEvent_Delay ev)
         {
-            this.lastActivationTick += ev.DelayTicks;
-            ev.Completed = true;
+            if (ev.ExecutorEntity == this.Parent)
+            {
+                this.lastActivationTick += ev.DelayTicks;
+                ev.Completed = true;
+            }
         }
 
         protected override GameEvent _HandleEvent(GameEvent ev)

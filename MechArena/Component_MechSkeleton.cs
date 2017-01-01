@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace MechArena
 {
@@ -109,6 +110,15 @@ namespace MechArena
             this.RegisterActivated(ev.CurrentTick);
         }
 
+        private void HandleCommand(GameEvent_Command ev)
+        {
+            var executor = this.Parent.TryGetSubEntities(SubEntitiesSelector.TRACKS_TIME)
+                .Where(e => e == ev.ExecutorEntity)
+                .FirstOrDefault();
+            if (executor != null)
+                executor.HandleEvent(ev);
+        }
+
         protected override GameEvent _HandleEvent(GameEvent ev)
         {
             // TODO: Move off inheritance
@@ -119,6 +129,8 @@ namespace MechArena
                 this.HandleTakeDamage((GameEvent_TakeDamage)ev);
             else if (ev is GameEvent_MoveSingle)
                 this.HandleMoveSingle((GameEvent_MoveSingle)ev);
+            else if (ev is GameEvent_Command)
+                this.HandleCommand((GameEvent_Command)ev);
 
             return ev;
         }
