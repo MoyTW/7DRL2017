@@ -58,12 +58,16 @@ namespace MechArena.UI
             console.SetBackColor(0, 0, console.Width, console.Height, RLColor.Black);
             console.Print(console.Width / 2 - 6, 1, "COMPETITOR MENU", RLColor.White);
 
+            int i = 1;
             foreach (var c in tournament.AllCompetitors())
             {
+                var label = i +") " + c.Label;
+                i++;
+
                 if (tournament.IsEliminated(c.CompetitorID))
-                    console.Print(currentX, line, c.Label, RLColor.Red);
+                    console.Print(currentX, line, label, RLColor.Red);
                 else
-                    console.Print(currentX, line, c.Label, RLColor.White);
+                    console.Print(currentX, line, label, RLColor.White);
 
                 line++;
                 if (line > console.Height - 3)

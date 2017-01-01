@@ -140,40 +140,40 @@ namespace MechArena
                     case RLKey.F:
                         _arena.TryPlayerAttack();
                         break;
-                    case RLKey.Up:
-                        _arena.TryPlayerMove(0, -1);
-                        break;
-                    case RLKey.Down:
-                        _arena.TryPlayerMove(0, 1);
-                        break;
-                    case RLKey.Left:
-                        _arena.TryPlayerMove(-1, 0);
-                        break;
-                    case RLKey.Right:
-                        _arena.TryPlayerMove(1, 0);
-                        break;
                     case RLKey.Keypad1:
+                    case RLKey.B:
                         _arena.TryPlayerMove(-1, 1);
                         break;
                     case RLKey.Keypad2:
+                    case RLKey.Down:
+                    case RLKey.J:
                         _arena.TryPlayerMove(0, 1);
                         break;
                     case RLKey.Keypad3:
+                    case RLKey.N:
                         _arena.TryPlayerMove(1, 1);
                         break;
                     case RLKey.Keypad4:
+                    case RLKey.H:
+                    case RLKey.Left:
                         _arena.TryPlayerMove(-1, 0);
                         break;
                     case RLKey.Keypad6:
+                    case RLKey.Right:
+                    case RLKey.L:
                         _arena.TryPlayerMove(1, 0);
                         break;
                     case RLKey.Keypad7:
+                    case RLKey.Y:
                         _arena.TryPlayerMove(-1, -1);
                         break;
                     case RLKey.Keypad8:
+                    case RLKey.Up:
+                    case RLKey.K:
                         _arena.TryPlayerMove(0, -1);
                         break;
                     case RLKey.Keypad9:
+                    case RLKey.U:
                         _arena.TryPlayerMove(1, -1);
                         break;
                     default:
@@ -352,15 +352,25 @@ namespace MechArena
             switch (_gameState)
             {
                 case GameState.MAIN_MENU:
+                    int baseX = _screenWidth / 2 - 5;
+                    int baseY = _screenHeight / 2 - 8;
                     _rootConsole.SetBackColor(0, 0, _screenWidth, _screenHeight, RLColor.Black);
-                    _rootConsole.Print(_screenWidth / 2 - 4, _screenHeight / 2 - 3, "Main Menu", RLColor.White);
-                    _rootConsole.Print(_screenWidth / 2 - 4, _screenHeight / 2 - 1, "Options", RLColor.White);
-                    _rootConsole.Print(_screenWidth / 2 - 2, _screenHeight / 2 + 0, "N) Play Next Match", RLColor.White);
-                    _rootConsole.Print(_screenWidth / 2 - 2, _screenHeight / 2 + 1, "R) Return To Game", RLColor.White);
-                    _rootConsole.Print(_screenWidth / 2 - 2, _screenHeight / 2 + 2, "T) Fast-Forward Tournament", RLColor.White);
-                    _rootConsole.Print(_screenWidth / 2 - 2, _screenHeight / 2 + 3, "H) View Match History", RLColor.White);
-                    _rootConsole.Print(_screenWidth / 2 - 2, _screenHeight / 2 + 4, "M) View Upcoming Matches", RLColor.White);
-                    _rootConsole.Print(_screenWidth / 2 - 2, _screenHeight / 2 + 5, "Esc) Quit", RLColor.White);
+                    _rootConsole.Print(baseX - 4, baseY, "Main Menu", RLColor.White);
+
+                    _rootConsole.Print(baseX - 4, baseY + 2, "Options", RLColor.White);
+                    _rootConsole.Print(baseX - 2, baseY + 3, "N) Play Next Match", RLColor.White);
+                    _rootConsole.Print(baseX - 2, baseY + 4, "R) Return To Game", RLColor.White);
+                    _rootConsole.Print(baseX - 2, baseY + 5, "T) Fast-Forward Tournament", RLColor.White);
+                    _rootConsole.Print(baseX - 2, baseY + 6, "H) View Match History", RLColor.White);
+                    _rootConsole.Print(baseX - 2, baseY + 7, "M) View Upcoming Matches", RLColor.White);
+                    _rootConsole.Print(baseX - 2, baseY + 8, "Esc) Quit", RLColor.White);
+
+                    _rootConsole.Print(baseX - 4, baseY + 10, "Arena Keys", RLColor.White);
+                    _rootConsole.Print(baseX - 2, baseY + 11, "Movement: NumPad, HJKLYUBN, Arrow Keys", RLColor.White);
+                    _rootConsole.Print(baseX - 2, baseY + 12, "Fire Weapons: F", RLColor.White);
+                    _rootConsole.Print(baseX - 2, baseY + 13, "Delay For One TU: P", RLColor.White);
+                    _rootConsole.Print(baseX - 2, baseY + 14, "Delay Until Next Action: Space", RLColor.White);
+                    _rootConsole.Print(baseX - 2, baseY + 15, "Delay For Full Cooldown: Enter", RLColor.White);
                     break;
                 case GameState.ARENA:
                     _arenaDrawer.Blit(_rootConsole);
