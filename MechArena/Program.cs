@@ -253,7 +253,7 @@ namespace MechArena
                         break;
                     case RLKey.M:
                         Log.InfoLine("########## UPCOMING PLAYER MATCHES ##########");
-                        foreach(var m in _tournament.ScheduledMatches(_player.CompetitorID))
+                        foreach (var m in _tournament.ScheduledMatches(_player.CompetitorID))
                         {
                             Log.InfoLine(m);
                         }
@@ -262,14 +262,16 @@ namespace MechArena
                         Log.DebugLine("T Pressed!");
                         Log.DebugLine("Round: " + _tournament.RoundNum());
 
-                        // Need to ensure submitting doesn't change the scheduled tasks!
-                        var upcomingMatches = new List<Match>(_tournament.ScheduledMatches()
-                            .TakeWhile(m => !m.HasCompetitor(_player.CompetitorID)));
-                        Task<MatchResult>[] matchTasks = upcomingMatches.Select(m => BuildArena(m))
-                            .Select(ma => Task.Run(() => RunArena(ma)))
-                            .ToArray();
-                        Task.WaitAll(matchTasks);
-                        foreach(var task in matchTasks)
+                        var results = _tournament.ScheduledMatches()
+                            .TakeWhile(m => !m.HasCompetitor(_player.CompetitorID))
+                            // BuildArena sequential because of the RNG draws
+                            .Select(m => BuildArena(m))
+                            // Setting degree of parallelism not required - default is fn of # processors already
+                            .AsParallel().WithDegreeOfParallelism(Config.NumThreads())
+                            .Select(ma => Task.Run(() => RunArena(ma)));
+
+                        // Reporting happens in order
+                        foreach (var task in results)
                         {
                             Log.DebugLine("Winner of " + task.Result.OriginalMatch + " is " + task.Result.Winner);
                             _tournament.ReportResult(task.Result);
