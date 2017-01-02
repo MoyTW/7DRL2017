@@ -49,7 +49,8 @@ namespace MechArena
             //EntityBuilder.BuildKnifeMech("Player Knifer", true));
             //EntityBuilder.BuildDoomCannonMech("Doom Cannon Mech", true));
             _tournamentRandom = new DotNetRandom(1);
-            _tournament = TournamentBuilder.BuildTournament(_player, _tournamentRandom);
+            _tournament = TournamentBuilder.BuildTournament(_player, _tournamentRandom,
+                new TournamentMapPicker(5, _tournamentRandom));
             _match = _tournament.NextMatch();
 
             _gameState = GameState.MAIN_MENU;

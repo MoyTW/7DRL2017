@@ -25,7 +25,7 @@ namespace MechArenaTests.Tournament
         {
             var comps = this.BuildComps(256);
 
-            var st = new Schedule_Tournament(comps);
+            var st = new Schedule_Tournament(comps, new MapPickerPlaceholder());
             Assert.AreEqual(1, st.RoundNum());
             Assert.AreEqual(896, st.ScheduledMatches().Count);
 
@@ -43,7 +43,7 @@ namespace MechArenaTests.Tournament
         {
             var comps = this.BuildComps(256);
 
-            var st = new Schedule_Tournament(comps);
+            var st = new Schedule_Tournament(comps, new MapPickerPlaceholder());
             foreach (var m in st.ScheduledMatches())
             {
                 st.ReportResult(new MatchResult(m, m.Competitor1, 0, 0));

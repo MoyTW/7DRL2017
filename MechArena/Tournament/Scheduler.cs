@@ -8,7 +8,8 @@ namespace MechArena.Tournament
 {
     public static class Scheduler
     {
-        public static List<Match> ScheduleRoundRobin(List<ICompetitor> originalCompetitors, bool tieBreaker=false)
+        public static List<Match> ScheduleRoundRobin(List<ICompetitor> originalCompetitors, IMapPicker mapPicker,
+            bool tieBreaker=false)
         {
             var competitors = new List<ICompetitor>(originalCompetitors);
 
@@ -32,12 +33,12 @@ namespace MechArena.Tournament
             {
                 int teamIdx = day % teamsSize;
 
-                matches.Add(new Match(competitors[0], teams[teamIdx], tieBreaker));
+                matches.Add(new Match(competitors[0], teams[teamIdx], mapPicker.PickMapID(), tieBreaker));
 
                 for (int idx = 1; idx < competitors.Count / 2; idx++)
                 {
                     var match = new Match(teams[(day + idx) % teamsSize], teams[(day + teamsSize - idx) % teamsSize],
-                        tieBreaker);
+                        mapPicker.PickMapID(), tieBreaker);
                     matches.Add(match);
                 }
             }

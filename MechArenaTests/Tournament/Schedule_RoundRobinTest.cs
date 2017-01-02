@@ -24,7 +24,7 @@ namespace MechArenaTests.Tournament
         public void TestTiebreakerSimple()
         {
             var comps = this.BuildComps(3);
-            var srr = new Schedule_RoundRobin(1, comps);
+            var srr = new Schedule_RoundRobin(1, comps, new MapPickerPlaceholder());
 
             // Match ordering: [0:1] [0:2] [1:2]
             srr.ReportResult(new MatchResult(srr.NextMatch(), comps[0], 0, 0));
@@ -39,7 +39,7 @@ namespace MechArenaTests.Tournament
         public void TestTiebreakerModerate()
         {
             var comps = this.BuildComps(4);
-            var srr = new Schedule_RoundRobin(3, comps);
+            var srr = new Schedule_RoundRobin(3, comps, new MapPickerPlaceholder());
 
             // Match ordering: [0:1] [2:3] [0:2] [3:1] [0:3] [1:2]
             // 0 wins 3, 1 wins 1, 2 wins 1, 3 wins 0
@@ -58,7 +58,7 @@ namespace MechArenaTests.Tournament
         public void TestTiebreakerComplex()
         {
             var comps = this.BuildComps(5);
-            var srr = new Schedule_RoundRobin(2, comps);
+            var srr = new Schedule_RoundRobin(2, comps, new MapPickerPlaceholder());
 
             // Match ordering: [0:1] [3:4] [0:2] [3:1] [0:3] [4:2] [0:4] [1:2] [1:4] [2:3]
             // 0 -> [4 0]

@@ -24,7 +24,7 @@ namespace MechArenaTests.Tournament
         public void TestSplits()
         {
             var comps = this.BuildComps(24);
-            var sgs = new Schedule_GroupStage(8, 1, comps);
+            var sgs = new Schedule_GroupStage(8, 1, comps, new MapPickerPlaceholder());
             
             Assert.AreEqual(84, sgs.ScheduledMatches().Count);
             int breaker = 9995;

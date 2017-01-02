@@ -15,7 +15,7 @@ namespace MechArena.Tournament
         private Dictionary<string, Schedule> entreantsToSchedules;
         private List<Schedule> groupStagesSchedules;
 
-        private void ScheduleGroupStages()
+        private void ScheduleGroupStages(IMapPicker picker)
         {
             if (groupStagesSchedules.Count() > 0)
                 throw new InvalidOperationException("Can't double-gen schdules for group stages!");
@@ -27,7 +27,7 @@ namespace MechArena.Tournament
                 if (groupList.Count == this.GroupSize)
                 {
                     // TODO: Always uses round robin - fine for now but be aware!
-                    var newSchedule = new Schedule_RoundRobin(this.WinnersPerGroup, groupList);
+                    var newSchedule = new Schedule_RoundRobin(this.WinnersPerGroup, groupList, picker);
                     groupStagesSchedules.Add(newSchedule);
                     foreach(var groupEntreant in groupList)
                     {
@@ -38,7 +38,8 @@ namespace MechArena.Tournament
             }
         }
 
-        public Schedule_GroupStage(int groupSize, int winnersPerGroup, IEnumerable<ICompetitor> entreants)
+        public Schedule_GroupStage(int groupSize, int winnersPerGroup, IEnumerable<ICompetitor> entreants,
+            IMapPicker picker)
         {
             if (entreants.Count() % groupSize != 0)
                 throw new ArgumentException("Cannot evenly divide " + entreants.Count() +
@@ -51,7 +52,7 @@ namespace MechArena.Tournament
             this.entreantsToSchedules = new Dictionary<string, Schedule>();
             this.groupStagesSchedules = new List<Schedule>();
 
-            this.ScheduleGroupStages();
+            this.ScheduleGroupStages(picker);
         }
 
         public bool IsEliminated(string competitorID)

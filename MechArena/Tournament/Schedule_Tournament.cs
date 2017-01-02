@@ -14,16 +14,19 @@ namespace MechArena.Tournament
         private const int numSecondStageWinners = 2;
 
         private IEnumerable<ICompetitor> entreants;
+        private IMapPicker picker;
         private List<Schedule> rounds;
 
-        public Schedule_Tournament(IEnumerable<ICompetitor> entreants)
+        public Schedule_Tournament(IEnumerable<ICompetitor> entreants, IMapPicker picker)
         {
             if (entreants.Count() != expectedNumEntreants)
                 throw new ArgumentException("Wrong number of entreants into tournament! Should be 256!");
 
             this.entreants = entreants;
             this.rounds = new List<Schedule>();
-            rounds.Add(new Schedule_GroupStage(groupStageSize, numFirstStageWinners, entreants));
+            this.picker = picker;
+
+            rounds.Add(new Schedule_GroupStage(groupStageSize, numFirstStageWinners, entreants, picker));
         }
 
         public IList<ICompetitor> AllCompetitors()
@@ -85,12 +88,12 @@ namespace MechArena.Tournament
                 // Stage 2 (4 groups of 8, 2 winners each)
                 if (rounds.Count == 1)
                 {
-                    rounds.Add(new Schedule_GroupStage(8, 2, this.Winners()));
+                    rounds.Add(new Schedule_GroupStage(8, 2, this.Winners(), this.picker));
                 }
                 // Stage 3 (1 group of 8, 1 winner)
                 else if (rounds.Count == 2)
                 {
-                    rounds.Add(new Schedule_RoundRobin(1, this.Winners()));
+                    rounds.Add(new Schedule_RoundRobin(1, this.Winners(), this.picker));
                 }
             }
         }

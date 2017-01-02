@@ -11,14 +11,16 @@ namespace MechArena.Tournament
         public ICompetitor Competitor1 { get; }
         public ICompetitor Competitor2 { get; }
         public bool IsTieBreaker { get; }
+        public string MapID { get; }
 
-        public Match(ICompetitor competitor1, ICompetitor competitor2, bool isTieBreaker=false)
+        public Match(ICompetitor competitor1, ICompetitor competitor2, string mapID, bool isTieBreaker=false)
         {
             // We don't want the competitors to get changed - for example, if the player later swaps out his mech, we
             // want to ensure that when we replay the Match he still has the original mech for the history. I don't
             // think there will be memory issues, but we'll see!
             this.Competitor1 = competitor1.DeepCopy();
             this.Competitor2 = competitor2.DeepCopy();
+            this.MapID = mapID;
             this.IsTieBreaker = isTieBreaker;
         }
 

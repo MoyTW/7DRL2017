@@ -12,13 +12,15 @@ namespace MechArenaTests.Tournament
     {
         private void AssertCounts(int numComps, int countMatches, int countMatchesPerComp)
         {
+            var picker = new MapPickerPlaceholder();
+
             List<ICompetitor> comps = new List<ICompetitor>();
             for (int i = 0; i < numComps; i++)
             {
                 comps.Add(new CompetitorPlaceholder(i.ToString(), i.ToString()));
             }
 
-            var scheduled = Scheduler.ScheduleRoundRobin(comps);
+            var scheduled = Scheduler.ScheduleRoundRobin(comps, picker);
 
             Assert.AreEqual(countMatches, scheduled.Count);
             foreach (var c in comps.Select(c => c.CompetitorID))

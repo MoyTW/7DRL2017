@@ -9,6 +9,7 @@ namespace MechArena.Tournament
     public class Schedule_RoundRobin : Schedule
     {
         public int NumWinners { get; }
+        public IMapPicker Picker { get; }
 
         private HashSet<ICompetitor> remainingEntreants;
         private HashSet<ICompetitor> winningEntreants;
@@ -18,7 +19,7 @@ namespace MechArena.Tournament
         private List<MatchResult> matchResults;
 
         // TODO: Possibly rename competitor->entreants because it's easier for me to spell
-        public Schedule_RoundRobin(int numWinners, IEnumerable<ICompetitor> entreants)
+        public Schedule_RoundRobin(int numWinners, IEnumerable<ICompetitor> entreants, IMapPicker picker)
         {
             if (numWinners >= entreants.Count())
                 throw new ArgumentException("Num winners is equal to or greater to the number of entreants!");
@@ -26,12 +27,13 @@ namespace MechArena.Tournament
                 throw new ArgumentException("Num winners must be a non-zero, positive integer!");
 
             this.NumWinners = numWinners;
+            this.Picker = picker;
 
             this.remainingEntreants = new HashSet<ICompetitor>(entreants);
             this.winningEntreants = new HashSet<ICompetitor>();
             this.eliminatedEntreants = new HashSet<ICompetitor>();
 
-            this.upcomingMatches = Scheduler.ScheduleRoundRobin(entreants.ToList());
+            this.upcomingMatches = Scheduler.ScheduleRoundRobin(entreants.ToList(), picker);
             this.matchResults = new List<MatchResult>();
         }
 
@@ -122,7 +124,8 @@ namespace MechArena.Tournament
                 if (this.remainingEntreants.Count != 0)
                 {
                     Log.DebugLine("Tiebreaker match!");
-                    this.upcomingMatches = Scheduler.ScheduleRoundRobin(this.remainingEntreants.ToList(), true);
+                    this.upcomingMatches = Scheduler.ScheduleRoundRobin(this.remainingEntreants.ToList(), this.Picker,
+                        true);
                 }
             }
         }
