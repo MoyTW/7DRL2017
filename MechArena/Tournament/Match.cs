@@ -48,15 +48,15 @@ namespace MechArena.Tournament
                 this.Competitor2.CompetitorID == competitorID;
         }
 
-        public MatchResult BuildResult(ICompetitor winner, int mapSeed, int arenaSeed)
+        public MatchResult BuildResult(ICompetitor winner, string mapID, int arenaSeed)
         {
-            Console.WriteLine("Winner " + winner + " map " + mapSeed + " arena " + arenaSeed);
-            return new MatchResult(this, winner, mapSeed, arenaSeed);
+            Console.WriteLine("Winner " + winner + " map " + mapID + " arena " + arenaSeed);
+            return new MatchResult(this, winner, mapID, arenaSeed);
         }
 
-        public MatchResult BuildResult(string winnerID, int mapSeed, int arenaSeed)
+        public MatchResult BuildResult(string winnerID, string mapID, int arenaSeed)
         {
-            return this.BuildResult(this.CompetitorByID(winnerID), mapSeed, arenaSeed);
+            return this.BuildResult(this.CompetitorByID(winnerID), mapID, arenaSeed);
         }
 
         public override string ToString()

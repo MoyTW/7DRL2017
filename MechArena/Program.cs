@@ -37,6 +37,7 @@ namespace MechArena
         private static ICompetitor _player;
         private static bool _playPlayerMatches = false;
         private static IRandom _tournamentRandom;
+        private static TournamentMapPicker _tournamentPicker;
         private static Schedule_Tournament _tournament;
         private static Match _match;
         private static ArenaState _arena;
@@ -49,8 +50,8 @@ namespace MechArena
             //EntityBuilder.BuildKnifeMech("Player Knifer", true));
             //EntityBuilder.BuildDoomCannonMech("Doom Cannon Mech", true));
             _tournamentRandom = new DotNetRandom(1);
-            _tournament = TournamentBuilder.BuildTournament(_player, _tournamentRandom,
-                new TournamentMapPicker(5, _tournamentRandom));
+            _tournamentPicker = new TournamentMapPicker(5, _tournamentRandom);
+            _tournament = TournamentBuilder.BuildTournament(_player, _tournamentRandom, _tournamentPicker);
             _match = _tournament.NextMatch();
 
             _gameState = GameState.MAIN_MENU;
@@ -69,11 +70,6 @@ namespace MechArena
             _rootConsole.Render += OnRootConsoleRender;
             // Begin RLNET's game loop
             _rootConsole.Run();
-        }
-
-        private static int GenMapSeed()
-        {
-            return _tournamentRandom.Next(Config.NumMaps() - 1);
         }
 
         private static int GenArenaSeed()
@@ -97,7 +93,7 @@ namespace MechArena
                 var winner = _match.CompetitorByID(_arena.WinnerID());
                 if (winner != null)
                 {
-                    _tournament.ReportResult(_match.BuildResult(winner, _arena.MapSeed, _arena.ArenaSeed));
+                    _tournament.ReportResult(_match.BuildResult(winner, _arena.MapID, _arena.ArenaSeed));
                     _match = null;
                     Log.DebugLine("Reported winner of match!");
                 }
@@ -195,8 +191,9 @@ namespace MechArena
         {
             _match = _tournament.NextMatch();
             // TODO: The casting here is silly!
-            _arena = ArenaBuilder.BuildArena(ArenaDrawer.arenaWidth, ArenaDrawer.arenaHeight, GenMapSeed(),
-                GenArenaSeed(), (CompetitorEntity)_match.Competitor1, (CompetitorEntity)_match.Competitor2);
+            _arena = ArenaBuilder.BuildArena(ArenaDrawer.arenaWidth, ArenaDrawer.arenaHeight,
+                _tournamentPicker.PickMapID(), GenArenaSeed(), (CompetitorEntity)_match.Competitor1,
+                (CompetitorEntity)_match.Competitor2);
             _arenaDrawer = new ArenaDrawer(_arena);
             _gameState = GameState.ARENA;
         }
@@ -211,7 +208,7 @@ namespace MechArena
 
         private static void GotoArenaForMatch(MatchResult result)
         {
-            _arena = ArenaBuilder.BuildArena(ArenaDrawer.arenaWidth, ArenaDrawer.arenaHeight, result.MapSeed,
+            _arena = ArenaBuilder.BuildArena(ArenaDrawer.arenaWidth, ArenaDrawer.arenaHeight, result.MapID,
                 result.ArenaSeed, (CompetitorEntity)result.Competitor1, (CompetitorEntity)result.Competitor2);
             _arenaDrawer = new ArenaDrawer(_arena);
             _gameState = GameState.ARENA;
@@ -219,8 +216,9 @@ namespace MechArena
 
         private static Tuple<Match, ArenaState> BuildArena(Match m)
         {
-            var arena = ArenaBuilder.BuildArena(ArenaDrawer.arenaWidth, ArenaDrawer.arenaHeight, GenMapSeed(),
-                GenArenaSeed(), (CompetitorEntity)m.Competitor1, (CompetitorEntity)m.Competitor2);
+            var arena = ArenaBuilder.BuildArena(ArenaDrawer.arenaWidth, ArenaDrawer.arenaHeight,
+                _tournamentPicker.PickMapID(), GenArenaSeed(), (CompetitorEntity)m.Competitor1,
+                (CompetitorEntity)m.Competitor2);
             return new Tuple<Match, ArenaState>(m, arena);
         }
 
@@ -233,7 +231,7 @@ namespace MechArena
             {
                 matchArena.TryFindAndExecuteNextCommand();
             }
-            return match.BuildResult(matchArena.WinnerID(), matchArena.MapSeed, matchArena.ArenaSeed);
+            return match.BuildResult(matchArena.WinnerID(), matchArena.MapID, matchArena.ArenaSeed);
         }
 
         private static void OnRootConsoleUpdateForMainMenu(object sender, UpdateEventArgs e)
@@ -289,7 +287,7 @@ namespace MechArena
                             }
                             else
                             {
-                                var playerResult = _match.BuildResult(_player.CompetitorID, 0, 0);
+                                var playerResult = _match.BuildResult(_player.CompetitorID, "0", 0);
                                 Log.InfoLine("Player wins match!");
                                 _tournament.ReportResult(playerResult);
                                 _match = _tournament.NextMatch();

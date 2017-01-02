@@ -32,9 +32,9 @@ namespace MechArenaTests.Tournament
             while(breaker > 0 && sgs.NextMatch() != null)
             {
                 if (r.Next(100) % 2 == 0)
-                    sgs.ReportResult(new MatchResult(sgs.NextMatch(), sgs.NextMatch().Competitor1, 0, 0));
+                    sgs.ReportResult(new MatchResult(sgs.NextMatch(), sgs.NextMatch().Competitor1, "", 0));
                 else
-                    sgs.ReportResult(new MatchResult(sgs.NextMatch(), sgs.NextMatch().Competitor2, 0, 0));
+                    sgs.ReportResult(new MatchResult(sgs.NextMatch(), sgs.NextMatch().Competitor2, "", 0));
 
                 breaker--;
             }

@@ -31,7 +31,7 @@ namespace MechArenaTests.Tournament
 
             foreach (var m in st.ScheduledMatches())
             {
-                st.ReportResult(new MatchResult(m, m.Competitor1, 0, 0));
+                st.ReportResult(new MatchResult(m, m.Competitor1, "", 0));
             }
 
             Assert.AreEqual(32, st.Winners(1).Count);
@@ -46,14 +46,14 @@ namespace MechArenaTests.Tournament
             var st = new Schedule_Tournament(comps, new MapPickerPlaceholder());
             foreach (var m in st.ScheduledMatches())
             {
-                st.ReportResult(new MatchResult(m, m.Competitor1, 0, 0));
+                st.ReportResult(new MatchResult(m, m.Competitor1, "", 0));
             }
 
             Assert.AreEqual(112, st.ScheduledMatches().Count);
             int breaker = 9999;
             while (st.RoundNum() == 2 && st.NextMatch() != null && breaker > 0)
             {
-                st.ReportResult(new MatchResult(st.NextMatch(), st.NextMatch().Competitor1, 0, 0));
+                st.ReportResult(new MatchResult(st.NextMatch(), st.NextMatch().Competitor1, "", 0));
                 breaker--;
             }
             Assert.AreEqual(8, st.Winners(2).Count);
