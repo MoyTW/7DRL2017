@@ -11,7 +11,7 @@ namespace MechArena.Tournament
         // Match Info & Reporting
         Match NextMatch();
         void ReportResult(MatchResult result);
-        IList<Competitor> Winners();
+        IList<ICompetitor> Winners();
 
         // Competitor Info
         bool IsEliminated(string competitorID);

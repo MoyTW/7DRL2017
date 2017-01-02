@@ -13,10 +13,10 @@ namespace MechArena.Tournament
         private const int numFirstStageWinners = 1;
         private const int numSecondStageWinners = 2;
 
-        private IEnumerable<Competitor> entreants;
+        private IEnumerable<ICompetitor> entreants;
         private List<Schedule> rounds;
 
-        public Schedule_Tournament(IEnumerable<Competitor> entreants)
+        public Schedule_Tournament(IEnumerable<ICompetitor> entreants)
         {
             if (entreants.Count() != expectedNumEntreants)
                 throw new ArgumentException("Wrong number of entreants into tournament! Should be 256!");
@@ -26,7 +26,7 @@ namespace MechArena.Tournament
             rounds.Add(new Schedule_GroupStage(groupStageSize, numFirstStageWinners, entreants));
         }
 
-        public IList<Competitor> AllCompetitors()
+        public IList<ICompetitor> AllCompetitors()
         {
             return this.entreants.ToList().AsReadOnly();
         }
@@ -41,12 +41,12 @@ namespace MechArena.Tournament
             return rounds.Any(r => r.IsEliminated(competitorID));
         }
 
-        public IList<Competitor> Winners()
+        public IList<ICompetitor> Winners()
         {
             return rounds.Last().Winners();
         }
 
-        public IList<Competitor> Winners(int round)
+        public IList<ICompetitor> Winners(int round)
         {
             return rounds[round - 1].Winners();
         }

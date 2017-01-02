@@ -10,15 +10,15 @@ namespace MechArena.Tournament
     {
         public int NumWinners { get; }
 
-        private HashSet<Competitor> remainingEntreants;
-        private HashSet<Competitor> winningEntreants;
-        private HashSet<Competitor> eliminatedEntreants;
+        private HashSet<ICompetitor> remainingEntreants;
+        private HashSet<ICompetitor> winningEntreants;
+        private HashSet<ICompetitor> eliminatedEntreants;
 
         private List<Match> upcomingMatches;
         private List<MatchResult> matchResults;
 
         // TODO: Possibly rename competitor->entreants because it's easier for me to spell
-        public Schedule_RoundRobin(int numWinners, IEnumerable<Competitor> entreants)
+        public Schedule_RoundRobin(int numWinners, IEnumerable<ICompetitor> entreants)
         {
             if (numWinners >= entreants.Count())
                 throw new ArgumentException("Num winners is equal to or greater to the number of entreants!");
@@ -27,9 +27,9 @@ namespace MechArena.Tournament
 
             this.NumWinners = numWinners;
 
-            this.remainingEntreants = new HashSet<Competitor>(entreants);
-            this.winningEntreants = new HashSet<Competitor>();
-            this.eliminatedEntreants = new HashSet<Competitor>();
+            this.remainingEntreants = new HashSet<ICompetitor>(entreants);
+            this.winningEntreants = new HashSet<ICompetitor>();
+            this.eliminatedEntreants = new HashSet<ICompetitor>();
 
             this.upcomingMatches = Scheduler.ScheduleRoundRobin(entreants.ToList());
             this.matchResults = new List<MatchResult>();
@@ -83,7 +83,7 @@ namespace MechArena.Tournament
             }
         }
 
-        public IList<Competitor> Winners()
+        public IList<ICompetitor> Winners()
         {
             if (this.remainingEntreants.Count() != 0)
                 throw new InvalidOperationException("Can't call winners before round resolved!");

@@ -11,7 +11,7 @@ namespace MechArena.Tournament
         public int GroupSize { get; }
         public int WinnersPerGroup { get; }
 
-        private IEnumerable<Competitor> allEntreants;
+        private IEnumerable<ICompetitor> allEntreants;
         private Dictionary<string, Schedule> entreantsToSchedules;
         private List<Schedule> groupStagesSchedules;
 
@@ -20,7 +20,7 @@ namespace MechArena.Tournament
             if (groupStagesSchedules.Count() > 0)
                 throw new InvalidOperationException("Can't double-gen schdules for group stages!");
             
-            HashSet<Competitor> groupList = new HashSet<Competitor>();
+            HashSet<ICompetitor> groupList = new HashSet<ICompetitor>();
             foreach (var e in this.allEntreants)
             {
                 groupList.Add(e);
@@ -38,7 +38,7 @@ namespace MechArena.Tournament
             }
         }
 
-        public Schedule_GroupStage(int groupSize, int winnersPerGroup, IEnumerable<Competitor> entreants)
+        public Schedule_GroupStage(int groupSize, int winnersPerGroup, IEnumerable<ICompetitor> entreants)
         {
             if (entreants.Count() % groupSize != 0)
                 throw new ArgumentException("Cannot evenly divide " + entreants.Count() +
@@ -62,9 +62,9 @@ namespace MechArena.Tournament
                 return true;
         }
 
-        public IList<Competitor> Winners()
+        public IList<ICompetitor> Winners()
         {
-            var winners = new List<Competitor>();
+            var winners = new List<ICompetitor>();
             foreach(var s in this.groupStagesSchedules)
             {
                 winners.AddRange(s.Winners());

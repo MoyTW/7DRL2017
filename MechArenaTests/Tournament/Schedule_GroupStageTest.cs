@@ -10,9 +10,9 @@ namespace MechArenaTests.Tournament
     public class Schedule_GroupStageTest
     {
         // TODO: Util fn
-        private List<Competitor> BuildComps(int numComps)
+        private List<ICompetitor> BuildComps(int numComps)
         {
-            List<Competitor> comps = new List<Competitor>();
+            List<ICompetitor> comps = new List<ICompetitor>();
             for (int i = 0; i < numComps; i++)
             {
                 comps.Add(new CompetitorPlaceholder(i.ToString(), i.ToString()));

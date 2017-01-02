@@ -4,7 +4,7 @@ using System;
 
 namespace MechArena
 {
-    public class CompetitorEntity : Competitor
+    public class CompetitorEntity : ICompetitor
     {
         public Entity Pilot { get; }
         public Entity Mech { get; }
@@ -20,7 +20,7 @@ namespace MechArena
             this.Mech = mech;
         }
 
-        public Competitor DeepCopy()
+        public ICompetitor DeepCopy()
         {
             return new CompetitorEntity(this.Pilot.DeepCopy(), this.Mech.DeepCopy());
         }

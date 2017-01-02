@@ -15,7 +15,7 @@ namespace MechArena.UI
         private RLConsole statusConsole;
         private IntegerSelectionField selectionField;
 
-        public Competitor SelectedCompetitor { get; }
+        public ICompetitor SelectedCompetitor { get; }
         public string SelectedID { get { return this.SelectedCompetitor.CompetitorID; } }
 
         private MatchResult selectedMatch;
@@ -24,7 +24,7 @@ namespace MechArena.UI
         public bool GotoCompetitorMenu { get { return this.gotoCompetitorMenu; } }
         public MatchResult SelectedMatch { get { return this.selectedMatch; } }
 
-        public CompetitorHistory(Competitor selectedCompetitor)
+        public CompetitorHistory(ICompetitor selectedCompetitor)
         {
             this.statusConsole = new RLConsole(ArenaDrawer.statusWidth, ArenaDrawer.statusHeight);
             this.statusConsole.SetBackColor(0, 0, ArenaDrawer.statusWidth, ArenaDrawer.statusHeight,

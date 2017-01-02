@@ -8,16 +8,16 @@ namespace MechArena.Tournament
 {
     public class MatchResult
     {
-        public Competitor Competitor1 { get { return this.OriginalMatch.Competitor1; } }
-        public Competitor Competitor2 { get { return this.OriginalMatch.Competitor2; } }
+        public ICompetitor Competitor1 { get { return this.OriginalMatch.Competitor1; } }
+        public ICompetitor Competitor2 { get { return this.OriginalMatch.Competitor2; } }
         public bool IsTieBreaker { get { return this.OriginalMatch.IsTieBreaker; } }
 
         public Match OriginalMatch { get; }
-        public Competitor Winner { get; }
+        public ICompetitor Winner { get; }
         public int MapSeed { get; }
         public int ArenaSeed { get; }
 
-        public MatchResult(Match originalMatch, Competitor winner, int mapSeed, int arenaSeed)
+        public MatchResult(Match originalMatch, ICompetitor winner, int mapSeed, int arenaSeed)
         {
             this.OriginalMatch = originalMatch;
             this.Winner = winner;
@@ -30,7 +30,7 @@ namespace MechArena.Tournament
             return this.OriginalMatch.HasCompetitor(competitorID);
         }
 
-        public Competitor OpponentOf(string competitorID)
+        public ICompetitor OpponentOf(string competitorID)
         {
             return this.OriginalMatch.OpponentOf(competitorID);
         }

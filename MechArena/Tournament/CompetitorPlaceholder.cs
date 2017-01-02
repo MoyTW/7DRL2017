@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MechArena.Tournament
 {
-    public class CompetitorPlaceholder : Competitor
+    public class CompetitorPlaceholder : ICompetitor
     {
         public string PilotLabel { get; }
         public string MechLabel { get; }
@@ -24,7 +24,7 @@ namespace MechArena.Tournament
             this.CompetitorID = competitorID;
         }
 
-        public Competitor DeepCopy()
+        public ICompetitor DeepCopy()
         {
             return new CompetitorPlaceholder(this.PilotLabel, this.MechLabel, this.CompetitorID);
         }

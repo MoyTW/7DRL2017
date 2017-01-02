@@ -8,9 +8,9 @@ namespace MechArena.Tournament
 {
     public static class Scheduler
     {
-        public static List<Match> ScheduleRoundRobin(List<Competitor> originalCompetitors, bool tieBreaker=false)
+        public static List<Match> ScheduleRoundRobin(List<ICompetitor> originalCompetitors, bool tieBreaker=false)
         {
-            var competitors = new List<Competitor>(originalCompetitors);
+            var competitors = new List<ICompetitor>(originalCompetitors);
 
             if (competitors.Count < 2)
                 throw new ArgumentException("Can't schedule if only 1 competitor!");
@@ -23,7 +23,7 @@ namespace MechArena.Tournament
 
             List<Match> matches = new List<Match>();
 
-            List<Competitor> teams = new List<Competitor>(competitors);
+            List<ICompetitor> teams = new List<ICompetitor>(competitors);
             teams.RemoveAt(0);
 
             int teamsSize = teams.Count;

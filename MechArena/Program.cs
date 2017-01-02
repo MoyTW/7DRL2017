@@ -34,7 +34,7 @@ namespace MechArena
         private static CompetitorHistory _competitorHistory;
 
         // Tournament
-        private static Competitor _player;
+        private static ICompetitor _player;
         private static bool _playPlayerMatches = false;
         private static IRandom _tournamentRandom;
         private static Schedule_Tournament _tournament;
@@ -316,7 +316,7 @@ namespace MechArena
             }
         }
 
-        private static void GotoCompetitorHistory(Competitor selectedCompetitor)
+        private static void GotoCompetitorHistory(ICompetitor selectedCompetitor)
         {
             _competitorHistory = new CompetitorHistory(selectedCompetitor);
             _gameState = GameState.COMPETITOR_HISTORY;

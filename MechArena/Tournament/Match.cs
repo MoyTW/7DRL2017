@@ -8,11 +8,11 @@ namespace MechArena.Tournament
 {
     public class Match
     {
-        public Competitor Competitor1 { get; }
-        public Competitor Competitor2 { get; }
+        public ICompetitor Competitor1 { get; }
+        public ICompetitor Competitor2 { get; }
         public bool IsTieBreaker { get; }
 
-        public Match(Competitor competitor1, Competitor competitor2, bool isTieBreaker=false)
+        public Match(ICompetitor competitor1, ICompetitor competitor2, bool isTieBreaker=false)
         {
             // We don't want the competitors to get changed - for example, if the player later swaps out his mech, we
             // want to ensure that when we replay the Match he still has the original mech for the history. I don't
@@ -22,7 +22,7 @@ namespace MechArena.Tournament
             this.IsTieBreaker = isTieBreaker;
         }
 
-        public Competitor CompetitorByID(string id)
+        public ICompetitor CompetitorByID(string id)
         {
             if (this.Competitor1.CompetitorID == id)
                 return this.Competitor1;
@@ -32,7 +32,7 @@ namespace MechArena.Tournament
                 return null;
         }
 
-        public Competitor OpponentOf(string competitorID)
+        public ICompetitor OpponentOf(string competitorID)
         {
             if (this.Competitor1.CompetitorID == competitorID)
                 return this.Competitor2;
@@ -46,7 +46,7 @@ namespace MechArena.Tournament
                 this.Competitor2.CompetitorID == competitorID;
         }
 
-        public MatchResult BuildResult(Competitor winner, int mapSeed, int arenaSeed)
+        public MatchResult BuildResult(ICompetitor winner, int mapSeed, int arenaSeed)
         {
             Console.WriteLine("Winner " + winner + " map " + mapSeed + " arena " + arenaSeed);
             return new MatchResult(this, winner, mapSeed, arenaSeed);

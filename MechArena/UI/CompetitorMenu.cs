@@ -11,9 +11,9 @@ namespace MechArena.UI
 {
     class CompetitorMenuToCompetitorHistory
     {
-        public Competitor SelectedCompetitor { get; }
+        public ICompetitor SelectedCompetitor { get; }
 
-        public CompetitorMenuToCompetitorHistory(Competitor selection)
+        public CompetitorMenuToCompetitorHistory(ICompetitor selection)
         {
             this.SelectedCompetitor = selection;
         }

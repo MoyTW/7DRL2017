@@ -96,7 +96,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RS_Extensions.cs" />
-    <Compile Include="Tournament\Competitor.cs" />
+    <Compile Include="Tournament\ICompetitor.cs" />
     <Compile Include="Tournament\CompetitorPlaceholder.cs" />
     <Compile Include="Tournament\Match.cs" />
     <Compile Include="Tournament\MatchResult.cs" />

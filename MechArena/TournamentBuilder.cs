@@ -55,9 +55,9 @@ namespace MechArena
             return new CompetitorEntity(pilot, mech);
         }
 
-        public static Schedule_Tournament BuildTournament(Competitor player, IRandom rand)
+        public static Schedule_Tournament BuildTournament(ICompetitor player, IRandom rand)
         {
-            var entreants = new List<Competitor>();
+            var entreants = new List<ICompetitor>();
             entreants.Add(player);
             for (int i = 0; i < 255; i++)
             {
