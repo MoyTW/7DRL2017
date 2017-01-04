@@ -8,6 +8,7 @@ namespace MechArena.Tournament
 {
     public class MatchResult
     {
+        public string MatchID { get { return this.OriginalMatch.MatchID; } }
         public ICompetitor Competitor1 { get { return this.OriginalMatch.Competitor1; } }
         public ICompetitor Competitor2 { get { return this.OriginalMatch.Competitor2; } }
         public bool IsTieBreaker { get { return this.OriginalMatch.IsTieBreaker; } }

@@ -9,6 +9,7 @@ namespace MechArena.Tournament
     public interface ISchedule
     {
         // Match Info & Reporting
+        Match FindMatch(string matchID);
         Match NextMatch();
         void ReportResult(MatchResult result);
         IList<ICompetitor> Winners();

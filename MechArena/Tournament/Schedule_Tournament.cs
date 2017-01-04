@@ -29,55 +29,16 @@ namespace MechArena.Tournament
             rounds.Add(new Schedule_GroupStage(groupStageSize, numFirstStageWinners, entreants, picker));
         }
 
-        public IList<ICompetitor> AllCompetitors()
-        {
-            return this.entreants.ToList().AsReadOnly();
-        }
+        #region ISchedule Fns
 
-        public int RoundNum()
+        public Match FindMatch(string matchID)
         {
-            return this.rounds.Count;
-        }
-
-        public bool IsEliminated(string competitorID)
-        {
-            return rounds.Any(r => r.IsEliminated(competitorID));
-        }
-
-        public IList<ICompetitor> Winners()
-        {
-            return rounds.Last().Winners();
-        }
-
-        public IList<ICompetitor> Winners(int round)
-        {
-            return rounds[round - 1].Winners();
-        }
-        
-        public IList<Match> ScheduledMatches()
-        {
-            return rounds.Last().ScheduledMatches();
-        }
-
-        public IList<Match> ScheduledMatches(string competitorID)
-        {
-            return rounds.Last().ScheduledMatches(competitorID);
+            return rounds.Select(r => r.FindMatch(matchID)).Where(m => m != null).FirstOrDefault();
         }
 
         public Match NextMatch()
         {
             return rounds.Last().NextMatch();
-        }
-
-        // Earliest first
-        public IList<MatchResult> MatchHistory(string competitorID)
-        {
-            var results = new List<MatchResult>();
-            foreach(var round in this.rounds)
-            {
-                results.AddRange(round.MatchHistory(competitorID));
-            }
-            return results.AsReadOnly();
         }
 
         public void ReportResult(MatchResult result)
@@ -96,6 +57,53 @@ namespace MechArena.Tournament
                     rounds.Add(new Schedule_RoundRobin(1, this.Winners(), this.picker));
                 }
             }
+        }
+
+        public IList<ICompetitor> Winners()
+        {
+            return rounds.Last().Winners();
+        }
+
+        public bool IsEliminated(string competitorID)
+        {
+            return rounds.Any(r => r.IsEliminated(competitorID));
+        }
+
+        public IList<Match> ScheduledMatches()
+        {
+            return rounds.Last().ScheduledMatches();
+        }
+
+        public IList<Match> ScheduledMatches(string competitorID)
+        {
+            return rounds.Last().ScheduledMatches(competitorID);
+        }
+
+        // Earliest first
+        public IList<MatchResult> MatchHistory(string competitorID)
+        {
+            var results = new List<MatchResult>();
+            foreach (var round in this.rounds)
+            {
+                results.AddRange(round.MatchHistory(competitorID));
+            }
+            return results.AsReadOnly();
+        }
+        #endregion
+
+        public IList<ICompetitor> AllCompetitors()
+        {
+            return this.entreants.ToList().AsReadOnly();
+        }
+
+        public int RoundNum()
+        {
+            return this.rounds.Count;
+        }
+
+        public IList<ICompetitor> Winners(int round)
+        {
+            return rounds[round - 1].Winners();
         }
     }
 }

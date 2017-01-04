@@ -37,15 +37,79 @@ namespace MechArena.Tournament
             this.matchResults = new List<MatchResult>();
         }
 
-        public bool IsEliminated(string competitorID)
+        #region ISchedule Fns
+
+        public Match FindMatch(string matchID)
         {
-            return this.eliminatedEntreants.Where(c => c.CompetitorID == competitorID).Count() != 0;
+            var upcomingMatchWithID = this.upcomingMatches.Where(m => m.MatchID == matchID).FirstOrDefault();
+            if (upcomingMatchWithID != null)
+            {
+                return upcomingMatchWithID;
+            }
+            else
+            {
+                return this.matchResults.Where(r => r.MatchID == matchID)
+                    .Select(r => r.OriginalMatch)
+                    .FirstOrDefault();
+            }
         }
 
         public Match NextMatch()
         {
             return this.upcomingMatches.FirstOrDefault();
         }
+
+        public void ReportResult(MatchResult result)
+        {
+            if (!this.upcomingMatches.Contains(result.OriginalMatch))
+                throw new InvalidOperationException("Cannot report result of non-upcoming match!");
+
+            this.upcomingMatches.Remove(result.OriginalMatch);
+            this.matchResults.Add(result);
+
+            if (this.upcomingMatches.Count == 0)
+            {
+                // Calculate winners
+                this.ResolveTopScorers();
+                // If there's a tie, you need to re-generate with your remaining entreants
+                if (this.remainingEntreants.Count != 0)
+                {
+                    Log.DebugLine("Tiebreaker match!");
+                    this.upcomingMatches = Scheduler.ScheduleRoundRobin(this.remainingEntreants.ToList(), this.Picker,
+                        true);
+                }
+            }
+        }
+
+        public IList<ICompetitor> Winners()
+        {
+            if (this.remainingEntreants.Count() != 0)
+                throw new InvalidOperationException("Can't call winners before round resolved!");
+            else
+                return this.winningEntreants.ToList().AsReadOnly();
+        }
+
+        public bool IsEliminated(string competitorID)
+        {
+            return this.eliminatedEntreants.Where(c => c.CompetitorID == competitorID).Count() != 0;
+        }
+
+        public IList<Match> ScheduledMatches()
+        {
+            return this.upcomingMatches.AsReadOnly();
+        }
+
+        public IList<Match> ScheduledMatches(string competitorID)
+        {
+            return this.upcomingMatches.Where(m => m.HasCompetitor(competitorID)).ToList().AsReadOnly();
+        }
+
+        public IList<MatchResult> MatchHistory(string competitorID)
+        {
+            return this.matchResults.Where(r => r.OriginalMatch.HasCompetitor(competitorID)).ToList().AsReadOnly();
+        }
+
+        #endregion
 
         public int Wins(string competitorID)
         {
@@ -81,51 +145,6 @@ namespace MechArena.Tournament
                 {
                     this.remainingEntreants.Remove(c);
                     this.eliminatedEntreants.Add(c);
-                }
-            }
-        }
-
-        public IList<ICompetitor> Winners()
-        {
-            if (this.remainingEntreants.Count() != 0)
-                throw new InvalidOperationException("Can't call winners before round resolved!");
-            else
-                return this.winningEntreants.ToList().AsReadOnly();
-        }
-
-        public IList<Match> ScheduledMatches()
-        {
-            return this.upcomingMatches.AsReadOnly();
-        }
-
-        public IList<Match> ScheduledMatches(string competitorID)
-        {
-            return this.upcomingMatches.Where(m => m.HasCompetitor(competitorID)).ToList().AsReadOnly();
-        }
-
-        public IList<MatchResult> MatchHistory(string competitorID)
-        {
-            return this.matchResults.Where(r => r.OriginalMatch.HasCompetitor(competitorID)).ToList().AsReadOnly();
-        }
-
-        public void ReportResult(MatchResult result)
-        {
-            if (!this.upcomingMatches.Contains(result.OriginalMatch))
-                throw new InvalidOperationException("Cannot report result of non-upcoming match!");
-
-            this.upcomingMatches.Remove(result.OriginalMatch);
-            this.matchResults.Add(result);
-
-            if (this.upcomingMatches.Count == 0)
-            {
-                // Calculate winners
-                this.ResolveTopScorers();
-                // If there's a tie, you need to re-generate with your remaining entreants
-                if (this.remainingEntreants.Count != 0)
-                {
-                    Log.DebugLine("Tiebreaker match!");
-                    this.upcomingMatches = Scheduler.ScheduleRoundRobin(this.remainingEntreants.ToList(), this.Picker,
-                        true);
                 }
             }
         }

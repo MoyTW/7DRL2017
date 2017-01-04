@@ -55,22 +55,47 @@ namespace MechArena.Tournament
             this.ScheduleGroupStages(picker);
         }
 
+        #region ISchedule Fns
+
+        public Match FindMatch(string matchID)
+        {
+            return this.groupStagesSchedules.Select(s => s.FindMatch(matchID))
+                .Where(m => m != null)
+                .FirstOrDefault();
+        }
+
+        // Matches are retrieved one group at a time
+        public Match NextMatch()
+        {
+            foreach (var subSchedule in this.groupStagesSchedules)
+            {
+                if (subSchedule.NextMatch() != null)
+                    return subSchedule.NextMatch();
+            }
+            return null;
+        }
+
+        public void ReportResult(MatchResult result)
+        {
+            this.entreantsToSchedules[result.Winner.CompetitorID].ReportResult(result);
+        }
+
+        public IList<ICompetitor> Winners()
+        {
+            var winners = new List<ICompetitor>();
+            foreach (var s in this.groupStagesSchedules)
+            {
+                winners.AddRange(s.Winners());
+            }
+            return winners;
+        }
+
         public bool IsEliminated(string competitorID)
         {
             if (this.entreantsToSchedules.ContainsKey(competitorID))
                 return this.entreantsToSchedules[competitorID].IsEliminated(competitorID);
             else
                 return true;
-        }
-
-        public IList<ICompetitor> Winners()
-        {
-            var winners = new List<ICompetitor>();
-            foreach(var s in this.groupStagesSchedules)
-            {
-                winners.AddRange(s.Winners());
-            }
-            return winners;
         }
 
         public IList<Match> ScheduledMatches()
@@ -90,17 +115,6 @@ namespace MechArena.Tournament
             return new List<Match>();
         }
 
-        // Matches are retrieved one group at a time
-        public Match NextMatch()
-        {
-            foreach(var subSchedule in this.groupStagesSchedules)
-            {
-                if (subSchedule.NextMatch() != null)
-                    return subSchedule.NextMatch();
-            }
-            return null;
-        }
-
         public IList<MatchResult> MatchHistory(string competitorID)
         {
             if (this.entreantsToSchedules.ContainsKey(competitorID))
@@ -109,9 +123,6 @@ namespace MechArena.Tournament
                 return new List<MatchResult>();
         }
 
-        public void ReportResult(MatchResult result)
-        {
-            this.entreantsToSchedules[result.Winner.CompetitorID].ReportResult(result);
-        }
+        #endregion
     }
 }
