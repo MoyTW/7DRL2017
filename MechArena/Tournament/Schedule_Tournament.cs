@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MechArena.Tournament
 {
-    public class Schedule_Tournament : Schedule
+    public class Schedule_Tournament : ISchedule
     {
         private const int expectedNumEntreants = 256;
         private const int groupStageSize = 8;
@@ -15,7 +15,7 @@ namespace MechArena.Tournament
 
         private IEnumerable<ICompetitor> entreants;
         private IMapPicker picker;
-        private List<Schedule> rounds;
+        private List<ISchedule> rounds;
 
         public Schedule_Tournament(IEnumerable<ICompetitor> entreants, IMapPicker picker)
         {
@@ -23,7 +23,7 @@ namespace MechArena.Tournament
                 throw new ArgumentException("Wrong number of entreants into tournament! Should be 256!");
 
             this.entreants = entreants;
-            this.rounds = new List<Schedule>();
+            this.rounds = new List<ISchedule>();
             this.picker = picker;
 
             rounds.Add(new Schedule_GroupStage(groupStageSize, numFirstStageWinners, entreants, picker));

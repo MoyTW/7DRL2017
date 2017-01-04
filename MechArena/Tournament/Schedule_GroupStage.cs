@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 
 namespace MechArena.Tournament
 {
-    public class Schedule_GroupStage : Schedule
+    public class Schedule_GroupStage : ISchedule
     {
         public int GroupSize { get; }
         public int WinnersPerGroup { get; }
 
         private IEnumerable<ICompetitor> allEntreants;
-        private Dictionary<string, Schedule> entreantsToSchedules;
-        private List<Schedule> groupStagesSchedules;
+        private Dictionary<string, ISchedule> entreantsToSchedules;
+        private List<ISchedule> groupStagesSchedules;
 
         private void ScheduleGroupStages(IMapPicker picker)
         {
@@ -49,8 +49,8 @@ namespace MechArena.Tournament
             this.WinnersPerGroup = winnersPerGroup;
 
             this.allEntreants = entreants;
-            this.entreantsToSchedules = new Dictionary<string, Schedule>();
-            this.groupStagesSchedules = new List<Schedule>();
+            this.entreantsToSchedules = new Dictionary<string, ISchedule>();
+            this.groupStagesSchedules = new List<ISchedule>();
 
             this.ScheduleGroupStages(picker);
         }

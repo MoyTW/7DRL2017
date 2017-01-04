@@ -106,7 +106,7 @@
     <Compile Include="Tournament\Schedule_GroupStage.cs" />
     <Compile Include="Tournament\Schedule_RoundRobin.cs" />
     <Compile Include="Tournament\Scheduler.cs" />
-    <Compile Include="Tournament\Schedule.cs" />
+    <Compile Include="Tournament\ISchedule.cs" />
     <Compile Include="Tournament\Schedule_Tournament.cs" />
     <Compile Include="UI\ArenaDrawer.cs" />
     <Compile Include="UI\CompetitorHistory.cs" />

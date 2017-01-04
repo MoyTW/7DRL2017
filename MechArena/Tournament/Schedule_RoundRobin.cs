@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MechArena.Tournament
 {
-    public class Schedule_RoundRobin : Schedule
+    public class Schedule_RoundRobin : ISchedule
     {
         public int NumWinners { get; }
         public IMapPicker Picker { get; }

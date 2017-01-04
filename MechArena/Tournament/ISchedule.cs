@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MechArena.Tournament
 {
-    public interface Schedule
+    public interface ISchedule
     {
         // Match Info & Reporting
         Match NextMatch();
