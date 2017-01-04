@@ -39,7 +39,6 @@ namespace MechArena
         private static IRandom _tournamentRandom;
         private static TournamentMapPicker _tournamentPicker;
         private static Schedule_Tournament _tournament;
-        private static Match _match;
         private static ArenaState _arena;
         private static ArenaDrawer _arenaDrawer;
 
@@ -52,7 +51,6 @@ namespace MechArena
             _tournamentRandom = new DotNetRandom(1);
             _tournamentPicker = new TournamentMapPicker(5, _tournamentRandom);
             _tournament = TournamentBuilder.BuildTournament(_player, _tournamentRandom, _tournamentPicker);
-            _match = _tournament.NextMatch();
 
             _gameState = GameState.MAIN_MENU;
 
@@ -85,27 +83,8 @@ namespace MechArena
         // TODO: Will attempt to register replays!
         private static void HandleArenaEnded()
         {
-            Log.DebugLine("Match has ended!");
-
-            if (_match != null)
-            {
-                Log.DebugLine("Attempting to register match results with the Tournament!");
-                var winner = _match.CompetitorByID(_arena.WinnerID());
-                if (winner != null)
-                {
-                    _tournament.ReportResult(_match.BuildResult(winner, _arena.MapID, _arena.ArenaSeed));
-                    _match = null;
-                    Log.DebugLine("Reported winner of match!");
-                }
-                else
-                {
-                    Log.DebugLine("Something's gone wrong! Can't get winner from ended match!");
-                }
-            }
-            else
-            {
-                Log.DebugLine("Match was not an official tournament match or was a replay, not registering!");
-            }
+            Log.Debug("Reporting match " + _arena.MatchID + " to Tournament!");
+            _tournament.ReportResult(_arena.MatchID, _arena.WinnerID(), _arena.MapID, _arena.ArenaSeed);
 
             GotoMainMenu();
         }
@@ -187,13 +166,12 @@ namespace MechArena
             }
         }
 
-        private static void GotoNextMatchArena()
+        private static void GotoMatchArena(Match m)
         {
-            _match = _tournament.NextMatch();
             // TODO: The casting here is silly!
-            _arena = ArenaBuilder.BuildArena(ArenaDrawer.arenaWidth, ArenaDrawer.arenaHeight,
-                _tournamentPicker.PickMapID(), GenArenaSeed(), (CompetitorEntity)_match.Competitor1,
-                (CompetitorEntity)_match.Competitor2);
+            _arena = ArenaBuilder.BuildArena(ArenaDrawer.arenaWidth, ArenaDrawer.arenaHeight, m.MatchID,
+                _tournamentPicker.PickMapID(), GenArenaSeed(), (CompetitorEntity)m.Competitor1,
+                (CompetitorEntity)m.Competitor2);
             _arenaDrawer = new ArenaDrawer(_arena);
             _gameState = GameState.ARENA;
         }
@@ -203,20 +181,21 @@ namespace MechArena
             if (_arena != null)
                 _gameState = GameState.ARENA;
             else
-                GotoNextMatchArena();
+                Log.InfoLine("Cannot re-spectate - no arena!");
         }
 
         private static void GotoArenaForMatch(MatchResult result)
         {
-            _arena = ArenaBuilder.BuildArena(ArenaDrawer.arenaWidth, ArenaDrawer.arenaHeight, result.MapID,
-                result.ArenaSeed, (CompetitorEntity)result.Competitor1, (CompetitorEntity)result.Competitor2);
+            _arena = ArenaBuilder.BuildArena(ArenaDrawer.arenaWidth, ArenaDrawer.arenaHeight, result.MatchID,
+                result.MapID, result.ArenaSeed, (CompetitorEntity)result.Competitor1,
+                (CompetitorEntity)result.Competitor2);
             _arenaDrawer = new ArenaDrawer(_arena);
             _gameState = GameState.ARENA;
         }
 
         private static Tuple<Match, ArenaState> BuildArena(Match m)
         {
-            var arena = ArenaBuilder.BuildArena(ArenaDrawer.arenaWidth, ArenaDrawer.arenaHeight,
+            var arena = ArenaBuilder.BuildArena(ArenaDrawer.arenaWidth, ArenaDrawer.arenaHeight, m.MatchID,
                 _tournamentPicker.PickMapID(), GenArenaSeed(), (CompetitorEntity)m.Competitor1,
                 (CompetitorEntity)m.Competitor2);
             return new Tuple<Match, ArenaState>(m, arena);
@@ -277,9 +256,9 @@ namespace MechArena
                         }
 
                         // TODO: Get rid of _match!
-                        _match = _tournament.NextMatch();
+                        var match = _tournament.NextMatch();
                         // If it's a player match, resolve it or stop
-                        if (_match != null && _match.HasCompetitor(_player.CompetitorID))
+                        if (match != null && match.HasCompetitor(_player.CompetitorID))
                         {
                             if (_playPlayerMatches)
                             {
@@ -287,10 +266,9 @@ namespace MechArena
                             }
                             else
                             {
-                                var playerResult = _match.BuildResult(_player.CompetitorID, "0", 0);
+                                var playerResult = match.BuildResult(_player.CompetitorID, "0", 0);
                                 Log.InfoLine("Player wins match!");
                                 _tournament.ReportResult(playerResult);
-                                _match = _tournament.NextMatch();
                             }
                         }
 
@@ -301,7 +279,8 @@ namespace MechArena
                         }
                         break;
                     case RLKey.N:
-                        GotoNextMatchArena();
+                        if (_tournament.NextMatch() != null)
+                            GotoMatchArena(_tournament.NextMatch());
                         break;
                     case RLKey.R:
                         GotoCurrentArena();

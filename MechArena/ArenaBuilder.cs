@@ -15,8 +15,8 @@ namespace MechArena
 
         // WE ASSUME THE MAP, ONCE GENERATED, NEVER CHANGES!
         // THIS MEANS NO TERRAIN DEFORMATION WITHOUT CACHING EDITS!
-        public static ArenaState BuildArena(int width, int height, string mapID, int arenaSeed, CompetitorEntity entreant1,
-            CompetitorEntity entreant2)
+        public static ArenaState BuildArena(int width, int height, string matchID, string mapID, int arenaSeed,
+            CompetitorEntity entreant1, CompetitorEntity entreant2)
         {
             if (!seedsToMaps.ContainsKey(mapID))
             {
@@ -28,7 +28,7 @@ namespace MechArena
 
             var mech1 = entreant1.Mech.DeepCopy();
             var mech2 = entreant2.Mech.DeepCopy();
-            ArenaState arena = new ArenaState(mech1, mech2, mapID, seedsToMaps[mapID].Item1, seedsToMaps[mapID].Item2, arenaSeed);
+            ArenaState arena = new ArenaState(mech1, mech2, mapID, seedsToMaps[mapID].Item1, seedsToMaps[mapID].Item2, arenaSeed, matchID);
 
             arena.PlaceEntityNear(mech1, width - 15, height - 15);
             arena.PlaceEntityNear(mech2, 15, 15);

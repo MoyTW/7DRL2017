@@ -43,19 +43,29 @@ namespace MechArena.Tournament
 
         public void ReportResult(MatchResult result)
         {
-            rounds.Last().ReportResult(result);
-            if (rounds.Last().NextMatch() == null)
+            if (this.FindMatchResult(result.MatchID) == null)
             {
-                // Stage 2 (4 groups of 8, 2 winners each)
-                if (rounds.Count == 1)
+                rounds.Last().ReportResult(result);
+                if (rounds.Last().NextMatch() == null)
                 {
-                    rounds.Add(new Schedule_GroupStage(8, 2, this.Winners(), this.picker));
+                    // Stage 2 (4 groups of 8, 2 winners each)
+                    if (rounds.Count == 1)
+                    {
+                        Log.DebugLine("Progressing to round 2!");
+                        rounds.Add(new Schedule_GroupStage(8, 2, this.Winners(), this.picker));
+                    }
+                    // Stage 3 (1 group of 8, 1 winner)
+                    else if (rounds.Count == 2)
+                    {
+                        Log.DebugLine("Progressing to round 3!");
+                        rounds.Add(new Schedule_RoundRobin(1, this.Winners(), this.picker));
+                    }
                 }
-                // Stage 3 (1 group of 8, 1 winner)
-                else if (rounds.Count == 2)
-                {
-                    rounds.Add(new Schedule_RoundRobin(1, this.Winners(), this.picker));
-                }
+                Log.DebugLine("Match result " + result + " reported!");
+            }
+            else
+            {
+                Log.DebugLine("Attempting to report already-reported match result " + result);
             }
         }
 
@@ -89,6 +99,7 @@ namespace MechArena.Tournament
             }
             return results.AsReadOnly();
         }
+
         #endregion
 
         public IList<ICompetitor> AllCompetitors()
@@ -104,6 +115,19 @@ namespace MechArena.Tournament
         public IList<ICompetitor> Winners(int round)
         {
             return rounds[round - 1].Winners();
+        }
+
+        public void ReportResult(string matchID, string winnerID, string mapID, int arenaSeed)
+        {
+            var result = this.FindMatch(matchID).BuildResult(winnerID, mapID, arenaSeed);
+            this.ReportResult(result);
+        }
+
+        public MatchResult FindMatchResult(string matchID)
+        {
+            // This implementation is somewhat dubious!
+            var match = this.FindMatch(matchID);
+            return this.MatchHistory(match.Competitor1.CompetitorID).Where(r => r.MatchID == matchID).FirstOrDefault();
         }
     }
 }

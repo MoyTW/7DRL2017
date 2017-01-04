@@ -28,6 +28,7 @@ namespace MechArena
         public Entity Mech2 { get { return this.mech2; } }
         public Entity NextExecutorEntity { get { return this.nextExecutorEntity; } }
         public string MapID { get; }
+        public string MatchID { get; }
         public IMap ArenaMap { get; }
         public PathFinder ArenaPathFinder { get; }
         public IRandom SeededRand { get { return this.seededRand; } }
@@ -99,7 +100,8 @@ namespace MechArena
         }
 
         // TODO: Create a "Mech/Map Blueprint" so you don't pass a literal Entity/IMap instance in!
-        public ArenaState(Entity mech1, Entity mech2, string mapID, IMap arenaMap, PathFinder arenaPathFinder, int arenaSeed)
+        public ArenaState(Entity mech1, Entity mech2, string mapID, IMap arenaMap, PathFinder arenaPathFinder,
+            int arenaSeed, string matchID)
         {
             if (!mech1.HasComponentOfType<Component_Player>() && !mech1.HasComponentOfType<Component_AI>())
                 throw new ArgumentException("Can't initialize Arena: Mech 1 has no player or AI!");
@@ -112,6 +114,7 @@ namespace MechArena
             this.mapEntities = new List<Entity>();
             this.mapEntities.Add(mech1);
             this.mapEntities.Add(mech2);
+            this.MatchID = matchID;
             this.MapID = mapID;
             this.ArenaMap = arenaMap;
             this.ArenaPathFinder = arenaPathFinder;
