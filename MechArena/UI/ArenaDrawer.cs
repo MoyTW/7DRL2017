@@ -17,8 +17,8 @@ namespace MechArena.UI
         public const int arenaHeight = 50;
         private RLConsole arenaConsole;
 
-        private readonly int hudWidth = 50;
-        private readonly int hudHeight = 30;
+        private readonly int hudWidth = 30;
+        private readonly int hudHeight = 90;
         private RLConsole hudConsole;
 
         public const int statusWidth = 60;
@@ -62,7 +62,8 @@ namespace MechArena.UI
             RLConsole.Blit(this.arenaConsole, 0, 0, ArenaDrawer.arenaWidth, ArenaDrawer.arenaHeight, console, 0, 0);
 
             this.DrawHUD(this.hudConsole);
-            RLConsole.Blit(this.hudConsole, 0, 0, this.hudWidth, this.hudHeight, console, 0, arenaHeight);
+            RLConsole.Blit(this.hudConsole, 0, 0, this.hudWidth, this.hudHeight, console,
+                ArenaDrawer.arenaWidth + ArenaDrawer.statusWidth, 0);
 
             ArenaDrawer.DrawMechStatus(this.arena.Mech1, this.status1Console);
             RLConsole.Blit(this.status1Console, 0, 0, ArenaDrawer.statusWidth, ArenaDrawer.statusHeight, console,
@@ -127,32 +128,54 @@ namespace MechArena.UI
             ArenaDrawer.DrawBodyPartStatus(skeleton.InspectBodyPart(BodyPartLocation.RIGHT_LEG), 41, line + 20, mechDestroyed, console);
         }
 
+        private IEnumerable<Tuple<Entity,int>> ArenaTimeTrackers()
+        {
+            var trackers = new List<Entity>();
+
+            trackers.Add(this.arena.Mech1);
+            trackers.AddRange(this.arena.Mech1.TryGetSubEntities(SubEntitiesSelector.TRACKS_TIME));
+            trackers.Add(this.arena.Mech2);
+            trackers.AddRange(this.arena.Mech2.TryGetSubEntities(SubEntitiesSelector.TRACKS_TIME));
+
+            return trackers.Select(e => new Tuple<Entity,int>(e, e.TryGetTicksToLive(this.arena.CurrentTick)))
+                .OrderBy(t => t.Item2);
+        }
+
         public void DrawHUD(RLConsole console)
         {
-            int line = 1;
+            int line = 0;
 
             // HUD line
-            console.Print(1, line, "##### HUD #####", RLColor.Black);
-            line += 2;
+            console.Print(0, line,      "##############################", RLColor.Black);
+            console.Print(0, ++line, "#                            #", RLColor.Black);
+            console.Print(0, ++line, "#       ACTION QUEUE         #", RLColor.Black);
+            console.Print(0, ++line, "#                            #", RLColor.Black);
+            console.Print(0, ++line, "#     Current Tick: " + arena.CurrentTick + "           ", RLColor.Black);
+            console.Print(29, line, "#", RLColor.Black);
+            console.Print(0, ++line, "#                            #", RLColor.Black);
+            console.Print(0, ++line, "##############################", RLColor.Black);
+            console.Print(0, ++line, "#                #     #     #", RLColor.Black);
+            console.Print(0, ++line, "#    ENTITY      # CD  # TTL #", RLColor.Black);
+            console.Print(0, ++line, "#                #     #     #", RLColor.Black);
+            console.Print(0, ++line, "##############################", RLColor.Black);
+            console.Print(0, ++line, "------------------------------", RLColor.Black);
+            line++;
 
-            // Current turn status
-            console.Print(1, line, "Next Action: " + arena.NextExecutorEntity.ToString() + "          ", RLColor.Black);
-            line += 2;
-
-            var playerTicksToLive = arena.Mech1.TryGetTicksToLive(arena.CurrentTick);
-            var playerCooldown = arena.Mech1.HandleQuery(new GameQuery_TicksCooldown()).Value;
-            console.Print(1, line, "Ticks to next move: " + playerTicksToLive + " [" + playerCooldown + "]    ", RLColor.Black);
-            line += 2;
-
-            foreach (var subTimeTracker in arena.Mech1.TryGetSubEntities(SubEntitiesSelector.TRACKS_TIME))
+            var trackers = this.ArenaTimeTrackers();
+            foreach (var tracker in trackers)
             {
-                var ticksToLive = subTimeTracker.HandleQuery(new GameQuery_TicksToLive(arena.CurrentTick)).TicksToLive;
-                console.Print(1, line, subTimeTracker.ToString() + " active in: " + ticksToLive + "    ", RLColor.Black);
-                line += 2;
+                var cd = tracker.Item1.HandleQuery(new GameQuery_TicksCooldown()).Value;
+                console.Print(2, line, tracker.Item1.Label + "                  ", RLColor.Black);
+                console.Print(19, line, cd + "        ", RLColor.Black);
+                console.Print(25, line, tracker.Item2 + "                  ", RLColor.Black);
+                console.Print(0, line, "|", RLColor.Black);
+                console.Print(17, line, "|", RLColor.Black);
+                console.Print(23, line, "|", RLColor.Black);
+                console.Print(29, line, "|", RLColor.Black);
+                line++;
+                console.Print(0, line, "------------------------------", RLColor.Black);
+                line++;
             }
-
-            console.Print(1, line, "Current Tick: " + arena.CurrentTick + "           ", RLColor.Black);
-            line += 2;
         }
 
         public void DrawArena(RLConsole console)
