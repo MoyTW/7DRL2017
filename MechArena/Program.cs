@@ -1,11 +1,8 @@
-﻿using RLNET;
-using RogueSharp.Random;
-
-using MechArena.Tournament;
+﻿using MechArena.Tournament;
 using MechArena.UI;
-
+using RLNET;
+using RogueSharp.Random;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -23,8 +20,9 @@ namespace MechArena
     public class Program
     {
         // The screen height and width are in number of tiles
-        private static readonly int _screenWidth = 110;
-        private static readonly int _screenHeight = 80;
+        // Values set for 1280x720
+        private static readonly int _screenWidth = 160;
+        private static readonly int _screenHeight = 90;
         private static RLRootConsole _rootConsole;
 
         private static GameState _gameState;

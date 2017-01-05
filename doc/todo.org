@@ -68,12 +68,12 @@ This will come after, however.
 
 + Adds bonuses to selected stats
 
-** AI Differentiation
+** TODO AI Differentiation
 
 Eventually the AIs will build their own mechs and refine their own behaviours
 but for right now I'll just hard code some Stuff to get it playable.
 
-*** TODO AIs have different mechs
+*** DONE AIs have different mechs
 *** TODO AIs have different behaviours
 
 ** DONE Tournament
