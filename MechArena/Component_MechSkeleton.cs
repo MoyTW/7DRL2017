@@ -29,6 +29,14 @@ namespace MechArena
             }
         }
 
+        public Entity InspectBodyPart(BodyPartLocation location)
+        {
+            if (this.bodyParts.ContainsKey(location))
+                return this.bodyParts[location];
+            else
+                return null;
+        }
+
         #region Event Handlers
 
         // We have NO DAMAGE TRANSFER! A mech with no arm is just harder to hit.

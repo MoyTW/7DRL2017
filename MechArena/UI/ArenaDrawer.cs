@@ -22,7 +22,7 @@ namespace MechArena.UI
         private RLConsole hudConsole;
 
         public const int statusWidth = 60;
-        public const int statusHeight = 40;
+        public const int statusHeight = 45;
         private RLConsole status1Console;
         private RLConsole status2Console;
 
@@ -83,9 +83,9 @@ namespace MechArena.UI
             var bodyPartStructure = bodyPart.TryGetAttribute(EntityAttributeType.STRUCTURE).Value;
 
             if (mechDestroyed || bodyPartDestroyed)
-                console.Print(x, y, "- " + bodyPart.ToString() + ":" + bodyPartStructure + " ", RLColor.Red);
+                console.Print(x, y, "  " + bodyPart.ToString() + ":" + bodyPartStructure + " ", RLColor.Red);
             else
-                console.Print(x, y, "- " + bodyPart.ToString() + ":" + bodyPartStructure + " ", RLColor.Black);
+                console.Print(x, y, "  " + bodyPart.ToString() + ":" + bodyPartStructure + " ", RLColor.Black);
             y += 2;
 
             var mountedParts = bodyPart.HandleQuery(new GameQuery_SubEntities(SubEntitiesSelector.ALL)).SubEntities;
@@ -115,23 +115,16 @@ namespace MechArena.UI
             line++;
             line++;
 
-            var bodyParts = mech.HandleQuery(new GameQuery_SubEntities(SubEntitiesSelector.BODY_PART)).SubEntities;
             int x = 1;
-            int y = line;
-            foreach (var bodyPart in bodyParts)
-            {
-                if (y == line)
-                {
-                    y += ArenaDrawer.DrawBodyPartStatus(bodyPart, x, y, mechDestroyed, console);
-                }
-                else
-                {
-                    ArenaDrawer.DrawBodyPartStatus(bodyPart, x, y, mechDestroyed, console);
-                    y = line;
-                    x += 20;
-                }
+            var skeleton = mech.GetComponentOfType<Component_MechSkeleton>();
+            ArenaDrawer.DrawBodyPartStatus(skeleton.InspectBodyPart(BodyPartLocation.LEFT_ARM), 1, line + 2, mechDestroyed, console);
+            ArenaDrawer.DrawBodyPartStatus(skeleton.InspectBodyPart(BodyPartLocation.LEFT_LEG), 1, line + 20, mechDestroyed, console);
 
-            }
+            ArenaDrawer.DrawBodyPartStatus(skeleton.InspectBodyPart(BodyPartLocation.HEAD), 21, line, mechDestroyed, console);
+            ArenaDrawer.DrawBodyPartStatus(skeleton.InspectBodyPart(BodyPartLocation.TORSO), 21, line + 12, mechDestroyed, console);
+
+            ArenaDrawer.DrawBodyPartStatus(skeleton.InspectBodyPart(BodyPartLocation.RIGHT_ARM), 41, line + 2, mechDestroyed, console);
+            ArenaDrawer.DrawBodyPartStatus(skeleton.InspectBodyPart(BodyPartLocation.RIGHT_LEG), 41, line + 20, mechDestroyed, console);
         }
 
         public void DrawHUD(RLConsole console)
