@@ -116,7 +116,6 @@ namespace MechArena.UI
             line++;
             line++;
 
-            int x = 1;
             var skeleton = mech.GetComponentOfType<Component_MechSkeleton>();
             ArenaDrawer.DrawBodyPartStatus(skeleton.InspectBodyPart(BodyPartLocation.LEFT_ARM), 1, line + 2, mechDestroyed, console);
             ArenaDrawer.DrawBodyPartStatus(skeleton.InspectBodyPart(BodyPartLocation.LEFT_LEG), 1, line + 20, mechDestroyed, console);
