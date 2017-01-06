@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MechArena
 {
+    [Serializable()]
     class Component_Mountable : Component
     {
         public MountSize SizeRequired { get; }

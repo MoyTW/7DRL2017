@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MechArena
 {
@@ -13,6 +9,7 @@ namespace MechArena
         LARGE = 2
     }
 
+    [Serializable()]
     class Component_Mount : Component
     {
         private Entity mountedEntity;
@@ -33,7 +30,7 @@ namespace MechArena
         public bool CanMount(Entity en)
         {
             return this.mountedEntity == null &&
-                this.MaxSize > en.GetComponentOfType<Component_Mountable>().SizeRequired;
+                this.MaxSize >= en.GetComponentOfType<Component_Mountable>().SizeRequired;
 
         }
 
