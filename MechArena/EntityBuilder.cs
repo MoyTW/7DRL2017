@@ -54,21 +54,20 @@ namespace MechArena
             }
         }
 
-        private static Entity BuildWeapon(string weaponLabel, int slotsRequired, int internalStructure,
-            MountSize size, int toHit, int maxRange, int damage, int refireTicks)
+        private static Entity BuildWeaponAndMount(string weaponLabel, MountSize size, int toHit, int maxRange, int damage, int refireTicks)
         {
-            return new Entity(label: weaponLabel, typeLabel: EntityBuilder.WeaponTypeLabel)
-                .AddComponent(new Component_Slottable(slotsRequired))
-                .AddComponent(new Component_InternalStructure(internalStructure))
+            var weapon = new Entity(label: weaponLabel, typeLabel: EntityBuilder.WeaponTypeLabel)
+                .AddComponent(new Component_Mountable(size))
                 .AddComponent(new Component_Weapon(size, toHit, maxRange, damage, refireTicks));
+            var mount = BuildMount(size);
+            mount.HandleEvent(new GameEvent_Slot(null, mount, weapon));
+            return mount;
         }
 
-        private static Entity BuildAndSlotWeapon(Entity mech, BodyPartLocation location, string weaponLabel,
-            int slotsRequired, int internalStructure, MountSize size, int toHit, int maxRange, int damage,
-            int refireTicks)
+        private static Entity BuildAndSlotWeapon(Entity mech, BodyPartLocation location, string weaponLabel, 
+            MountSize size, int toHit, int maxRange, int damage, int refireTicks)
         {
-            var weapon = BuildWeapon(weaponLabel, slotsRequired, internalStructure, size, toHit, maxRange, damage,
-                refireTicks);
+            var weapon = BuildWeaponAndMount(weaponLabel, size, toHit, maxRange, damage, refireTicks);
             SlotAt(mech, location, weapon);
             return mech;
         }
@@ -76,6 +75,30 @@ namespace MechArena
         #endregion
 
         #region Slottable Parts
+
+        public static Entity BuildMount(MountSize size)
+        {
+            var mount = new Entity(label: "Mount", typeLabel: EntityBuilder.SlottablePartTypeLabel)
+                .AddComponent(new Component_Mount(size));
+            switch (size)
+            {
+                case MountSize.SMALL:
+                    mount.AddComponent(new Component_Slottable(2))
+                        .AddComponent(new Component_InternalStructure(2));
+                    break;
+                case MountSize.MEDIUM:
+                    mount.AddComponent(new Component_Slottable(4))
+                        .AddComponent(new Component_InternalStructure(4));
+                    break;
+                case MountSize.LARGE:
+                    mount.AddComponent(new Component_Slottable(8))
+                        .AddComponent(new Component_InternalStructure(8));
+                    break;
+                default:
+                    throw new ArgumentException("I have no idea how you passed " + size + " in.");
+            }
+            return mount;
+        }
 
         public static Entity BuildAccelerator()
         {
@@ -163,10 +186,10 @@ namespace MechArena
         {
             var mech = BuildNakedMech(label, player);
 
-            BuildAndSlotWeapon(mech, BodyPartLocation.HEAD, "P.HL.", 1, 1, MountSize.SMALL, 9999, 10, 3, 25);
-            BuildAndSlotWeapon(mech, BodyPartLocation.LEFT_ARM, "DM.CNNN.", 4, 32, MountSize.LARGE, 9999, 9999,
+            BuildAndSlotWeapon(mech, BodyPartLocation.HEAD, "P.HL.", MountSize.SMALL, 9999, 10, 3, 25);
+            BuildAndSlotWeapon(mech, BodyPartLocation.LEFT_ARM, "DM.CNNN.", MountSize.LARGE, 9999, 9999,
                 9999, 1);
-            BuildAndSlotWeapon(mech, BodyPartLocation.RIGHT_ARM, "DM.CNNN.", 4, 32, MountSize.LARGE, 9999, 9999,
+            BuildAndSlotWeapon(mech, BodyPartLocation.RIGHT_ARM, "DM.CNNN.", MountSize.LARGE, 9999, 9999,
                 9999, 1);
 
             FillLocationWith(mech, BodyPartLocation.LEFT_LEG, BuildAccelerator);
@@ -179,9 +202,9 @@ namespace MechArena
         {
             var mech = BuildNakedMech(label, player);
 
-            BuildAndSlotWeapon(mech, BodyPartLocation.HEAD, "AIIM.HL.", 1, 1, MountSize.SMALL, 5, 10, 1, 25);
-            BuildAndSlotWeapon(mech, BodyPartLocation.LEFT_ARM, "AIIM.LAW.", 1, 1, MountSize.SMALL, 0, 10, 3, 25);
-            BuildAndSlotWeapon(mech, BodyPartLocation.RIGHT_ARM, "AIIM.RAW.", 1, 1, MountSize.SMALL, 0, 10, 3, 25);
+            BuildAndSlotWeapon(mech, BodyPartLocation.HEAD, "AIIM.HL.", MountSize.SMALL, 5, 10, 1, 25);
+            BuildAndSlotWeapon(mech, BodyPartLocation.LEFT_ARM, "AIIM.LAW.", MountSize.SMALL, 0, 10, 3, 25);
+            BuildAndSlotWeapon(mech, BodyPartLocation.RIGHT_ARM, "AIIM.RAW.", MountSize.SMALL, 0, 10, 3, 25);
 
             foreach (var location in EntityBuilder.MechLocations)
             {
@@ -195,10 +218,10 @@ namespace MechArena
         {
             var mech = BuildNakedMech(label, player);
 
-            BuildAndSlotWeapon(mech, BodyPartLocation.LEFT_ARM, "KNF.", 1, 2, MountSize.SMALL, 3, 1, 2, 13);
-            BuildAndSlotWeapon(mech, BodyPartLocation.RIGHT_ARM, "KNF.", 1, 2, MountSize.SMALL, 3, 1, 2, 13);
-            BuildAndSlotWeapon(mech, BodyPartLocation.LEFT_LEG, "KNF.", 1, 2, MountSize.SMALL, 3, 1, 2, 13);
-            BuildAndSlotWeapon(mech, BodyPartLocation.RIGHT_LEG, "KNF.", 1, 2, MountSize.SMALL, 3, 1, 2, 13);
+            BuildAndSlotWeapon(mech, BodyPartLocation.LEFT_ARM, "KNF.", MountSize.SMALL, 3, 1, 2, 13);
+            BuildAndSlotWeapon(mech, BodyPartLocation.RIGHT_ARM, "KNF.", MountSize.SMALL, 3, 1, 2, 13);
+            BuildAndSlotWeapon(mech, BodyPartLocation.LEFT_LEG, "KNF.", MountSize.SMALL, 3, 1, 2, 13);
+            BuildAndSlotWeapon(mech, BodyPartLocation.RIGHT_LEG, "KNF.", MountSize.SMALL, 3, 1, 2, 13);
 
             FillLocationWith(mech, BodyPartLocation.LEFT_LEG, BuildAccelerator);
             FillLocationWith(mech, BodyPartLocation.RIGHT_LEG, BuildAccelerator);
@@ -215,9 +238,9 @@ namespace MechArena
         {
             var mech = BuildNakedMech(label, player);
 
-            BuildAndSlotWeapon(mech, BodyPartLocation.HEAD, "HD.LSR.", 1, 1, MountSize.SMALL, 5, 10, 1, 25);
-            BuildAndSlotWeapon(mech, BodyPartLocation.LEFT_ARM, "SHLD.", 4, 20, MountSize.LARGE, 3, 1, 1, 50);
-            BuildAndSlotWeapon(mech, BodyPartLocation.RIGHT_ARM, "SWRD.", 2, 4, MountSize.MEDIUM, 0, 1, 6, 20);
+            BuildAndSlotWeapon(mech, BodyPartLocation.HEAD, "HD.LSR.", MountSize.SMALL, 5, 10, 1, 25);
+            BuildAndSlotWeapon(mech, BodyPartLocation.LEFT_ARM, "SHLD.", MountSize.LARGE, 3, 1, 1, 50);
+            BuildAndSlotWeapon(mech, BodyPartLocation.RIGHT_ARM, "SWRD.", MountSize.MEDIUM, 0, 1, 6, 20);
 
             foreach (var location in EntityBuilder.MechLocations)
             {
@@ -231,7 +254,7 @@ namespace MechArena
         {
             var mech = BuildNakedMech(label, player);
 
-            Func<Entity> buildRocketPod = () => BuildWeapon("RCKT.PD.", 2, 2, MountSize.MEDIUM, -3, 6, 12, 200);
+            Func<Entity> buildRocketPod = () => BuildWeaponAndMount("RCKT.PD.", MountSize.MEDIUM, -3, 6, 12, 200);
 
             FillLocationWith(mech, BodyPartLocation.LEFT_LEG, BuildAccelerator);
             FillLocationWith(mech, BodyPartLocation.RIGHT_LEG, BuildAccelerator);
