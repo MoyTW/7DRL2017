@@ -3,22 +3,15 @@ using System.Collections.Generic;
 
 namespace MechArena
 {
-    public enum WeaponSize
-    {
-        SMALL = 0,
-        MEDIUM,
-        LARGE
-    }
-
     [Serializable()]
     public class Component_Weapon : Component_TracksTime
     {
-        public WeaponSize Size { get; }
+        public MountSize Size { get; }
         private readonly Dictionary<EntityAttributeType, int> WeaponAttributes;
 
         // TODO: I would like to define a construct which can be read from a file to construct these!
         // Right now I'll just hard-code them all and feel bad about it.
-        public Component_Weapon(WeaponSize size, int toHit, int maxRange, int damage, int refireTicks)
+        public Component_Weapon(MountSize size, int toHit, int maxRange, int damage, int refireTicks)
             : base(EntityAttributeType.REFIRE_TICKS)
         {
             this.Size = size;
