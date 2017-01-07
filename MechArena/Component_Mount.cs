@@ -14,6 +14,7 @@ namespace MechArena
     {
         private Entity mountedEntity;
 
+        public bool HasMountedEntity { get { return this.mountedEntity != null; } }
         public MountSize MaxSize { get; }
 
         public Component_Mount(MountSize maxSize)
