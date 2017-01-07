@@ -31,7 +31,6 @@ namespace MechArena
         {
             return this.mountedEntity == null &&
                 this.MaxSize >= en.GetComponentOfType<Component_Mountable>().SizeRequired;
-
         }
 
         private void HandleSlot(GameEvent_Slot ev)
@@ -41,6 +40,7 @@ namespace MechArena
                 if (this.CanMount(ev.EntityToSlot))
                 {
                     this.mountedEntity = ev.EntityToSlot;
+                    ev.EntityToSlot.GetComponentOfType<Component_Mountable>().Notify_Mounted(this.Parent);
                     ev.Completed = true;
                 }
                 else
@@ -58,6 +58,7 @@ namespace MechArena
                     throw new ArgumentException("Cannot unmount unmounted item " + ev.EntityToUnslot.ToString() + "!");
 
                 this.mountedEntity = null;
+                ev.EntityToUnslot.GetComponentOfType<Component_Mountable>().Notify_Unmounted();
                 ev.Completed = true;
             }
         }
