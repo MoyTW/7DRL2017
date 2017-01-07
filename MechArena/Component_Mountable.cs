@@ -32,10 +32,20 @@ namespace MechArena
             this.MountedTo.HandleQuery(q);
         }
 
+        private void HandleQueryEntityAttribute(GameQuery_EntityAttribute q)
+        {
+            if (q.AttributeType == EntityAttributeType.STRUCTURE && this.MountedTo != null)
+            {
+                this.MountedTo.HandleQuery(q);
+            }
+        }
+
         protected override GameQuery _HandleQuery(GameQuery q)
         {
             if (q is GameQuery_Destroyed)
                 this.HandleQueryDestroyed((GameQuery_Destroyed)q);
+            if (q is GameQuery_EntityAttribute)
+                this.HandleQueryEntityAttribute((GameQuery_EntityAttribute)q);
 
             return q;
         }

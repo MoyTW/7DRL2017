@@ -85,7 +85,10 @@ namespace MechArena
 
         private void HandleQueryEntityAttribute(GameQuery_EntityAttribute q)
         {
-            if (this.mountedEntity != null && !this.mountedEntity.TryGetDestroyed())
+            // Structure is not passed to Mountable!
+            if (q.AttributeType != EntityAttributeType.STRUCTURE &&
+                this.mountedEntity != null &&
+                !this.mountedEntity.TryGetDestroyed())
             {
                 this.mountedEntity.HandleQuery(q);
             }
