@@ -37,16 +37,16 @@ command, instead of the player inputs directly hitting the state of the Arena.
 
 This will come after, however.
 
-** Mech Construction
-*** Remaining Parts
+** TODO Mech Construction
+*** TODO Remaining Parts
 
-+ Head sensors: increase LOS
-+ Power Plant: provide cooldown penalties if damaged
-+ Arm actuators: hold weapons, fire weapons
-+ Leg actuators: move speed bonus
-+ Holster (small, medium, large): hold weapons
-+ Weapon mount (small, medium, large): fire weapons
-+ Booster: increase speed for short period of time
+**** TODO Head sensors: eliminate FOW
+**** TODO Power Plant: provide cooldown penalties if damaged
+**** DONE Arm actuators: hold weapons, fire weapons
+**** DONE Leg actuators: move speed bonus
+**** TODO Holster (small, medium, large): hold weapons
+**** DONE Weapon mount (small, medium, large): fire weapons
+**** TODO Booster: increase speed for short period of time
 
 *** Remaining Weapons
 | Item             | Size   | Accuracy | Refire | Damage | Range  |

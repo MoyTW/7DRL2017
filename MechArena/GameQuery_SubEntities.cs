@@ -11,7 +11,8 @@ namespace MechArena
         ALL = 0,
         WEAPON,
         BODY_PART,
-        TRACKS_TIME
+        TRACKS_TIME,
+        MOUNTS
     }
 
     // This is definitely astronauting the heck out of my problem.
@@ -23,7 +24,8 @@ namespace MechArena
                 { SubEntitiesSelector.ALL, null },
                 { SubEntitiesSelector.WEAPON, new List<Type>() { typeof(Component_Weapon) } },
                 { SubEntitiesSelector.BODY_PART, new List<Type>() { typeof(Component_BodyPartLocation) } },
-                { SubEntitiesSelector.TRACKS_TIME, new List<Type>() { typeof(Component_TracksTime) } }
+                { SubEntitiesSelector.TRACKS_TIME, new List<Type>() { typeof(Component_TracksTime) } },
+                { SubEntitiesSelector.MOUNTS, new List<Type>() { typeof(Component_Mount) } }
             };
 
         public static bool MatchesSelector(Entity en, SubEntitiesSelector s)

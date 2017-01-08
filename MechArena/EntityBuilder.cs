@@ -12,6 +12,7 @@ namespace MechArena
         #region Values
 
         // TODO: Hardcoded values all over!
+        public const string ArmActuatorLabel = "Arm.Actr.";
         public const string SlottablePartTypeLabel = "Slottable Part";
         public const string BodyPartTypeLabel = "Body Part";
         public const string MechTypeLabel = "Mech";
@@ -54,6 +55,13 @@ namespace MechArena
             }
         }
 
+        private static Entity BuildWeapon(string weaponLabel, MountSize size, int toHit, int maxRange, int damage, int refireTicks)
+        {
+            return new Entity(label: weaponLabel, typeLabel: EntityBuilder.WeaponTypeLabel)
+                .AddComponent(new Component_Mountable(size))
+                .AddComponent(new Component_Weapon(size, toHit, maxRange, damage, refireTicks));
+        }
+
         private static Entity BuildWeaponAndMount(string weaponLabel, MountSize size, int toHit, int maxRange, int damage, int refireTicks)
         {
             var weapon = new Entity(label: weaponLabel, typeLabel: EntityBuilder.WeaponTypeLabel)
@@ -69,6 +77,16 @@ namespace MechArena
         {
             var weapon = BuildWeaponAndMount(weaponLabel, size, toHit, maxRange, damage, refireTicks);
             SlotAt(mech, location, weapon);
+            return mech;
+        }
+
+        private static Entity MountOntoArm(Entity mech, BodyPartLocation location, Entity mountable)
+        {
+            var armActuator = GetBodyPart(mech, location)
+                .TryGetSubEntities(SubEntitiesSelector.MOUNTS)
+                .Where(e => e.Label == ArmActuatorLabel)
+                .First();
+            armActuator.HandleEvent(new GameEvent_Slot(mech, armActuator, mountable));
             return mech;
         }
 
@@ -124,7 +142,8 @@ namespace MechArena
 
         public static Entity BuildArmActuator()
         {
-            return new Entity(label: "Arm.Actr.", typeLabel: SlottablePartTypeLabel)
+            return new Entity(label: ArmActuatorLabel, typeLabel: SlottablePartTypeLabel)
+                .AddComponent(new Component_Mount(MountSize.LARGE))
                 .AddComponent(new Component_Slottable(2))
                 .AddComponent(new Component_InternalStructure(2));
         }
@@ -202,6 +221,9 @@ namespace MechArena
         {
             var mech = BuildNakedMech(label, player);
 
+            MountOntoArm(mech, BodyPartLocation.LEFT_ARM, BuildWeapon("GUN", MountSize.MEDIUM, 0, 9, 5, 75));
+            MountOntoArm(mech, BodyPartLocation.RIGHT_ARM, BuildWeapon("GUN", MountSize.MEDIUM, 0, 9, 5, 75));
+
             BuildAndSlotWeapon(mech, BodyPartLocation.HEAD, "AIIM.HL.", MountSize.SMALL, 5, 10, 1, 25);
             BuildAndSlotWeapon(mech, BodyPartLocation.LEFT_ARM, "AIIM.LAW.", MountSize.SMALL, 0, 10, 3, 25);
             BuildAndSlotWeapon(mech, BodyPartLocation.RIGHT_ARM, "AIIM.RAW.", MountSize.SMALL, 0, 10, 3, 25);
@@ -217,6 +239,9 @@ namespace MechArena
         public static Entity BuildKnifeMech(string label, bool player)
         {
             var mech = BuildNakedMech(label, player);
+
+            MountOntoArm(mech, BodyPartLocation.LEFT_ARM, BuildWeapon("KNF.", MountSize.SMALL, 3, 1, 2, 13));
+            MountOntoArm(mech, BodyPartLocation.RIGHT_ARM, BuildWeapon("KNF.", MountSize.SMALL, 3, 1, 2, 13));
 
             BuildAndSlotWeapon(mech, BodyPartLocation.LEFT_ARM, "KNF.", MountSize.SMALL, 3, 1, 2, 13);
             BuildAndSlotWeapon(mech, BodyPartLocation.RIGHT_ARM, "KNF.", MountSize.SMALL, 3, 1, 2, 13);
@@ -238,9 +263,10 @@ namespace MechArena
         {
             var mech = BuildNakedMech(label, player);
 
+            MountOntoArm(mech, BodyPartLocation.LEFT_ARM, BuildWeapon("SHLD.", MountSize.LARGE, 3, 1, 1, 50));
+            MountOntoArm(mech, BodyPartLocation.RIGHT_ARM, BuildWeapon("SWRD.", MountSize.MEDIUM, 0, 1, 6, 20));
+
             BuildAndSlotWeapon(mech, BodyPartLocation.HEAD, "HD.LSR.", MountSize.SMALL, 5, 10, 1, 25);
-            BuildAndSlotWeapon(mech, BodyPartLocation.LEFT_ARM, "SHLD.", MountSize.LARGE, 3, 1, 1, 50);
-            BuildAndSlotWeapon(mech, BodyPartLocation.RIGHT_ARM, "SWRD.", MountSize.MEDIUM, 0, 1, 6, 20);
 
             foreach (var location in EntityBuilder.MechLocations)
             {
@@ -255,6 +281,9 @@ namespace MechArena
             var mech = BuildNakedMech(label, player);
 
             Func<Entity> buildRocketPod = () => BuildWeaponAndMount("RCKT.PD.", MountSize.MEDIUM, -3, 6, 12, 200);
+
+            MountOntoArm(mech, BodyPartLocation.LEFT_ARM, BuildWeapon("RCKT.PD.", MountSize.MEDIUM, -3, 6, 12, 200));
+            MountOntoArm(mech, BodyPartLocation.RIGHT_ARM, BuildWeapon("RCKT.PD.", MountSize.MEDIUM, -3, 6, 12, 200));
 
             FillLocationWith(mech, BodyPartLocation.LEFT_LEG, BuildAccelerator);
             FillLocationWith(mech, BodyPartLocation.RIGHT_LEG, BuildAccelerator);
