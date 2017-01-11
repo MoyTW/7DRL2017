@@ -94,6 +94,65 @@ namespace MechArena
 
         #region Slottable Parts
 
+        #region Weapons
+
+        public static Entity BuildMissile()
+        {
+            return BuildWeapon("Mssl.Rck.", MountSize.MEDIUM, 1, 15, 4, 100);
+        }
+
+        public static Entity BuildMiniMissile()
+        {
+            return BuildWeapon("Mn.Mssl.", MountSize.SMALL, 1, 10, 2, 75);
+        }
+
+        public static Entity BuildSniperRifle()
+        {
+            return BuildWeapon("Snpr.Rfl.", MountSize.LARGE, 6, 20, 8, 250);
+        }
+
+        public static Entity BuildRifle()
+        {
+            return BuildWeapon("Rfl.", MountSize.MEDIUM, 1, 12, 3, 80);
+        }
+
+        public static Entity BuildMachinegun()
+        {
+            return BuildWeapon("Mchngn.", MountSize.LARGE, -2, 14, 1, 20);
+        }
+
+        public static Entity BuildShotgun()
+        {
+            return BuildWeapon("Shtgn.", MountSize.MEDIUM, 3, 8, 6, 100);
+        }
+
+        public static Entity BuildPistol()
+        {
+            return BuildWeapon("Pstl.", MountSize.SMALL, 2, 8, 2, 65);
+        }
+
+        public static Entity BuildRockets()
+        {
+            return BuildWeapon("Rckt.Pd.", MountSize.SMALL, -3, 6, 9, 170);
+        }
+
+        public static Entity BuildDagger()
+        {
+            return BuildWeapon("Dggr.", MountSize.SMALL, 2, 1, 2, 15);
+        }
+
+        public static Entity BuildSword()
+        {
+            return BuildWeapon("Swrd.", MountSize.MEDIUM, 0, 1, 6, 30);
+        }
+
+        public static Entity BuildHammer()
+        {
+            return BuildWeapon("Hmmr.", MountSize.MEDIUM, -1, 1, 9, 60);
+        }
+
+        #endregion
+
         public static Entity BuildMount(MountSize size)
         {
             var mount = new Entity(label: "Mount", typeLabel: EntityBuilder.SlottablePartTypeLabel)
@@ -221,8 +280,8 @@ namespace MechArena
         {
             var mech = BuildNakedMech(label, player);
 
-            MountOntoArm(mech, BodyPartLocation.LEFT_ARM, BuildWeapon("GUN", MountSize.MEDIUM, 0, 9, 5, 75));
-            MountOntoArm(mech, BodyPartLocation.RIGHT_ARM, BuildWeapon("GUN", MountSize.MEDIUM, 0, 9, 5, 75));
+            MountOntoArm(mech, BodyPartLocation.LEFT_ARM, BuildRifle());
+            MountOntoArm(mech, BodyPartLocation.RIGHT_ARM, BuildRifle());
 
             BuildAndSlotWeapon(mech, BodyPartLocation.HEAD, "AIIM.HL.", MountSize.SMALL, 5, 10, 1, 25);
             BuildAndSlotWeapon(mech, BodyPartLocation.LEFT_ARM, "AIIM.LAW.", MountSize.SMALL, 0, 10, 3, 25);
@@ -240,8 +299,8 @@ namespace MechArena
         {
             var mech = BuildNakedMech(label, player);
 
-            MountOntoArm(mech, BodyPartLocation.LEFT_ARM, BuildWeapon("KNF.", MountSize.SMALL, 3, 1, 2, 13));
-            MountOntoArm(mech, BodyPartLocation.RIGHT_ARM, BuildWeapon("KNF.", MountSize.SMALL, 3, 1, 2, 13));
+            MountOntoArm(mech, BodyPartLocation.LEFT_ARM, BuildDagger());
+            MountOntoArm(mech, BodyPartLocation.RIGHT_ARM, BuildDagger());
 
             BuildAndSlotWeapon(mech, BodyPartLocation.LEFT_ARM, "KNF.", MountSize.SMALL, 3, 1, 2, 13);
             BuildAndSlotWeapon(mech, BodyPartLocation.RIGHT_ARM, "KNF.", MountSize.SMALL, 3, 1, 2, 13);
@@ -263,8 +322,8 @@ namespace MechArena
         {
             var mech = BuildNakedMech(label, player);
 
-            MountOntoArm(mech, BodyPartLocation.LEFT_ARM, BuildWeapon("SHLD.", MountSize.LARGE, 3, 1, 1, 50));
-            MountOntoArm(mech, BodyPartLocation.RIGHT_ARM, BuildWeapon("SWRD.", MountSize.MEDIUM, 0, 1, 6, 20));
+            MountOntoArm(mech, BodyPartLocation.LEFT_ARM, BuildSword());
+            MountOntoArm(mech, BodyPartLocation.RIGHT_ARM, BuildSword());
 
             BuildAndSlotWeapon(mech, BodyPartLocation.HEAD, "HD.LSR.", MountSize.SMALL, 5, 10, 1, 25);
 
@@ -282,8 +341,8 @@ namespace MechArena
 
             Func<Entity> buildRocketPod = () => BuildWeaponAndMount("RCKT.PD.", MountSize.MEDIUM, -3, 6, 12, 200);
 
-            MountOntoArm(mech, BodyPartLocation.LEFT_ARM, BuildWeapon("RCKT.PD.", MountSize.MEDIUM, -3, 6, 12, 200));
-            MountOntoArm(mech, BodyPartLocation.RIGHT_ARM, BuildWeapon("RCKT.PD.", MountSize.MEDIUM, -3, 6, 12, 200));
+            MountOntoArm(mech, BodyPartLocation.LEFT_ARM, BuildRockets());
+            MountOntoArm(mech, BodyPartLocation.RIGHT_ARM, BuildRockets());
 
             FillLocationWith(mech, BodyPartLocation.LEFT_LEG, BuildAccelerator);
             FillLocationWith(mech, BodyPartLocation.RIGHT_LEG, BuildAccelerator);
