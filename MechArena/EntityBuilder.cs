@@ -71,7 +71,9 @@ namespace MechArena
 
         private static Entity BuildAndSlotWeapon(Entity mech, BodyPartLocation location, Entity weapon)
         {
-            SlotAt(mech, location, weapon);
+            var mount = BuildMount(weapon.GetComponentOfType<Component_Mountable>().SizeRequired);
+            mount.HandleEvent(new GameEvent_Slot(null, mount, weapon));
+            SlotAt(mech, location, mount);
             return mech;
         }
 
