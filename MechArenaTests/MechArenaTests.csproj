@@ -63,6 +63,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="Genetic\EvolverTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="GameRandomTest.cs" />
     <Compile Include="EntityTest.cs" />
