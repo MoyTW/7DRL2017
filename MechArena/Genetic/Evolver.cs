@@ -15,6 +15,8 @@ namespace MechArena.Genetic
         private double mutationRate;
         private Population currentPopulation;
 
+        public int CurrentGeneration { get { return this.currentGeneration; } }
+
         public Evolver(int requiredFitness, int maxGenerations, double mutationRate, int populationSize, IGene gene,
             int chromosomeSize, int seed=1, bool keepHistory = true)
         {

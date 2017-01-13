@@ -92,23 +92,28 @@ namespace MechArenaTests.Genetic
         [TestMethod]
         public void TestEvolver()
         {
-            var e = new Evolver(6, 100, 0.25, 50, new Gene('a'), this.chromosomeSize);
+            var e = new Evolver(this.target.Count(), 150, 0.25, 50, new Gene('a'), this.chromosomeSize);
             var individual = e.Evolve(this.Fitness, this.Roulette, this.SinglePointCrossover, this.RandomMutation, this.IsSurvivor);
             Console.WriteLine("Winner: ");
             foreach (Gene g in individual.InspectGenes().Cast<Gene>())
                 Console.Write(g.Value);
+            Console.Write(" Generation: " + e.CurrentGeneration);
             Console.WriteLine();
 
+            int generation = 1;
             foreach(var p in e.InspectHistory())
             {
-                Console.WriteLine("Next Population:");
+                Console.WriteLine("Next Population, Generation " + generation);
                 foreach(var i in p.InspectIndividuals())
                 {
-                    Console.WriteLine(i);
+                    Console.Write(i);
+                    Console.Write(" ");
                 }
+                Console.WriteLine();
+                generation++;
             }
 
-            Assert.IsTrue(false);
+            Assert.AreEqual(this.target, individual.ToString());
         }
     }
 }
