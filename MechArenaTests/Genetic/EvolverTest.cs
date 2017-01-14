@@ -11,44 +11,23 @@ namespace MechArenaTests.Genetic
         private Random rand = new Random();
         private string target = "Batman";
         private int chromosomeSize = 6;
+        private GeneFactory<char> factory = new GeneFactory<char>("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ");
 
-        private class Gene : IGene
-        {
-            private const string possibleGeneValues = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-            public char Value { get; }
-
-            public Gene(char value)
-            {
-                this.Value = value;
-            }
-
-            public IGene RandomGene(Random rand)
-            {
-                var i = rand.Next(Gene.possibleGeneValues.Count());
-                return new Gene(Gene.possibleGeneValues.ElementAt(i));
-            }
-
-            public override string ToString()
-            {
-                return this.Value.ToString();
-            }
-        }
-
-        private int Fitness(Individual individual)
+        private int Fitness(Individual<char> individual)
         {
             int fitness = 0;
 
-            var genes = individual.InspectGenes().Cast<Gene>();
+            var genes = individual.InspectGenes();
             for (int i = 0; i < this.target.Count(); i++)
             {
-                if (target.ElementAt(i) == genes.ElementAt(i).Value)
+                if (target.ElementAt(i) == genes.ElementAt(i))
                     fitness++;
             }
 
             return fitness;
         }
 
-        private Individual Roulette(Population pop, Random rand)
+        private Individual<char> Roulette(Population<char> pop, Random rand)
         {
             int totalweight = pop.InspectIndividuals().Sum(i => this.Fitness(i));
             int choice = rand.Next(totalweight);
@@ -65,9 +44,9 @@ namespace MechArenaTests.Genetic
             return null;
         }
 
-        private Individual SinglePointCrossover(Individual parentA, Individual parentB, Random rand)
+        private Individual<char> SinglePointCrossover(Individual<char> parentA, Individual<char> parentB, Random rand)
         {
-            Individual child = new Individual(parentA);
+            Individual<char> child = new Individual<char>(parentA);
 
             int crossoverAt = rand.Next(this.chromosomeSize);
             for (int i = crossoverAt; i < this.chromosomeSize; i++)
@@ -78,13 +57,12 @@ namespace MechArenaTests.Genetic
             return child;
         }
 
-        private void RandomMutation(Individual mutant, Random rand)
+        private void RandomMutation(Individual<char> mutant, Random rand)
         {
-            int mutateAt = rand.Next(this.chromosomeSize);
-            mutant.SetGene(mutateAt, mutant.GetGene(mutateAt).RandomGene(rand));
+            mutant.SetGene(rand.Next(this.chromosomeSize), this.factory.SelectRandomGene(rand));
         }
 
-        private bool IsSurvivor(Individual survivor)
+        private bool IsSurvivor(Individual<char> survivor)
         {
             return this.Fitness(survivor) >= 2;
         }
@@ -92,11 +70,11 @@ namespace MechArenaTests.Genetic
         [TestMethod]
         public void TestEvolver()
         {
-            var e = new Evolver(this.target.Count(), 150, 0.25, 50, new Gene('a'), this.chromosomeSize);
+            var e = new Evolver<char>(this.target.Count(), 150, 0.25, 50, this.factory, this.chromosomeSize);
             var individual = e.Evolve(this.Fitness, this.Roulette, this.SinglePointCrossover, this.RandomMutation, this.IsSurvivor);
             Console.WriteLine("Winner: ");
-            foreach (Gene g in individual.InspectGenes().Cast<Gene>())
-                Console.Write(g.Value);
+            foreach (char g in individual.InspectGenes())
+                Console.Write(g);
             Console.Write(" Generation: " + e.CurrentGeneration);
             Console.WriteLine();
 

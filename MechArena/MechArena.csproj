@@ -59,7 +59,7 @@
     <Compile Include="Component_Mountable.cs" />
     <Compile Include="Config.cs" />
     <Compile Include="Genetic\Evolver.cs" />
-    <Compile Include="Genetic\IGene.cs" />
+    <Compile Include="Genetic\GeneFactory.cs" />
     <Compile Include="Genetic\Individual.cs" />
     <Compile Include="Genetic\Population.cs" />
     <Compile Include="Log.cs" />

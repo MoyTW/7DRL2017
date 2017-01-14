@@ -6,20 +6,20 @@ using System.Threading.Tasks;
 
 namespace MechArena.Genetic
 {
-    public class Population
+    public class Population<T>
     {
-        private List<Individual> population;
+        private List<Individual<T>> population;
 
         public int CurrentSize { get { return this.population.Count; } }
         public int DesiredSize { get; }
 
         public Population(int desiredSize)
         {
-            this.population = new List<Individual>(desiredSize);
+            this.population = new List<Individual<T>>(desiredSize);
             this.DesiredSize = desiredSize;
         }
 
-        public void AddIndividual(Individual newIndividual)
+        public void AddIndividual(Individual<T> newIndividual)
         {
             if (this.CurrentSize < this.DesiredSize)
                 this.population.Add(newIndividual);
@@ -27,7 +27,7 @@ namespace MechArena.Genetic
                 throw new InvalidOperationException("Can't add individuals to already full population!");
         }
 
-        public void AddIndividual(Individual newIndividual, int idx)
+        public void AddIndividual(Individual<T> newIndividual, int idx)
         {
             this.population[idx] = newIndividual;
         }
@@ -37,17 +37,17 @@ namespace MechArena.Genetic
             this.population.RemoveAt(idx);
         }
 
-        public Individual GetIndividual(int idx)
+        public Individual<T> GetIndividual(int idx)
         {
             return this.population[idx];
         }
 
-        public IList<Individual> InspectIndividuals()
+        public IList<Individual<T>> InspectIndividuals()
         {
             return this.population.AsReadOnly();
         }
 
-        public int HighestFitness(Func<Individual, int> fitness)
+        public int HighestFitness(Func<Individual<T>, int> fitness)
         {
             if (this.CurrentSize > 0)
                 return this.population.Max(fitness);
@@ -55,7 +55,7 @@ namespace MechArena.Genetic
                 return -1;
         }
 
-        public Individual HighestFitnessIndividual(Func<Individual, int> fitness)
+        public Individual<T> HighestFitnessIndividual(Func<Individual<T>, int> fitness)
         {
             return this.population.OrderByDescending(fitness).FirstOrDefault();
         }

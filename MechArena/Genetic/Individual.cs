@@ -6,39 +6,39 @@ using System.Threading.Tasks;
 
 namespace MechArena.Genetic
 {
-    public class Individual
+    public class Individual<T>
     {
         public int ChromosomeSize { get; }
-        private List<IGene> genes;
+        private List<T> genes;
 
-        public Individual(IGene gene, int chromosomeSize, Random rand)
+        public Individual(GeneFactory<T> factory, int chromosomeSize, Random rand)
         {
             this.ChromosomeSize = chromosomeSize;
 
-            this.genes = new List<IGene>(chromosomeSize);
+            this.genes = new List<T>(chromosomeSize);
             for(int i = 0; i < chromosomeSize; i++)
             {
-                this.genes.Add(gene.RandomGene(rand));
+                this.genes.Add(factory.SelectRandomGene(rand));
             }
         }
 
-        public Individual(Individual parent)
+        public Individual(Individual<T> parent)
         {
             this.ChromosomeSize = parent.ChromosomeSize;
-            this.genes = new List<IGene>(parent.InspectGenes());
+            this.genes = new List<T>(parent.InspectGenes());
         }
 
-        public IList<IGene> InspectGenes()
+        public IList<T> InspectGenes()
         {
             return this.genes.AsReadOnly();
         }
 
-        public IGene GetGene(int idx)
+        public T GetGene(int idx)
         {
             return this.genes[idx];
         }
 
-        public void SetGene(int idx, IGene gene)
+        public void SetGene(int idx, T gene)
         {
             this.genes[idx] = gene;
         }

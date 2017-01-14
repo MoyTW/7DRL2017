@@ -6,42 +6,42 @@ using System.Threading.Tasks;
 
 namespace MechArena.Genetic
 {
-    public class Evolver
+    public class Evolver<T>
     {
         private bool keepHistory;
-        private List<Population> history;
+        private List<Population<T>> history;
         private Random rand;
         private int currentGeneration, requiredFitness, maxGenerations;
         private double mutationRate;
-        private Population currentPopulation;
+        private Population<T> currentPopulation;
 
         public int CurrentGeneration { get { return this.currentGeneration; } }
 
-        public Evolver(int requiredFitness, int maxGenerations, double mutationRate, int populationSize, IGene gene,
+        public Evolver(int requiredFitness, int maxGenerations, double mutationRate, int populationSize, GeneFactory<T> factory,
             int chromosomeSize, int seed=1, bool keepHistory = true)
         {
             this.rand = new Random(seed);
             this.keepHistory = keepHistory;
             if (this.keepHistory)
             {
-                this.history = new List<Population>();
+                this.history = new List<Population<T>>();
             }
             this.currentGeneration = 0;
             this.requiredFitness = requiredFitness;
             this.maxGenerations = maxGenerations;
             this.mutationRate = mutationRate;
-            this.currentPopulation = new Population(populationSize);
+            this.currentPopulation = new Population<T>(populationSize);
 
             // Randomly build the first generation
             for (int i = 0; i < populationSize; i++)
             {
-                this.currentPopulation.AddIndividual(new Individual(gene, chromosomeSize, rand));
+                this.currentPopulation.AddIndividual(new Individual<T>(factory, chromosomeSize, rand));
             }
         }
 
-        public Individual Evolve(Func<Individual, int> fitness, Func<Population, Random, Individual> selectParent,
-            Func<Individual, Individual, Random, Individual> crossover, Action<Individual, Random> mutate,
-            Func<Individual, bool> isSurvivor)
+        public Individual<T> Evolve(Func<Individual<T>, int> fitness, Func<Population<T>, Random, Individual<T>> selectParent,
+            Func<Individual<T>, Individual<T>, Random, Individual<T>> crossover, Action<Individual<T>, Random> mutate,
+            Func<Individual<T>, bool> isSurvivor)
         {
             // silly, cache the fitness
             while (this.currentPopulation.HighestFitness(fitness) < this.requiredFitness &&
@@ -53,16 +53,16 @@ namespace MechArena.Genetic
             return this.currentPopulation.HighestFitnessIndividual(fitness);
         }
 
-        public void AdvanceGeneration(Func<Population, Random, Individual> selectParent, Func<Individual, Individual, Random, Individual> crossover,
-            Action<Individual, Random> mutate, Func<Individual, bool> isSurvivor)
+        public void AdvanceGeneration(Func<Population<T>, Random, Individual<T>> selectParent, Func<Individual<T>, Individual<T>, Random, Individual<T>> crossover,
+            Action<Individual<T>, Random> mutate, Func<Individual<T>, bool> isSurvivor)
         {
             // Breed next generation (fully replaces current generation)
-            Population newPopulation = new Population(this.currentPopulation.DesiredSize);
+            Population<T> newPopulation = new Population<T>(this.currentPopulation.DesiredSize);
             for (int i = 0; i < currentPopulation.DesiredSize; i++)
             {
-                Individual parentOne = selectParent(this.currentPopulation, this.rand);
-                Individual parentTwo = selectParent(this.currentPopulation, this.rand);
-                Individual offspring = crossover(parentOne, parentTwo, this.rand);
+                Individual<T> parentOne = selectParent(this.currentPopulation, this.rand);
+                Individual<T> parentTwo = selectParent(this.currentPopulation, this.rand);
+                Individual<T> offspring = crossover(parentOne, parentTwo, this.rand);
                 newPopulation.AddIndividual(offspring);
             }
             if (this.keepHistory)
@@ -88,7 +88,7 @@ namespace MechArena.Genetic
             this.currentGeneration++;
         }
 
-        public IList<Population> InspectHistory()
+        public IList<Population<T>> InspectHistory()
         {
             return this.history.AsReadOnly();
         }
