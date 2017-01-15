@@ -17,6 +17,7 @@ namespace MechArena
         public const string BodyPartTypeLabel = "Body Part";
         public const string MechTypeLabel = "Mech";
         public const string WeaponTypeLabel = "Weapon";
+
         public static readonly List<BodyPartLocation> MechLocations = new List<BodyPartLocation> {
             BodyPartLocation.HEAD,
             BodyPartLocation.TORSO,
@@ -26,9 +27,28 @@ namespace MechArena
             BodyPartLocation.RIGHT_LEG
         };
 
+        // Exposing this in this manner is absolutely a hack!
+        public static readonly List<Func<Entity>> BuildPartFunctions = new List<Func<Entity>>()
+        {
+            BuildMountedMissile,
+            BuildMountedMiniMissile,
+            BuildMountedSniperRifle,
+            BuildMountedRifle,
+            BuildMountedMachinegun,
+            BuildMountedShotgun,
+            BuildMountedPistol,
+            BuildMountedRockets,
+            BuildMountedDagger,
+            BuildMountedSword,
+            BuildMountedHammer,
+            BuildAccelerator,
+            BuildSensorPackage,
+            BuildArmorPart
+        };
+
         #endregion
 
-        #region Private Utilities
+        #region Utilities
 
         private static Entity GetBodyPart(Entity mech, BodyPartLocation location)
         {
@@ -38,7 +58,7 @@ namespace MechArena
                 .First();
         }
 
-        private static void SlotAt(Entity mech, BodyPartLocation location, Entity slottable)
+        public static void SlotAt(Entity mech, BodyPartLocation location, Entity slottable)
         {
             var bodyPart = GetBodyPart(mech, location);
             bodyPart.HandleEvent(new GameEvent_Slot(mech, bodyPart, slottable));
