@@ -28,7 +28,7 @@ namespace MechArena
 
         #endregion
 
-        #region Utilities
+        #region Private Utilities
 
         private static Entity GetBodyPart(Entity mech, BodyPartLocation location)
         {
@@ -62,19 +62,11 @@ namespace MechArena
                 .AddComponent(new Component_Weapon(size, toHit, maxRange, damage, refireTicks));
         }
 
-        private static Entity BuildWeaponAndMount(Entity weapon)
+        private static Entity BuildMountForWeapon(Entity weapon)
         {
             var mount = BuildMount(weapon.GetComponentOfType<Component_Mountable>().SizeRequired);
             mount.HandleEvent(new GameEvent_Slot(null, mount, weapon));
             return mount;
-        }
-
-        private static Entity BuildAndSlotWeapon(Entity mech, BodyPartLocation location, Entity weapon)
-        {
-            var mount = BuildMount(weapon.GetComponentOfType<Component_Mountable>().SizeRequired);
-            mount.HandleEvent(new GameEvent_Slot(null, mount, weapon));
-            SlotAt(mech, location, mount);
-            return mech;
         }
 
         private static Entity MountOntoArm(Entity mech, BodyPartLocation location, Entity mountable)
@@ -89,9 +81,7 @@ namespace MechArena
 
         #endregion
 
-        #region Slottable Parts
-
-        #region Weapons
+        #region Bare Weapons
 
         public static Entity BuildMissile()
         {
@@ -150,6 +140,8 @@ namespace MechArena
 
         #endregion
 
+        #region Slottable Parts
+
         public static Entity BuildMount(MountSize size)
         {
             var mount = new Entity(label: "Mount", typeLabel: EntityBuilder.SlottablePartTypeLabel)
@@ -174,26 +166,13 @@ namespace MechArena
             return mount;
         }
 
-        public static Entity BuildAccelerator()
-        {
-            return new Entity(label: "Accel.", typeLabel: SlottablePartTypeLabel)
-                .AddComponent(new Component_AttributeModifierMult(EntityAttributeType.SPEED, .9))
-                .AddComponent(new Component_Slottable(1))
-                .AddComponent(new Component_InternalStructure(1));
-        }
+        # region Naked Only
 
         public static Entity BuildPowerPlant()
         {
             return new Entity(label: "Pwr.Plnt.", typeLabel: SlottablePartTypeLabel)
                 .AddComponent(new Component_Slottable(5))
                 .AddComponent(new Component_InternalStructure(5));
-        }
-
-        public static Entity BuildSensorPackage()
-        {
-            return new Entity(label: "Snsr.Pckg.", typeLabel: SlottablePartTypeLabel)
-                .AddComponent(new Component_Slottable(2))
-                .AddComponent(new Component_InternalStructure(2));
         }
 
         public static Entity BuildArmActuator()
@@ -211,12 +190,92 @@ namespace MechArena
                 .AddComponent(new Component_InternalStructure(3));
         }
 
+        #endregion
+
+        #region Weapons
+
+        public static Entity BuildMountedMissile()
+        {
+            return BuildMountForWeapon(BuildMissile());
+        }
+
+        public static Entity BuildMountedMiniMissile()
+        {
+            return BuildMountForWeapon(BuildMiniMissile());
+        }
+
+        public static Entity BuildMountedSniperRifle()
+        {
+            return BuildMountForWeapon(BuildSniperRifle());
+        }
+
+        public static Entity BuildMountedRifle()
+        {
+            return BuildMountForWeapon(BuildRifle());
+        }
+
+        public static Entity BuildMountedMachinegun()
+        {
+            return BuildMountForWeapon(BuildMachinegun());
+        }
+
+        public static Entity BuildMountedShotgun()
+        {
+            return BuildMountForWeapon(BuildShotgun());
+        }
+
+        public static Entity BuildMountedPistol()
+        {
+            return BuildMountForWeapon(BuildPistol());
+        }
+
+        public static Entity BuildMountedRockets()
+        {
+            return BuildMountForWeapon(BuildRockets());
+        }
+
+        public static Entity BuildMountedDagger()
+        {
+            return BuildMountForWeapon(BuildDagger());
+        }
+
+        public static Entity BuildMountedSword()
+        {
+            return BuildMountForWeapon(BuildSword());
+        }
+
+        public static Entity BuildMountedHammer()
+        {
+            return BuildMountForWeapon(BuildHammer());
+        }
+
+        #endregion
+
+        #region Other Parts
+
+        public static Entity BuildAccelerator()
+        {
+            return new Entity(label: "Accel.", typeLabel: SlottablePartTypeLabel)
+                .AddComponent(new Component_AttributeModifierMult(EntityAttributeType.SPEED, .9))
+                .AddComponent(new Component_Slottable(1))
+                .AddComponent(new Component_InternalStructure(1));
+        }
+
+        public static Entity BuildSensorPackage()
+        {
+            return new Entity(label: "Snsr.Pckg.", typeLabel: SlottablePartTypeLabel)
+                .AddComponent(new Component_Slottable(2))
+                .AddComponent(new Component_InternalStructure(2));
+        }
+
         public static Entity BuildArmorPart()
         {
             return new Entity(label: "Armor", typeLabel: BodyPartTypeLabel)
                 .AddComponent(new Component_Slottable(1))
                 .AddComponent(new Component_InternalStructure(4));
         }
+
+        #endregion
 
         #endregion
 
@@ -264,9 +323,9 @@ namespace MechArena
             MountOntoArm(mech, BodyPartLocation.LEFT_ARM, BuildRifle());
             MountOntoArm(mech, BodyPartLocation.RIGHT_ARM, BuildRifle());
 
-            BuildAndSlotWeapon(mech, BodyPartLocation.HEAD, BuildPistol());
-            BuildAndSlotWeapon(mech, BodyPartLocation.LEFT_ARM, BuildPistol());
-            BuildAndSlotWeapon(mech, BodyPartLocation.RIGHT_ARM, BuildPistol());
+            SlotAt(mech, BodyPartLocation.HEAD, BuildMountedPistol());
+            SlotAt(mech, BodyPartLocation.LEFT_ARM, BuildMountedPistol());
+            SlotAt(mech, BodyPartLocation.RIGHT_ARM, BuildMountedPistol());
 
             foreach (var location in EntityBuilder.MechLocations)
             {
@@ -283,10 +342,10 @@ namespace MechArena
             MountOntoArm(mech, BodyPartLocation.LEFT_ARM, BuildDagger());
             MountOntoArm(mech, BodyPartLocation.RIGHT_ARM, BuildDagger());
 
-            BuildAndSlotWeapon(mech, BodyPartLocation.LEFT_ARM, BuildDagger());
-            BuildAndSlotWeapon(mech, BodyPartLocation.RIGHT_ARM, BuildDagger());
-            BuildAndSlotWeapon(mech, BodyPartLocation.LEFT_LEG, BuildDagger());
-            BuildAndSlotWeapon(mech, BodyPartLocation.RIGHT_LEG, BuildDagger());
+            SlotAt(mech, BodyPartLocation.LEFT_ARM, BuildMountedDagger());
+            SlotAt(mech, BodyPartLocation.RIGHT_ARM, BuildMountedDagger());
+            SlotAt(mech, BodyPartLocation.LEFT_LEG, BuildMountedDagger());
+            SlotAt(mech, BodyPartLocation.RIGHT_LEG, BuildMountedDagger());
 
             FillLocationWith(mech, BodyPartLocation.LEFT_LEG, BuildAccelerator);
             FillLocationWith(mech, BodyPartLocation.RIGHT_LEG, BuildAccelerator);
@@ -306,7 +365,7 @@ namespace MechArena
             MountOntoArm(mech, BodyPartLocation.LEFT_ARM, BuildSword());
             MountOntoArm(mech, BodyPartLocation.RIGHT_ARM, BuildSword());
 
-            BuildAndSlotWeapon(mech, BodyPartLocation.HEAD, BuildPistol());
+            SlotAt(mech, BodyPartLocation.HEAD, BuildMountedPistol());
 
             foreach (var location in EntityBuilder.MechLocations)
             {
@@ -320,7 +379,7 @@ namespace MechArena
         {
             var mech = BuildNakedMech(label, player);
 
-            Func<Entity> buildRocketPod = () => BuildWeaponAndMount(BuildRockets());
+            Func<Entity> buildRocketPod = () => BuildMountForWeapon(BuildRockets());
 
             MountOntoArm(mech, BodyPartLocation.LEFT_ARM, BuildRockets());
             MountOntoArm(mech, BodyPartLocation.RIGHT_ARM, BuildRockets());
