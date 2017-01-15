@@ -41,23 +41,6 @@ namespace MechArenaTests.Genetic
             return testMech.TryGetAttribute(EntityAttributeType.STRUCTURE).Value;
         }
 
-        private Individual<Action<Entity>> Roulette(Population<Action<Entity>> pop, Random rand)
-        {
-            int totalweight = pop.InspectIndividuals().Sum(i => this.Fitness(i));
-            int choice = rand.Next(totalweight);
-            int weightIndex = 0;
-
-            foreach (var individual in pop.InspectIndividuals())
-            {
-                weightIndex += this.Fitness(individual);
-
-                if (weightIndex > choice)
-                    return individual;
-            }
-
-            return null;
-        }
-
         private Individual<Action<Entity>> SinglePointCrossover(Individual<Action<Entity>> parentA,
             Individual<Action<Entity>> parentB, Random rand)
         {
@@ -85,8 +68,18 @@ namespace MechArenaTests.Genetic
         [TestMethod]
         public void TestMechEvolver()
         {
-            var evolver = new Evolver<Action<Entity>>(200, 60, 0.25, 20, this.factory, 80);
-            var individual = evolver.Evolve(this.Fitness, this.Roulette, this.SinglePointCrossover, this.RandomMutation, this.IsSurvivor);
+            //var evolver = new Evolver<Action<Entity>>(200, this.Fitness, 150, 0.25, 320, this.factory, 80);
+
+            // This gets up to 160, but takes 3 minutes to run at 300 generations!
+            //var evolver = new Evolver<Action<Entity>>(200, this.Fitness, 300, 1, 320, this.factory, 80);
+
+            // 10 minutes, 173 total
+            //var evolver = new Evolver<Action<Entity>>(200, this.Fitness, 300, 1, 320, this.factory, 80);
+
+            // 149 at 54 seconds
+            var evolver = new Evolver<Action<Entity>>(200, this.Fitness, 300, 1, 80, this.factory, 80);
+
+            var individual = evolver.Evolve(ParentStrategies.Roulette, this.SinglePointCrossover, this.RandomMutation, this.IsSurvivor);
             Console.WriteLine("Winner: ");
 
             var genes = individual.InspectGenes();
@@ -108,7 +101,7 @@ namespace MechArenaTests.Genetic
             int generation = 1;
             foreach (var p in evolver.InspectHistory())
             {
-                Console.WriteLine("Gen " + generation + " Structure: " + p.HighestFitness(this.Fitness));
+                Console.WriteLine("Gen " + generation + " Structure: " + p.HighestFitness());
                 generation++;
             }
             

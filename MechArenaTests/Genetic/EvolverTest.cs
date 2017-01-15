@@ -70,8 +70,8 @@ namespace MechArenaTests.Genetic
         [TestMethod]
         public void TestEvolver()
         {
-            var e = new Evolver<char>(this.target.Count(), 150, 0.25, 50, this.factory, this.chromosomeSize);
-            var individual = e.Evolve(this.Fitness, this.Roulette, this.SinglePointCrossover, this.RandomMutation, this.IsSurvivor);
+            var e = new Evolver<char>(this.target.Count(), this.Fitness, 150, 0.25, 50, this.factory, this.chromosomeSize);
+            var individual = e.Evolve(this.Roulette, this.SinglePointCrossover, this.RandomMutation, this.IsSurvivor);
             Console.WriteLine("Winner: ");
             foreach (char g in individual.InspectGenes())
                 Console.Write(g);

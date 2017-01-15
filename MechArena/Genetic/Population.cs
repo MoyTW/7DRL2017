@@ -47,17 +47,17 @@ namespace MechArena.Genetic
             return this.population.AsReadOnly();
         }
 
-        public int HighestFitness(Func<Individual<T>, int> fitness)
+        public int HighestFitness()
         {
             if (this.CurrentSize > 0)
-                return this.population.Max(fitness);
+                return this.population.Max(i => i.Fitness);
             else
                 return -1;
         }
 
-        public Individual<T> HighestFitnessIndividual(Func<Individual<T>, int> fitness)
+        public Individual<T> HighestFitnessIndividual()
         {
-            return this.population.OrderByDescending(fitness).FirstOrDefault();
+            return this.population.OrderByDescending(i => i.Fitness).FirstOrDefault();
         }
     }
 }

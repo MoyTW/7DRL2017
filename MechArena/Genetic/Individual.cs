@@ -8,11 +8,29 @@ namespace MechArena.Genetic
 {
     public class Individual<T>
     {
-        public int ChromosomeSize { get; }
+        private bool dirty;
+        private int fitness;
         private List<T> genes;
 
-        public Individual(GeneFactory<T> factory, int chromosomeSize, Random rand)
+        public Func<Individual<T>, int> FitnessFn { get; }
+        public bool Dirty { get { return this.dirty; } }
+        public int ChromosomeSize { get; }
+        public int Fitness {
+            get
+            {
+                if (dirty)
+                {
+                    this.fitness = this.FitnessFn(this);
+                    this.dirty = false;
+                }
+                return this.fitness;
+            }
+        }
+
+        public Individual(GeneFactory<T> factory, int chromosomeSize, Func<Individual<T>, int> fitnessFn, Random rand)
         {
+            this.dirty = true;
+            this.FitnessFn = fitnessFn;
             this.ChromosomeSize = chromosomeSize;
 
             this.genes = new List<T>(chromosomeSize);
@@ -24,6 +42,17 @@ namespace MechArena.Genetic
 
         public Individual(Individual<T> parent)
         {
+            if (parent.Dirty)
+            {
+                this.dirty = true;
+            }
+            else
+            {
+                this.dirty = false;
+                this.fitness = parent.Fitness;
+            }
+
+            this.FitnessFn = parent.FitnessFn;
             this.ChromosomeSize = parent.ChromosomeSize;
             this.genes = new List<T>(parent.InspectGenes());
         }
@@ -41,6 +70,7 @@ namespace MechArena.Genetic
         public void SetGene(int idx, T gene)
         {
             this.genes[idx] = gene;
+            this.dirty = true;
         }
 
         public override string ToString()

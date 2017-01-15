@@ -17,8 +17,9 @@ namespace MechArena.Genetic
 
         public int CurrentGeneration { get { return this.currentGeneration; } }
 
-        public Evolver(int requiredFitness, int maxGenerations, double mutationRate, int populationSize, GeneFactory<T> factory,
-            int chromosomeSize, int seed=1, bool keepHistory = true)
+        public Evolver(int requiredFitness, Func<Individual<T>, int> fitnessFn, int maxGenerations,
+            double mutationRate, int populationSize, GeneFactory<T> factory, int chromosomeSize, int seed=1,
+            bool keepHistory = true)
         {
             this.rand = new Random(seed);
             this.keepHistory = keepHistory;
@@ -35,22 +36,22 @@ namespace MechArena.Genetic
             // Randomly build the first generation
             for (int i = 0; i < populationSize; i++)
             {
-                this.currentPopulation.AddIndividual(new Individual<T>(factory, chromosomeSize, rand));
+                this.currentPopulation.AddIndividual(new Individual<T>(factory, chromosomeSize, fitnessFn, rand));
             }
         }
 
-        public Individual<T> Evolve(Func<Individual<T>, int> fitness, Func<Population<T>, Random, Individual<T>> selectParent,
+        public Individual<T> Evolve(Func<Population<T>, Random, Individual<T>> selectParent,
             Func<Individual<T>, Individual<T>, Random, Individual<T>> crossover, Action<Individual<T>, Random> mutate,
             Func<Individual<T>, bool> isSurvivor)
         {
             // silly, cache the fitness
-            while (this.currentPopulation.HighestFitness(fitness) < this.requiredFitness &&
+            while (this.currentPopulation.HighestFitness() < this.requiredFitness &&
                 this.currentGeneration < this.maxGenerations)
             {
                 this.AdvanceGeneration(selectParent, crossover, mutate, isSurvivor);
             }
 
-            return this.currentPopulation.HighestFitnessIndividual(fitness);
+            return this.currentPopulation.HighestFitnessIndividual();
         }
 
         public void AdvanceGeneration(Func<Population<T>, Random, Individual<T>> selectParent, Func<Individual<T>, Individual<T>, Random, Individual<T>> crossover,
