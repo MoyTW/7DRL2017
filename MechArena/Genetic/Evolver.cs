@@ -40,6 +40,8 @@ namespace MechArena.Genetic
             }
         }
 
+        public Population<T> InspectCurrentPopulation() { return this.currentPopulation; }
+
         public Individual<T> Evolve(Func<Population<T>, Random, Individual<T>> selectParent,
             Func<Individual<T>, Individual<T>, Random, Individual<T>> crossover, Action<Individual<T>, Random> mutate,
             Func<Individual<T>, bool> isSurvivor)

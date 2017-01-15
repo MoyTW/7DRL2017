@@ -12,6 +12,7 @@ namespace MechArenaTests.Genetic
     {
         private Random rand = new Random();
         private GeneFactory<Action<Entity>> factory = BuildGeneFactory();
+        Evolver<Action<Entity>> evolver;
 
         private static GeneFactory<Action<Entity>> BuildGeneFactory()
         {
@@ -62,24 +63,21 @@ namespace MechArenaTests.Genetic
 
         private bool IsSurvivor(Individual<Action<Entity>> survivor)
         {
-            return true;
+            // Kill off everything less than average fitness
+            var avg = this.evolver.InspectCurrentPopulation().InspectIndividuals().Average(i => i.Fitness);
+            return survivor.Fitness > avg;
         }
 
         [TestMethod]
         public void TestMechEvolver()
         {
-            //var evolver = new Evolver<Action<Entity>>(200, this.Fitness, 150, 0.25, 320, this.factory, 80);
+            // It's REALLY important that you have some selection pressure during the culling phase! I couldn't get it
+            // to 200 until I added a "Kill every member of the population whose fitness is under average" to the
+            // culling phase, at which point it actually achieved the target, and fairly quickly!
+            this.evolver = new Evolver<Action<Entity>>(200, this.Fitness, 300, 1, 160, this.factory, 80);
 
-            // This gets up to 160, but takes 3 minutes to run at 300 generations!
-            //var evolver = new Evolver<Action<Entity>>(200, this.Fitness, 300, 1, 320, this.factory, 80);
-
-            // 10 minutes, 173 total
-            //var evolver = new Evolver<Action<Entity>>(200, this.Fitness, 300, 1, 320, this.factory, 80);
-
-            // 149 at 54 seconds
-            var evolver = new Evolver<Action<Entity>>(200, this.Fitness, 300, 1, 80, this.factory, 80);
-
-            var individual = evolver.Evolve(ParentStrategies.Roulette, this.SinglePointCrossover, this.RandomMutation, this.IsSurvivor);
+            var individual = this.evolver.Evolve(ParentStrategies.Roulette, this.SinglePointCrossover,
+                this.RandomMutation, this.IsSurvivor);
             Console.WriteLine("Winner: ");
 
             var genes = individual.InspectGenes();
@@ -95,17 +93,17 @@ namespace MechArenaTests.Genetic
                 Console.WriteLine(e);
             }
 
-            Console.Write(" Generation: " + evolver.CurrentGeneration);
+            Console.Write(" Generation: " + this.evolver.CurrentGeneration);
             Console.WriteLine();
 
             int generation = 1;
-            foreach (var p in evolver.InspectHistory())
+            foreach (var p in this.evolver.InspectHistory())
             {
                 Console.WriteLine("Gen " + generation + " Structure: " + p.HighestFitness());
                 generation++;
             }
-            
-            Assert.IsTrue(false);
+
+            Assert.IsTrue(testMech.TryGetAttribute(EntityAttributeType.STRUCTURE).Value >= 200);
         }
     }
 }
