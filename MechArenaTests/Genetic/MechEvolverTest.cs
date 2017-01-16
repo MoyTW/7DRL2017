@@ -12,7 +12,6 @@ namespace MechArenaTests.Genetic
     {
         private Random rand = new Random();
         private GeneFactory<Action<Entity>> factory = BuildGeneFactory();
-        Evolver<Action<Entity>> evolver;
 
         private static GeneFactory<Action<Entity>> BuildGeneFactory()
         {
@@ -47,10 +46,10 @@ namespace MechArenaTests.Genetic
             mutant.SetGene(rand.Next(mutant.ChromosomeSize), this.factory.SelectRandomGene(rand));
         }
 
-        private bool IsSurvivor(Individual<Action<Entity>> survivor)
+        private bool IsSurvivor(Population<Action<Entity>> population, Individual<Action<Entity>> survivor)
         {
             // Kill off everything less than average fitness
-            var avg = this.evolver.InspectCurrentPopulation().InspectIndividuals().Average(i => i.Fitness);
+            var avg = population.InspectIndividuals().Average(i => i.Fitness);
             return survivor.Fitness > avg;
         }
 
@@ -60,9 +59,9 @@ namespace MechArenaTests.Genetic
             // It's REALLY important that you have some selection pressure during the culling phase! I couldn't get it
             // to 200 until I added a "Kill every member of the population whose fitness is under average" to the
             // culling phase, at which point it actually achieved the target, and fairly quickly!
-            this.evolver = new Evolver<Action<Entity>>(200, this.Fitness, 300, 1, 160, this.factory, 80);
+            var evolver = new Evolver<Action<Entity>>(200, this.Fitness, 300, 1, 160, this.factory, 80);
 
-            var individual = this.evolver.Evolve(ParentStrategies.Roulette, CrossoverStrategies.SinglePointCrossover,
+            var individual = evolver.Evolve(ParentStrategies.Roulette, CrossoverStrategies.SinglePointCrossover,
                 this.RandomMutation, this.IsSurvivor);
             Console.WriteLine("Winner: ");
 
@@ -79,11 +78,11 @@ namespace MechArenaTests.Genetic
                 Console.WriteLine(e);
             }
 
-            Console.Write(" Generation: " + this.evolver.CurrentGeneration);
+            Console.Write(" Generation: " + evolver.CurrentGeneration);
             Console.WriteLine();
 
             int generation = 1;
-            foreach (var p in this.evolver.InspectHistory())
+            foreach (var p in evolver.InspectHistory())
             {
                 Console.WriteLine("Gen " + generation + " Structure: " + p.HighestFitness());
                 generation++;

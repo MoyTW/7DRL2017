@@ -32,7 +32,7 @@ namespace MechArenaTests.Genetic
             mutant.SetGene(rand.Next(this.chromosomeSize), this.factory.SelectRandomGene(rand));
         }
 
-        private bool IsSurvivor(Individual<char> survivor)
+        private bool IsSurvivor(Population<char> population, Individual<char> survivor)
         {
             return this.Fitness(survivor) >= 2;
         }

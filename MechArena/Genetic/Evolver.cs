@@ -44,7 +44,7 @@ namespace MechArena.Genetic
 
         public Individual<T> Evolve(Func<Population<T>, Random, Individual<T>> selectParent,
             Func<Individual<T>, Individual<T>, Random, Individual<T>> crossover, Action<Individual<T>, Random> mutate,
-            Func<Individual<T>, bool> isSurvivor)
+            Func<Population<T>, Individual<T>, bool> isSurvivor)
         {
             // silly, cache the fitness
             while (this.currentPopulation.HighestFitness() < this.requiredFitness &&
@@ -56,8 +56,9 @@ namespace MechArena.Genetic
             return this.currentPopulation.HighestFitnessIndividual();
         }
 
-        public void AdvanceGeneration(Func<Population<T>, Random, Individual<T>> selectParent, Func<Individual<T>, Individual<T>, Random, Individual<T>> crossover,
-            Action<Individual<T>, Random> mutate, Func<Individual<T>, bool> isSurvivor)
+        public void AdvanceGeneration(Func<Population<T>, Random, Individual<T>> selectParent,
+            Func<Individual<T>, Individual<T>, Random, Individual<T>> crossover, Action<Individual<T>, Random> mutate,
+            Func<Population<T>, Individual<T>, bool> isSurvivor)
         {
             // Breed next generation (fully replaces current generation)
             Population<T> newPopulation = new Population<T>(this.currentPopulation.DesiredSize);
@@ -84,7 +85,7 @@ namespace MechArena.Genetic
             // Cull next generation
             for (int i = this.currentPopulation.CurrentSize - 1; i >= 0; i--)
             {
-                if (!isSurvivor(this.currentPopulation.GetIndividual(i)))
+                if (!isSurvivor(this.currentPopulation, this.currentPopulation.GetIndividual(i)))
                     this.currentPopulation.RemoveIndividualAt(i);
             }
 
