@@ -42,20 +42,6 @@ namespace MechArenaTests.Genetic
             return testMech.TryGetAttribute(EntityAttributeType.STRUCTURE).Value;
         }
 
-        private Individual<Action<Entity>> SinglePointCrossover(Individual<Action<Entity>> parentA,
-            Individual<Action<Entity>> parentB, Random rand)
-        {
-            Individual<Action<Entity>> child = new Individual<Action<Entity>>(parentA);
-
-            int crossoverAt = rand.Next(parentA.ChromosomeSize);
-            for (int i = crossoverAt; i < parentA.ChromosomeSize; i++)
-            {
-                child.SetGene(i, parentB.GetGene(i));
-            }
-
-            return child;
-        }
-
         private void RandomMutation(Individual<Action<Entity>> mutant, Random rand)
         {
             mutant.SetGene(rand.Next(mutant.ChromosomeSize), this.factory.SelectRandomGene(rand));
@@ -76,7 +62,7 @@ namespace MechArenaTests.Genetic
             // culling phase, at which point it actually achieved the target, and fairly quickly!
             this.evolver = new Evolver<Action<Entity>>(200, this.Fitness, 300, 1, 160, this.factory, 80);
 
-            var individual = this.evolver.Evolve(ParentStrategies.Roulette, this.SinglePointCrossover,
+            var individual = this.evolver.Evolve(ParentStrategies.Roulette, CrossoverStrategies.SinglePointCrossover,
                 this.RandomMutation, this.IsSurvivor);
             Console.WriteLine("Winner: ");
 

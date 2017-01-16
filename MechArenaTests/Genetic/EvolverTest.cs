@@ -27,36 +27,6 @@ namespace MechArenaTests.Genetic
             return fitness;
         }
 
-        private Individual<char> Roulette(Population<char> pop, Random rand)
-        {
-            int totalweight = pop.InspectIndividuals().Sum(i => this.Fitness(i));
-            int choice = rand.Next(totalweight);
-            int weightIndex = 0;
-
-            foreach (var individual in pop.InspectIndividuals())
-            {
-                weightIndex += this.Fitness(individual);
-
-                if (weightIndex > choice)
-                    return individual;
-            }
-
-            return null;
-        }
-
-        private Individual<char> SinglePointCrossover(Individual<char> parentA, Individual<char> parentB, Random rand)
-        {
-            Individual<char> child = new Individual<char>(parentA);
-
-            int crossoverAt = rand.Next(this.chromosomeSize);
-            for (int i = crossoverAt; i < this.chromosomeSize; i++)
-            {
-                child.SetGene(i, parentB.GetGene(i));
-            }
-
-            return child;
-        }
-
         private void RandomMutation(Individual<char> mutant, Random rand)
         {
             mutant.SetGene(rand.Next(this.chromosomeSize), this.factory.SelectRandomGene(rand));
@@ -71,7 +41,8 @@ namespace MechArenaTests.Genetic
         public void TestEvolver()
         {
             var e = new Evolver<char>(this.target.Count(), this.Fitness, 150, 0.25, 50, this.factory, this.chromosomeSize);
-            var individual = e.Evolve(this.Roulette, this.SinglePointCrossover, this.RandomMutation, this.IsSurvivor);
+            var individual = e.Evolve(ParentStrategies.Roulette, CrossoverStrategies.SinglePointCrossover,
+                this.RandomMutation, this.IsSurvivor);
             Console.WriteLine("Winner: ");
             foreach (char g in individual.InspectGenes())
                 Console.Write(g);

@@ -58,6 +58,7 @@
     <Compile Include="Component_Mount.cs" />
     <Compile Include="Component_Mountable.cs" />
     <Compile Include="Config.cs" />
+    <Compile Include="Genetic\CrossoverStrategies.cs" />
     <Compile Include="Genetic\Evolver.cs" />
     <Compile Include="Genetic\GeneFactory.cs" />
     <Compile Include="Genetic\Individual.cs" />
