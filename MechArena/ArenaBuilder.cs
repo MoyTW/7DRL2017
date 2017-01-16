@@ -18,6 +18,12 @@ namespace MechArena
         public static ArenaState BuildArena(int width, int height, string matchID, string mapID, int arenaSeed,
             CompetitorEntity entreant1, CompetitorEntity entreant2)
         {
+            return BuildArena(width, height, matchID, mapID, arenaSeed, entreant1.Mech, entreant2.Mech);
+        }
+
+        public static ArenaState BuildArena(int width, int height, string matchID, string mapID, int arenaSeed,
+            Entity baseMech1, Entity baseMech2)
+        {
             if (!seedsToMaps.ContainsKey(mapID))
             {
                 var map = Map.Create(new RogueSharp.MapCreation.CaveMapCreationStrategy<Map>(width, height,
@@ -26,8 +32,8 @@ namespace MechArena
                 seedsToMaps[mapID] = new Tuple<IMap, PathFinder>(map, pathFinder);
             }
 
-            var mech1 = entreant1.Mech.DeepCopy();
-            var mech2 = entreant2.Mech.DeepCopy();
+            var mech1 = baseMech1.DeepCopy();
+            var mech2 = baseMech2.DeepCopy();
             ArenaState arena = new ArenaState(mech1, mech2, mapID, seedsToMaps[mapID].Item1, seedsToMaps[mapID].Item2, arenaSeed, matchID);
 
             arena.PlaceEntityNear(mech1, width - 15, height - 15);

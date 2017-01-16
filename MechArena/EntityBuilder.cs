@@ -418,7 +418,6 @@ namespace MechArena
 
         public static Entity BuildRandomMech(string label, bool player, IRandom rand)
         {
-            // DoomCannonMech is reserved for the Player
             var choice = rand.Next(3);
             switch (choice)
             {
