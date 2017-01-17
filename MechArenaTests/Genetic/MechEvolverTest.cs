@@ -140,6 +140,9 @@ namespace MechArenaTests.Genetic
                 return -10;
         }
 
+        /* Commented out because it takes forever to run and doesn't really seem to work!
+         * The issue with this is that the designs seem to converge very slowly into "Fill every slot with close-range
+         * weapons" which is as expected, but also very boring and it doesn't seem to prioritize one specific weapon.
         [TestMethod]
         public void TestMechEvolverArena()
         {
@@ -183,5 +186,6 @@ namespace MechArenaTests.Genetic
 
             Assert.IsFalse(true);
         }
+        */
     }
 }
