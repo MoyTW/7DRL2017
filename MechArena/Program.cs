@@ -43,7 +43,7 @@ namespace MechArena
         public static void Main()
         {
             _player = new CompetitorEntity(new Entity(label: "Player"),
-                EntityBuilder.BuildAlphaStrikerMech("Player Mech", true));
+                EntityBuilder.BuildSniperMech("Player Mech", true));
             //EntityBuilder.BuildKnifeMech("Player Knifer", true));
             //EntityBuilder.BuildDoomCannonMech("Doom Cannon Mech", true));
             _tournamentRandom = new DotNetRandom(1);

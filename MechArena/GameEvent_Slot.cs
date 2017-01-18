@@ -13,7 +13,8 @@ namespace MechArena
             : base(topContainer, subContainer)
         {
             if (!subContainer.HasComponentOfType<Component_SlottedContainer>() &&
-                !subContainer.HasComponentOfType<Component_Mount>())
+                !subContainer.HasComponentOfType<Component_Mount>() &&
+                !subContainer.HasComponentOfType<Component_Holster>())
             {
                 throw new ArgumentException("Can't slot to item without slots!");
             }

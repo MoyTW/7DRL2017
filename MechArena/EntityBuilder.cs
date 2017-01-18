@@ -89,6 +89,13 @@ namespace MechArena
             return mount;
         }
 
+        private static Entity BuildHolsterForWeapon(Entity weapon)
+        {
+            var holster = BuildHolster(weapon.GetComponentOfType<Component_Mountable>().SizeRequired);
+            holster.HandleEvent(new GameEvent_Slot(null, holster, weapon));
+            return holster;
+        }
+
         private static Entity MountOntoArm(Entity mech, BodyPartLocation location, Entity mountable)
         {
             var armActuator = GetBodyPart(mech, location)
@@ -178,6 +185,30 @@ namespace MechArena
                     break;
                 case MountSize.LARGE:
                     mount.AddComponent(new Component_Slottable(8))
+                        .AddComponent(new Component_InternalStructure(8));
+                    break;
+                default:
+                    throw new ArgumentException("I have no idea how you passed " + size + " in.");
+            }
+            return mount;
+        }
+
+        public static Entity BuildHolster(MountSize size)
+        {
+            var mount = new Entity(label: "Mount", typeLabel: EntityBuilder.SlottablePartTypeLabel)
+                .AddComponent(new Component_Holster(size));
+            switch (size)
+            {
+                case MountSize.SMALL:
+                    mount.AddComponent(new Component_Slottable(1))
+                        .AddComponent(new Component_InternalStructure(2));
+                    break;
+                case MountSize.MEDIUM:
+                    mount.AddComponent(new Component_Slottable(2))
+                        .AddComponent(new Component_InternalStructure(4));
+                    break;
+                case MountSize.LARGE:
+                    mount.AddComponent(new Component_Slottable(4))
                         .AddComponent(new Component_InternalStructure(8));
                     break;
                 default:
@@ -395,6 +426,27 @@ namespace MechArena
             return mech;
         }
 
+        public static Entity BuildSniperMech(string label, bool player)
+        {
+            var mech = BuildNakedMech(label, player);
+
+            MountOntoArm(mech, BodyPartLocation.LEFT_ARM, BuildSniperRifle());
+            MountOntoArm(mech, BodyPartLocation.RIGHT_ARM, BuildSniperRifle());
+
+            SlotAt(mech, BodyPartLocation.LEFT_ARM, BuildHolsterForWeapon(BuildHammer()));
+            SlotAt(mech, BodyPartLocation.RIGHT_ARM, BuildHolsterForWeapon(BuildHammer()));
+
+            FillLocationWith(mech, BodyPartLocation.LEFT_LEG, BuildAccelerator);
+            FillLocationWith(mech, BodyPartLocation.RIGHT_LEG, BuildAccelerator);
+
+            foreach (var location in EntityBuilder.MechLocations)
+            {
+                FillLocationWith(mech, location, BuildArmorPart);
+            }
+
+            return mech;
+        }
+
         public static Entity BuildAlphaStrikerMech(string label, bool player)
         {
             var mech = BuildNakedMech(label, player);
@@ -418,7 +470,7 @@ namespace MechArena
 
         public static Entity BuildRandomMech(string label, bool player, IRandom rand)
         {
-            var choice = rand.Next(3);
+            var choice = rand.Next(4);
             switch (choice)
             {
                 case 0:
@@ -429,6 +481,8 @@ namespace MechArena
                     return BuildPaladinMech(label, player);
                 case 3:
                     return BuildAlphaStrikerMech(label, player);
+                case 4:
+                    return BuildSniperMech(label, player);
                 default:
                     return BuildNakedMech(label, player);
             }
