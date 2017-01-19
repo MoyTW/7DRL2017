@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace MechArena
 {
@@ -69,7 +70,8 @@ namespace MechArena
 
         private void HandleQuerySubEntities(GameQuery_SubEntities q)
         {
-            if (this.holsteredEntity != null)
+            // Holsters won't report their entities as being active time-trackers because they cannot take actions
+            if (this.holsteredEntity != null && !q.Selectors.Contains(SubEntitiesSelector.ACTIVE_TRACKS_TIME))
             {
                 if (q.MatchesSelectors(this.holsteredEntity))
                     q.RegisterEntity(this.holsteredEntity);
