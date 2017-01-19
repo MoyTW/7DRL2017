@@ -39,6 +39,8 @@ namespace MechArena
         private SubEntitiesSelector[] selectors;
         private List<Entity> subEntities;
 
+        public IReadOnlyCollection<SubEntitiesSelector> Selectors { get { return Array.AsReadOnly(this.selectors); } }
+
         public IList<Entity> SubEntities { get { return this.subEntities.AsReadOnly(); } }
 
         public GameQuery_SubEntities(params SubEntitiesSelector [] selectors)
