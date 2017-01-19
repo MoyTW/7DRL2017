@@ -146,9 +146,9 @@ namespace MechArena.UI
             var trackers = new List<Entity>();
 
             trackers.Add(this.arena.Mech1);
-            trackers.AddRange(this.arena.Mech1.TryGetSubEntities(SubEntitiesSelector.TRACKS_TIME));
+            trackers.AddRange(this.arena.Mech1.TryGetSubEntities(SubEntitiesSelector.ACTIVE_TRACKS_TIME));
             trackers.Add(this.arena.Mech2);
-            trackers.AddRange(this.arena.Mech2.TryGetSubEntities(SubEntitiesSelector.TRACKS_TIME));
+            trackers.AddRange(this.arena.Mech2.TryGetSubEntities(SubEntitiesSelector.ACTIVE_TRACKS_TIME));
 
             return trackers.Select(e => new Tuple<Entity,int>(e, e.TryGetTicksToLive(this.arena.CurrentTick)))
                 .OrderBy(t => t.Item2);

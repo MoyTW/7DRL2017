@@ -120,7 +120,7 @@ namespace MechArena
 
         private void HandleCommand(GameEvent_Command ev)
         {
-            var executor = this.Parent.TryGetSubEntities(SubEntitiesSelector.TRACKS_TIME)
+            var executor = this.Parent.TryGetSubEntities(SubEntitiesSelector.ACTIVE_TRACKS_TIME)
                 .Where(e => e == ev.ExecutorEntity)
                 .FirstOrDefault();
             if (executor != null)
@@ -176,7 +176,7 @@ namespace MechArena
 
         private void HandleQueryNextTimeTracker(GameQuery_NextTimeTracker q)
         {
-            var timeTrackers = this.Parent.TryGetSubEntities(SubEntitiesSelector.TRACKS_TIME);
+            var timeTrackers = this.Parent.TryGetSubEntities(SubEntitiesSelector.ACTIVE_TRACKS_TIME);
             foreach(var tracker in timeTrackers)
             {
                 q.RegisterEntity(tracker);

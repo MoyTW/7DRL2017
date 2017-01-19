@@ -281,7 +281,7 @@ namespace MechArena
         {
             if (this.ShouldWaitForPlayerInput)
             {
-                var timeTrackers = this.nextCommandEntity.TryGetSubEntities(SubEntitiesSelector.TRACKS_TIME);
+                var timeTrackers = this.nextCommandEntity.TryGetSubEntities(SubEntitiesSelector.ACTIVE_TRACKS_TIME);
                 foreach(var tracker in timeTrackers)
                 {
                     if (tracker.TryGetTicksToLive(this.CurrentTick) == 0)

@@ -27,7 +27,7 @@ namespace MechArena
             }
             else if (this.Duration == DelayDuration.NEXT_ACTION)
             {
-                var timeTrackers = new List<Entity>(commandEntity.TryGetSubEntities(SubEntitiesSelector.TRACKS_TIME));
+                var timeTrackers = new List<Entity>(commandEntity.TryGetSubEntities(SubEntitiesSelector.ACTIVE_TRACKS_TIME));
                 if (commandEntity.HasComponentOfType<Component_TracksTime>())
                     timeTrackers.Add(commandEntity);
                 timeTrackers.Remove(delayEntity);
