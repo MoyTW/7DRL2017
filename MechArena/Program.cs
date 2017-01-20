@@ -28,6 +28,7 @@ namespace MechArena
         private static GameState _gameState;
 
         // Menus
+        private static Menu_Main _mainMenu;
         private static Menu_CompetitorListing _competitorListingMenu;
         private static Menu_CompetitorDetails _competitorDetailsMenu;
 
@@ -51,6 +52,7 @@ namespace MechArena
             _tournament = TournamentBuilder.BuildTournament(_player, _tournamentRandom, _tournamentPicker);
 
             _gameState = GameState.MAIN_MENU;
+            _mainMenu = new Menu_Main(_screenWidth, _screenHeight);
 
             // This must be the exact name of the bitmap font file we are using or it will error.
             string fontFileName = "terminal8x8.png";
@@ -116,6 +118,9 @@ namespace MechArena
                         break;
                     case RLKey.F:
                         _arena.TryPlayerAttack();
+                        break;
+                    case RLKey.W:
+                        Console.WriteLine("Attempting to Wield Weapon!");
                         break;
                     case RLKey.Keypad1:
                     case RLKey.B:
@@ -352,25 +357,7 @@ namespace MechArena
             switch (_gameState)
             {
                 case GameState.MAIN_MENU:
-                    int baseX = _screenWidth / 2 - 5;
-                    int baseY = _screenHeight / 2 - 8;
-                    _rootConsole.SetBackColor(0, 0, _screenWidth, _screenHeight, RLColor.Black);
-                    _rootConsole.Print(baseX - 4, baseY, "Main Menu", RLColor.White);
-
-                    _rootConsole.Print(baseX - 4, baseY + 2, "Options", RLColor.White);
-                    _rootConsole.Print(baseX - 2, baseY + 3, "N) Play Next Match", RLColor.White);
-                    _rootConsole.Print(baseX - 2, baseY + 4, "R) Return To Game", RLColor.White);
-                    _rootConsole.Print(baseX - 2, baseY + 5, "T) Fast-Forward Tournament", RLColor.White);
-                    _rootConsole.Print(baseX - 2, baseY + 6, "H) View Match History", RLColor.White);
-                    _rootConsole.Print(baseX - 2, baseY + 7, "M) View Upcoming Matches", RLColor.White);
-                    _rootConsole.Print(baseX - 2, baseY + 8, "Esc) Quit", RLColor.White);
-
-                    _rootConsole.Print(baseX - 4, baseY + 10, "Arena Keys", RLColor.White);
-                    _rootConsole.Print(baseX - 2, baseY + 11, "Movement: NumPad, HJKLYUBN, Arrow Keys", RLColor.White);
-                    _rootConsole.Print(baseX - 2, baseY + 12, "Fire Weapons: F", RLColor.White);
-                    _rootConsole.Print(baseX - 2, baseY + 13, "Delay For One TU: P", RLColor.White);
-                    _rootConsole.Print(baseX - 2, baseY + 14, "Delay Until Next Action: Space", RLColor.White);
-                    _rootConsole.Print(baseX - 2, baseY + 15, "Delay For Full Cooldown: Enter", RLColor.White);
+                    _mainMenu.Blit(_rootConsole);
                     break;
                 case GameState.ARENA:
                     _arenaDrawer.Blit(_rootConsole);
