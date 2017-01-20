@@ -297,12 +297,6 @@ namespace MechArena
             }
         }
 
-        private static void GotoCompetitorHistory(ICompetitor selectedCompetitor)
-        {
-            _competitorDetailsMenu = new Menu_CompetitorDetails(selectedCompetitor);
-            _gameState = GameState.COMPETITOR_HISTORY;
-        }
-
         // Event handler for RLNET's Update event
         private static void OnRootConsoleUpdate(object sender, UpdateEventArgs e)
         {
@@ -319,11 +313,16 @@ namespace MechArena
                     if (_competitorListingMenu.GotoMainMenu)
                         _gameState = GameState.MAIN_MENU;
                     else if (_competitorListingMenu.Transition != null)
-                        GotoCompetitorHistory(_competitorListingMenu.Transition.SelectedCompetitor);
+                    {
+                        _competitorDetailsMenu = new Menu_CompetitorDetails(_competitorListingMenu, _tournament,
+                            _competitorListingMenu.Transition.SelectedCompetitor);
+                        _gameState = GameState.COMPETITOR_HISTORY;
+                    }
                     break;
                 case GameState.COMPETITOR_HISTORY:
-                    _competitorDetailsMenu.OnRootConsoleUpdate(_rootConsole, _tournament);
-                    if (_competitorDetailsMenu.GotoCompetitorMenu)
+                    _competitorDetailsMenu.OnRootConsoleUpdate(_rootConsole, _rootConsole.Keyboard.GetKeyPress());
+                    // TODO: Don't do this!
+                    if (_competitorDetailsMenu.NextDisplay != _competitorDetailsMenu)
                     {
                         // TODO: Write transition fn
                         _competitorListingMenu = new Menu_CompetitorListing();
@@ -366,7 +365,7 @@ namespace MechArena
                     _competitorListingMenu.Blit(_rootConsole, _tournament);
                     break;
                 case GameState.COMPETITOR_HISTORY:
-                    _competitorDetailsMenu.Blit(_rootConsole, _tournament);
+                    _competitorDetailsMenu.Blit(_rootConsole);
                     break;
                 default:
                     break;

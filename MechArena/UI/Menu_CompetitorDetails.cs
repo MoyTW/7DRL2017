@@ -10,26 +10,33 @@ using System.Threading.Tasks;
 
 namespace MechArena.UI
 {
-    class Menu_CompetitorDetails
+    class Menu_CompetitorDetails : IDisplay
     {
         private RLConsole statusConsole;
         private IntegerSelectionField selectionField;
+        private IDisplay parentDisplay;
+        private Schedule_Tournament tournament;
 
         public ICompetitor SelectedCompetitor { get; }
         public string SelectedID { get { return this.SelectedCompetitor.CompetitorID; } }
 
         private MatchResult selectedMatch;
-        private bool gotoCompetitorMenu = false;
+        private bool gotoParent = false;
 
-        public bool GotoCompetitorMenu { get { return this.gotoCompetitorMenu; } }
+        public IDisplay NextDisplay { get { return this.gotoParent ? this.parentDisplay : this; } }
+        // TODO: Move off this interface and roll it into NextDisplay!
         public MatchResult SelectedMatch { get { return this.selectedMatch; } }
 
-        public Menu_CompetitorDetails(ICompetitor selectedCompetitor)
+        public Menu_CompetitorDetails(IDisplay parentDisplay, Schedule_Tournament tournament,
+            ICompetitor selectedCompetitor)
         {
             this.statusConsole = new RLConsole(ArenaDrawer.statusWidth, ArenaDrawer.statusHeight);
             this.statusConsole.SetBackColor(0, 0, ArenaDrawer.statusWidth, ArenaDrawer.statusHeight,
                 RLColor.LightBlue);
             this.selectionField = new IntegerSelectionField();
+
+            this.parentDisplay = parentDisplay;
+            this.tournament = tournament;
             this.SelectedCompetitor = selectedCompetitor;
         }
 
@@ -37,26 +44,25 @@ namespace MechArena.UI
         {
             this.selectionField.Reset();
             this.selectedMatch = null;
-            this.gotoCompetitorMenu = false;
+            this.gotoParent = false;
         }
 
-        public void OnRootConsoleUpdate(RLRootConsole rootConsole, Schedule_Tournament tournament)
+        public void OnRootConsoleUpdate(RLConsole rootConsole, RLKeyPress keyPress)
         {
-            RLKeyPress keyPress = rootConsole.Keyboard.GetKeyPress();
             this.selectedMatch = this.selectionField.HandleKeyPress(keyPress,
-                tournament.MatchHistory(this.SelectedID));
+                this.tournament.MatchHistory(this.SelectedID));
 
             if (keyPress != null)
             {
                 switch (keyPress.Key) {
                     case RLKey.Escape:
-                        this.gotoCompetitorMenu = true;
+                        this.gotoParent = true;
                         break;
                 }
             }
         }
 
-        public void Blit(RLConsole console, Schedule_Tournament tournament)
+        public void Blit(RLConsole console)
         {
             int tableWidth = 60;
             int currentX = 1;

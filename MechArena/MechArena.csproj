@@ -118,6 +118,7 @@
     <Compile Include="Tournament\ISchedule.cs" />
     <Compile Include="Tournament\Schedule_Tournament.cs" />
     <Compile Include="UI\ArenaDrawer.cs" />
+    <Compile Include="UI\IDisplay.cs" />
     <Compile Include="UI\Menu_CompetitorDetails.cs" />
     <Compile Include="UI\Menu_CompetitorListing.cs" />
     <Compile Include="UI\IntegerSelectionField.cs" />
