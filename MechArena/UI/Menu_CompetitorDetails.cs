@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace MechArena.UI
 {
-    class CompetitorHistory
+    class Menu_CompetitorDetails
     {
         private RLConsole statusConsole;
         private IntegerSelectionField selectionField;
@@ -24,7 +24,7 @@ namespace MechArena.UI
         public bool GotoCompetitorMenu { get { return this.gotoCompetitorMenu; } }
         public MatchResult SelectedMatch { get { return this.selectedMatch; } }
 
-        public CompetitorHistory(ICompetitor selectedCompetitor)
+        public Menu_CompetitorDetails(ICompetitor selectedCompetitor)
         {
             this.statusConsole = new RLConsole(ArenaDrawer.statusWidth, ArenaDrawer.statusHeight);
             this.statusConsole.SetBackColor(0, 0, ArenaDrawer.statusWidth, ArenaDrawer.statusHeight,
@@ -75,7 +75,6 @@ namespace MechArena.UI
             int i = 1;
             foreach (var result in tournament.MatchHistory(this.SelectedCompetitor.CompetitorID))
             {
-                
                 var resultString = i + ")" + this.SelectedCompetitor + " versus " +
                     result.OpponentOf(this.SelectedCompetitor.CompetitorID);
                 if (result.Winner.CompetitorID == this.SelectedCompetitor.CompetitorID)

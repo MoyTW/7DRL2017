@@ -19,7 +19,7 @@ namespace MechArena.UI
         }
     }
 
-    class CompetitorMenu
+    class Menu_CompetitorListing
     {
         private IntegerSelectionField selectionField = new IntegerSelectionField();
         private bool gotoMainMenu = false;

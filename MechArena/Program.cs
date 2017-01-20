@@ -27,9 +27,9 @@ namespace MechArena
 
         private static GameState _gameState;
 
-        // History
-        private static CompetitorMenu _competitorMenu;
-        private static CompetitorHistory _competitorHistory;
+        // Menus
+        private static Menu_CompetitorListing _competitorListingMenu;
+        private static Menu_CompetitorDetails _competitorDetailsMenu;
 
         // Tournament
         private static ICompetitor _player;
@@ -225,7 +225,7 @@ namespace MechArena
                     // argh UI work is the *worst*!
                     case RLKey.H:
                         _gameState = GameState.COMPETITOR_MENU;
-                        _competitorMenu = new CompetitorMenu();
+                        _competitorListingMenu = new Menu_CompetitorListing();
                         break;
                     case RLKey.M:
                         Log.InfoLine("########## UPCOMING PLAYER MATCHES ##########");
@@ -294,7 +294,7 @@ namespace MechArena
 
         private static void GotoCompetitorHistory(ICompetitor selectedCompetitor)
         {
-            _competitorHistory = new CompetitorHistory(selectedCompetitor);
+            _competitorDetailsMenu = new Menu_CompetitorDetails(selectedCompetitor);
             _gameState = GameState.COMPETITOR_HISTORY;
         }
 
@@ -310,30 +310,30 @@ namespace MechArena
                     OnRootConsoleUpdateForArena(sender, e);
                     break;
                 case GameState.COMPETITOR_MENU:
-                    _competitorMenu.OnRootConsoleUpdate(_rootConsole, _tournament);
-                    if (_competitorMenu.GotoMainMenu)
+                    _competitorListingMenu.OnRootConsoleUpdate(_rootConsole, _tournament);
+                    if (_competitorListingMenu.GotoMainMenu)
                         _gameState = GameState.MAIN_MENU;
-                    else if (_competitorMenu.Transition != null)
-                        GotoCompetitorHistory(_competitorMenu.Transition.SelectedCompetitor);
+                    else if (_competitorListingMenu.Transition != null)
+                        GotoCompetitorHistory(_competitorListingMenu.Transition.SelectedCompetitor);
                     break;
                 case GameState.COMPETITOR_HISTORY:
-                    _competitorHistory.OnRootConsoleUpdate(_rootConsole, _tournament);
-                    if (_competitorHistory.GotoCompetitorMenu)
+                    _competitorDetailsMenu.OnRootConsoleUpdate(_rootConsole, _tournament);
+                    if (_competitorDetailsMenu.GotoCompetitorMenu)
                     {
                         // TODO: Write transition fn
-                        _competitorMenu = new CompetitorMenu();
+                        _competitorListingMenu = new Menu_CompetitorListing();
                         _gameState = GameState.COMPETITOR_MENU;
                     }
-                    else if (_competitorHistory.SelectedMatch != null)
+                    else if (_competitorDetailsMenu.SelectedMatch != null)
                     {
-                        if (_competitorHistory.SelectedMatch.HasCompetitor(_player.CompetitorID))
+                        if (_competitorDetailsMenu.SelectedMatch.HasCompetitor(_player.CompetitorID))
                         {
                             Log.InfoLine("Can't replay player matches!");
-                            _competitorHistory.ResetCompetitorHistory();
+                            _competitorDetailsMenu.ResetCompetitorHistory();
                         }
                         else
                         {
-                            GotoArenaForMatch(_competitorHistory.SelectedMatch);
+                            GotoArenaForMatch(_competitorDetailsMenu.SelectedMatch);
                         }
                     }
                     break;
@@ -376,10 +376,10 @@ namespace MechArena
                     _arenaDrawer.Blit(_rootConsole);
                     break;
                 case GameState.COMPETITOR_MENU:
-                    _competitorMenu.Blit(_rootConsole, _tournament);
+                    _competitorListingMenu.Blit(_rootConsole, _tournament);
                     break;
                 case GameState.COMPETITOR_HISTORY:
-                    _competitorHistory.Blit(_rootConsole, _tournament);
+                    _competitorDetailsMenu.Blit(_rootConsole, _tournament);
                     break;
                 default:
                     break;
