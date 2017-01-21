@@ -28,8 +28,8 @@ namespace MechArena.UI
         public Menu_CompetitorDetails(IDisplay parentDisplay, Schedule_Tournament tournament,
             ICompetitor selectedCompetitor)
         {
-            this.statusConsole = new RLConsole(ArenaDrawer.statusWidth, ArenaDrawer.statusHeight);
-            this.statusConsole.SetBackColor(0, 0, ArenaDrawer.statusWidth, ArenaDrawer.statusHeight,
+            this.statusConsole = new RLConsole(Menu_Arena.statusWidth, Menu_Arena.statusHeight);
+            this.statusConsole.SetBackColor(0, 0, Menu_Arena.statusWidth, Menu_Arena.statusHeight,
                 RLColor.LightBlue);
             this.selectionField = new IntegerSelectionField();
 
@@ -92,7 +92,7 @@ namespace MechArena.UI
                 i++;
 
                 line++;
-                if (line > console.Height - ArenaDrawer.statusHeight - 3)
+                if (line > console.Height - Menu_Arena.statusHeight - 3)
                 {
                     line = lineStart;
                     currentX += tableWidth;
@@ -105,9 +105,9 @@ namespace MechArena.UI
             console.Print(currentX, line, "# " + this.selectionField.SelectionString, RLColor.White);
 
             // Status of mech
-            ArenaDrawer.DrawMechStatus(((CompetitorEntity)this.SelectedCompetitor).Mech, this.statusConsole);
-            RLConsole.Blit(statusConsole, 0, 0, ArenaDrawer.statusWidth, ArenaDrawer.statusHeight, console, 0,
-                console.Height - ArenaDrawer.statusHeight);
+            Menu_Arena.DrawMechStatus(((CompetitorEntity)this.SelectedCompetitor).Mech, this.statusConsole);
+            RLConsole.Blit(statusConsole, 0, 0, Menu_Arena.statusWidth, Menu_Arena.statusHeight, console, 0,
+                console.Height - Menu_Arena.statusHeight);
         }
 
     }

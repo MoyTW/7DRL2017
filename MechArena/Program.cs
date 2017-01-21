@@ -4,7 +4,7 @@ using RLNET;
 using RogueSharp.Random;
 using System;
 using System.Linq;
-using System.Threading;
+
 using System.Threading.Tasks;
 
 namespace MechArena
@@ -39,7 +39,7 @@ namespace MechArena
         private static TournamentMapPicker _tournamentPicker;
         private static Schedule_Tournament _tournament;
         private static ArenaState _arena;
-        private static ArenaDrawer _arenaDrawer;
+        private static Menu_Arena _arenaDrawer;
 
         public static void Main()
         {
@@ -80,102 +80,13 @@ namespace MechArena
             _gameState = GameState.MAIN_MENU;
         }
 
-        // TODO: Will attempt to register replays!
-        private static void HandleArenaEnded()
-        {
-            Log.Debug("Reporting match " + _arena.MatchID + " to Tournament!");
-            _tournament.ReportResult(_arena.MatchID, _arena.WinnerID(), _arena.MapID, _arena.ArenaSeed);
-
-            GotoMainMenu();
-        }
-
-        private static void OnRootConsoleUpdateForArena(object sender, UpdateEventArgs e)
-        {
-            if (_arena.IsMatchEnded())
-            {
-                HandleArenaEnded();
-                return;
-            }
-
-            _arenaDrawer.OnRootConsoleUpdate(_rootConsole);
-
-            RLKeyPress keyPress = _rootConsole.Keyboard.GetKeyPress();
-            if (keyPress != null)
-            {
-                switch (keyPress.Key)
-                {
-                    case RLKey.Escape:
-                        GotoMainMenu();
-                        break;
-                    case RLKey.P:
-                        _arena.PlayerDelayAction(DelayDuration.SINGLE_TICK);
-                        break;
-                    case RLKey.Space:
-                        _arena.PlayerDelayAction(DelayDuration.NEXT_ACTION);
-                        break;
-                    case RLKey.Enter:
-                        _arena.PlayerDelayAction(DelayDuration.FULL_INTERVAL);
-                        break;
-                    case RLKey.F:
-                        _arena.TryPlayerAttack();
-                        break;
-                    case RLKey.W:
-                        Console.WriteLine("Attempting to Wield Weapon!");
-                        break;
-                    case RLKey.Keypad1:
-                    case RLKey.B:
-                        _arena.TryPlayerMove(-1, 1);
-                        break;
-                    case RLKey.Keypad2:
-                    case RLKey.Down:
-                    case RLKey.J:
-                        _arena.TryPlayerMove(0, 1);
-                        break;
-                    case RLKey.Keypad3:
-                    case RLKey.N:
-                        _arena.TryPlayerMove(1, 1);
-                        break;
-                    case RLKey.Keypad4:
-                    case RLKey.H:
-                    case RLKey.Left:
-                        _arena.TryPlayerMove(-1, 0);
-                        break;
-                    case RLKey.Keypad6:
-                    case RLKey.Right:
-                    case RLKey.L:
-                        _arena.TryPlayerMove(1, 0);
-                        break;
-                    case RLKey.Keypad7:
-                    case RLKey.Y:
-                        _arena.TryPlayerMove(-1, -1);
-                        break;
-                    case RLKey.Keypad8:
-                    case RLKey.Up:
-                    case RLKey.K:
-                        _arena.TryPlayerMove(0, -1);
-                        break;
-                    case RLKey.Keypad9:
-                    case RLKey.U:
-                        _arena.TryPlayerMove(1, -1);
-                        break;
-                    default:
-                        break;
-                }
-            }
-            else
-            {
-                _arena.TryFindAndExecuteNextCommand();
-                Thread.Sleep(50); // inelegant way of forcing games to display slow enough to spectate
-            }
-        }
-
         private static void GotoMatchArena(Match m)
         {
             // TODO: The casting here is silly!
-            _arena = ArenaBuilder.BuildArena(ArenaDrawer.arenaWidth, ArenaDrawer.arenaHeight, m.MatchID,
+            _arena = ArenaBuilder.BuildArena(Menu_Arena.arenaWidth, Menu_Arena.arenaHeight, m.MatchID,
                 _tournamentPicker.PickMapID(), GenArenaSeed(), (CompetitorEntity)m.Competitor1,
                 (CompetitorEntity)m.Competitor2);
-            _arenaDrawer = new ArenaDrawer(_arena);
+            _arenaDrawer = new Menu_Arena(_mainMenu, _arena, _tournament);
             _gameState = GameState.ARENA;
         }
 
@@ -189,16 +100,16 @@ namespace MechArena
 
         private static void GotoArenaForMatch(MatchResult result)
         {
-            _arena = ArenaBuilder.BuildArena(ArenaDrawer.arenaWidth, ArenaDrawer.arenaHeight, result.MatchID,
+            _arena = ArenaBuilder.BuildArena(Menu_Arena.arenaWidth, Menu_Arena.arenaHeight, result.MatchID,
                 result.MapID, result.ArenaSeed, (CompetitorEntity)result.Competitor1,
                 (CompetitorEntity)result.Competitor2);
-            _arenaDrawer = new ArenaDrawer(_arena);
+            _arenaDrawer = new Menu_Arena(_mainMenu, _arena, _tournament);
             _gameState = GameState.ARENA;
         }
 
         private static Tuple<Match, ArenaState> BuildArena(Match m)
         {
-            var arena = ArenaBuilder.BuildArena(ArenaDrawer.arenaWidth, ArenaDrawer.arenaHeight, m.MatchID,
+            var arena = ArenaBuilder.BuildArena(Menu_Arena.arenaWidth, Menu_Arena.arenaHeight, m.MatchID,
                 _tournamentPicker.PickMapID(), GenArenaSeed(), (CompetitorEntity)m.Competitor1,
                 (CompetitorEntity)m.Competitor2);
             return new Tuple<Match, ArenaState>(m, arena);
@@ -308,7 +219,9 @@ namespace MechArena
                     OnRootConsoleUpdateForMainMenu(sender, e);
                     break;
                 case GameState.ARENA:
-                    OnRootConsoleUpdateForArena(sender, e);
+                    nextDisplay = _arenaDrawer.OnRootConsoleUpdate(_rootConsole, _rootConsole.Keyboard.GetKeyPress());
+                    if (nextDisplay is Menu_Main)
+                        _gameState = GameState.MAIN_MENU;
                     break;
                 case GameState.COMPETITOR_MENU:
                     nextDisplay = _competitorListingMenu.OnRootConsoleUpdate(_rootConsole, _rootConsole.Keyboard.GetKeyPress());

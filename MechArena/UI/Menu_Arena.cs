@@ -1,17 +1,17 @@
-﻿using RLNET;
-using RogueSharp;
-
+﻿using MechArena.Tournament;
+using RLNET;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
 
 namespace MechArena.UI
 {
-    class ArenaDrawer
+    class Menu_Arena : IDisplay
     {
+        private readonly IDisplay parent;
         private readonly ArenaState arena;
+        private readonly Schedule_Tournament tournament;
 
         public const int arenaWidth = 50;
         public const int arenaHeight = 50;
@@ -26,55 +26,141 @@ namespace MechArena.UI
         private RLConsole status1Console;
         private RLConsole status2Console;
 
-        public ArenaDrawer(ArenaState arena)
+        public Menu_Arena(IDisplay parent, ArenaState arena, Schedule_Tournament tournament)
         {
+            this.parent = parent;
             this.arena = arena;
-            arenaConsole = new RLConsole(ArenaDrawer.arenaWidth, ArenaDrawer.arenaHeight);
+            this.tournament = tournament;
+
+            arenaConsole = new RLConsole(Menu_Arena.arenaWidth, Menu_Arena.arenaHeight);
             hudConsole = new RLConsole(this.hudWidth, this.hudHeight);
-            status1Console = new RLConsole(ArenaDrawer.statusWidth, ArenaDrawer.statusHeight);
-            status2Console = new RLConsole(ArenaDrawer.statusWidth, ArenaDrawer.statusHeight);
+            status1Console = new RLConsole(Menu_Arena.statusWidth, Menu_Arena.statusHeight);
+            status2Console = new RLConsole(Menu_Arena.statusWidth, Menu_Arena.statusHeight);
         }
 
-        #region External
+        #region IDisplay Fns
 
-        public void OnRootConsoleUpdate(RLConsole console)
+        public IDisplay OnRootConsoleUpdate(RLConsole console, RLKeyPress keyPress)
         {
-            this.arenaConsole.SetBackColor(0, 0, ArenaDrawer.arenaWidth, ArenaDrawer.arenaHeight, RLColor.Black);
+            // Drawing sets
+            this.arenaConsole.SetBackColor(0, 0, Menu_Arena.arenaWidth, Menu_Arena.arenaHeight, RLColor.Black);
             this.arenaConsole.Print(1, 1, "Arena", RLColor.White);
 
             this.hudConsole.SetBackColor(0, 0, this.hudWidth, this.hudHeight, RLColor.LightGray);
 
-            this.status1Console.SetBackColor(0, 0, ArenaDrawer.statusWidth, ArenaDrawer.statusHeight, RLColor.LightBlue);
-            this.status2Console.SetBackColor(0, 0, ArenaDrawer.statusWidth, ArenaDrawer.statusHeight, RLColor.LightCyan);
+            this.status1Console.SetBackColor(0, 0, Menu_Arena.statusWidth, Menu_Arena.statusHeight, RLColor.LightBlue);
+            this.status2Console.SetBackColor(0, 0, Menu_Arena.statusWidth, Menu_Arena.statusHeight, RLColor.LightCyan);
+
+            // Logic
+            if (this.arena.IsMatchEnded())
+            {
+                Log.Debug("Reporting match " + this.arena.MatchID + " to Tournament!");
+                this.tournament.ReportResult(this.arena.MatchID, this.arena.WinnerID(), this.arena.MapID, this.arena.ArenaSeed);
+                return this.parent;
+            }
+            else if (keyPress != null)
+                return this.HandleKeyPressed(keyPress);
+            else
+            {
+                this.arena.TryFindAndExecuteNextCommand();
+                Thread.Sleep(50); // inelegant way of forcing games to display slow enough to spectate
+                return this;
+            }
         }
 
         public void Blit(RLConsole console)
         {
-            this.arenaConsole.SetBackColor(0, 0, ArenaDrawer.arenaWidth, ArenaDrawer.arenaHeight, RLColor.Black);
+            this.arenaConsole.SetBackColor(0, 0, Menu_Arena.arenaWidth, Menu_Arena.arenaHeight, RLColor.Black);
             this.arenaConsole.Print(1, 1, "Arena", RLColor.White);
 
             this.hudConsole.SetBackColor(0, 0, this.hudWidth, this.hudHeight, RLColor.LightGray);
 
-            this.status1Console.SetBackColor(0, 0, ArenaDrawer.statusWidth, ArenaDrawer.statusHeight, RLColor.LightBlue);
-            this.status2Console.SetBackColor(0, 0, ArenaDrawer.statusWidth, ArenaDrawer.statusHeight, RLColor.LightCyan);
+            this.status1Console.SetBackColor(0, 0, Menu_Arena.statusWidth, Menu_Arena.statusHeight, RLColor.LightBlue);
+            this.status2Console.SetBackColor(0, 0, Menu_Arena.statusWidth, Menu_Arena.statusHeight, RLColor.LightCyan);
 
             this.DrawArena(this.arenaConsole);
-            RLConsole.Blit(this.arenaConsole, 0, 0, ArenaDrawer.arenaWidth, ArenaDrawer.arenaHeight, console, 0, 0);
+            RLConsole.Blit(this.arenaConsole, 0, 0, Menu_Arena.arenaWidth, Menu_Arena.arenaHeight, console, 0, 0);
 
             this.DrawHUD(this.hudConsole);
             RLConsole.Blit(this.hudConsole, 0, 0, this.hudWidth, this.hudHeight, console,
-                ArenaDrawer.arenaWidth + ArenaDrawer.statusWidth, 0);
+                Menu_Arena.arenaWidth + Menu_Arena.statusWidth, 0);
 
-            ArenaDrawer.DrawMechStatus(this.arena.Mech1, this.status1Console);
-            RLConsole.Blit(this.status1Console, 0, 0, ArenaDrawer.statusWidth, ArenaDrawer.statusHeight, console,
-                ArenaDrawer.arenaWidth, 0);
+            Menu_Arena.DrawMechStatus(this.arena.Mech1, this.status1Console);
+            RLConsole.Blit(this.status1Console, 0, 0, Menu_Arena.statusWidth, Menu_Arena.statusHeight, console,
+                Menu_Arena.arenaWidth, 0);
 
-            ArenaDrawer.DrawMechStatus(this.arena.Mech2, this.status2Console);
-            RLConsole.Blit(this.status2Console, 0, 0, ArenaDrawer.statusWidth, ArenaDrawer.statusHeight, console,
-                ArenaDrawer.arenaWidth, ArenaDrawer.statusHeight);
+            Menu_Arena.DrawMechStatus(this.arena.Mech2, this.status2Console);
+            RLConsole.Blit(this.status2Console, 0, 0, Menu_Arena.statusWidth, Menu_Arena.statusHeight, console,
+                Menu_Arena.arenaWidth, Menu_Arena.statusHeight);
         }
 
         #endregion
+
+        private IDisplay HandleKeyPressed(RLKeyPress keyPress)
+        {
+            if (keyPress == null)
+                throw new InvalidOperationException("Called HandleKeyPressed with null, don't do this!");
+
+            switch (keyPress.Key)
+            {
+                case RLKey.Escape:
+                    return this.parent;
+                case RLKey.P:
+                    this.arena.PlayerDelayAction(DelayDuration.SINGLE_TICK);
+                    break;
+                case RLKey.Space:
+                    this.arena.PlayerDelayAction(DelayDuration.NEXT_ACTION);
+                    break;
+                case RLKey.Enter:
+                    this.arena.PlayerDelayAction(DelayDuration.FULL_INTERVAL);
+                    break;
+                case RLKey.F:
+                    this.arena.TryPlayerAttack();
+                    break;
+                case RLKey.W:
+                    Console.WriteLine("Attempting to Wield Weapon!");
+                    break;
+                case RLKey.Keypad1:
+                case RLKey.B:
+                    this.arena.TryPlayerMove(-1, 1);
+                    break;
+                case RLKey.Keypad2:
+                case RLKey.Down:
+                case RLKey.J:
+                    this.arena.TryPlayerMove(0, 1);
+                    break;
+                case RLKey.Keypad3:
+                case RLKey.N:
+                    this.arena.TryPlayerMove(1, 1);
+                    break;
+                case RLKey.Keypad4:
+                case RLKey.H:
+                case RLKey.Left:
+                    this.arena.TryPlayerMove(-1, 0);
+                    break;
+                case RLKey.Keypad6:
+                case RLKey.Right:
+                case RLKey.L:
+                    this.arena.TryPlayerMove(1, 0);
+                    break;
+                case RLKey.Keypad7:
+                case RLKey.Y:
+                    this.arena.TryPlayerMove(-1, -1);
+                    break;
+                case RLKey.Keypad8:
+                case RLKey.Up:
+                case RLKey.K:
+                    this.arena.TryPlayerMove(0, -1);
+                    break;
+                case RLKey.Keypad9:
+                case RLKey.U:
+                    this.arena.TryPlayerMove(1, -1);
+                    break;
+                default:
+                    break;
+            }
+            return this;
+        }
 
         #region Drawing
 
@@ -131,14 +217,14 @@ namespace MechArena.UI
             line++;
 
             var skeleton = mech.GetComponentOfType<Component_MechSkeleton>();
-            ArenaDrawer.DrawBodyPartStatus(skeleton.InspectBodyPart(BodyPartLocation.LEFT_ARM), 0, line + 2, mechDestroyed, console);
-            ArenaDrawer.DrawBodyPartStatus(skeleton.InspectBodyPart(BodyPartLocation.LEFT_LEG), 0, line + 20, mechDestroyed, console);
+            Menu_Arena.DrawBodyPartStatus(skeleton.InspectBodyPart(BodyPartLocation.LEFT_ARM), 0, line + 2, mechDestroyed, console);
+            Menu_Arena.DrawBodyPartStatus(skeleton.InspectBodyPart(BodyPartLocation.LEFT_LEG), 0, line + 20, mechDestroyed, console);
 
-            ArenaDrawer.DrawBodyPartStatus(skeleton.InspectBodyPart(BodyPartLocation.HEAD), 20, line, mechDestroyed, console);
-            ArenaDrawer.DrawBodyPartStatus(skeleton.InspectBodyPart(BodyPartLocation.TORSO), 20, line + 12, mechDestroyed, console);
+            Menu_Arena.DrawBodyPartStatus(skeleton.InspectBodyPart(BodyPartLocation.HEAD), 20, line, mechDestroyed, console);
+            Menu_Arena.DrawBodyPartStatus(skeleton.InspectBodyPart(BodyPartLocation.TORSO), 20, line + 12, mechDestroyed, console);
 
-            ArenaDrawer.DrawBodyPartStatus(skeleton.InspectBodyPart(BodyPartLocation.RIGHT_ARM), 40, line + 2, mechDestroyed, console);
-            ArenaDrawer.DrawBodyPartStatus(skeleton.InspectBodyPart(BodyPartLocation.RIGHT_LEG), 40, line + 20, mechDestroyed, console);
+            Menu_Arena.DrawBodyPartStatus(skeleton.InspectBodyPart(BodyPartLocation.RIGHT_ARM), 40, line + 2, mechDestroyed, console);
+            Menu_Arena.DrawBodyPartStatus(skeleton.InspectBodyPart(BodyPartLocation.RIGHT_LEG), 40, line + 20, mechDestroyed, console);
         }
 
         private IEnumerable<Tuple<Entity,int>> ArenaTimeTrackers()
