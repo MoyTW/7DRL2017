@@ -34,9 +34,6 @@ namespace MechArena
 
         // Tournament
         private static ICompetitor _player;
-        private static bool _playPlayerMatches = false;
-        private static IRandom _tournamentRandom;
-        private static TournamentMapPicker _tournamentPicker;
         private static Schedule_Tournament _tournament;
         private static ArenaState _arena;
         private static Menu_Arena _arenaDrawer;
@@ -47,9 +44,8 @@ namespace MechArena
                 EntityBuilder.BuildSniperMech("Player Mech", true));
             //EntityBuilder.BuildKnifeMech("Player Knifer", true));
             //EntityBuilder.BuildDoomCannonMech("Doom Cannon Mech", true));
-            _tournamentRandom = new DotNetRandom(1);
-            _tournamentPicker = new TournamentMapPicker(5, _tournamentRandom);
-            _tournament = TournamentBuilder.BuildTournament(_player, _tournamentRandom, _tournamentPicker);
+            _tournament = TournamentBuilder.BuildTournament(_player, new DotNetRandom(1), new DotNetRandom(2),
+                new TournamentMapPicker(5, new DotNetRandom(3)));
 
             _gameState = GameState.MAIN_MENU;
             _mainMenu = new Menu_Main(_screenWidth, _screenHeight);

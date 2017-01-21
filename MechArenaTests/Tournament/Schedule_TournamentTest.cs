@@ -1,8 +1,7 @@
 ﻿using MechArena.Tournament;
-
-using System;
-using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using RogueSharp.Random;
+using System.Collections.Generic;
 
 namespace MechArenaTests.Tournament
 {
@@ -25,7 +24,7 @@ namespace MechArenaTests.Tournament
         {
             var comps = this.BuildComps(256);
 
-            var st = new Schedule_Tournament(comps, new MapPickerPlaceholder());
+            var st = new Schedule_Tournament(comps, new DotNetRandom(), new MapPickerPlaceholder());
             Assert.AreEqual(1, st.RoundNum());
             Assert.AreEqual(896, st.ScheduledMatches().Count);
 
@@ -43,7 +42,7 @@ namespace MechArenaTests.Tournament
         {
             var comps = this.BuildComps(256);
 
-            var st = new Schedule_Tournament(comps, new MapPickerPlaceholder());
+            var st = new Schedule_Tournament(comps, new DotNetRandom(), new MapPickerPlaceholder());
             foreach (var m in st.ScheduledMatches())
             {
                 st.ReportResult(new MatchResult(m, m.Competitor1, "", 0));

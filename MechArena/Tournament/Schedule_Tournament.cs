@@ -1,8 +1,7 @@
-﻿using System;
+﻿using RogueSharp.Random;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MechArena.Tournament
 {
@@ -14,18 +13,20 @@ namespace MechArena.Tournament
         private const int numSecondStageWinners = 2;
 
         private IEnumerable<ICompetitor> entreants;
+        private IRandom seeder;
         private IMapPicker picker;
         private List<ISchedule> rounds;
 
-        public Schedule_Tournament(IEnumerable<ICompetitor> entreants, IMapPicker picker)
+        public Schedule_Tournament(IEnumerable<ICompetitor> entreants, IRandom seeder, IMapPicker picker)
         {
             if (entreants.Count() != expectedNumEntreants)
                 throw new ArgumentException("Wrong number of entreants into tournament! Should be 256!");
 
             this.entreants = entreants;
-            this.rounds = new List<ISchedule>();
+            this.seeder = seeder;
             this.picker = picker;
 
+            this.rounds = new List<ISchedule>();
             rounds.Add(new Schedule_GroupStage(groupStageSize, numFirstStageWinners, entreants, picker));
         }
 
@@ -101,6 +102,16 @@ namespace MechArena.Tournament
         }
 
         #endregion
+
+        public int GenArenaSeed()
+        {
+            return this.seeder.Next(Int16.MaxValue);
+        }
+
+        public string PickMapID()
+        {
+            return this.picker.PickMapID();
+        }
 
         public IList<ICompetitor> AllCompetitors()
         {

@@ -56,7 +56,7 @@ namespace MechArena
         }
 
         public static Schedule_Tournament BuildTournament(ICompetitor player, IRandom competitorRand,
-            IMapPicker mapPicker)
+            IRandom matchSeedRand, IMapPicker mapPicker)
         {
             var entreants = new List<ICompetitor>();
             entreants.Add(player);
@@ -65,7 +65,7 @@ namespace MechArena
                 var comp = BuildCompetitor(competitorRand);
                 entreants.Add(comp);
             }
-            return new Schedule_Tournament(entreants, mapPicker);
+            return new Schedule_Tournament(entreants, matchSeedRand, mapPicker);
         }
     }
 }
