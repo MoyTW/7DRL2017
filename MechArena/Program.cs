@@ -2,21 +2,9 @@
 using MechArena.UI;
 using RLNET;
 using RogueSharp.Random;
-using System;
-using System.Linq;
-
-using System.Threading.Tasks;
 
 namespace MechArena
 {
-    public enum GameState
-    {
-        MAIN_MENU = 0,
-        ARENA,
-        COMPETITOR_MENU,
-        COMPETITOR_HISTORY
-    }
-
     public class Program
     {
         // The screen height and width are in number of tiles
@@ -25,17 +13,12 @@ namespace MechArena
         private static readonly int _screenHeight = 90;
         private static RLRootConsole _rootConsole;
 
-        private static GameState _gameState;
-
         // Menus
-        private static Menu_Main _mainMenu;
-        private static Menu_CompetitorListing _competitorListingMenu;
-        private static Menu_CompetitorDetails _competitorDetailsMenu;
+        private static IDisplay _currentDisplay;
 
         // Tournament
         private static ICompetitor _player;
         private static Schedule_Tournament _tournament;
-        private static Menu_Arena _arenaDrawer;
 
         public static void Main()
         {
@@ -46,8 +29,7 @@ namespace MechArena
             _tournament = TournamentBuilder.BuildTournament(_player, new DotNetRandom(1), new DotNetRandom(2),
                 new TournamentMapPicker(5, new DotNetRandom(3)));
 
-            _gameState = GameState.MAIN_MENU;
-            _mainMenu = new Menu_Main(_screenWidth, _screenHeight, _player, _tournament);
+            _currentDisplay = new Menu_Main(_screenWidth, _screenHeight, _player, _tournament);
 
             // This must be the exact name of the bitmap font file we are using or it will error.
             string fontFileName = "terminal8x8.png";
@@ -68,65 +50,7 @@ namespace MechArena
         // Event handler for RLNET's Update event
         private static void OnRootConsoleUpdate(object sender, UpdateEventArgs e)
         {
-            IDisplay nextDisplay = null;
-
-            switch (_gameState)
-            {
-                case GameState.MAIN_MENU:
-                    nextDisplay = _mainMenu.OnRootConsoleUpdate(_rootConsole, _rootConsole.Keyboard.GetKeyPress());
-                    if (nextDisplay is Menu_Arena)
-                    {
-                        _gameState = GameState.ARENA;
-                        _arenaDrawer = (Menu_Arena)nextDisplay;
-                    }
-                    else if (nextDisplay is Menu_CompetitorListing)
-                    {
-                        _gameState = GameState.COMPETITOR_MENU;
-                        _competitorListingMenu = (Menu_CompetitorListing)nextDisplay;
-                    }
-                    break;
-                case GameState.ARENA:
-                    nextDisplay = _arenaDrawer.OnRootConsoleUpdate(_rootConsole, _rootConsole.Keyboard.GetKeyPress());
-                    if (nextDisplay is Menu_Main)
-                        _gameState = GameState.MAIN_MENU;
-                    break;
-                case GameState.COMPETITOR_MENU:
-                    nextDisplay = _competitorListingMenu.OnRootConsoleUpdate(_rootConsole, _rootConsole.Keyboard.GetKeyPress());
-                    if (nextDisplay is Menu_Main)
-                        _gameState = GameState.MAIN_MENU;
-                    else if (nextDisplay is Menu_CompetitorDetails)
-                    {
-                        _competitorDetailsMenu = (Menu_CompetitorDetails)nextDisplay;
-                        _gameState = GameState.COMPETITOR_HISTORY;
-                    }
-                    break;
-                case GameState.COMPETITOR_HISTORY:
-                    nextDisplay = _competitorDetailsMenu.OnRootConsoleUpdate(_rootConsole, _rootConsole.Keyboard.GetKeyPress());
-                    if (nextDisplay is Menu_CompetitorListing)
-                    {
-                        _competitorListingMenu = (Menu_CompetitorListing)nextDisplay;
-                        _gameState = GameState.COMPETITOR_MENU;
-                    }
-                    if (nextDisplay is Menu_Arena)
-                    {
-                        _arenaDrawer = (Menu_Arena)nextDisplay;
-                        _gameState = GameState.ARENA;
-                    }
-                    break;
-                default:
-                    nextDisplay = _mainMenu.OnRootConsoleUpdate(_rootConsole, _rootConsole.Keyboard.GetKeyPress());
-                    if (nextDisplay is Menu_Arena)
-                    {
-                        _gameState = GameState.ARENA;
-                        _arenaDrawer = (Menu_Arena)nextDisplay;
-                    }
-                    else if (nextDisplay is Menu_CompetitorListing)
-                    {
-                        _gameState = GameState.COMPETITOR_MENU;
-                        _competitorListingMenu = (Menu_CompetitorListing)nextDisplay;
-                    }
-                    break;
-            }
+            _currentDisplay = _currentDisplay.OnRootConsoleUpdate(_rootConsole, _rootConsole.Keyboard.GetKeyPress());
         }
 
         // Event handler for RLNET's Render event
@@ -134,25 +58,7 @@ namespace MechArena
         private static void OnRootConsoleRender(object sender, UpdateEventArgs e)
         {
             _rootConsole.Clear();
-
-            switch (_gameState)
-            {
-                case GameState.MAIN_MENU:
-                    _mainMenu.Blit(_rootConsole);
-                    break;
-                case GameState.ARENA:
-                    _arenaDrawer.Blit(_rootConsole);
-                    break;
-                case GameState.COMPETITOR_MENU:
-                    _competitorListingMenu.Blit(_rootConsole, _tournament);
-                    break;
-                case GameState.COMPETITOR_HISTORY:
-                    _competitorDetailsMenu.Blit(_rootConsole);
-                    break;
-                default:
-                    break;
-            }
-
+            _currentDisplay.Blit(_rootConsole);
             _rootConsole.Draw();
         }
     }

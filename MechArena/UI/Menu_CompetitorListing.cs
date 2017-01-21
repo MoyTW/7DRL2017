@@ -11,9 +11,6 @@ namespace MechArena.UI
 {
     class Menu_CompetitorListing : IDisplay
     {
-        // Stub out interface fns
-        public void Blit(RLConsole console) { throw new NotImplementedException(); }
-
         private IDisplay parent;
         private ICompetitor player;
         private Schedule_Tournament tournament;
@@ -56,7 +53,7 @@ namespace MechArena.UI
                 yield return new List<T>(source.Skip(size * i).Take(size));
         }
 
-        public void Blit(RLConsole console, Schedule_Tournament tournament)
+        public void Blit(RLConsole console)
         {
             int tableWidth = 40;
             int currentX = 0;
@@ -66,7 +63,7 @@ namespace MechArena.UI
             console.SetBackColor(0, 0, console.Width, console.Height, RLColor.Black);
             console.Print(console.Width / 2 - 8, 1, "COMPETITOR MENU", RLColor.White);
 
-            var byGroups = this.Partition(tournament.AllCompetitors(), 32);
+            var byGroups = this.Partition(this.tournament.AllCompetitors(), 32);
 
             int g = 1;
             int i = 1;
@@ -81,7 +78,7 @@ namespace MechArena.UI
                     var label = i + ") " + c.Label;
                     i++;
 
-                    if (tournament.IsEliminated(c.CompetitorID))
+                    if (this.tournament.IsEliminated(c.CompetitorID))
                         console.Print(currentX+1, line, label, RLColor.Red);
                     else
                         console.Print(currentX+1, line, label, RLColor.White);
