@@ -35,7 +35,6 @@ namespace MechArena
         // Tournament
         private static ICompetitor _player;
         private static Schedule_Tournament _tournament;
-        private static ArenaState _arena;
         private static Menu_Arena _arenaDrawer;
 
         public static void Main()
@@ -48,7 +47,7 @@ namespace MechArena
                 new TournamentMapPicker(5, new DotNetRandom(3)));
 
             _gameState = GameState.MAIN_MENU;
-            _mainMenu = new Menu_Main(_screenWidth, _screenHeight);
+            _mainMenu = new Menu_Main(_screenWidth, _screenHeight, _player, _tournament);
 
             // This must be the exact name of the bitmap font file we are using or it will error.
             string fontFileName = "terminal8x8.png";
@@ -66,142 +65,13 @@ namespace MechArena
             _rootConsole.Run();
         }
 
-        private static int GenArenaSeed()
-        {
-            return _tournamentRandom.Next(Int16.MaxValue);
-        }
-
-        private static void GotoMainMenu()
-        {
-            _gameState = GameState.MAIN_MENU;
-        }
-
-        private static void GotoMatchArena(Match m)
-        {
-            // TODO: The casting here is silly!
-            _arena = ArenaBuilder.BuildArena(Menu_Arena.arenaWidth, Menu_Arena.arenaHeight, m.MatchID,
-                _tournamentPicker.PickMapID(), GenArenaSeed(), (CompetitorEntity)m.Competitor1,
-                (CompetitorEntity)m.Competitor2);
-            _arenaDrawer = new Menu_Arena(_mainMenu, _arena, _tournament);
-            _gameState = GameState.ARENA;
-        }
-
-        private static void GotoCurrentArena()
-        {
-            if (_arena != null)
-                _gameState = GameState.ARENA;
-            else
-                Log.InfoLine("Cannot re-spectate - no arena!");
-        }
-
         private static void GotoArenaForMatch(MatchResult result)
         {
-            _arena = ArenaBuilder.BuildArena(Menu_Arena.arenaWidth, Menu_Arena.arenaHeight, result.MatchID,
+            var arena = ArenaBuilder.BuildArena(Menu_Arena.arenaWidth, Menu_Arena.arenaHeight, result.MatchID,
                 result.MapID, result.ArenaSeed, (CompetitorEntity)result.Competitor1,
                 (CompetitorEntity)result.Competitor2);
-            _arenaDrawer = new Menu_Arena(_mainMenu, _arena, _tournament);
+            _arenaDrawer = new Menu_Arena(_mainMenu, arena, _tournament);
             _gameState = GameState.ARENA;
-        }
-
-        private static Tuple<Match, ArenaState> BuildArena(Match m)
-        {
-            var arena = ArenaBuilder.BuildArena(Menu_Arena.arenaWidth, Menu_Arena.arenaHeight, m.MatchID,
-                _tournamentPicker.PickMapID(), GenArenaSeed(), (CompetitorEntity)m.Competitor1,
-                (CompetitorEntity)m.Competitor2);
-            return new Tuple<Match, ArenaState>(m, arena);
-        }
-
-        private static MatchResult RunArena(Tuple<Match, ArenaState> matchAndArena)
-        {
-            var match = matchAndArena.Item1;
-            var matchArena = matchAndArena.Item2;
-
-            while (!matchArena.IsMatchEnded())
-            {
-                matchArena.TryFindAndExecuteNextCommand();
-            }
-            return match.BuildResult(matchArena.WinnerID(), matchArena.MapID, matchArena.ArenaSeed);
-        }
-
-        private static void OnRootConsoleUpdateForMainMenu(object sender, UpdateEventArgs e)
-        {
-            RLKeyPress keyPress = _rootConsole.Keyboard.GetKeyPress();
-            if (keyPress != null)
-            {
-                switch (keyPress.Key)
-                {
-                    case RLKey.L:
-                        Log.ToggleDebugLog();
-                        break;
-                    // TODO: Don't just dump the info onto the console, actually display it
-                    // argh UI work is the *worst*!
-                    case RLKey.H:
-                        _gameState = GameState.COMPETITOR_MENU;
-                        _competitorListingMenu = new Menu_CompetitorListing(_mainMenu, _tournament);
-                        break;
-                    case RLKey.M:
-                        Log.InfoLine("########## UPCOMING PLAYER MATCHES ##########");
-                        foreach (var m in _tournament.ScheduledMatches(_player.CompetitorID))
-                        {
-                            Log.InfoLine(m);
-                        }
-                        break;
-                    case RLKey.T:
-                        Log.DebugLine("T Pressed!");
-                        Log.DebugLine("Round: " + _tournament.RoundNum());
-
-                        var results = _tournament.ScheduledMatches()
-                            .TakeWhile(m => !m.HasCompetitor(_player.CompetitorID))
-                            // BuildArena sequential because of the RNG draws
-                            .Select(m => BuildArena(m))
-                            // Setting degree of parallelism not required - default is fn of # processors already
-                            .AsParallel().WithDegreeOfParallelism(Config.NumThreads())
-                            .Select(ma => Task.Run(() => RunArena(ma)));
-
-                        // Reporting happens in order
-                        foreach (var task in results)
-                        {
-                            Log.DebugLine("Winner of " + task.Result.OriginalMatch + " is " + task.Result.Winner);
-                            _tournament.ReportResult(task.Result);
-                        }
-
-                        // TODO: Get rid of _match!
-                        var match = _tournament.NextMatch();
-                        // If it's a player match, resolve it or stop
-                        if (match != null && match.HasCompetitor(_player.CompetitorID))
-                        {
-                            if (_playPlayerMatches)
-                            {
-                                Log.InfoLine("Next match is player!");
-                            }
-                            else
-                            {
-                                var playerResult = match.BuildResult(_player.CompetitorID, "0", 0);
-                                Log.InfoLine("Player wins match!");
-                                _tournament.ReportResult(playerResult);
-                            }
-                        }
-
-                        if (_tournament.NextMatch() == null)
-                        {
-                            Log.InfoLine("===== WINNER IS =====");
-                            Log.InfoLine("Winner is " + _tournament.Winners()[0]);
-                        }
-                        break;
-                    case RLKey.N:
-                        if (_tournament.NextMatch() != null)
-                            GotoMatchArena(_tournament.NextMatch());
-                        break;
-                    case RLKey.R:
-                        GotoCurrentArena();
-                        break;
-                    case RLKey.Escape:
-                        Environment.Exit(0);
-                        break;
-                    default:
-                        break;
-                }
-            }
         }
 
         // Event handler for RLNET's Update event
@@ -212,7 +82,17 @@ namespace MechArena
             switch (_gameState)
             {
                 case GameState.MAIN_MENU:
-                    OnRootConsoleUpdateForMainMenu(sender, e);
+                    nextDisplay = _mainMenu.OnRootConsoleUpdate(_rootConsole, _rootConsole.Keyboard.GetKeyPress());
+                    if (nextDisplay is Menu_Arena)
+                    {
+                        _gameState = GameState.ARENA;
+                        _arenaDrawer = (Menu_Arena)nextDisplay;
+                    }
+                    else if (nextDisplay is Menu_CompetitorListing)
+                    {
+                        _gameState = GameState.COMPETITOR_MENU;
+                        _competitorListingMenu = (Menu_CompetitorListing)nextDisplay;
+                    }
                     break;
                 case GameState.ARENA:
                     nextDisplay = _arenaDrawer.OnRootConsoleUpdate(_rootConsole, _rootConsole.Keyboard.GetKeyPress());
@@ -251,7 +131,17 @@ namespace MechArena
                     }
                     break;
                 default:
-                    OnRootConsoleUpdateForMainMenu(sender, e);
+                    nextDisplay = _mainMenu.OnRootConsoleUpdate(_rootConsole, _rootConsole.Keyboard.GetKeyPress());
+                    if (nextDisplay is Menu_Arena)
+                    {
+                        _gameState = GameState.ARENA;
+                        _arenaDrawer = (Menu_Arena)nextDisplay;
+                    }
+                    else if (nextDisplay is Menu_CompetitorListing)
+                    {
+                        _gameState = GameState.COMPETITOR_MENU;
+                        _competitorListingMenu = (Menu_CompetitorListing)nextDisplay;
+                    }
                     break;
             }
         }

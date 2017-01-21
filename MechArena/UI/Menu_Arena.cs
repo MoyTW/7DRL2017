@@ -26,6 +26,8 @@ namespace MechArena.UI
         private RLConsole status1Console;
         private RLConsole status2Console;
 
+        public bool MatchEnded { get { return this.arena.IsMatchEnded(); } }
+
         public Menu_Arena(IDisplay parent, ArenaState arena, Schedule_Tournament tournament)
         {
             this.parent = parent;
