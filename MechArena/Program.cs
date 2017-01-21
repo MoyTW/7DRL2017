@@ -230,7 +230,7 @@ namespace MechArena
                     // argh UI work is the *worst*!
                     case RLKey.H:
                         _gameState = GameState.COMPETITOR_MENU;
-                        _competitorListingMenu = new Menu_CompetitorListing();
+                        _competitorListingMenu = new Menu_CompetitorListing(_mainMenu, _tournament);
                         break;
                     case RLKey.M:
                         Log.InfoLine("########## UPCOMING PLAYER MATCHES ##########");
@@ -311,13 +311,12 @@ namespace MechArena
                     OnRootConsoleUpdateForArena(sender, e);
                     break;
                 case GameState.COMPETITOR_MENU:
-                    _competitorListingMenu.OnRootConsoleUpdate(_rootConsole, _tournament);
-                    if (_competitorListingMenu.GotoMainMenu)
+                    nextDisplay = _competitorListingMenu.OnRootConsoleUpdate(_rootConsole, _rootConsole.Keyboard.GetKeyPress());
+                    if (nextDisplay is Menu_Main)
                         _gameState = GameState.MAIN_MENU;
-                    else if (_competitorListingMenu.Transition != null)
+                    else if (nextDisplay is Menu_CompetitorDetails)
                     {
-                        _competitorDetailsMenu = new Menu_CompetitorDetails(_competitorListingMenu, _tournament,
-                            _competitorListingMenu.Transition.SelectedCompetitor);
+                        _competitorDetailsMenu = (Menu_CompetitorDetails)nextDisplay;
                         _gameState = GameState.COMPETITOR_HISTORY;
                     }
                     break;

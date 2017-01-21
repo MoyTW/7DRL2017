@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MechArena.UI
 {
-    class Menu_Main
+    class Menu_Main : IDisplay
     {
         public int Width { get; }
         public int Height { get; }
@@ -16,6 +16,11 @@ namespace MechArena.UI
         {
             this.Width = width;
             this.Height = height;
+        }
+
+        public IDisplay OnRootConsoleUpdate(RLConsole console, RLKeyPress keyPress)
+        {
+            throw new NotImplementedException();
         }
 
         public void Blit(RLConsole console)

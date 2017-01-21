@@ -9,46 +9,41 @@ using System.Threading.Tasks;
 
 namespace MechArena.UI
 {
-    class CompetitorMenuToCompetitorHistory
-    {
-        public ICompetitor SelectedCompetitor { get; }
-
-        public CompetitorMenuToCompetitorHistory(ICompetitor selection)
-        {
-            this.SelectedCompetitor = selection;
-        }
-    }
-
     class Menu_CompetitorListing : IDisplay
     {
         // Stub out interface fns
-        public IDisplay OnRootConsoleUpdate(RLConsole console, RLKeyPress keyPress) { throw new NotImplementedException(); }
         public void Blit(RLConsole console) { throw new NotImplementedException(); }
 
+        private IDisplay parent;
+        private Schedule_Tournament tournament;
+
         private IntegerSelectionField selectionField = new IntegerSelectionField();
-        private bool gotoMainMenu = false;
-        private CompetitorMenuToCompetitorHistory transition;
 
-        public bool GotoMainMenu { get { return this.gotoMainMenu; } }
-        public CompetitorMenuToCompetitorHistory Transition { get { return this.transition; } }
-
-        public void OnRootConsoleUpdate(RLRootConsole rootConsole, Schedule_Tournament tournament)
+        public Menu_CompetitorListing(IDisplay parent, Schedule_Tournament tournament)
         {
-            RLKeyPress keyPress = rootConsole.Keyboard.GetKeyPress();
+            this.parent = parent;
+            this.tournament = tournament;
+        }
+
+        public IDisplay OnRootConsoleUpdate(RLConsole console, RLKeyPress keyPress)
+        {
             if (keyPress != null)
             {
                 var selection = this.selectionField.HandleKeyPress(keyPress, tournament.AllCompetitors());
                 if (selection != null)
-                    this.transition = new CompetitorMenuToCompetitorHistory(selection);
+                    return new Menu_CompetitorDetails(this, this.tournament, selection);
 
                 switch (keyPress.Key)
                 {
                     case RLKey.Escape:
-                        this.gotoMainMenu = true;
-                        break;
+                        return this.parent;
                     default:
-                        break;
+                        return this;
                 }
+            }
+            else
+            {
+                return this;
             }
         }
 
