@@ -63,7 +63,7 @@ namespace MechArena.UI
                 // TODO: Don't just dump the info onto the console, actually display it
                 // argh UI work is the *worst*!
                 case RLKey.H:
-                    return new Menu_CompetitorListing(this, this.tournament);
+                    return new Menu_CompetitorListing(this, this.player, this.tournament);
                 case RLKey.M:
                     Log.InfoLine("########## UPCOMING PLAYER MATCHES ##########");
                     foreach (var m in this.tournament.ScheduledMatches(this.player.CompetitorID))

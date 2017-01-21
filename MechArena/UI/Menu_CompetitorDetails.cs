@@ -1,12 +1,5 @@
 ﻿using MechArena.Tournament;
-
 using RLNET;
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MechArena.UI
 {
@@ -15,17 +8,13 @@ namespace MechArena.UI
         private RLConsole statusConsole;
         private IntegerSelectionField selectionField;
         private IDisplay parentDisplay;
+        private ICompetitor player;
         private Schedule_Tournament tournament;
-
         public ICompetitor SelectedCompetitor { get; }
+
         public string SelectedID { get { return this.SelectedCompetitor.CompetitorID; } }
 
-        private MatchResult selectedMatch;
-
-        // TODO: Move off this interface and roll it into NextDisplay!
-        public MatchResult SelectedMatch { get { return this.selectedMatch; } }
-
-        public Menu_CompetitorDetails(IDisplay parentDisplay, Schedule_Tournament tournament,
+        public Menu_CompetitorDetails(IDisplay parentDisplay, ICompetitor player, Schedule_Tournament tournament,
             ICompetitor selectedCompetitor)
         {
             this.statusConsole = new RLConsole(Menu_Arena.statusWidth, Menu_Arena.statusHeight);
@@ -34,22 +23,33 @@ namespace MechArena.UI
             this.selectionField = new IntegerSelectionField();
 
             this.parentDisplay = parentDisplay;
+            this.player = player;
             this.tournament = tournament;
             this.SelectedCompetitor = selectedCompetitor;
         }
 
-        public void ResetCompetitorHistory()
-        {
-            this.selectionField.Reset();
-            this.selectedMatch = null;
-        }
-
         public IDisplay OnRootConsoleUpdate(RLConsole rootConsole, RLKeyPress keyPress)
         {
-            this.selectedMatch = this.selectionField.HandleKeyPress(keyPress,
+            var selectedMatch = this.selectionField.HandleKeyPress(keyPress,
                 this.tournament.MatchHistory(this.SelectedID));
 
-            if (keyPress != null)
+            if (selectedMatch != null)
+            {
+                if (selectedMatch.HasCompetitor(this.player.CompetitorID))
+                {
+                    Log.InfoLine("Can't replay player matches!");
+                    this.selectionField.Reset();
+                    return this;
+                }
+                else
+                {
+                    var arena = ArenaBuilder.BuildArena(Menu_Arena.arenaWidth, Menu_Arena.arenaHeight,
+                        selectedMatch.MatchID, selectedMatch.MapID, selectedMatch.ArenaSeed,
+                        (CompetitorEntity)selectedMatch.Competitor1, (CompetitorEntity)selectedMatch.Competitor2);
+                    return new Menu_Arena(this, arena, this.tournament);
+                }
+            }
+            else if (keyPress != null)
             {
                 switch (keyPress.Key) {
                     case RLKey.Escape:

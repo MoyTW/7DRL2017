@@ -65,15 +65,6 @@ namespace MechArena
             _rootConsole.Run();
         }
 
-        private static void GotoArenaForMatch(MatchResult result)
-        {
-            var arena = ArenaBuilder.BuildArena(Menu_Arena.arenaWidth, Menu_Arena.arenaHeight, result.MatchID,
-                result.MapID, result.ArenaSeed, (CompetitorEntity)result.Competitor1,
-                (CompetitorEntity)result.Competitor2);
-            _arenaDrawer = new Menu_Arena(_mainMenu, arena, _tournament);
-            _gameState = GameState.ARENA;
-        }
-
         // Event handler for RLNET's Update event
         private static void OnRootConsoleUpdate(object sender, UpdateEventArgs e)
         {
@@ -113,21 +104,13 @@ namespace MechArena
                     nextDisplay = _competitorDetailsMenu.OnRootConsoleUpdate(_rootConsole, _rootConsole.Keyboard.GetKeyPress());
                     if (nextDisplay is Menu_CompetitorListing)
                     {
-                        // TODO: Write transition fn
                         _competitorListingMenu = (Menu_CompetitorListing)nextDisplay;
                         _gameState = GameState.COMPETITOR_MENU;
                     }
-                    else if (_competitorDetailsMenu.SelectedMatch != null)
+                    if (nextDisplay is Menu_Arena)
                     {
-                        if (_competitorDetailsMenu.SelectedMatch.HasCompetitor(_player.CompetitorID))
-                        {
-                            Log.InfoLine("Can't replay player matches!");
-                            _competitorDetailsMenu.ResetCompetitorHistory();
-                        }
-                        else
-                        {
-                            GotoArenaForMatch(_competitorDetailsMenu.SelectedMatch);
-                        }
+                        _arenaDrawer = (Menu_Arena)nextDisplay;
+                        _gameState = GameState.ARENA;
                     }
                     break;
                 default:

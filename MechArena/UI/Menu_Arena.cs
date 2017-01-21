@@ -44,6 +44,10 @@ namespace MechArena.UI
 
         public IDisplay OnRootConsoleUpdate(RLConsole console, RLKeyPress keyPress)
         {
+            if (keyPress != null)
+            {
+                Console.WriteLine("KEYPRESS: " + keyPress);
+            }
             // Drawing sets
             this.arenaConsole.SetBackColor(0, 0, Menu_Arena.arenaWidth, Menu_Arena.arenaHeight, RLColor.Black);
             this.arenaConsole.Print(1, 1, "Arena", RLColor.White);

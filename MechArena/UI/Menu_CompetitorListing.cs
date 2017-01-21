@@ -15,13 +15,15 @@ namespace MechArena.UI
         public void Blit(RLConsole console) { throw new NotImplementedException(); }
 
         private IDisplay parent;
+        private ICompetitor player;
         private Schedule_Tournament tournament;
 
         private IntegerSelectionField selectionField = new IntegerSelectionField();
 
-        public Menu_CompetitorListing(IDisplay parent, Schedule_Tournament tournament)
+        public Menu_CompetitorListing(IDisplay parent, ICompetitor player, Schedule_Tournament tournament)
         {
             this.parent = parent;
+            this.player = player;
             this.tournament = tournament;
         }
 
@@ -31,7 +33,7 @@ namespace MechArena.UI
             {
                 var selection = this.selectionField.HandleKeyPress(keyPress, tournament.AllCompetitors());
                 if (selection != null)
-                    return new Menu_CompetitorDetails(this, this.tournament, selection);
+                    return new Menu_CompetitorDetails(this, this.player, this.tournament, selection);
 
                 switch (keyPress.Key)
                 {
