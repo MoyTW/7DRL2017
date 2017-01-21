@@ -300,6 +300,8 @@ namespace MechArena
         // Event handler for RLNET's Update event
         private static void OnRootConsoleUpdate(object sender, UpdateEventArgs e)
         {
+            IDisplay nextDisplay = null;
+
             switch (_gameState)
             {
                 case GameState.MAIN_MENU:
@@ -320,12 +322,11 @@ namespace MechArena
                     }
                     break;
                 case GameState.COMPETITOR_HISTORY:
-                    _competitorDetailsMenu.OnRootConsoleUpdate(_rootConsole, _rootConsole.Keyboard.GetKeyPress());
-                    // TODO: Don't do this!
-                    if (_competitorDetailsMenu.NextDisplay != _competitorDetailsMenu)
+                    nextDisplay = _competitorDetailsMenu.OnRootConsoleUpdate(_rootConsole, _rootConsole.Keyboard.GetKeyPress());
+                    if (nextDisplay is Menu_CompetitorListing)
                     {
                         // TODO: Write transition fn
-                        _competitorListingMenu = new Menu_CompetitorListing();
+                        _competitorListingMenu = (Menu_CompetitorListing)nextDisplay;
                         _gameState = GameState.COMPETITOR_MENU;
                     }
                     else if (_competitorDetailsMenu.SelectedMatch != null)

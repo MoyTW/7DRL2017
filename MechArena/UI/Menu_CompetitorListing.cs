@@ -22,8 +22,7 @@ namespace MechArena.UI
     class Menu_CompetitorListing : IDisplay
     {
         // Stub out interface fns
-        public IDisplay NextDisplay { get { throw new NotImplementedException(); } }
-        public void OnRootConsoleUpdate(RLConsole console, RLKeyPress keyPress) { throw new NotImplementedException(); }
+        public IDisplay OnRootConsoleUpdate(RLConsole console, RLKeyPress keyPress) { throw new NotImplementedException(); }
         public void Blit(RLConsole console) { throw new NotImplementedException(); }
 
         private IntegerSelectionField selectionField = new IntegerSelectionField();

@@ -21,9 +21,7 @@ namespace MechArena.UI
         public string SelectedID { get { return this.SelectedCompetitor.CompetitorID; } }
 
         private MatchResult selectedMatch;
-        private bool gotoParent = false;
 
-        public IDisplay NextDisplay { get { return this.gotoParent ? this.parentDisplay : this; } }
         // TODO: Move off this interface and roll it into NextDisplay!
         public MatchResult SelectedMatch { get { return this.selectedMatch; } }
 
@@ -44,10 +42,9 @@ namespace MechArena.UI
         {
             this.selectionField.Reset();
             this.selectedMatch = null;
-            this.gotoParent = false;
         }
 
-        public void OnRootConsoleUpdate(RLConsole rootConsole, RLKeyPress keyPress)
+        public IDisplay OnRootConsoleUpdate(RLConsole rootConsole, RLKeyPress keyPress)
         {
             this.selectedMatch = this.selectionField.HandleKeyPress(keyPress,
                 this.tournament.MatchHistory(this.SelectedID));
@@ -56,9 +53,14 @@ namespace MechArena.UI
             {
                 switch (keyPress.Key) {
                     case RLKey.Escape:
-                        this.gotoParent = true;
-                        break;
+                        return this.parentDisplay;
+                    default:
+                        return this;
                 }
+            }
+            else
+            {
+                return this;
             }
         }
 
