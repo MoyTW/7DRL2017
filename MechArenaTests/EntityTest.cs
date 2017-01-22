@@ -9,11 +9,19 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace MechArenaTests
 {
+    class TestComponent : Component
+    {
+        protected override ISet<SubEntitiesSelector> _MatchingSelectors()
+        {
+            return new HashSet<SubEntitiesSelector>();
+        }
+    }
+
     [TestClass]
     public class EntityTest
     {
         private Entity ent = new Entity();
-        private Component cmp = new Component();
+        private Component cmp = new TestComponent();
 
         [TestMethod]
         public void TestAddComponent()

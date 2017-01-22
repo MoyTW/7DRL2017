@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace MechArena
 {
@@ -11,6 +12,11 @@ namespace MechArena
         public Component_Slottable(int slotsRequired)
         {
             this.slotsRequired = slotsRequired;
+        }
+
+        protected override ISet<SubEntitiesSelector> _MatchingSelectors()
+        {
+            return new HashSet<SubEntitiesSelector>();
         }
     }
 }

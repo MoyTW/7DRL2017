@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace MechArena
 {
@@ -17,6 +18,11 @@ namespace MechArena
             this.x = x;
             this.y = y;
             this.blocksMovement = blocksMovement;
+        }
+
+        protected override ISet<SubEntitiesSelector> _MatchingSelectors()
+        {
+            return new HashSet<SubEntitiesSelector>();
         }
 
         private void HandleMove(GameEvent_MoveSingle ev)

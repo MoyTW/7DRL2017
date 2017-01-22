@@ -1,5 +1,5 @@
-﻿using RogueSharp;
-using System;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace MechArena
@@ -7,6 +7,11 @@ namespace MechArena
     [Serializable()]
     class Component_AI : Component
     {
+        protected override ISet<SubEntitiesSelector> _MatchingSelectors()
+        {
+            return new HashSet<SubEntitiesSelector>();
+        }
+
         private void RegisterPathTowards(GameQuery_Command q, Entity target)
         {
             // TODO: Wow this is awkward!?

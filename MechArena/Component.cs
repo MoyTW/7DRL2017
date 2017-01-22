@@ -1,12 +1,22 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace MechArena
 {
     [Serializable()]
-    public class Component
+    public abstract class Component
     {
         private Entity parent;
         public Entity Parent { get { return this.parent; } }
+        public ISet<SubEntitiesSelector> MatchingSelectors
+        {
+            get
+            {
+                ISet<SubEntitiesSelector> derivedSelectors = this._MatchingSelectors();
+                derivedSelectors.Add(SubEntitiesSelector.ALL);
+                return derivedSelectors;
+            }
+        }
 
         public void Notify_Added(Entity parent)
         {
@@ -27,6 +37,8 @@ namespace MechArena
         {
             return this._HandleQuery(q);
         }
+
+        protected abstract ISet<SubEntitiesSelector> _MatchingSelectors();
 
         protected virtual GameEvent _HandleEvent(GameEvent ev) { return ev; }
 

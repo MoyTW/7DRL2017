@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace MechArena
 {
@@ -25,6 +26,11 @@ namespace MechArena
         public void Notify_Unmounted()
         {
             this.mountedTo = null;
+        }
+
+        protected override ISet<SubEntitiesSelector> _MatchingSelectors()
+        {
+            return new HashSet<SubEntitiesSelector>();
         }
 
         private void HandleQueryDestroyed(GameQuery_Destroyed q)

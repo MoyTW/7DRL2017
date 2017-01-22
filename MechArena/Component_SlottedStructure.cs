@@ -1,6 +1,6 @@
 ﻿using RogueSharp.Random;
-
 using System;
+using System.Collections.Generic;
 
 namespace MechArena
 {
@@ -9,7 +9,11 @@ namespace MechArena
     [Serializable()]
     public class Component_SlottedStructure : Component
     {
-        
+        protected override ISet<SubEntitiesSelector> _MatchingSelectors()
+        {
+            return new HashSet<SubEntitiesSelector>();
+        }
+
         private int GetRemainingInternalStructure(Entity e)
         {
             return e.TryGetAttribute(EntityAttributeType.STRUCTURE).Value;

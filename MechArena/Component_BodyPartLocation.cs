@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace MechArena
 {
@@ -11,5 +12,11 @@ namespace MechArena
         {
             this.Location = location;
         }
+
+        protected override ISet<SubEntitiesSelector> _MatchingSelectors()
+        {
+            return new HashSet<SubEntitiesSelector>() { SubEntitiesSelector.BODY_PART };
+        }
+
     }
 }

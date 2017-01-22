@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace MechArena
@@ -26,6 +27,11 @@ namespace MechArena
         {
             return this.holsteredEntity == null &&
                 this.MaxSize >= en.GetComponentOfType<Component_Mountable>().SizeRequired;
+        }
+
+        protected override ISet<SubEntitiesSelector> _MatchingSelectors()
+        {
+            return new HashSet<SubEntitiesSelector>();
         }
 
         private void HandleSlot(GameEvent_Slot ev)

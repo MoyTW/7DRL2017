@@ -40,6 +40,11 @@ namespace MechArena
                 return false;
         }
 
+        protected override ISet<SubEntitiesSelector> _MatchingSelectors()
+        {
+            return new HashSet<SubEntitiesSelector>();
+        }
+
         private void HandleSlot(GameEvent_Slot ev)
         {
             if (ev.ExecutorEntity == this.Parent)

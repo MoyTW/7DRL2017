@@ -18,22 +18,9 @@ namespace MechArena
     // This is definitely astronauting the heck out of my problem.
     public class GameQuery_SubEntities : GameQuery
     {
-        // TODO: Don't use Components for selectors! Instead use, "Can you handle this event/query?"
-        public static readonly Dictionary<SubEntitiesSelector, List<Type>> SelectorsToComponents =
-            new Dictionary<SubEntitiesSelector, List<Type>>() {
-                { SubEntitiesSelector.ALL, null },
-                { SubEntitiesSelector.WEAPON, new List<Type>() { typeof(Component_Weapon) } },
-                { SubEntitiesSelector.BODY_PART, new List<Type>() { typeof(Component_BodyPartLocation) } },
-                { SubEntitiesSelector.ACTIVE_TRACKS_TIME, new List<Type>() { typeof(Component_TracksTime) } },
-                { SubEntitiesSelector.MOUNTS, new List<Type>() { typeof(Component_Mount) } }
-            };
-
         public static bool MatchesSelector(Entity en, SubEntitiesSelector s)
         {
-            if (s == SubEntitiesSelector.ALL)
-                return true;
-            else
-                return !SelectorsToComponents[s].Any(t => !en.HasComponentOfType(t));
+            return en.MatchesSelector(s);
         }
 
         private SubEntitiesSelector[] selectors;

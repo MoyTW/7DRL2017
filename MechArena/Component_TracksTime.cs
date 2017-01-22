@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace MechArena
 {
@@ -17,6 +18,11 @@ namespace MechArena
         public void RegisterActivated(int activationTick)
         {
             this.lastActivationTick = activationTick;
+        }
+
+        protected override ISet<SubEntitiesSelector> _MatchingSelectors()
+        {
+            return new HashSet<SubEntitiesSelector>() { SubEntitiesSelector.ACTIVE_TRACKS_TIME };
         }
 
         private void HandleDelay(GameEvent_Delay ev)

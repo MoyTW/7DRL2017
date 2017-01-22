@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace MechArena
 {
@@ -12,6 +13,11 @@ namespace MechArena
         {
             this.AttributeType = attributeType;
             this.Value = value;
+        }
+
+        protected override ISet<SubEntitiesSelector> _MatchingSelectors()
+        {
+            return new HashSet<SubEntitiesSelector>();
         }
 
         private void HandleQueryEntityAttribute(GameQuery_EntityAttribute q)

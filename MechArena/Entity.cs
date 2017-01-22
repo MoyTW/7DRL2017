@@ -46,6 +46,16 @@ namespace MechArena
 
         #region Convenience Queries
 
+        public bool MatchesSelector(SubEntitiesSelector selector)
+        {
+            foreach (Component c in this.orderedComponents)
+            {
+                if (c.MatchingSelectors.Contains(selector))
+                    return true;
+            }
+            return false;
+        }
+
         public GameQuery_Position TryGetPosition()
         {
             return this.HandleQuery(new GameQuery_Position());

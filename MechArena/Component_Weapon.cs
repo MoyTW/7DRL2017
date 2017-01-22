@@ -23,6 +23,13 @@ namespace MechArena
             };
         }
 
+        protected override ISet<SubEntitiesSelector> _MatchingSelectors()
+        {
+            var baseMatching = base._MatchingSelectors();
+            baseMatching.Add(SubEntitiesSelector.WEAPON);
+            return baseMatching;
+        }
+
         private void HandleQueryEntityAttribute(GameQuery_EntityAttribute q)
         {
             if (this.Parent == q.BaseEntity && this.WeaponAttributes.ContainsKey(q.AttributeType))

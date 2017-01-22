@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace MechArena
 {
@@ -16,6 +17,11 @@ namespace MechArena
         {
             this.StructureMax = structureMax;
             this.structureDestroyed = 0;
+        }
+
+        protected override ISet<SubEntitiesSelector> _MatchingSelectors()
+        {
+            return new HashSet<SubEntitiesSelector>();
         }
 
         private void HandleTakeDamage(GameEvent_TakeDamage ev)
