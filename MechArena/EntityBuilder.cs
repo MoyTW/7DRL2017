@@ -84,7 +84,7 @@ namespace MechArena
 
         private static Entity BuildMountForWeapon(Entity weapon)
         {
-            var mount = BuildMount(weapon.GetComponentOfType<Component_Mountable>().SizeRequired);
+            var mount = BuildFixedMount(weapon.GetComponentOfType<Component_Mountable>().SizeRequired);
             mount.HandleEvent(new GameEvent_Slot(null, mount, weapon));
             return mount;
         }
@@ -99,7 +99,7 @@ namespace MechArena
         private static Entity MountOntoArm(Entity mech, BodyPartLocation location, Entity mountable)
         {
             var armActuator = GetBodyPart(mech, location)
-                .TryGetSubEntities(SubEntitiesSelector.MOUNTS)
+                .TryGetSubEntities(SubEntitiesSelector.SWAPPABLE_MOUNTS)
                 .Where(e => e.Label == ArmActuatorLabel)
                 .First();
             armActuator.HandleEvent(new GameEvent_Slot(mech, armActuator, mountable));
@@ -169,10 +169,10 @@ namespace MechArena
 
         #region Slottable Parts
 
-        public static Entity BuildMount(MountSize size)
+        public static Entity BuildFixedMount(MountSize size)
         {
             var mount = new Entity(label: "Mount", typeLabel: EntityBuilder.SlottablePartTypeLabel)
-                .AddComponent(new Component_Mount(size));
+                .AddComponent(new Component_Mount(size, false));
             switch (size)
             {
                 case MountSize.SMALL:
@@ -229,7 +229,7 @@ namespace MechArena
         public static Entity BuildArmActuator()
         {
             return new Entity(label: ArmActuatorLabel, typeLabel: SlottablePartTypeLabel)
-                .AddComponent(new Component_Mount(MountSize.LARGE))
+                .AddComponent(new Component_Mount(MountSize.LARGE, true))
                 .AddComponent(new Component_Slottable(2))
                 .AddComponent(new Component_InternalStructure(2));
         }

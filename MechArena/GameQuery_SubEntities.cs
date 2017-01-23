@@ -12,7 +12,7 @@ namespace MechArena
         WEAPON,
         BODY_PART,
         ACTIVE_TRACKS_TIME,
-        MOUNTS
+        SWAPPABLE_MOUNTS
     }
 
     // This is definitely astronauting the heck out of my problem.

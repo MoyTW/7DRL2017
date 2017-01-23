@@ -17,11 +17,13 @@ namespace MechArena
 
         public bool HasMountedEntity { get { return this.mountedEntity != null; } }
         public MountSize MaxSize { get; }
+        public bool Swappable { get; }
 
-        public Component_Mount(MountSize maxSize)
+        public Component_Mount(MountSize maxSize, bool swappable)
         {
             this.mountedEntity = null;
             this.MaxSize = maxSize;
+            this.Swappable = swappable;
         }
 
         public Entity InspectMountedEntity()
@@ -37,7 +39,10 @@ namespace MechArena
 
         protected override ISet<SubEntitiesSelector> _MatchingSelectors()
         {
-            return new HashSet<SubEntitiesSelector>() { SubEntitiesSelector.MOUNTS };
+            var selectors = new HashSet<SubEntitiesSelector>();
+            if (this.Swappable)
+                selectors.Add(SubEntitiesSelector.SWAPPABLE_MOUNTS);
+            return selectors;
         }
 
         private void HandleSlot(GameEvent_Slot ev)
