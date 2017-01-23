@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.Immutable;
 
 namespace MechArena
 {
@@ -37,12 +37,12 @@ namespace MechArena
                 this.MaxSize >= en.GetComponentOfType<Component_Mountable>().SizeRequired;
         }
 
-        protected override ISet<SubEntitiesSelector> _MatchingSelectors()
+        protected override IImmutableSet<SubEntitiesSelector> _MatchingSelectors()
         {
-            var selectors = new HashSet<SubEntitiesSelector>();
             if (this.Swappable)
-                selectors.Add(SubEntitiesSelector.SWAPPABLE_MOUNTS);
-            return selectors;
+                return ImmutableHashSet<SubEntitiesSelector>.Empty.Add(SubEntitiesSelector.SWAPPABLE_MOUNTS);
+            else
+                return ImmutableHashSet<SubEntitiesSelector>.Empty;
         }
 
         private void HandleSlot(GameEvent_Slot ev)

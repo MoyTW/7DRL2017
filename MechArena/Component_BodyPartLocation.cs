@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.Immutable;
 
 namespace MechArena
 {
@@ -13,10 +13,9 @@ namespace MechArena
             this.Location = location;
         }
 
-        protected override ISet<SubEntitiesSelector> _MatchingSelectors()
+        protected override IImmutableSet<SubEntitiesSelector> _MatchingSelectors()
         {
-            return new HashSet<SubEntitiesSelector>() { SubEntitiesSelector.BODY_PART };
+            return ImmutableHashSet<SubEntitiesSelector>.Empty.Add(SubEntitiesSelector.BODY_PART);
         }
-
     }
 }

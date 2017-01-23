@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.Immutable;
 
 namespace MechArena
 {
@@ -20,9 +20,9 @@ namespace MechArena
             this.lastActivationTick = activationTick;
         }
 
-        protected override ISet<SubEntitiesSelector> _MatchingSelectors()
+        protected override IImmutableSet<SubEntitiesSelector> _MatchingSelectors()
         {
-            return new HashSet<SubEntitiesSelector>() { SubEntitiesSelector.ACTIVE_TRACKS_TIME };
+            return ImmutableHashSet<SubEntitiesSelector>.Empty.Add(SubEntitiesSelector.ACTIVE_TRACKS_TIME);
         }
 
         private void HandleDelay(GameEvent_Delay ev)

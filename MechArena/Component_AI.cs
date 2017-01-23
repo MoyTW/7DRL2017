@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 
 namespace MechArena
@@ -7,9 +7,9 @@ namespace MechArena
     [Serializable()]
     class Component_AI : Component
     {
-        protected override ISet<SubEntitiesSelector> _MatchingSelectors()
+        protected override IImmutableSet<SubEntitiesSelector> _MatchingSelectors()
         {
-            return new HashSet<SubEntitiesSelector>();
+            return ImmutableHashSet<SubEntitiesSelector>.Empty;
         }
 
         private void RegisterPathTowards(GameQuery_Command q, Entity target)

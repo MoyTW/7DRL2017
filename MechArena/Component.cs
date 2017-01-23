@@ -1,20 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 
 namespace MechArena
 {
     [Serializable()]
     public abstract class Component
     {
+        private static IImmutableSet<Type> emptySet = ImmutableHashSet<Type>.Empty;
+
         private Entity parent;
         public Entity Parent { get { return this.parent; } }
-        public ISet<SubEntitiesSelector> MatchingSelectors
+        public IImmutableSet<SubEntitiesSelector> MatchingSelectors
         {
             get
             {
-                ISet<SubEntitiesSelector> derivedSelectors = this._MatchingSelectors();
-                derivedSelectors.Add(SubEntitiesSelector.ALL);
-                return derivedSelectors;
+                return this._MatchingSelectors().Add(SubEntitiesSelector.ALL);
             }
         }
 
@@ -38,7 +39,7 @@ namespace MechArena
             return this._HandleQuery(q);
         }
 
-        protected abstract ISet<SubEntitiesSelector> _MatchingSelectors();
+        protected abstract IImmutableSet<SubEntitiesSelector> _MatchingSelectors();
 
         protected virtual GameEvent _HandleEvent(GameEvent ev) { return ev; }
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 
 namespace MechArena
 {
@@ -23,11 +24,9 @@ namespace MechArena
             };
         }
 
-        protected override ISet<SubEntitiesSelector> _MatchingSelectors()
+        protected override IImmutableSet<SubEntitiesSelector> _MatchingSelectors()
         {
-            var baseMatching = base._MatchingSelectors();
-            baseMatching.Add(SubEntitiesSelector.WEAPON);
-            return baseMatching;
+            return base._MatchingSelectors().Add(SubEntitiesSelector.WEAPON);
         }
 
         private void HandleQueryEntityAttribute(GameQuery_EntityAttribute q)

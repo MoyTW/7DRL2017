@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 
 namespace MechArena
@@ -40,9 +41,9 @@ namespace MechArena
                 return false;
         }
 
-        protected override ISet<SubEntitiesSelector> _MatchingSelectors()
+        protected override IImmutableSet<SubEntitiesSelector> _MatchingSelectors()
         {
-            return new HashSet<SubEntitiesSelector>();
+            return ImmutableHashSet<SubEntitiesSelector>.Empty;
         }
 
         private void HandleSlot(GameEvent_Slot ev)

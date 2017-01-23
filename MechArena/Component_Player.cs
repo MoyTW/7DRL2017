@@ -1,14 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.Immutable;
 
 namespace MechArena
 {
     [Serializable()]
     class Component_Player : Component
     {
-        protected override ISet<SubEntitiesSelector> _MatchingSelectors()
+        protected override IImmutableSet<SubEntitiesSelector> _MatchingSelectors()
         {
-            return new HashSet<SubEntitiesSelector>();
+            return ImmutableHashSet<SubEntitiesSelector>.Empty;
         }
     }
 }
