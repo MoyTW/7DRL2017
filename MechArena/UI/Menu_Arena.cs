@@ -116,6 +116,9 @@ namespace MechArena.UI
                 case RLKey.Enter:
                     this.arena.PlayerDelayAction(DelayDuration.FULL_INTERVAL);
                     break;
+                case RLKey.E:
+                    // Technically, this doesn't limit it to the player mech.
+                    return new Menu_MechDetails(this, this.arena.Mech1);
                 case RLKey.F:
                     this.arena.TryPlayerAttack();
                     break;
