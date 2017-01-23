@@ -358,8 +358,8 @@ namespace MechArena
             SlotAt(mech, BodyPartLocation.TORSO, BuildPowerPlant());
             SlotAt(mech, BodyPartLocation.LEFT_ARM, BuildArmActuator());
             SlotAt(mech, BodyPartLocation.RIGHT_ARM, BuildArmActuator());
-            SlotAt(mech, BodyPartLocation.LEFT_LEG, BuildArmActuator());
-            SlotAt(mech, BodyPartLocation.RIGHT_LEG, BuildArmActuator());
+            SlotAt(mech, BodyPartLocation.LEFT_LEG, BuildLegActuator());
+            SlotAt(mech, BodyPartLocation.RIGHT_LEG, BuildLegActuator());
 
             // Slot in all the required components
             return mech;
