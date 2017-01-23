@@ -117,6 +117,7 @@
     <Compile Include="Tournament\Scheduler.cs" />
     <Compile Include="Tournament\ISchedule.cs" />
     <Compile Include="Tournament\Schedule_Tournament.cs" />
+    <Compile Include="UI\Drawer_Mech.cs" />
     <Compile Include="UI\Menu_Arena.cs" />
     <Compile Include="UI\IDisplay.cs" />
     <Compile Include="UI\Menu_CompetitorDetails.cs" />

@@ -105,7 +105,7 @@ namespace MechArena.UI
             console.Print(currentX, line, "# " + this.selectionField.SelectionString, RLColor.White);
 
             // Status of mech
-            Menu_Arena.DrawMechStatus(((CompetitorEntity)this.SelectedCompetitor).Mech, this.statusConsole);
+            Drawer_Mech.DrawMechStatus(((CompetitorEntity)this.SelectedCompetitor).Mech, this.statusConsole);
             RLConsole.Blit(statusConsole, 0, 0, Menu_Arena.statusWidth, Menu_Arena.statusHeight, console, 0,
                 console.Height - Menu_Arena.statusHeight);
         }
