@@ -19,9 +19,21 @@ namespace MechArena
             }
         }
 
-        public void Notify_Added(Entity parent)
+        public void Notify_Added(Entity attachingEntity)
         {
-            this.parent = parent;
+            foreach (var required in this._RequiredComponents())
+            {
+                if (!attachingEntity.HasComponentOfType(required))
+                    throw new InvalidOperationException("Cannot add " + this + " to " + attachingEntity +
+                        " missing required Component " + required);
+            }
+            foreach (var cannotAddAfter in this._CannotAddAfterComponents())
+            {
+                if (attachingEntity.HasComponentOfType(cannotAddAfter))
+                    throw new InvalidOperationException("Cannot add " + this + " to " + attachingEntity +
+                        " has Component " + cannotAddAfter + " before this component in the Entity!");
+            }
+            this.parent = attachingEntity;
         }
 
         public void Notify_Removed()
@@ -40,6 +52,9 @@ namespace MechArena
         }
 
         protected abstract IImmutableSet<SubEntitiesSelector> _MatchingSelectors();
+
+        protected virtual IImmutableSet<Type> _CannotAddAfterComponents() { return Component.emptySet; }
+        protected virtual IImmutableSet<Type> _RequiredComponents() { return Component.emptySet; }
 
         protected virtual GameEvent _HandleEvent(GameEvent ev) { return ev; }
 
