@@ -76,13 +76,16 @@ namespace MechArena
 
         private void HandleQuerySubEntities(GameQuery_SubEntities q)
         {
-            // Holsters won't report their entities as being active time-trackers because they cannot take actions
-            if (this.holsteredEntity != null && !q.Selectors.Contains(SubEntitiesSelector.ACTIVE_TRACKS_TIME))
+            if (this.holsteredEntity == null)
+                return;
+
+            if (q.MatchesSelectors(this.holsteredEntity) ||
+                q.Selectors.Contains(SubEntitiesSelector.DISABLED_TRACKS_TIME) &&
+                this.holsteredEntity.MatchesSelector(SubEntitiesSelector.TRACKS_TIME))
             {
-                if (q.MatchesSelectors(this.holsteredEntity))
-                    q.RegisterEntity(this.holsteredEntity);
-                this.holsteredEntity.HandleQuery(q);
+                q.RegisterEntity(this.holsteredEntity);
             }
+            this.holsteredEntity.HandleQuery(q);
         }
 
         protected override GameQuery _HandleQuery(GameQuery q)

@@ -11,7 +11,9 @@ namespace MechArena
         ALL = 0,
         WEAPON,
         BODY_PART,
+        TRACKS_TIME,
         ACTIVE_TRACKS_TIME,
+        DISABLED_TRACKS_TIME,
         SWAPPABLE_MOUNTS
     }
 
@@ -45,8 +47,6 @@ namespace MechArena
 
         public void RegisterEntity(Entity en)
         {
-            if (!this.MatchesSelectors(en))
-                throw new ArgumentException("Attempted to register invalid item!");
             this.subEntities.Add(en);
         }
     }

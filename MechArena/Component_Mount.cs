@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Immutable;
+using System.Linq;
 
 namespace MechArena
 {
@@ -87,12 +88,16 @@ namespace MechArena
 
         private void HandleQuerySubEntities(GameQuery_SubEntities q)
         {
-            if (this.mountedEntity != null)
+            if (this.mountedEntity == null)
+                return;
+
+            if (q.MatchesSelectors(this.mountedEntity) ||
+                q.Selectors.Contains(SubEntitiesSelector.ACTIVE_TRACKS_TIME) &&
+                this.mountedEntity.MatchesSelector(SubEntitiesSelector.TRACKS_TIME))
             {
-                if (q.MatchesSelectors(this.mountedEntity))
-                    q.RegisterEntity(this.mountedEntity);
-                this.mountedEntity.HandleQuery(q);
+                q.RegisterEntity(this.mountedEntity);
             }
+            this.mountedEntity.HandleQuery(q);
         }
 
         private void HandleQueryEntityAttribute(GameQuery_EntityAttribute q)

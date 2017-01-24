@@ -22,7 +22,7 @@ namespace MechArena
 
         protected override IImmutableSet<SubEntitiesSelector> _MatchingSelectors()
         {
-            return ImmutableHashSet<SubEntitiesSelector>.Empty.Add(SubEntitiesSelector.ACTIVE_TRACKS_TIME);
+            return ImmutableHashSet<SubEntitiesSelector>.Empty.Add(SubEntitiesSelector.TRACKS_TIME);
         }
 
         private void HandleDelay(GameEvent_Delay ev)
