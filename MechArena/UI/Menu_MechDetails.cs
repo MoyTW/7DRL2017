@@ -1,14 +1,19 @@
 ﻿using RLNET;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace MechArena.UI
 {
     class Menu_MechDetails : IDisplay
     {
+        private const string letters = "abcdefghijklmnopqrstuvwxyz";
+
         private RLConsole statusConsole;
         private IDisplay parentDisplay;
         private Entity mech;
+        private Dictionary<BodyPartLocation, List<Tuple<char, Entity>>> holstersDict;
+        private Dictionary<BodyPartLocation, List<Tuple<char, Entity>>> mountsDict;
 
         public Menu_MechDetails(IDisplay parentDisplay, Entity mech)
         {
@@ -21,6 +26,31 @@ namespace MechArena.UI
 
             this.parentDisplay = parentDisplay;
             this.mech = mech;
+
+            this.holstersDict = new Dictionary<BodyPartLocation, List<Tuple<char, Entity>>>();
+            this.mountsDict = new Dictionary<BodyPartLocation, List<Tuple<char, Entity>>>();
+            var skeleton = this.mech.GetComponentOfType<Component_MechSkeleton>();
+            int holsterIdx = 0, mountIdx = 0;
+            foreach (var location in EntityBuilder.MechLocations)
+            {
+                var holsters = skeleton.InspectBodyPart(location).TryGetSubEntities(SubEntitiesSelector.HOLSTERS);
+                foreach (var holster in holsters)
+                {
+                    if (!this.holstersDict.ContainsKey(location))
+                        this.holstersDict.Add(location, new List<Tuple<char, Entity>>());
+                    this.holstersDict[location].Add(new Tuple<char, Entity>(letters[holsterIdx], holster));
+                    holsterIdx++;
+                }
+                var mounts = skeleton.InspectBodyPart(location)
+                    .TryGetSubEntities(SubEntitiesSelector.SWAPPABLE_MOUNTS);
+                foreach (var mount in mounts)
+                {
+                    if (!this.mountsDict.ContainsKey(location))
+                        this.mountsDict.Add(location, new List<Tuple<char, Entity>>());
+                    this.mountsDict[location].Add(new Tuple<char, MechArena.Entity>(letters[mountIdx], mount));
+                    mountIdx++;
+                }
+            }
         }
 
         public IDisplay OnRootConsoleUpdate(RLConsole console, RLKeyPress keyPress)
@@ -48,32 +78,27 @@ namespace MechArena.UI
             console.Print(x, y++, "####################", RLColor.White);
 
             var skeleton = this.mech.GetComponentOfType<Component_MechSkeleton>();
-            foreach (var location in EntityBuilder.MechLocations)
+            foreach (var entry in this.holstersDict)
             {
-                var holsters = skeleton.InspectBodyPart(location)
-                    .TryGetSubEntities(SubEntitiesSelector.HOLSTERS);
-                if (holsters.Count() > 0)
+                console.Print(x, y, "#                  #", RLColor.White);
+                console.Print(x + 2, y++, entry.Key.ToString(), RLColor.White);
+                console.Print(x, y++, "#------------------#", RLColor.White);
+
+                foreach (var holster in entry.Value)
                 {
-                    console.Print(x, y, "#                  #", RLColor.White);
-                    console.Print(x + 2, y++, location.ToString(), RLColor.White);
-                    console.Print(x, y++, "#------------------#", RLColor.White);
+                    var mountedEntity = holster.Item2.GetComponentOfType<Component_Holster>().InspectHolsteredEntity();
+                    string mountedString;
+                    if (mountedEntity != null)
+                        mountedString = mountedEntity.ToString();
+                    else
+                        mountedString = "";
 
-                    foreach (var holster in holsters)
-                    {
-                        var mountedEntity = holster.GetComponentOfType<Component_Holster>().InspectHolsteredEntity();
-                        string mountedString;
-                        if (mountedEntity != null)
-                            mountedString = mountedEntity.ToString();
-                        else
-                            mountedString = "";
-
-                        console.Print(x, y, "+                  +", RLColor.White);
-                        console.Print(x + 2, y++, holster.ToString(), RLColor.White);
-                        console.Print(x, y++, "| ^                |", RLColor.White);
-                        console.Print(x, y, "+                  +", RLColor.White);
-                        console.Print(x + 2, y++, mountedString, RLColor.White);
-                        console.Print(x, y++, "|------------------|", RLColor.White);
-                    }
+                    console.Print(x, y, "+                  +", RLColor.White);
+                    console.Print(x + 5, y++, holster.Item2.ToString(), RLColor.White);
+                    console.Print(x, y++, "| " + holster.Item1 + ") ^             |", RLColor.White);
+                    console.Print(x, y, "+                  +", RLColor.White);
+                    console.Print(x + 5, y++, mountedString, RLColor.White);
+                    console.Print(x, y++, "|------------------|", RLColor.White);
                 }
             }
         }
@@ -85,32 +110,27 @@ namespace MechArena.UI
             console.Print(x, y++, "####################", RLColor.White);
 
             var skeleton = this.mech.GetComponentOfType<Component_MechSkeleton>();
-            foreach (var location in EntityBuilder.MechLocations)
+            foreach (var entry in this.mountsDict)
             {
-                var mounts = skeleton.InspectBodyPart(location)
-                    .TryGetSubEntities(SubEntitiesSelector.SWAPPABLE_MOUNTS);
-                if (mounts.Count() > 0)
+                console.Print(x, y, "#                  #", RLColor.White);
+                console.Print(x + 2, y++, entry.Key.ToString(), RLColor.White);
+                console.Print(x, y++, "#------------------#", RLColor.White);
+
+                foreach (var mount in entry.Value)
                 {
-                    console.Print(x, y, "#                  #", RLColor.White);
-                    console.Print(x + 2, y++, location.ToString(), RLColor.White);
-                    console.Print(x, y++, "#------------------#", RLColor.White);
+                    var mountedEntity = mount.Item2.GetComponentOfType<Component_Mount>().InspectMountedEntity();
+                    string mountedString;
+                    if (mountedEntity != null)
+                        mountedString = mountedEntity.ToString();
+                    else
+                        mountedString = "";
 
-                    foreach (var mount in mounts)
-                    {
-                        var mountedEntity = mount.GetComponentOfType<Component_Mount>().InspectMountedEntity();
-                        string mountedString;
-                        if (mountedEntity != null)
-                            mountedString = mountedEntity.ToString();
-                        else
-                            mountedString = "";
-
-                        console.Print(x, y, "+                  +", RLColor.White);
-                        console.Print(x + 2, y++, mount.ToString(), RLColor.White);
-                        console.Print(x, y++, "| ^                |", RLColor.White);
-                        console.Print(x, y, "+                  +", RLColor.White);
-                        console.Print(x + 2, y++, mountedString, RLColor.White);
-                        console.Print(x, y++, "|------------------|", RLColor.White);
-                    }
+                    console.Print(x, y, "+                  +", RLColor.White);
+                    console.Print(x + 5, y++, mount.Item2.ToString(), RLColor.White);
+                    console.Print(x, y++, "| " + mount.Item1 + ") ^             |", RLColor.White);
+                    console.Print(x, y, "+                  +", RLColor.White);
+                    console.Print(x + 5, y++, mountedString, RLColor.White);
+                    console.Print(x, y++, "|------------------|", RLColor.White);
                 }
             }
         }
