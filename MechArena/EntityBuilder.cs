@@ -195,26 +195,26 @@ namespace MechArena
 
         public static Entity BuildHolster(MountSize size)
         {
-            var mount = new Entity(label: "Mount", typeLabel: EntityBuilder.SlottablePartTypeLabel)
+            var holster = new Entity(label: "Holster", typeLabel: EntityBuilder.SlottablePartTypeLabel)
                 .AddComponent(new Component_Holster(size));
             switch (size)
             {
                 case MountSize.SMALL:
-                    mount.AddComponent(new Component_Slottable(1))
+                    holster.AddComponent(new Component_Slottable(1))
                         .AddComponent(new Component_InternalStructure(2));
                     break;
                 case MountSize.MEDIUM:
-                    mount.AddComponent(new Component_Slottable(2))
+                    holster.AddComponent(new Component_Slottable(2))
                         .AddComponent(new Component_InternalStructure(4));
                     break;
                 case MountSize.LARGE:
-                    mount.AddComponent(new Component_Slottable(4))
+                    holster.AddComponent(new Component_Slottable(4))
                         .AddComponent(new Component_InternalStructure(8));
                     break;
                 default:
                     throw new ArgumentException("I have no idea how you passed " + size + " in.");
             }
-            return mount;
+            return holster;
         }
 
         # region Naked Only

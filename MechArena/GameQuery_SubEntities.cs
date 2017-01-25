@@ -14,7 +14,8 @@ namespace MechArena
         TRACKS_TIME,
         ACTIVE_TRACKS_TIME,
         DISABLED_TRACKS_TIME,
-        SWAPPABLE_MOUNTS
+        SWAPPABLE_MOUNTS,
+        HOLSTERS
     }
 
     // This is definitely astronauting the heck out of my problem.

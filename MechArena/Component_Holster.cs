@@ -31,7 +31,7 @@ namespace MechArena
 
         protected override IImmutableSet<SubEntitiesSelector> _MatchingSelectors()
         {
-            return ImmutableHashSet<SubEntitiesSelector>.Empty;
+            return ImmutableHashSet<SubEntitiesSelector>.Empty.Add(SubEntitiesSelector.HOLSTERS);
         }
 
         private void HandleSlot(GameEvent_Slot ev)
