@@ -10,6 +10,8 @@ namespace MechArena.UI
         private const string letters = "abcdefghijklmnopqrstuvwxyz";
 
         private RLConsole statusConsole;
+        private char? weaponSelection;
+
         private IDisplay parentDisplay;
         private Entity mech;
         private Dictionary<BodyPartLocation, List<Tuple<char, Entity>>> holstersDict;
@@ -23,6 +25,7 @@ namespace MechArena.UI
             this.statusConsole = new RLConsole(Menu_Arena.statusWidth, Menu_Arena.statusHeight);
             this.statusConsole.SetBackColor(0, 0, Menu_Arena.statusWidth, Menu_Arena.statusHeight,
                 RLColor.LightBlue);
+            this.weaponSelection = null;
 
             this.parentDisplay = parentDisplay;
             this.mech = mech;
@@ -53,22 +56,42 @@ namespace MechArena.UI
             }
         }
 
+        public void TryStoreWeaponSelection(char weaponSelection)
+        {
+            var selected = this.holstersDict.Values
+                .SelectMany(i => i)
+                .Where(i => i.Item1 == weaponSelection)
+                .FirstOrDefault();
+
+            if (selected != null)
+                this.weaponSelection = weaponSelection;
+        }
+
+        public void TrySwapWeaponToMount(char mountSelection)
+        {
+
+        }
+
         public IDisplay OnRootConsoleUpdate(RLConsole console, RLKeyPress keyPress)
         {
-            if (keyPress != null)
-            {
-                switch (keyPress.Key)
-                {
-                    case RLKey.Escape:
-                        return this.parentDisplay;
-                    default:
-                        return this;
-                }
-            }
-            else
-            {
+            // Explicit exit conditions
+            if (keyPress == null)
                 return this;
+            else if (keyPress.Key == RLKey.Escape)
+                return this.parentDisplay;
+
+            // Key logic
+            if (keyPress.Key == RLKey.BackSpace)
+                this.weaponSelection = null;
+            else if (keyPress.Char != null && char.IsLetter((char)keyPress.Char))
+            {
+                if (this.weaponSelection == null)
+                    this.TryStoreWeaponSelection((char)keyPress.Char);
+                else
+                    this.TrySwapWeaponToMount((char)keyPress.Char);
             }
+
+            return this;
         }
 
         private void DrawWeaponsListing(RLConsole console, int x, int y)
@@ -135,13 +158,26 @@ namespace MechArena.UI
             }
         }
 
+        private void DrawSelection(RLConsole console, int x, int y)
+        {
+            console.Print(x, y++, "####################", RLColor.White);
+            console.Print(x, y++, "# SELECTED WEAPON  #", RLColor.White);
+            console.Print(x, y++, "####################", RLColor.White);
+            console.Print(x, y++, "#                  #", RLColor.White);
+            console.Print(x, y, "#                  #", RLColor.White);
+            console.Print(x + 9, y++, this.weaponSelection.ToString(), RLColor.White);
+            console.Print(x, y++, "#                  #", RLColor.White);
+            console.Print(x, y++, "####################", RLColor.White);
+        }
+
         public void Blit(RLConsole console)
         {
             Drawer_Mech.DrawMechStatus(this.mech, this.statusConsole);
             RLConsole.Blit(this.statusConsole, 0, 0, Menu_Arena.statusWidth, Menu_Arena.statusHeight, console, 0, 0);
 
-            this.DrawWeaponsListing(console, 1, Menu_Arena.statusHeight + 1);
-            this.DrawMountsListing(console, 22, Menu_Arena.statusHeight + 1);
+            this.DrawSelection(console, 12, Menu_Arena.statusHeight + 1);
+            this.DrawWeaponsListing(console, 1, Menu_Arena.statusHeight + 9);
+            this.DrawMountsListing(console, 22, Menu_Arena.statusHeight + 9);
         }
     }
 }
