@@ -12,9 +12,12 @@ namespace MechArena
         public GameEvent_Unslot(Entity topContainer, Entity subContainer, Entity entityToUnslot)
             : base(topContainer, subContainer)
         {
-            if (!subContainer.HasComponentOfType<Component_SlottedContainer>())
+            if (!subContainer.HasComponentOfType<Component_SlottedContainer>() &&
+                !subContainer.HasComponentOfType<Component_Mount>() &&
+                !subContainer.HasComponentOfType<Component_Holster>())
                 throw new ArgumentException("Can't slot to item without slots!");
-            if (!entityToUnslot.HasComponentOfType<Component_Slottable>())
+            if (!entityToUnslot.HasComponentOfType<Component_Slottable>() &&
+                !entityToUnslot.HasComponentOfType<Component_Mountable>())
                 throw new ArgumentException("Can't slot unslottable item!");
 
             this.EntityToUnslot = entityToUnslot;

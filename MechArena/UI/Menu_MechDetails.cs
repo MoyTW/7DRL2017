@@ -56,20 +56,60 @@ namespace MechArena.UI
             }
         }
 
-        public void TryStoreWeaponSelection(char weaponSelection)
+        // This is kind of silly, but not silly enough for me to refactor right now.
+        // It's not like this silliness will leak...WILL IT!? (it won't)
+        private Entity GetEntityByChar(Dictionary<BodyPartLocation, List<Tuple<char,Entity>>> d, char c)
         {
-            var selected = this.holstersDict.Values
+            var selected = d.Values
                 .SelectMany(i => i)
-                .Where(i => i.Item1 == weaponSelection)
+                .Where(i => i.Item1 == c)
                 .FirstOrDefault();
 
             if (selected != null)
+                return selected.Item2;
+            else
+                return null;
+        }
+
+        public void TryStoreWeaponSelection(char weaponSelection)
+        {
+            if (this.GetEntityByChar(this.holstersDict, weaponSelection) != null)
                 this.weaponSelection = weaponSelection;
         }
 
+        // TODO: Pull logic of swapping out of menu code
         public void TrySwapWeaponToMount(char mountSelection)
         {
+            var selectedMount = this.GetEntityByChar(this.mountsDict, mountSelection);
 
+            if (selectedMount == null)
+                return;
+
+            var holsterEntity = this.GetEntityByChar(this.holstersDict, (char)this.weaponSelection);
+            var weaponFromHolster = holsterEntity.GetComponentOfType<Component_Holster>().InspectHolsteredEntity();
+
+            var mountEntity = selectedMount;
+            var weaponFromMount = mountEntity.GetComponentOfType<Component_Mount>().InspectMountedEntity();
+
+            // Whew, that's silly ugly!
+            if (holsterEntity.GetComponentOfType<Component_Holster>().MaxSize >=
+                weaponFromMount.GetComponentOfType<Component_Mountable>().SizeRequired &&
+                mountEntity.GetComponentOfType<Component_Mount>().MaxSize >=
+                weaponFromHolster.GetComponentOfType<Component_Mountable>().SizeRequired)
+            {
+                // TODO: There's something wrong when you pass null into a constructor like this!
+                mountEntity.HandleEvent(new GameEvent_Unslot(null, mountEntity, weaponFromMount));
+                holsterEntity.HandleEvent(new GameEvent_Unslot(null, holsterEntity, weaponFromHolster));
+
+                mountEntity.HandleEvent(new GameEvent_Slot(null, mountEntity, weaponFromHolster));
+                holsterEntity.HandleEvent(new GameEvent_Slot(null, holsterEntity, weaponFromMount));
+            }
+            else
+            {
+                // TODO: See message
+                Log.ErrorLine("Can't swap, weapons not same size! Msg should be printed on screen & removed from ERR");
+            }
+            this.weaponSelection = null;
         }
 
         public IDisplay OnRootConsoleUpdate(RLConsole console, RLKeyPress keyPress)
