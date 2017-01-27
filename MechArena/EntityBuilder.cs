@@ -172,7 +172,7 @@ namespace MechArena
         public static Entity BuildFixedMount(MountSize size)
         {
             var mount = new Entity(label: "Mount", typeLabel: EntityBuilder.SlottablePartTypeLabel)
-                .AddComponent(new Component_Mount(size, false));
+                .AddComponent(new Component_Mount(size, active: true, swappable: false));
             switch (size)
             {
                 case MountSize.SMALL:
@@ -229,7 +229,7 @@ namespace MechArena
         public static Entity BuildArmActuator()
         {
             return new Entity(label: ArmActuatorLabel, typeLabel: SlottablePartTypeLabel)
-                .AddComponent(new Component_Mount(MountSize.LARGE, true))
+                .AddComponent(new Component_Mount(MountSize.LARGE, true, true))
                 .AddComponent(new Component_Slottable(2))
                 .AddComponent(new Component_InternalStructure(2));
         }

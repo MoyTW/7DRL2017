@@ -18,12 +18,14 @@ namespace MechArena
 
         public bool HasMountedEntity { get { return this.mountedEntity != null; } }
         public MountSize MaxSize { get; }
+        public bool Active { get; }
         public bool Swappable { get; }
 
-        public Component_Mount(MountSize maxSize, bool swappable)
+        public Component_Mount(MountSize maxSize, bool active, bool swappable)
         {
             this.mountedEntity = null;
             this.MaxSize = maxSize;
+            this.Active = active;
             this.Swappable = swappable;
         }
 
