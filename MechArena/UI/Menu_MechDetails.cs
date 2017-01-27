@@ -36,22 +36,24 @@ namespace MechArena.UI
             int holsterIdx = 0, mountIdx = 0;
             foreach (var location in EntityBuilder.MechLocations)
             {
-                var holsters = skeleton.InspectBodyPart(location).TryGetSubEntities(SubEntitiesSelector.HOLSTERS);
-                foreach (var holster in holsters)
-                {
-                    if (!this.holstersDict.ContainsKey(location))
-                        this.holstersDict.Add(location, new List<Tuple<char, Entity>>());
-                    this.holstersDict[location].Add(new Tuple<char, Entity>(letters[holsterIdx], holster));
-                    holsterIdx++;
-                }
                 var mounts = skeleton.InspectBodyPart(location)
                     .TryGetSubEntities(SubEntitiesSelector.SWAPPABLE_MOUNTS);
                 foreach (var mount in mounts)
                 {
-                    if (!this.mountsDict.ContainsKey(location))
-                        this.mountsDict.Add(location, new List<Tuple<char, Entity>>());
-                    this.mountsDict[location].Add(new Tuple<char, MechArena.Entity>(letters[mountIdx], mount));
-                    mountIdx++;
+                    if (mount.GetComponentOfType<Component_Mount>().Active)
+                    {
+                        if (!this.mountsDict.ContainsKey(location))
+                            this.mountsDict.Add(location, new List<Tuple<char, Entity>>());
+                        this.mountsDict[location].Add(new Tuple<char, MechArena.Entity>(letters[mountIdx], mount));
+                        mountIdx++;
+                    }
+                    else
+                    {
+                        if (!this.holstersDict.ContainsKey(location))
+                            this.holstersDict.Add(location, new List<Tuple<char, Entity>>());
+                        this.holstersDict[location].Add(new Tuple<char, Entity>(letters[holsterIdx], mount));
+                        holsterIdx++;
+                    }
                 }
             }
         }
@@ -86,16 +88,18 @@ namespace MechArena.UI
                 return;
 
             var holsterEntity = this.GetEntityByChar(this.holstersDict, (char)this.weaponSelection);
-            var weaponFromHolster = holsterEntity.GetComponentOfType<Component_Holster>().InspectHolsteredEntity();
+            var holsterMount = holsterEntity.GetComponentOfType<Component_Mount>();
+            var weaponFromHolster = holsterMount.InspectMountedEntity();
 
             var mountEntity = selectedMount;
-            var weaponFromMount = mountEntity.GetComponentOfType<Component_Mount>().InspectMountedEntity();
+            var mountMount = mountEntity.GetComponentOfType<Component_Mount>();
+            var weaponFromMount = mountMount.InspectMountedEntity();
 
             // Whew, that's silly ugly!
-            if (holsterEntity.GetComponentOfType<Component_Holster>().MaxSize >=
-                weaponFromMount.GetComponentOfType<Component_Mountable>().SizeRequired &&
-                mountEntity.GetComponentOfType<Component_Mount>().MaxSize >=
-                weaponFromHolster.GetComponentOfType<Component_Mountable>().SizeRequired)
+            if (holsterMount.Swappable &&
+                holsterMount.MaxSize >= weaponFromMount.GetComponentOfType<Component_Mountable>().SizeRequired &&
+                mountMount.Swappable &&
+                mountMount.MaxSize >= weaponFromHolster.GetComponentOfType<Component_Mountable>().SizeRequired)
             {
                 // TODO: There's something wrong when you pass null into a constructor like this!
                 mountEntity.HandleEvent(new GameEvent_Unslot(null, mountEntity, weaponFromMount));
@@ -149,7 +153,7 @@ namespace MechArena.UI
 
                 foreach (var holster in entry.Value)
                 {
-                    var mountedEntity = holster.Item2.GetComponentOfType<Component_Holster>().InspectHolsteredEntity();
+                    var mountedEntity = holster.Item2.GetComponentOfType<Component_Mount>().InspectMountedEntity();
                     string mountedString;
                     if (mountedEntity != null)
                         mountedString = mountedEntity.ToString();

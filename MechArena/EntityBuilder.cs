@@ -196,7 +196,7 @@ namespace MechArena
         public static Entity BuildHolster(MountSize size)
         {
             var holster = new Entity(label: "Holster", typeLabel: EntityBuilder.SlottablePartTypeLabel)
-                .AddComponent(new Component_Holster(size));
+                .AddComponent(new Component_Mount(size, active: false, swappable: true));
             switch (size)
             {
                 case MountSize.SMALL:
