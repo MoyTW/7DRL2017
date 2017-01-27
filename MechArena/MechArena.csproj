@@ -59,8 +59,8 @@
     <Compile Include="ArenaBuilder.cs" />
     <Compile Include="BodyPartLocation.cs" />
     <Compile Include="CompetitorEntity.cs" />
-    <Compile Include="Component_Mount.cs" />
-    <Compile Include="Component_Mountable.cs" />
+    <Compile Include="Component_AttachPoint.cs" />
+    <Compile Include="Component_Attachable.cs" />
     <Compile Include="Config.cs" />
     <Compile Include="Genetic\CrossoverStrategies.cs" />
     <Compile Include="Genetic\Evolver.cs" />

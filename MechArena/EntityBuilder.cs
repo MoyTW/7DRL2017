@@ -75,23 +75,23 @@ namespace MechArena
             }
         }
 
-        private static Entity BuildWeapon(string weaponLabel, MountSize size, int toHit, int maxRange, int damage, int refireTicks)
+        private static Entity BuildWeapon(string weaponLabel, AttachmentSize size, int toHit, int maxRange, int damage, int refireTicks)
         {
             return new Entity(label: weaponLabel, typeLabel: EntityBuilder.WeaponTypeLabel)
-                .AddComponent(new Component_Mountable(size))
+                .AddComponent(new Component_Attachable(size))
                 .AddComponent(new Component_Weapon(size, toHit, maxRange, damage, refireTicks));
         }
 
         private static Entity BuildMountForWeapon(Entity weapon)
         {
-            var mount = BuildFixedMount(weapon.GetComponentOfType<Component_Mountable>().SizeRequired);
+            var mount = BuildFixedMount(weapon.GetComponentOfType<Component_Attachable>().SizeRequired);
             mount.HandleEvent(new GameEvent_Slot(null, mount, weapon));
             return mount;
         }
 
         private static Entity BuildHolsterForWeapon(Entity weapon)
         {
-            var holster = BuildHolster(weapon.GetComponentOfType<Component_Mountable>().SizeRequired);
+            var holster = BuildHolster(weapon.GetComponentOfType<Component_Attachable>().SizeRequired);
             holster.HandleEvent(new GameEvent_Slot(null, holster, weapon));
             return holster;
         }
@@ -99,7 +99,7 @@ namespace MechArena
         private static Entity MountOntoArm(Entity mech, BodyPartLocation location, Entity mountable)
         {
             var armActuator = GetBodyPart(mech, location)
-                .TryGetSubEntities(SubEntitiesSelector.SWAPPABLE_MOUNTS)
+                .TryGetSubEntities(SubEntitiesSelector.SWAPPABLE_ATTACH_POINTS)
                 .Where(e => e.Label == ArmActuatorLabel)
                 .First();
             armActuator.HandleEvent(new GameEvent_Slot(mech, armActuator, mountable));
@@ -112,78 +112,78 @@ namespace MechArena
 
         public static Entity BuildMissile()
         {
-            return BuildWeapon("Mssl.Rck.", MountSize.MEDIUM, 1, 15, 4, 100);
+            return BuildWeapon("Mssl.Rck.", AttachmentSize.MEDIUM, 1, 15, 4, 100);
         }
 
         public static Entity BuildMiniMissile()
         {
-            return BuildWeapon("Mn.Mssl.", MountSize.SMALL, 1, 10, 2, 75);
+            return BuildWeapon("Mn.Mssl.", AttachmentSize.SMALL, 1, 10, 2, 75);
         }
 
         public static Entity BuildSniperRifle()
         {
-            return BuildWeapon("Snpr.Rfl.", MountSize.LARGE, 6, 20, 8, 250);
+            return BuildWeapon("Snpr.Rfl.", AttachmentSize.LARGE, 6, 20, 8, 250);
         }
 
         public static Entity BuildRifle()
         {
-            return BuildWeapon("Rfl.", MountSize.MEDIUM, 1, 12, 3, 80);
+            return BuildWeapon("Rfl.", AttachmentSize.MEDIUM, 1, 12, 3, 80);
         }
 
         public static Entity BuildMachinegun()
         {
-            return BuildWeapon("Mchngn.", MountSize.LARGE, -2, 14, 1, 20);
+            return BuildWeapon("Mchngn.", AttachmentSize.LARGE, -2, 14, 1, 20);
         }
 
         public static Entity BuildShotgun()
         {
-            return BuildWeapon("Shtgn.", MountSize.MEDIUM, 3, 8, 6, 100);
+            return BuildWeapon("Shtgn.", AttachmentSize.MEDIUM, 3, 8, 6, 100);
         }
 
         public static Entity BuildPistol()
         {
-            return BuildWeapon("Pstl.", MountSize.SMALL, 2, 8, 2, 65);
+            return BuildWeapon("Pstl.", AttachmentSize.SMALL, 2, 8, 2, 65);
         }
 
         public static Entity BuildRockets()
         {
-            return BuildWeapon("Rckt.Pd.", MountSize.SMALL, -3, 6, 9, 170);
+            return BuildWeapon("Rckt.Pd.", AttachmentSize.SMALL, -3, 6, 9, 170);
         }
 
         public static Entity BuildDagger()
         {
-            return BuildWeapon("Dggr.", MountSize.SMALL, 2, 1, 2, 15);
+            return BuildWeapon("Dggr.", AttachmentSize.SMALL, 2, 1, 2, 15);
         }
 
         public static Entity BuildSword()
         {
-            return BuildWeapon("Swrd.", MountSize.MEDIUM, 0, 1, 6, 30);
+            return BuildWeapon("Swrd.", AttachmentSize.MEDIUM, 0, 1, 6, 30);
         }
 
         public static Entity BuildHammer()
         {
-            return BuildWeapon("Hmmr.", MountSize.MEDIUM, -1, 1, 9, 60);
+            return BuildWeapon("Hmmr.", AttachmentSize.MEDIUM, -1, 1, 9, 60);
         }
 
         #endregion
 
         #region Slottable Parts
 
-        public static Entity BuildFixedMount(MountSize size)
+        public static Entity BuildFixedMount(AttachmentSize size)
         {
             var mount = new Entity(label: "Mount", typeLabel: EntityBuilder.SlottablePartTypeLabel)
-                .AddComponent(new Component_Mount(size, active: true, swappable: false));
+                .AddComponent(new Component_AttachPoint(size, active: true, swappable: false));
             switch (size)
             {
-                case MountSize.SMALL:
+                case AttachmentSize.SMALL:
                     mount.AddComponent(new Component_Slottable(2))
                         .AddComponent(new Component_InternalStructure(2));
                     break;
-                case MountSize.MEDIUM:
+                case AttachmentSize.MEDIUM:
                     mount.AddComponent(new Component_Slottable(4))
                         .AddComponent(new Component_InternalStructure(4));
                     break;
-                case MountSize.LARGE:
+                case AttachmentSize.LARGE:
                     mount.AddComponent(new Component_Slottable(8))
                         .AddComponent(new Component_InternalStructure(8));
                     break;
@@ -193,21 +193,21 @@ namespace MechArena
             return mount;
         }
 
-        public static Entity BuildHolster(MountSize size)
+        public static Entity BuildHolster(AttachmentSize size)
         {
             var holster = new Entity(label: "Holster", typeLabel: EntityBuilder.SlottablePartTypeLabel)
-                .AddComponent(new Component_Mount(size, active: false, swappable: true));
+                .AddComponent(new Component_AttachPoint(size, active: false, swappable: true));
             switch (size)
             {
-                case MountSize.SMALL:
+                case AttachmentSize.SMALL:
                     holster.AddComponent(new Component_Slottable(1))
                         .AddComponent(new Component_InternalStructure(2));
                     break;
-                case MountSize.MEDIUM:
+                case AttachmentSize.MEDIUM:
                     holster.AddComponent(new Component_Slottable(2))
                         .AddComponent(new Component_InternalStructure(4));
                     break;
-                case MountSize.LARGE:
+                case AttachmentSize.LARGE:
                     holster.AddComponent(new Component_Slottable(4))
                         .AddComponent(new Component_InternalStructure(8));
                     break;
@@ -229,7 +229,7 @@ namespace MechArena
         public static Entity BuildArmActuator()
         {
             return new Entity(label: ArmActuatorLabel, typeLabel: SlottablePartTypeLabel)
-                .AddComponent(new Component_Mount(MountSize.LARGE, true, true))
+                .AddComponent(new Component_AttachPoint(AttachmentSize.LARGE, true, true))
                 .AddComponent(new Component_Slottable(2))
                 .AddComponent(new Component_InternalStructure(2));
         }

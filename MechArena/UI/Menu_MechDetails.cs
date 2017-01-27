@@ -37,10 +37,10 @@ namespace MechArena.UI
             foreach (var location in EntityBuilder.MechLocations)
             {
                 var mounts = skeleton.InspectBodyPart(location)
-                    .TryGetSubEntities(SubEntitiesSelector.SWAPPABLE_MOUNTS);
+                    .TryGetSubEntities(SubEntitiesSelector.SWAPPABLE_ATTACH_POINTS);
                 foreach (var mount in mounts)
                 {
-                    if (mount.GetComponentOfType<Component_Mount>().Active)
+                    if (mount.GetComponentOfType<Component_AttachPoint>().Active)
                     {
                         if (!this.mountsDict.ContainsKey(location))
                             this.mountsDict.Add(location, new List<Tuple<char, Entity>>());
@@ -88,18 +88,18 @@ namespace MechArena.UI
                 return;
 
             var holsterEntity = this.GetEntityByChar(this.holstersDict, (char)this.weaponSelection);
-            var holsterMount = holsterEntity.GetComponentOfType<Component_Mount>();
-            var weaponFromHolster = holsterMount.InspectMountedEntity();
+            var holsterMount = holsterEntity.GetComponentOfType<Component_AttachPoint>();
+            var weaponFromHolster = holsterMount.InspecAttachedEntity();
 
             var mountEntity = selectedMount;
-            var mountMount = mountEntity.GetComponentOfType<Component_Mount>();
-            var weaponFromMount = mountMount.InspectMountedEntity();
+            var mountMount = mountEntity.GetComponentOfType<Component_AttachPoint>();
+            var weaponFromMount = mountMount.InspecAttachedEntity();
 
             // Whew, that's silly ugly!
             if (holsterMount.Swappable &&
-                holsterMount.MaxSize >= weaponFromMount.GetComponentOfType<Component_Mountable>().SizeRequired &&
+                holsterMount.MaxSize >= weaponFromMount.GetComponentOfType<Component_Attachable>().SizeRequired &&
                 mountMount.Swappable &&
-                mountMount.MaxSize >= weaponFromHolster.GetComponentOfType<Component_Mountable>().SizeRequired)
+                mountMount.MaxSize >= weaponFromHolster.GetComponentOfType<Component_Attachable>().SizeRequired)
             {
                 // TODO: There's something wrong when you pass null into a constructor like this!
                 mountEntity.HandleEvent(new GameEvent_Unslot(null, mountEntity, weaponFromMount));
@@ -153,7 +153,7 @@ namespace MechArena.UI
 
                 foreach (var holster in entry.Value)
                 {
-                    var mountedEntity = holster.Item2.GetComponentOfType<Component_Mount>().InspectMountedEntity();
+                    var mountedEntity = holster.Item2.GetComponentOfType<Component_AttachPoint>().InspecAttachedEntity();
                     string mountedString;
                     if (mountedEntity != null)
                         mountedString = mountedEntity.ToString();
@@ -185,7 +185,7 @@ namespace MechArena.UI
 
                 foreach (var mount in entry.Value)
                 {
-                    var mountedEntity = mount.Item2.GetComponentOfType<Component_Mount>().InspectMountedEntity();
+                    var mountedEntity = mount.Item2.GetComponentOfType<Component_AttachPoint>().InspecAttachedEntity();
                     string mountedString;
                     if (mountedEntity != null)
                         mountedString = mountedEntity.ToString();

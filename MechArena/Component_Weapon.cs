@@ -7,12 +7,12 @@ namespace MechArena
     [Serializable()]
     public class Component_Weapon : Component_TracksTime
     {
-        public MountSize Size { get; }
+        public AttachmentSize Size { get; }
         private readonly Dictionary<EntityAttributeType, int> WeaponAttributes;
 
         // TODO: I would like to define a construct which can be read from a file to construct these!
         // Right now I'll just hard-code them all and feel bad about it.
-        public Component_Weapon(MountSize size, int toHit, int maxRange, int damage, int refireTicks)
+        public Component_Weapon(AttachmentSize size, int toHit, int maxRange, int damage, int refireTicks)
             : base(EntityAttributeType.REFIRE_TICKS)
         {
             this.Size = size;

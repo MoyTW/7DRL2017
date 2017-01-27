@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace MechArena
 {
-    public enum MountSize
+    public enum AttachmentSize
     {
         SMALL = 0,
         MEDIUM = 1,
@@ -12,38 +12,38 @@ namespace MechArena
     }
 
     [Serializable()]
-    class Component_Mount : Component
+    class Component_AttachPoint : Component
     {
-        private Entity mountedEntity;
+        private Entity attachedEntity;
 
-        public bool HasMountedEntity { get { return this.mountedEntity != null; } }
-        public MountSize MaxSize { get; }
+        public bool HasAttachedEntity { get { return this.attachedEntity != null; } }
+        public AttachmentSize MaxSize { get; }
         public bool Active { get; }
         public bool Swappable { get; }
 
-        public Component_Mount(MountSize maxSize, bool active, bool swappable)
+        public Component_AttachPoint(AttachmentSize maxSize, bool active, bool swappable)
         {
-            this.mountedEntity = null;
+            this.attachedEntity = null;
             this.MaxSize = maxSize;
             this.Active = active;
             this.Swappable = swappable;
         }
 
-        public Entity InspectMountedEntity()
+        public Entity InspecAttachedEntity()
         {
-            return this.mountedEntity;
+            return this.attachedEntity;
         }
 
-        public bool CanMount(Entity en)
+        public bool CanAttach(Entity en)
         {
-            return this.mountedEntity == null &&
-                this.MaxSize >= en.GetComponentOfType<Component_Mountable>().SizeRequired;
+            return this.attachedEntity == null &&
+                this.MaxSize >= en.GetComponentOfType<Component_Attachable>().SizeRequired;
         }
 
         protected override IImmutableSet<SubEntitiesSelector> _MatchingSelectors()
         {
             if (this.Swappable)
-                return ImmutableHashSet<SubEntitiesSelector>.Empty.Add(SubEntitiesSelector.SWAPPABLE_MOUNTS);
+                return ImmutableHashSet<SubEntitiesSelector>.Empty.Add(SubEntitiesSelector.SWAPPABLE_ATTACH_POINTS);
             else
                 return ImmutableHashSet<SubEntitiesSelector>.Empty;
         }
@@ -52,10 +52,10 @@ namespace MechArena
         {
             if (ev.ExecutorEntity == this.Parent)
             {
-                if (this.CanMount(ev.EntityToSlot))
+                if (this.CanAttach(ev.EntityToSlot))
                 {
-                    this.mountedEntity = ev.EntityToSlot;
-                    ev.EntityToSlot.GetComponentOfType<Component_Mountable>().Notify_Mounted(this.Parent);
+                    this.attachedEntity = ev.EntityToSlot;
+                    ev.EntityToSlot.GetComponentOfType<Component_Attachable>().Notify_Attached(this.Parent);
                     ev.Completed = true;
                 }
                 else
@@ -69,11 +69,11 @@ namespace MechArena
         {
             if (ev.ExecutorEntity == this.Parent)
             {
-                if (this.mountedEntity != ev.EntityToUnslot)
+                if (this.attachedEntity != ev.EntityToUnslot)
                     throw new ArgumentException("Cannot unmount unmounted item " + ev.EntityToUnslot.ToString() + "!");
 
-                this.mountedEntity = null;
-                ev.EntityToUnslot.GetComponentOfType<Component_Mountable>().Notify_Unmounted();
+                this.attachedEntity = null;
+                ev.EntityToUnslot.GetComponentOfType<Component_Attachable>().Notify_Detached();
                 ev.Completed = true;
             }
         }
@@ -90,26 +90,26 @@ namespace MechArena
 
         private void HandleQuerySubEntities(GameQuery_SubEntities q)
         {
-            if (this.mountedEntity == null)
+            if (this.attachedEntity == null)
                 return;
 
-            if (q.MatchesSelectors(this.mountedEntity) ||
+            if (q.MatchesSelectors(this.attachedEntity) ||
                 q.Selectors.Contains(SubEntitiesSelector.ACTIVE_TRACKS_TIME) &&
-                this.mountedEntity.MatchesSelector(SubEntitiesSelector.TRACKS_TIME))
+                this.attachedEntity.MatchesSelector(SubEntitiesSelector.TRACKS_TIME))
             {
-                q.RegisterEntity(this.mountedEntity);
+                q.RegisterEntity(this.attachedEntity);
             }
-            this.mountedEntity.HandleQuery(q);
+            this.attachedEntity.HandleQuery(q);
         }
 
         private void HandleQueryEntityAttribute(GameQuery_EntityAttribute q)
         {
-            // Structure is not passed to Mountable!
+            // Attached items should not contribute to structure!
             if (q.AttributeType != EntityAttributeType.STRUCTURE &&
-                this.mountedEntity != null &&
-                !this.mountedEntity.TryGetDestroyed())
+                this.attachedEntity != null &&
+                !this.attachedEntity.TryGetDestroyed())
             {
-                this.mountedEntity.HandleQuery(q);
+                this.attachedEntity.HandleQuery(q);
             }
         }
 

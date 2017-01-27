@@ -4,28 +4,28 @@ using System.Collections.Immutable;
 namespace MechArena
 {
     [Serializable()]
-    class Component_Mountable : Component
+    class Component_Attachable : Component
     {
-        private Entity mountedTo;
+        private Entity attachedTo;
 
-        public bool Mounted { get { return this.mountedTo != null; } }
-        public Entity MountedTo { get { return this.mountedTo; } }
-        public MountSize SizeRequired { get; }
+        public bool Attached { get { return this.attachedTo != null; } }
+        public Entity AttachedTo { get { return this.attachedTo; } }
+        public AttachmentSize SizeRequired { get; }
 
-        public Component_Mountable(MountSize sizeRequired)
+        public Component_Attachable(AttachmentSize sizeRequired)
         {
-            this.mountedTo = null;
+            this.attachedTo = null;
             this.SizeRequired = sizeRequired;
         }
 
-        public void Notify_Mounted(Entity mounter)
+        public void Notify_Attached(Entity attacher)
         {
-            this.mountedTo = mounter;
+            this.attachedTo = attacher;
         }
 
-        public void Notify_Unmounted()
+        public void Notify_Detached()
         {
-            this.mountedTo = null;
+            this.attachedTo = null;
         }
 
         protected override IImmutableSet<SubEntitiesSelector> _MatchingSelectors()
@@ -35,14 +35,14 @@ namespace MechArena
 
         private void HandleQueryDestroyed(GameQuery_Destroyed q)
         {
-            this.MountedTo.HandleQuery(q);
+            this.AttachedTo.HandleQuery(q);
         }
 
         private void HandleQueryEntityAttribute(GameQuery_EntityAttribute q)
         {
-            if (q.AttributeType == EntityAttributeType.STRUCTURE && this.MountedTo != null)
+            if (q.AttributeType == EntityAttributeType.STRUCTURE && this.AttachedTo != null)
             {
-                this.MountedTo.HandleQuery(q);
+                this.AttachedTo.HandleQuery(q);
             }
         }
 

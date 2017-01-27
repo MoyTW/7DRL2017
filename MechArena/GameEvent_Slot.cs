@@ -13,12 +13,12 @@ namespace MechArena
             : base(topContainer, subContainer)
         {
             if (!subContainer.HasComponentOfType<Component_SlottedContainer>() &&
-                !subContainer.HasComponentOfType<Component_Mount>())
+                !subContainer.HasComponentOfType<Component_AttachPoint>())
             {
                 throw new ArgumentException("Can't slot to item without slots!");
             }
             if (!entityToSlot.HasComponentOfType<Component_Slottable>() &&
-                !entityToSlot.HasComponentOfType<Component_Mountable>())
+                !entityToSlot.HasComponentOfType<Component_Attachable>())
             {
                 throw new ArgumentException("Can't slot unslottable item!");
             }

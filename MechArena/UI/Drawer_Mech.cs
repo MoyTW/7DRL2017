@@ -29,8 +29,8 @@ namespace MechArena.UI
                 console.Print(x + 1, y, "+", RLColor.Black);
                 console.Print(x + 18, y, "+", RLColor.Black);
 
-                if (mountedPart.HasComponentOfType<Component_Mount>() &&
-                    mountedPart.GetComponentOfType<Component_Mount>().HasMountedEntity)
+                if (mountedPart.HasComponentOfType<Component_AttachPoint>() &&
+                    mountedPart.GetComponentOfType<Component_AttachPoint>().HasAttachedEntity)
                 {
                     console.Print(x, ++y, " | ^              | ", RLColor.Black);
                 }
