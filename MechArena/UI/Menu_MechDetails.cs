@@ -80,19 +80,15 @@ namespace MechArena.UI
         }
 
         // TODO: Pull logic of swapping out of menu code
-        public void TrySwapWeaponToMount(char mountSelection)
+        public static void TrySwapWeaponToMount(Entity selectedHolster, Entity selectedMount)
         {
-            var selectedMount = this.GetEntityByChar(this.mountsDict, mountSelection);
-
-            if (selectedMount == null)
+            if (selectedMount == null || selectedHolster == null)
                 return;
 
-            var holsterEntity = this.GetEntityByChar(this.holstersDict, (char)this.weaponSelection);
-            var holsterMount = holsterEntity.GetComponentOfType<Component_AttachPoint>();
+            var holsterMount = selectedHolster.GetComponentOfType<Component_AttachPoint>();
             var weaponFromHolster = holsterMount.InspecAttachedEntity();
 
-            var mountEntity = selectedMount;
-            var mountMount = mountEntity.GetComponentOfType<Component_AttachPoint>();
+            var mountMount = selectedMount.GetComponentOfType<Component_AttachPoint>();
             var weaponFromMount = mountMount.InspecAttachedEntity();
 
             // Whew, that's silly ugly!
@@ -102,18 +98,17 @@ namespace MechArena.UI
                 mountMount.MaxSize >= weaponFromHolster.GetComponentOfType<Component_Attachable>().SizeRequired)
             {
                 // TODO: There's something wrong when you pass null into a constructor like this!
-                mountEntity.HandleEvent(new GameEvent_Unslot(null, mountEntity, weaponFromMount));
-                holsterEntity.HandleEvent(new GameEvent_Unslot(null, holsterEntity, weaponFromHolster));
+                selectedMount.HandleEvent(new GameEvent_Unslot(null, selectedMount, weaponFromMount));
+                selectedHolster.HandleEvent(new GameEvent_Unslot(null, selectedHolster, weaponFromHolster));
 
-                mountEntity.HandleEvent(new GameEvent_Slot(null, mountEntity, weaponFromHolster));
-                holsterEntity.HandleEvent(new GameEvent_Slot(null, holsterEntity, weaponFromMount));
+                selectedMount.HandleEvent(new GameEvent_Slot(null, selectedMount, weaponFromHolster));
+                selectedHolster.HandleEvent(new GameEvent_Slot(null, selectedHolster, weaponFromMount));
             }
             else
             {
                 // TODO: See message
                 Log.ErrorLine("Can't swap, weapons not same size! Msg should be printed on screen & removed from ERR");
             }
-            this.weaponSelection = null;
         }
 
         public IDisplay OnRootConsoleUpdate(RLConsole console, RLKeyPress keyPress)
@@ -132,7 +127,11 @@ namespace MechArena.UI
                 if (this.weaponSelection == null)
                     this.TryStoreWeaponSelection((char)keyPress.Char);
                 else
-                    this.TrySwapWeaponToMount((char)keyPress.Char);
+                {
+                    TrySwapWeaponToMount(this.GetEntityByChar(this.holstersDict, (char)this.weaponSelection),
+                        this.GetEntityByChar(this.mountsDict, (char)keyPress.Char));
+                    this.weaponSelection = null;
+                }
             }
 
             return this;

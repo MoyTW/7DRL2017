@@ -162,7 +162,7 @@ namespace MechArena
 
         public static Entity BuildHammer()
         {
-            return BuildWeapon("Hmmr.", AttachmentSize.MEDIUM, -1, 1, 9, 60);
+            return BuildWeapon("Hmmr.", AttachmentSize.LARGE, -1, 1, 9, 60);
         }
 
         #endregion
