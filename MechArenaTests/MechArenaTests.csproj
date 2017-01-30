@@ -84,6 +84,7 @@
     <Compile Include="Tournament\Schedule_GroupStageTest.cs" />
     <Compile Include="Tournament\Schedule_TournamentTest.cs" />
     <Compile Include="ComponentTest.cs" />
+    <Compile Include="BlueprintLoaderTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MechArena\MechArena.csproj">
