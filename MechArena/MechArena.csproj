@@ -62,6 +62,8 @@
     <Compile Include="ArenaState.cs" />
     <Compile Include="ArenaBuilder.cs" />
     <Compile Include="BodyPartLocation.cs" />
+    <Compile Include="Blueprint.cs" />
+    <Compile Include="BlueprintListing.cs" />
     <Compile Include="CompetitorEntity.cs" />
     <Compile Include="Component_AttachPoint.cs" />
     <Compile Include="Component_Attachable.cs" />

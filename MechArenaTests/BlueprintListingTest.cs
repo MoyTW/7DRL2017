@@ -7,7 +7,7 @@ using Newtonsoft.Json;
 namespace MechArenaTests
 {
     [TestClass]
-    public class BlueprintLoaderTest
+    public class BlueprintListingTest
     {
         [TestMethod]
         public void TestLoading()
