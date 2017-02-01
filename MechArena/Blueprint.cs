@@ -2,6 +2,7 @@
 using System.IO;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -9,12 +10,54 @@ namespace MechArena
 {
     public class ComponentBlueprint
     {
-        public string Class { get; set; }
+        private Func<Component> construct;
+
+        public string ComponentClass { get; set; }
         public Dictionary<string, string> Params { get; set; }
+
+        private static Type InferType(string value)
+        {
+            return ConvertValue(value).GetType();
+        }
+
+        private static object ConvertValue(string value)
+        {
+            int parsedInt;
+            bool isInt = Int32.TryParse(value, out parsedInt);
+
+            if (isInt)
+            {
+                return parsedInt;
+            }
+            else if (value.Contains('.'))
+            {
+                var typeString = value.Substring(0, value.LastIndexOf('.'));
+                var inferredType = Type.GetType(typeString, false);
+                if (inferredType != null)
+                {
+                    return Enum.Parse(inferredType, value.Substring(value.LastIndexOf('.') + 1));
+                }
+            }
+
+            return value;
+        }
+
+        private void Initialize()
+        {
+            Type[] blueprintTypes = this.Params.Values.Select(p => InferType(p)).ToArray();
+            var constructor = Type.GetType(this.ComponentClass).GetConstructor(blueprintTypes);
+
+            var blueprintParams = this.Params.Values.Select(p => Expression.Constant(ConvertValue(p)));
+
+            this.construct = Expression.Lambda<Func<Component>>(Expression.New(constructor, blueprintParams))
+                .Compile();
+        }
 
         public Component BuildComponent()
         {
-            throw new NotImplementedException();
+            if (this.construct == null)
+                this.Initialize();
+            return this.construct();
         }
     }
 

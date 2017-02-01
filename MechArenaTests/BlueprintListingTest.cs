@@ -20,20 +20,27 @@ namespace MechArenaTests
             var blueprint = JsonConvert.DeserializeObject<List<Blueprint>>(text)[0];
             Console.WriteLine(blueprint.Label);
             Console.WriteLine(blueprint.TypeLabel);
-            foreach(var c in blueprint.Components)
+            foreach (var c in blueprint.Components)
             {
-                Console.WriteLine(c.Class);
-                foreach(var p in c.Params)
+                Console.WriteLine(c.ComponentClass);
+                foreach (var p in c.Params)
                 {
                     Console.WriteLine(p);
                 }
             }
             Assert.AreEqual(blueprint.Label, "a");
             Assert.AreEqual(blueprint.TypeLabel, "b");
-            Assert.AreEqual(blueprint.Components[0].Class, "Component_Attachable");
-            Assert.AreEqual(blueprint.Components[0].Params["sizeRequired"], "LARGE");
-            Assert.AreEqual(blueprint.Components[1].Class, "Component_Weapon");
-            Assert.AreEqual(blueprint.Components[1].Params["damage"], "5");
+            Assert.AreEqual("MechArena.Component_Attachable", blueprint.Components[0].ComponentClass);
+            Assert.AreEqual("MechArena.AttachmentSize.LARGE", blueprint.Components[0].Params["sizeRequired"]);
+            Assert.AreEqual("MechArena.Component_Weapon", blueprint.Components[1].ComponentClass);
+            Assert.AreEqual("5", blueprint.Components[1].Params["damage"]);
+
+            var constructed = blueprint.BuildEntity();
+            Assert.AreEqual("a", constructed.Label);
+            var attachableComponent = constructed.GetComponentOfType<Component_Attachable>();
+            Assert.AreEqual(AttachmentSize.LARGE, attachableComponent.SizeRequired);
+            var weaponComponent = constructed.GetComponentOfType<Component_Weapon>();
+            Assert.AreEqual(100, weaponComponent.WeaponAttributes[EntityAttributeType.REFIRE_TICKS]);
         }
     }
 }
