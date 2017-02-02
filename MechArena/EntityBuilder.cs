@@ -12,7 +12,6 @@ namespace MechArena
         #region Values
 
         // TODO: Hardcoded values all over!
-        public const string ArmActuatorLabel = "Arm.Actr.";
         public const string SlottablePartTypeLabel = "Slottable Part";
         public const string BodyPartTypeLabel = "Body Part";
         public const string MechTypeLabel = "Mech";
@@ -100,7 +99,7 @@ namespace MechArena
         {
             var armActuator = GetBodyPart(mech, location)
                 .TryGetSubEntities(SubEntitiesSelector.SWAPPABLE_ATTACH_POINTS)
-                .Where(e => e.Label == ArmActuatorLabel)
+                .Where(e => e.Label == Blueprints.ARM_ACTUATOR)
                 .First();
             armActuator.HandleEvent(new GameEvent_Slot(mech, armActuator, mountable));
             return mech;
@@ -157,32 +156,6 @@ namespace MechArena
             }
             return holster;
         }
-
-        # region Naked Only
-
-        public static Entity BuildPowerPlant()
-        {
-            return new Entity(label: "Pwr.Plnt.", typeLabel: SlottablePartTypeLabel)
-                .AddComponent(new Component_Slottable(5))
-                .AddComponent(new Component_InternalStructure(5));
-        }
-
-        public static Entity BuildArmActuator()
-        {
-            return new Entity(label: ArmActuatorLabel, typeLabel: SlottablePartTypeLabel)
-                .AddComponent(new Component_AttachPoint(AttachmentSize.LARGE, true, true))
-                .AddComponent(new Component_Slottable(2))
-                .AddComponent(new Component_InternalStructure(2));
-        }
-
-        public static Entity BuildLegActuator()
-        {
-            return new Entity(label: "Leg.Actr.", typeLabel: SlottablePartTypeLabel)
-                .AddComponent(new Component_Slottable(3))
-                .AddComponent(new Component_InternalStructure(3));
-        }
-
-        #endregion
 
         #region Weapons
 
@@ -296,11 +269,11 @@ namespace MechArena
                 mech.AddComponent(new Component_AI());
 
             SlotAt(mech, BodyPartLocation.HEAD, BuildSensorPackage());
-            SlotAt(mech, BodyPartLocation.TORSO, BuildPowerPlant());
-            SlotAt(mech, BodyPartLocation.LEFT_ARM, BuildArmActuator());
-            SlotAt(mech, BodyPartLocation.RIGHT_ARM, BuildArmActuator());
-            SlotAt(mech, BodyPartLocation.LEFT_LEG, BuildLegActuator());
-            SlotAt(mech, BodyPartLocation.RIGHT_LEG, BuildLegActuator());
+            SlotAt(mech, BodyPartLocation.TORSO, BlueprintListing.BuildForLabel(Blueprints.POWER_PLANT));
+            SlotAt(mech, BodyPartLocation.LEFT_ARM, BlueprintListing.BuildForLabel(Blueprints.ARM_ACTUATOR));
+            SlotAt(mech, BodyPartLocation.RIGHT_ARM, BlueprintListing.BuildForLabel(Blueprints.ARM_ACTUATOR));
+            SlotAt(mech, BodyPartLocation.LEFT_LEG, BlueprintListing.BuildForLabel(Blueprints.LEG_ACTUATOR));
+            SlotAt(mech, BodyPartLocation.RIGHT_LEG, BlueprintListing.BuildForLabel(Blueprints.LEG_ACTUATOR));
 
             // Slot in all the required components
             return mech;

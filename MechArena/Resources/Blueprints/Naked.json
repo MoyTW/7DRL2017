@@ -22,9 +22,11 @@
     "TypeLabel": "Slottable Part",
     "Components": [
       {
-        "ComponentClass": "MechArena.Component_Attachable",
+        "ComponentClass": "MechArena.Component_AttachPoint",
         "Params": {
-          "sizeRequired": "MechArena.AttachmentSize.LARGE"
+          "maxSize": "MechArena.AttachmentSize.LARGE",
+          "active": true,
+          "swappable": true
         }
       },
       {
