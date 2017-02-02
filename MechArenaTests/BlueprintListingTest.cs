@@ -42,5 +42,19 @@ namespace MechArenaTests
             var weaponComponent = constructed.GetComponentOfType<Component_Weapon>();
             Assert.AreEqual(100, weaponComponent.WeaponAttributes[EntityAttributeType.REFIRE_TICKS]);
         }
+
+        [TestMethod]
+        public void TestLoadsFromResources()
+        {
+            // TODO: Put in loader
+            // TODO: Test file in test project
+            BlueprintListing.LoadAllBlueprints();
+
+            var powerPlant = BlueprintListing.GetBlueprintByLabel(Blueprints.POWER_PLANT);
+            Assert.AreEqual("Pwr.Plnt.", powerPlant.Label);
+
+            var machinegun = BlueprintListing.GetBlueprintByLabel(Blueprints.MACHINEGUN);
+            Assert.AreEqual("Mchngn.", machinegun.Label);
+        }
     }
 }

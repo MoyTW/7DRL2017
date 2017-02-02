@@ -4,13 +4,13 @@
     "TypeLabel": "Slottable Part",
     "Components": [
       {
-        "Class": "Component_Slottable",
+        "ComponentClass": "MechArena.Component_Slottable",
         "Params": {
           "slotsRequired": 5
         }
       },
       {
-        "Class": "Component_InternalStructure",
+        "ComponentClass": "MechArena.Component_InternalStructure",
         "Params": {
           "structureMax": 5
         }
@@ -22,19 +22,19 @@
     "TypeLabel": "Slottable Part",
     "Components": [
       {
-        "Class": "Component_Attachable",
+        "ComponentClass": "MechArena.Component_Attachable",
         "Params": {
-          "sizeRequired": "LARGE"
+          "sizeRequired": "MechArena.AttachmentSize.LARGE"
         }
       },
       {
-        "Class": "Component_Slottable",
+        "ComponentClass": "MechArena.Component_Slottable",
         "Params": {
           "slotsRequired": 2
         }
       },
       {
-        "Class": "Component_InternalStructure",
+        "ComponentClass": "MechArena.Component_InternalStructure",
         "Params": {
           "structureMax": 2
         }
@@ -46,13 +46,13 @@
     "TypeLabel": "Slottable Part",
     "Components": [
       {
-        "Class": "Component_Slottable",
+        "ComponentClass": "MechArena.Component_Slottable",
         "Params": {
           "slotsRequired": 3
         }
       },
       {
-        "Class": "Component_InternalStructure",
+        "ComponentClass": "MechArena.Component_InternalStructure",
         "Params": {
           "structureMax": 3
         }
