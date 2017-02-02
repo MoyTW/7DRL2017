@@ -56,5 +56,10 @@ namespace MechArena
         {
             return BlueprintListing.labelsToBlueprints.Values;
         }
+
+        public static Entity BuildForLabel(string label)
+        {
+            return BlueprintListing.GetBlueprintByLabel(label).BuildEntity();
+        }
     }
 }
