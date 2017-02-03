@@ -24,17 +24,17 @@ namespace MechArena
         {
             int parsedInt;
             bool isInt = Int32.TryParse(value, out parsedInt);
+            double parsedDouble;
+            bool isDouble = Double.TryParse(value, out parsedDouble);
             bool parsedBool;
             bool isBool = Boolean.TryParse(value, out parsedBool);
 
             if (isInt)
-            {
                 return parsedInt;
-            }
+            else if (isDouble)
+                return parsedDouble;
             else if (isBool)
-            {
                 return parsedBool;
-            }
             else if (value.Contains('.'))
             {
                 var typeString = value.Substring(0, value.LastIndexOf('.'));

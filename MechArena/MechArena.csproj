@@ -142,6 +142,9 @@
     <None Include="Resources\Blueprints\Naked.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Resources\Blueprints\Parts.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Resources\Blueprints\Weapons.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

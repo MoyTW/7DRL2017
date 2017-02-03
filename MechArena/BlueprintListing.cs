@@ -24,6 +24,15 @@ namespace MechArena
         public const string DAGGER = "Dggr.";
         public const string SWORD = "Swrd.";
         public const string HAMMER = "Hmmr.";
+        public const string SMALL_MOUNT = "Smll.Mnt.";
+        public const string MEDIUM_MOUNT = "Mdm.Mnt.";
+        public const string LARGE_MOUNT = "Lrg.Mnt.";
+        public const string SMALL_HOLSTER = "Smll.Hlstr.";
+        public const string MEDIUM_HOLSTER = "Mdm.Hlstr.";
+        public const string LARGE_HOLSTER = "Lrg.Hlstr.";
+        public const string ACCELERATOR = "Acclrtr.";
+        public const string SENSOR_PACKAGE = "Snsr.Pckg.";
+        public const string ARMOR = "Armr.";
     }
 
     public static class BlueprintListing

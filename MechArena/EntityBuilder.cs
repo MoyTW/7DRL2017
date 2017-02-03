@@ -74,23 +74,45 @@ namespace MechArena
             }
         }
 
-        private static Entity BuildWeapon(string weaponLabel, AttachmentSize size, int toHit, int maxRange, int damage, int refireTicks)
-        {
-            return new Entity(label: weaponLabel, typeLabel: EntityBuilder.WeaponTypeLabel)
-                .AddComponent(new Component_Attachable(size))
-                .AddComponent(new Component_Weapon(size, toHit, maxRange, damage, refireTicks));
-        }
-
         private static Entity BuildMountForWeapon(Entity weapon)
         {
-            var mount = BuildFixedMount(weapon.GetComponentOfType<Component_Attachable>().SizeRequired);
+            Entity mount;
+            switch (weapon.GetComponentOfType<Component_Attachable>().SizeRequired)
+            {
+                case AttachmentSize.SMALL:
+                    mount = BlueprintListing.BuildForLabel(Blueprints.SMALL_MOUNT);
+                    break;
+                case AttachmentSize.MEDIUM:
+                    mount = BlueprintListing.BuildForLabel(Blueprints.MEDIUM_MOUNT);
+                    break;
+                case AttachmentSize.LARGE:
+                    mount = BlueprintListing.BuildForLabel(Blueprints.LARGE_MOUNT);
+                    break;
+                default:
+                    throw new ArgumentException("BuildMountForWeapon can't handle size: not SMALL, MEDIUM, LARGE");
+            }
+
             mount.HandleEvent(new GameEvent_Slot(null, mount, weapon));
             return mount;
         }
 
         private static Entity BuildHolsterForWeapon(Entity weapon)
         {
-            var holster = BuildHolster(weapon.GetComponentOfType<Component_Attachable>().SizeRequired);
+            Entity holster;
+            switch (weapon.GetComponentOfType<Component_Attachable>().SizeRequired)
+            {
+                case AttachmentSize.SMALL:
+                    holster = BlueprintListing.BuildForLabel(Blueprints.SMALL_HOLSTER);
+                    break;
+                case AttachmentSize.MEDIUM:
+                    holster = BlueprintListing.BuildForLabel(Blueprints.MEDIUM_HOLSTER);
+                    break;
+                case AttachmentSize.LARGE:
+                    holster = BlueprintListing.BuildForLabel(Blueprints.LARGE_HOLSTER);
+                    break;
+                default:
+                    throw new ArgumentException("BuildHolsterForWeapon can't handle size: not SMALL, MEDIUM, LARGE");
+            }
             holster.HandleEvent(new GameEvent_Slot(null, holster, weapon));
             return holster;
         }
@@ -108,54 +130,6 @@ namespace MechArena
         #endregion
 
         #region Slottable Parts
-
-        public static Entity BuildFixedMount(AttachmentSize size)
-        {
-            var mount = new Entity(label: "Mount", typeLabel: EntityBuilder.SlottablePartTypeLabel)
-                .AddComponent(new Component_AttachPoint(size, active: true, swappable: false));
-            switch (size)
-            {
-                case AttachmentSize.SMALL:
-                    mount.AddComponent(new Component_Slottable(2))
-                        .AddComponent(new Component_InternalStructure(2));
-                    break;
-                case AttachmentSize.MEDIUM:
-                    mount.AddComponent(new Component_Slottable(4))
-                        .AddComponent(new Component_InternalStructure(4));
-                    break;
-                case AttachmentSize.LARGE:
-                    mount.AddComponent(new Component_Slottable(8))
-                        .AddComponent(new Component_InternalStructure(8));
-                    break;
-                default:
-                    throw new ArgumentException("I have no idea how you passed " + size + " in.");
-            }
-            return mount;
-        }
-
-        public static Entity BuildHolster(AttachmentSize size)
-        {
-            var holster = new Entity(label: "Holster", typeLabel: EntityBuilder.SlottablePartTypeLabel)
-                .AddComponent(new Component_AttachPoint(size, active: false, swappable: true));
-            switch (size)
-            {
-                case AttachmentSize.SMALL:
-                    holster.AddComponent(new Component_Slottable(1))
-                        .AddComponent(new Component_InternalStructure(2));
-                    break;
-                case AttachmentSize.MEDIUM:
-                    holster.AddComponent(new Component_Slottable(2))
-                        .AddComponent(new Component_InternalStructure(4));
-                    break;
-                case AttachmentSize.LARGE:
-                    holster.AddComponent(new Component_Slottable(4))
-                        .AddComponent(new Component_InternalStructure(8));
-                    break;
-                default:
-                    throw new ArgumentException("I have no idea how you passed " + size + " in.");
-            }
-            return holster;
-        }
 
         #region Weapons
 
@@ -220,24 +194,17 @@ namespace MechArena
 
         public static Entity BuildAccelerator()
         {
-            return new Entity(label: "Accel.", typeLabel: SlottablePartTypeLabel)
-                .AddComponent(new Component_AttributeModifierMult(EntityAttributeType.SPEED, .9))
-                .AddComponent(new Component_Slottable(1))
-                .AddComponent(new Component_InternalStructure(1));
+            return BlueprintListing.BuildForLabel(Blueprints.ACCELERATOR);
         }
 
         public static Entity BuildSensorPackage()
         {
-            return new Entity(label: "Snsr.Pckg.", typeLabel: SlottablePartTypeLabel)
-                .AddComponent(new Component_Slottable(2))
-                .AddComponent(new Component_InternalStructure(2));
+            return BlueprintListing.BuildForLabel(Blueprints.SENSOR_PACKAGE);
         }
 
         public static Entity BuildArmorPart()
         {
-            return new Entity(label: "Armor", typeLabel: BodyPartTypeLabel)
-                .AddComponent(new Component_Slottable(1))
-                .AddComponent(new Component_InternalStructure(4));
+            return BlueprintListing.BuildForLabel(Blueprints.ARMOR);
         }
 
         #endregion
