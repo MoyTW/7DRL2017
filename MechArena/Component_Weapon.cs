@@ -8,7 +8,7 @@ namespace MechArena
     public class Component_Weapon : Component_TracksTime
     {
         public AttachmentSize Size { get; }
-        private readonly Dictionary<EntityAttributeType, int> WeaponAttributes;
+        public readonly Dictionary<EntityAttributeType, int> WeaponAttributes;
 
         // TODO: I would like to define a construct which can be read from a file to construct these!
         // Right now I'll just hard-code them all and feel bad about it.

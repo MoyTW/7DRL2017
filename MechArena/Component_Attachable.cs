@@ -4,7 +4,7 @@ using System.Collections.Immutable;
 namespace MechArena
 {
     [Serializable()]
-    class Component_Attachable : Component
+    public class Component_Attachable : Component
     {
         private Entity attachedTo;
 

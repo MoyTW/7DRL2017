@@ -1,0 +1,24 @@
+[
+  {
+    "Label": "a",
+    "TypeLabel": "b",
+    "Components": [
+      {
+        "ComponentClass": "MechArena.Component_Attachable",
+        "Params": {
+          "sizeRequired": "MechArena.AttachmentSize.LARGE"
+        }
+      },
+      {
+        "ComponentClass": "MechArena.Component_Weapon",
+        "Params": {
+          "size": "MechArena.AttachmentSize.LARGE",
+          "toHit": 0,
+          "maxRange": 10,
+          "damage": 5,
+          "refireTicks": 100
+        }
+      }
+    ]
+  }
+]

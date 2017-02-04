@@ -1,0 +1,244 @@
+[
+  {
+    "Label": "Mssl.Rck.",
+    "TypeLabel": "Weapon",
+    "Components": [
+      {
+        "ComponentClass": "MechArena.Component_Attachable",
+        "Params": {
+          "sizeRequired": "MechArena.AttachmentSize.LARGE"
+        }
+      },
+      {
+        "ComponentClass": "MechArena.Component_Weapon",
+        "Params": {
+          "size": "MechArena.AttachmentSize.MEDIUM",
+          "toHit": 1,
+          "maxRange": 15,
+          "damage": 4,
+          "refireTicks": 100
+        }
+      }
+    ]
+  },
+  {
+    "Label": "Mn.Mssl.",
+    "TypeLabel": "Weapon",
+    "Components": [
+      {
+        "ComponentClass": "MechArena.Component_Attachable",
+        "Params": {
+          "sizeRequired": "MechArena.AttachmentSize.SMALL"
+        }
+      },
+      {
+        "ComponentClass": "MechArena.Component_Weapon",
+        "Params": {
+          "size": "MechArena.AttachmentSize.SMALL",
+          "toHit": 1,
+          "maxRange": 10,
+          "damage": 2,
+          "refireTicks": 75
+        }
+      }
+    ]
+  },
+  {
+    "Label": "Snpr.Rfl.",
+    "TypeLabel": "Weapon",
+    "Components": [
+      {
+        "ComponentClass": "MechArena.Component_Attachable",
+        "Params": {
+          "sizeRequired": "MechArena.AttachmentSize.MEDIUM"
+        }
+      },
+      {
+        "ComponentClass": "MechArena.Component_Weapon",
+        "Params": {
+          "size": "MechArena.AttachmentSize.MEDIUM",
+          "toHit": 1,
+          "maxRange": 12,
+          "damage": 3,
+          "refireTicks": 80
+        }
+      }
+    ]
+  },
+  {
+    "Label": "Rfl.",
+    "TypeLabel": "Weapon",
+    "Components": [
+      {
+        "ComponentClass": "MechArena.Component_Attachable",
+        "Params": {
+          "sizeRequired": "MechArena.AttachmentSize.LARGE"
+        }
+      },
+      {
+        "ComponentClass": "MechArena.Component_Weapon",
+        "Params": {
+          "size": "MechArena.AttachmentSize.LARGE",
+          "toHit": 6,
+          "maxRange": 20,
+          "damage": 8,
+          "refireTicks": 250
+        }
+      }
+    ]
+  },
+  {
+    "Label": "Mchngn.",
+    "TypeLabel": "Weapon",
+    "Components": [
+      {
+        "ComponentClass": "MechArena.Component_Attachable",
+        "Params": {
+          "sizeRequired": "MechArena.AttachmentSize.LARGE"
+        }
+      },
+      {
+        "ComponentClass": "MechArena.Component_Weapon",
+        "Params": {
+          "size": "MechArena.AttachmentSize.LARGE",
+          "toHit": -2,
+          "maxRange": 14,
+          "damage": 1,
+          "refireTicks": 20
+        }
+      }
+    ]
+  },
+  {
+    "Label": "Shtgn",
+    "TypeLabel": "Weapon",
+    "Components": [
+      {
+        "ComponentClass": "MechArena.Component_Attachable",
+        "Params": {
+          "sizeRequired": "MechArena.AttachmentSize.MEDIUM"
+        }
+      },
+      {
+        "ComponentClass": "MechArena.Component_Weapon",
+        "Params": {
+          "size": "MechArena.AttachmentSize.MEDIUM",
+          "toHit": 3,
+          "maxRange": 8,
+          "damage": 6,
+          "refireTicks": 100
+        }
+      }
+    ]
+  },
+  {
+    "Label": "Pstl.",
+    "TypeLabel": "Weapon",
+    "Components": [
+      {
+        "ComponentClass": "MechArena.Component_Attachable",
+        "Params": {
+          "sizeRequired": "MechArena.AttachmentSize.SMALL"
+        }
+      },
+      {
+        "ComponentClass": "MechArena.Component_Weapon",
+        "Params": {
+          "size": "MechArena.AttachmentSize.SMALL",
+          "toHit": 2,
+          "maxRange": 8,
+          "damage": 2,
+          "refireTicks": 65
+        }
+      }
+    ]
+  },
+  {
+    "Label": "Rckt.Pd.",
+    "TypeLabel": "Weapon",
+    "Components": [
+      {
+        "ComponentClass": "MechArena.Component_Attachable",
+        "Params": {
+          "sizeRequired": "MechArena.AttachmentSize.SMALL"
+        }
+      },
+      {
+        "ComponentClass": "MechArena.Component_Weapon",
+        "Params": {
+          "size": "MechArena.AttachmentSize.SMALL",
+          "toHit": -3,
+          "maxRange": 6,
+          "damage": 9,
+          "refireTicks": 170
+        }
+      }
+    ]
+  },
+  {
+    "Label": "Dggr.",
+    "TypeLabel": "Weapon",
+    "Components": [
+      {
+        "ComponentClass": "MechArena.Component_Attachable",
+        "Params": {
+          "sizeRequired": "MechArena.AttachmentSize.SMALL"
+        }
+      },
+      {
+        "ComponentClass": "MechArena.Component_Weapon",
+        "Params": {
+          "size": "MechArena.AttachmentSize.SMALL",
+          "toHit": 2,
+          "maxRange": 1,
+          "damage": 2,
+          "refireTicks": 15
+        }
+      }
+    ]
+  },
+  {
+    "Label": "Swrd.",
+    "TypeLabel": "Weapon",
+    "Components": [
+      {
+        "ComponentClass": "MechArena.Component_Attachable",
+        "Params": {
+          "sizeRequired": "MechArena.AttachmentSize.MEDIUM"
+        }
+      },
+      {
+        "ComponentClass": "MechArena.Component_Weapon",
+        "Params": {
+          "size": "MechArena.AttachmentSize.MEDIUM",
+          "toHit": 0,
+          "maxRange": 1,
+          "damage": 6,
+          "refireTicks": 30
+        }
+      }
+    ]
+  },
+  {
+    "Label": "Hmmr.",
+    "TypeLabel": "Weapon",
+    "Components": [
+      {
+        "ComponentClass": "MechArena.Component_Attachable",
+        "Params": {
+          "sizeRequired": "MechArena.AttachmentSize.LARGE"
+        }
+      },
+      {
+        "ComponentClass": "MechArena.Component_Weapon",
+        "Params": {
+          "size": "MechArena.AttachmentSize.LARGE",
+          "toHit": -1,
+          "maxRange": 1,
+          "damage": 9,
+          "refireTicks": 60
+        }
+      }
+    ]
+  }
+]

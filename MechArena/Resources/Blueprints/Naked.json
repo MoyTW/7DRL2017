@@ -1,0 +1,64 @@
+[
+  {
+    "Label": "Pwr.Plnt.",
+    "TypeLabel": "Slottable Part",
+    "Components": [
+      {
+        "ComponentClass": "MechArena.Component_Slottable",
+        "Params": {
+          "slotsRequired": 5
+        }
+      },
+      {
+        "ComponentClass": "MechArena.Component_InternalStructure",
+        "Params": {
+          "structureMax": 5
+        }
+      }
+    ]
+  },
+  {
+    "Label": "Arm.Actr.",
+    "TypeLabel": "Slottable Part",
+    "Components": [
+      {
+        "ComponentClass": "MechArena.Component_AttachPoint",
+        "Params": {
+          "maxSize": "MechArena.AttachmentSize.LARGE",
+          "active": true,
+          "swappable": true
+        }
+      },
+      {
+        "ComponentClass": "MechArena.Component_Slottable",
+        "Params": {
+          "slotsRequired": 2
+        }
+      },
+      {
+        "ComponentClass": "MechArena.Component_InternalStructure",
+        "Params": {
+          "structureMax": 2
+        }
+      }
+    ]
+  },
+  {
+    "Label": "Lg.Actr.",
+    "TypeLabel": "Slottable Part",
+    "Components": [
+      {
+        "ComponentClass": "MechArena.Component_Slottable",
+        "Params": {
+          "slotsRequired": 3
+        }
+      },
+      {
+        "ComponentClass": "MechArena.Component_InternalStructure",
+        "Params": {
+          "structureMax": 3
+        }
+      }
+    ]
+  }
+]
