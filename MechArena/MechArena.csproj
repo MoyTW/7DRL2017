@@ -50,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AI\Action.cs" />
+    <Compile Include="AI\Condition_CanSee.cs" />
     <Compile Include="AI\Condition_Distance.cs" />
     <Compile Include="AI\Condition_Health.cs" />
     <Compile Include="AI\Condition_MoveSpeed.cs" />
