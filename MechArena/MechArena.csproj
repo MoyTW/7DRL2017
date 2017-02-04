@@ -49,6 +49,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AI\Action.cs" />
+    <Compile Include="AI\Condition_Distance.cs" />
+    <Compile Include="AI\Condition_Health.cs" />
+    <Compile Include="AI\Condition_MoveSpeed.cs" />
+    <Compile Include="AI\SingleClause.cs" />
+    <Compile Include="AI\Condition.cs" />
+    <Compile Include="AI\Guidebook.cs" />
     <Compile Include="ArenaState.cs" />
     <Compile Include="ArenaBuilder.cs" />
     <Compile Include="BodyPartLocation.cs" />
