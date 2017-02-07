@@ -17,8 +17,15 @@ namespace MechArenaTests
     [TestFixture]
     public class EntityTest
     {
-        private Entity ent = new Entity();
-        private Component cmp = new TestComponent();
+        private Entity ent;
+        private Component cmp;
+
+		[SetUp()]
+		public void Initialize()
+		{
+			this.ent = new Entity ();
+			this.cmp = new TestComponent ();
+		}
 
         [Test]
         public void TestAddComponent()
