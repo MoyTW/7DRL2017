@@ -143,7 +143,6 @@ namespace MechArena.UI
             console.Print(x, y++, "# WEAPONS LISTING  #", RLColor.White);
             console.Print(x, y++, "####################", RLColor.White);
 
-            var skeleton = this.mech.GetComponentOfType<Component_MechSkeleton>();
             foreach (var entry in this.holstersDict)
             {
                 console.Print(x, y, "#                  #", RLColor.White);
@@ -175,7 +174,6 @@ namespace MechArena.UI
             console.Print(x, y++, "#  MOUNTS LISTING  #", RLColor.White);
             console.Print(x, y++, "####################", RLColor.White);
 
-            var skeleton = this.mech.GetComponentOfType<Component_MechSkeleton>();
             foreach (var entry in this.mountsDict)
             {
                 console.Print(x, y, "#                  #", RLColor.White);

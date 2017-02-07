@@ -13,8 +13,6 @@ namespace MechArena
         public IMap GameMap { get; }
         public IRandom Rand { get; }
 
-        private GameQuery_EntityAttribute attackerToHit, attackerDamage;
-
         public GameEvent_Attack(int currentTick, Entity attacker, Entity target, Entity weapon, IMap gameMap,
             IRandom rand, BodyPartLocation subTarget=BodyPartLocation.ANY) : base(attacker, weapon)
         {
@@ -26,17 +24,6 @@ namespace MechArena
             this.SubTarget = subTarget;
             this.GameMap = gameMap;
             this.Rand = rand;
-        }
-
-        public void RegisterAttackerAttributes(GameQuery_EntityAttribute toHit, GameQuery_EntityAttribute damage)
-        {
-            if (!(toHit.AttributeType == EntityAttributeType.TO_HIT))
-                throw new ArgumentException("Can't register toHit for attack, type != TO_HIT");
-            if (!(damage.AttributeType == EntityAttributeType.DAMAGE))
-                throw new ArgumentException("Can't register damage for attack, type != DAMAGE");
-
-            this.attackerToHit = toHit;
-            this.attackerDamage = damage;
         }
     }
 }

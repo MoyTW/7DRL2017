@@ -44,7 +44,6 @@ namespace MechArenaTests
         [Test]
         public void TestRemoveComponent()
         {
-            var a = new List<String>();
             this.ent.AddComponent(this.cmp);
             this.ent.RemoveComponent(this.cmp);
         }

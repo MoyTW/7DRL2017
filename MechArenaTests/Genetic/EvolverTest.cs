@@ -8,7 +8,6 @@ namespace MechArenaTests.Genetic
     [TestFixture]
     public class EvolverTest
     {
-        private Random rand = new Random();
         private string target = "Batman";
         private int chromosomeSize = 6;
         private GeneFactory<char> factory = new GeneFactory<char>("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ");
