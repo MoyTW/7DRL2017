@@ -1,15 +1,15 @@
 ﻿using System;
 using MechArena;
 using System.Collections.Generic;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using Newtonsoft.Json;
 
 namespace MechArenaTests
 {
-    [TestClass]
+    [TestFixture]
     public class BlueprintListingTest
     {
-        [TestMethod]
+        [Test]
         public void TestLoading()
         {
             // TODO: Put in loader
@@ -43,7 +43,7 @@ namespace MechArenaTests
             Assert.AreEqual(100, weaponComponent.WeaponAttributes[EntityAttributeType.REFIRE_TICKS]);
         }
 
-        [TestMethod]
+        [Test]
         public void TestLoadsFromResources()
         {
             // TODO: Put in loader

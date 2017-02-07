@@ -3,11 +3,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace MechArenaTests.Tournament
 {
-    [TestClass]
+    [TestFixture]
     public class Schedule_RoundRobinTest
     {
         private List<ICompetitor> BuildComps(int numComps)
@@ -20,7 +20,7 @@ namespace MechArenaTests.Tournament
             return comps;
         }
 
-        [TestMethod]
+        [Test]
         public void TestTiebreakerSimple()
         {
             var comps = this.BuildComps(3);
@@ -35,7 +35,7 @@ namespace MechArenaTests.Tournament
             Assert.AreEqual(3, srr.ScheduledMatches().Where(m => m.IsTieBreaker).Count());
         }
 
-        [TestMethod]
+        [Test]
         public void TestTiebreakerModerate()
         {
             var comps = this.BuildComps(4);
@@ -54,7 +54,7 @@ namespace MechArenaTests.Tournament
             Assert.AreEqual(3, srr.ScheduledMatches().Where(m => m.IsTieBreaker).Count());
         }
 
-        [TestMethod]
+        [Test]
         public void TestTiebreakerComplex()
         {
             var comps = this.BuildComps(5);

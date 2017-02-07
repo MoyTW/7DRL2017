@@ -2,11 +2,11 @@
 
 using System;
 using System.Collections.Generic;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace MechArenaTests.Tournament
 {
-    [TestClass]
+    [TestFixture]
     public class Schedule_GroupStageTest
     {
         // TODO: Util fn
@@ -20,7 +20,7 @@ namespace MechArenaTests.Tournament
             return comps;
         }
 
-        [TestMethod]
+        [Test]
         public void TestSplits()
         {
             var comps = this.BuildComps(24);

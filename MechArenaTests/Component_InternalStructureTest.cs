@@ -2,11 +2,11 @@
 using MechArena;
 
 using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace MechArenaTests
 {
-    [TestClass]
+    [TestFixture]
     public class Component_InternalStructureTest
     {
         IRandom rand = new DotNetRandom();
@@ -20,14 +20,14 @@ namespace MechArenaTests
             return e;
         }
 
-        [TestInitialize()]
+        [SetUp()]
         public void Initialize()
         {
             this.internalStructure = new Entity();
             this.internalStructure.AddComponent(new Component_InternalStructure(this.structureMax));
         }
 
-        [TestMethod]
+        [Test]
         public void CanTakeDamage()
         {
             var ev = new GameEvent_TakeDamage(3, this.rand);
@@ -45,7 +45,7 @@ namespace MechArenaTests
                 this.internalStructure.GetComponentOfType<Component_InternalStructure>().StructureRemaining);
         }
 
-        [TestMethod]
+        [Test]
         public void CanTakeExactDamage()
         {
             var ev = new GameEvent_TakeDamage(10, this.rand);
@@ -56,7 +56,7 @@ namespace MechArenaTests
                 this.internalStructure.GetComponentOfType<Component_InternalStructure>().StructureRemaining);
         }
 
-        [TestMethod]
+        [Test]
         public void CanTakeDamageOverflowsProperly()
         {
             var ev = new GameEvent_TakeDamage(20, this.rand);

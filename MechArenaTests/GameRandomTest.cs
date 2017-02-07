@@ -4,17 +4,17 @@ using MechArena;
 
 using System;
 using System.Collections.Generic;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace MechArenaTests
 {
-    [TestClass]
+    [TestFixture]
     public class GameRandomTest
     {
         IRandom rand = new DotNetRandom();
 
         // Probibalistic failures possible.
-        [TestMethod]
+        [Test]
         public void TestRandomByWeight()
         {
             Dictionary<String, int> resultCounts = new Dictionary<string, int>();

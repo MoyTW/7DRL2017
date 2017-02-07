@@ -1,13 +1,13 @@
 ﻿using MechArena;
 using MechArena.Genetic;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace MechArenaTests.Genetic
 {
-    [TestClass]
+    [TestFixture]
     public class MechEvolverTest
     {
         private Random rand = new Random();
@@ -55,7 +55,7 @@ namespace MechArenaTests.Genetic
             return testMech.TryGetAttribute(EntityAttributeType.STRUCTURE).Value;
         }
 
-        [TestMethod]
+        [Test]
         public void TestMechEvolverStructure()
         {
             // It's REALLY important that you have some selection pressure during the culling phase! I couldn't get it
@@ -143,7 +143,7 @@ namespace MechArenaTests.Genetic
         /* Commented out because it takes forever to run and doesn't really seem to work!
          * The issue with this is that the designs seem to converge very slowly into "Fill every slot with close-range
          * weapons" which is as expected, but also very boring and it doesn't seem to prioritize one specific weapon.
-        [TestMethod]
+        [Test]
         public void TestMechEvolverArena()
         {
             // 7 minutes runtime

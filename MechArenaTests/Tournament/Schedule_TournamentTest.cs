@@ -1,11 +1,11 @@
 ﻿using MechArena.Tournament;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using RogueSharp.Random;
 using System.Collections.Generic;
 
 namespace MechArenaTests.Tournament
 {
-    [TestClass]
+    [TestFixture]
     public class Schedule_TournamentTest
     {
         // TODO: Util fn
@@ -19,7 +19,7 @@ namespace MechArenaTests.Tournament
             return comps;
         }
 
-        [TestMethod]
+        [Test]
         public void TestFirstStage()
         {
             var comps = this.BuildComps(256);
@@ -37,7 +37,7 @@ namespace MechArenaTests.Tournament
             Assert.AreEqual(2, st.RoundNum());
         }
 
-        [TestMethod]
+        [Test]
         public void TestSecondStage()
         {
             var comps = this.BuildComps(256);

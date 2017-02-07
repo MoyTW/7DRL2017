@@ -1,5 +1,5 @@
 ﻿using MechArena;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -14,13 +14,13 @@ namespace MechArenaTests
         }
     }
 
-    [TestClass]
+    [TestFixture]
     public class EntityTest
     {
         private Entity ent = new Entity();
         private Component cmp = new TestComponent();
 
-        [TestMethod]
+        [Test]
         public void TestAddComponent()
         {
             this.ent.AddComponent(this.cmp);
@@ -28,22 +28,20 @@ namespace MechArenaTests
             Assert.AreEqual(this.cmp, this.ent.InspectComponents()[0]);
         }
 
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
+        [Test]
         public void TestAddComponentDouble()
         {
             this.ent.AddComponent(this.cmp);
-            this.ent.AddComponent(this.cmp);
+			Assert.Throws<ArgumentException> (() => this.ent.AddComponent(this.cmp));
         }
 
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentOutOfRangeException))]
+        [Test]
         public void TestRemoveComponentThrows()
         {
-            this.ent.RemoveComponent(this.cmp);
+			Assert.Throws<ArgumentOutOfRangeException> (() => this.ent.RemoveComponent (this.cmp));
         }
 
-        [TestMethod]
+        [Test]
         public void TestRemoveComponent()
         {
             var a = new List<String>();
@@ -51,7 +49,7 @@ namespace MechArenaTests
             this.ent.RemoveComponent(this.cmp);
         }
 
-        [TestMethod]
+        [Test]
         public void TestDeepCopy()
         {
             var mech = EntityBuilder.BuildArmoredMech("test", false);

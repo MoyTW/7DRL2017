@@ -1,13 +1,13 @@
 ﻿using MechArena;
 
 using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace MechArenaTests
 {
     // I don't know how to design in OO any more! The fact that I have one test class for 4(!) different classes is a
     // serious smell!
-    [TestClass]
+    [TestFixture]
     public class Component_SlottedContainerTest
     {
         int containerSize = 5;
@@ -20,14 +20,14 @@ namespace MechArenaTests
             return e;
         }
 
-        [TestInitialize()]
+        [SetUp()]
         public void Initialize()
         {
             this.slottedContainer = new Entity();
             this.slottedContainer.AddComponent(new Component_SlottedContainer(this.containerSize));
         }
 
-        [TestMethod]
+        [Test]
         public void CanSlot()
         {
             var small = this.SlottableRequiring(2);
@@ -43,7 +43,7 @@ namespace MechArenaTests
             Assert.AreEqual(0, this.slottedContainer.GetComponentOfType<Component_SlottedContainer>().SlotsRemaining);
         }
 
-        [TestMethod]
+        [Test]
         public void CanGracefullyPassIfHuge()
         {
             var huge = this.SlottableRequiring(999);
@@ -54,18 +54,17 @@ namespace MechArenaTests
                 this.slottedContainer.GetComponentOfType<Component_SlottedContainer>().SlotsRemaining);
         }
 
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
+        [Test]
         public void CannotDoubleSlot()
         {
             var small = this.SlottableRequiring(2);
             var ev = new GameEvent_Slot(null, this.slottedContainer, small);
             this.slottedContainer.HandleEvent(ev);
-            this.slottedContainer.HandleEvent(new GameEvent_Slot(null, this.slottedContainer, small));
-
+			var slotEvent = new GameEvent_Slot (null, this.slottedContainer, small);
+			Assert.Throws<ArgumentException> (() => this.slottedContainer.HandleEvent(slotEvent));
         }
 
-        [TestMethod]
+        [Test]
         public void CanUnslot()
         {
             var small = this.SlottableRequiring(2);
@@ -79,15 +78,12 @@ namespace MechArenaTests
                 this.slottedContainer.GetComponentOfType<Component_SlottedContainer>().SlotsRemaining);
         }
 
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
+        [Test]
         public void CannotUnslotIfUnattached()
         {
             var small = this.SlottableRequiring(2);
             var unslot = new GameEvent_Unslot(null, this.slottedContainer, small);
-            this.slottedContainer.HandleEvent(unslot);
-            Assert.IsTrue(unslot.Completed);
-            Assert.AreEqual(5, this.slottedContainer.GetComponentOfType<Component_SlottedContainer>().SlotsRemaining);
+			Assert.Throws<ArgumentException>(() => this.slottedContainer.HandleEvent(unslot));
         }
     }
 }

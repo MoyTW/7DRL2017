@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Linq;
 using MechArena.Genetic;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace MechArenaTests.Genetic
 {
-    [TestClass]
+    [TestFixture]
     public class EvolverTest
     {
         private Random rand = new Random();
@@ -37,7 +37,7 @@ namespace MechArenaTests.Genetic
             return this.Fitness(survivor) >= 2;
         }
 
-        [TestMethod]
+        [Test]
         public void TestEvolver()
         {
             var e = new Evolver<char>(this.target.Count(), this.Fitness, 150, 0.25, 50, this.factory, this.chromosomeSize);

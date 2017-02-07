@@ -3,11 +3,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace MechArenaTests.Tournament
 {
-    [TestClass]
+    [TestFixture]
     public class SchedulerTest
     {
         private void AssertCounts(int numComps, int countMatches, int countMatchesPerComp)
@@ -34,7 +34,7 @@ namespace MechArenaTests.Tournament
             }
         }
 
-        [TestMethod]
+        [Test]
         public void TestRoundRobin()
         {
             this.AssertCounts(2, 1, 1);

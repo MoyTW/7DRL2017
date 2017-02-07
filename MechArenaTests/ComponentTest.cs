@@ -1,11 +1,11 @@
 ﻿using MechArena;
 using System.Collections.Immutable;
 using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace MechArenaTests
 {
-    [TestClass]
+    [TestFixture]
     public class ComponentTest
     {
         private class NeutralComponent : Component
@@ -42,28 +42,29 @@ namespace MechArenaTests
             }
         }
 
-        [TestMethod]
-        [ExpectedException(typeof(InvalidOperationException))]
+        [Test]
         public void TestCannotAddAfter()
         {
-            new Entity().AddComponent(new NeutralComponent()).AddComponent(new CannotAddAfterNeutralComponent());
+			var e = new Entity ().AddComponent (new NeutralComponent ());
+			Assert.Throws<InvalidOperationException> (() =>
+				e.AddComponent(new CannotAddAfterNeutralComponent()));
         }
 
-        [TestMethod]
+        [Test]
         public void TestCanAddBefore()
         {
             var e = new Entity().AddComponent(new CannotAddAfterNeutralComponent()).AddComponent(new NeutralComponent());
             Assert.IsTrue(e.HasComponentOfType<CannotAddAfterNeutralComponent>());
         }
 
-        [TestMethod]
-        [ExpectedException(typeof(InvalidOperationException))]
+        [Test]
         public void TestRequiresThrowsIfNotPresent()
         {
-            new Entity().AddComponent(new RequiresNeutralComponent());
+			Assert.Throws<InvalidOperationException>( () =>
+				new Entity().AddComponent(new RequiresNeutralComponent()));
         }
 
-        [TestMethod]
+        [Test]
         public void TestRequiresWorksIfPresent()
         {
             var e = new Entity().AddComponent(new NeutralComponent()).AddComponent(new RequiresNeutralComponent());

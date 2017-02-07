@@ -3,11 +3,11 @@
 using MechArena;
 
 using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace MechArenaTests
 {
-    [TestClass]
+    [TestFixture]
     public class Component_SlottedStructureTest
     {
         IRandom rand = new DotNetRandom();
@@ -27,7 +27,7 @@ namespace MechArenaTests
             return en;
         }
 
-        [TestInitialize()]
+        [SetUp()]
         public void Initialize()
         {
             this.bodyPart = new Entity();
@@ -39,7 +39,7 @@ namespace MechArenaTests
         }
 
         // TODO: Fall-through should not be tested here!
-        [TestMethod]
+        [Test]
         public void TestTakeDamageWithNoSlottedEntities()
         {
             var ev = new GameEvent_TakeDamage(3, this.rand);
@@ -50,7 +50,7 @@ namespace MechArenaTests
                 this.bodyPart.GetComponentOfType<Component_InternalStructure>().StructureRemaining);
         }
 
-        [TestMethod]
+        [Test]
         public void TestTakeDamageWithSlottedEntities()
         {
             Entity slotted = this.SlotEntityWithStructure(this.bodyPart, 5);
@@ -65,7 +65,7 @@ namespace MechArenaTests
         }
 
         // Probibalistic failure possible!
-        [TestMethod]
+        [Test]
         public void TestAssignsDamageToLargestSlottedEntity()
         {
             Entity tinySlotted = this.SlotEntityWithStructure(this.bodyPart, 3);
@@ -82,7 +82,7 @@ namespace MechArenaTests
         }
 
         // TODO: Fall-through should not be tested here!
-        [TestMethod]
+        [Test]
         public void TestTakeDamageFallsThrough()
         {
             Entity tinySlotted = this.SlotEntityWithStructure(this.bodyPart, 5);
