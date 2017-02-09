@@ -8,14 +8,20 @@ namespace MechArena.AI
 {
     class Condition_CanSeeEnemy : Condition
     {
-        public override bool IsMet(Entity self, ArenaState state)
+        public override bool IsMet(GameQuery_Command commandQuery)
         {
             // TODO: This is gonna show up in a lot of conditions, and looks pretty janky.
-            var enemy = state.Mech1 == self ? state.Mech2 : state.Mech1;
+            Entity target;
+            if (commandQuery.CommandEntity == commandQuery.ArenaState.Mech1)
+                target = commandQuery.ArenaState.Mech2;
+            else
+                target = commandQuery.ArenaState.Mech1;
 
-            var enemyPos = enemy.TryGetPosition();
-            var attackerPos = self.TryGetPosition();
-            var path = state.ArenaMap.GetCellsAlongLine(attackerPos.X, attackerPos.Y, enemyPos.X, enemyPos.Y);
+            var targetPos = target.TryGetPosition();
+            var selfPos = commandQuery.CommandEntity.TryGetPosition();
+            // TODO: I don't really subscribe to Demeter, but this is a pretty long chain!
+            var path = commandQuery.ArenaState.ArenaMap
+                .GetCellsAlongLine(selfPos.X, selfPos.Y, targetPos.X, targetPos.Y);
 
             return !path.Any(c => !c.IsWalkable);
         }

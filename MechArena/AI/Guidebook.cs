@@ -10,30 +10,27 @@ namespace MechArena.AI
     {
         private IEnumerable<Condition> conditions;
         private Action action;
-        private Entity self;
 
-        ActionClause(Entity self, IEnumerable<Condition> conditions, Action action)
+        public ActionClause(IEnumerable<Condition> conditions, Action action)
         {
             this.conditions = conditions;
             this.action = action;
-            this.self = self;
         }
 
-        public bool ShouldTakeAction(ArenaState state)
+        public bool ShouldTakeAction(GameQuery_Command commandQuery)
         {
-            return !conditions.Any(c => !c.IsMet(self, state));
+            return !conditions.Any(c => !c.IsMet(commandQuery));
         }
     }
 
     class Guidebook
     {
-        private ArenaState state;
         private List<SingleClause> rawRules;
         private List<ActionClause> builtRules;
 
-        private ActionClause FirstActiveAction()
+        private ActionClause FirstActiveAction(GameQuery_Command commandQuery)
         {
-            return this.builtRules.FirstOrDefault(a => a.ShouldTakeAction(state));
+            return this.builtRules.FirstOrDefault(a => a.ShouldTakeAction(commandQuery));
         }
     }
 }

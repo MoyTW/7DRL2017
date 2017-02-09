@@ -8,7 +8,7 @@ namespace MechArena.AI
 {
     class Condition_MoveSpeed : Condition
     {
-        public override bool IsMet(Entity self, ArenaState state)
+        public override bool IsMet(GameQuery_Command commandQuery)
         {
             throw new NotImplementedException();
         }

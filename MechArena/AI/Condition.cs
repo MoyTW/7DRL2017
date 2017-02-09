@@ -8,6 +8,6 @@ namespace MechArena.AI
 {
     abstract class Condition : SingleClause
     {
-        public abstract bool IsMet(Entity self, ArenaState state);
+        public abstract bool IsMet(GameQuery_Command commandQuery);
     }
 }
