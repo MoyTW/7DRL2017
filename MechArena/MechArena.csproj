@@ -132,6 +132,8 @@
     <Compile Include="UI\Menu_CompetitorListing.cs" />
     <Compile Include="UI\IntegerSelectionField.cs" />
     <Compile Include="UI\Menu_Main.cs" />
+    <Compile Include="AI\Action_MoveTowardsEnemy.cs" />
+    <Compile Include="AI\Action_AttackEnemy.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
