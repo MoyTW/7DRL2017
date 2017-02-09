@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace MechArena.AI
 {
-    class Action : SingleClause
+    abstract class Action : SingleClause
     {
+        public abstract GameEvent_Command GenerateCommand(GameQuery_Command commandQuery);
     }
 }

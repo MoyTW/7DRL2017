@@ -21,16 +21,48 @@ namespace MechArena.AI
         {
             return !conditions.Any(c => !c.IsMet(commandQuery));
         }
+
+        public GameEvent_Command CommandForQuery(GameQuery_Command commandQuery)
+        {
+            return this.action.GenerateCommand(commandQuery);
+        }
     }
 
     class Guidebook
     {
-        private List<SingleClause> rawRules;
         private List<ActionClause> builtRules;
 
-        private ActionClause FirstActiveAction(GameQuery_Command commandQuery)
+        public Guidebook(IEnumerable<SingleClause> rawRules)
         {
-            return this.builtRules.FirstOrDefault(a => a.ShouldTakeAction(commandQuery));
+            this.builtRules = Guidebook.BuildRules(rawRules);
+        }
+
+        private static List<ActionClause> BuildRules(IEnumerable<SingleClause> rawRules)
+        {
+            var builtRules = new List<ActionClause>();
+            var acc = new List<Condition>();
+            foreach (var clause in rawRules)
+            {
+                if (clause is Action)
+                {
+                    builtRules.Add(new ActionClause(acc, (Action)clause));
+                    acc = new List<Condition>();
+                }
+                else if (clause is Condition)
+                    acc.Add((Condition)clause);
+                else
+                    throw new NotImplementedException();
+            }
+            return builtRules;
+        }
+
+        public void TryRegisterCommand(GameQuery_Command commandRequest)
+        {
+            GameEvent_Command command = this.builtRules.Where(r => r.ShouldTakeAction(commandRequest))
+                .Select(r => r.CommandForQuery(commandRequest))
+                .FirstOrDefault();
+            if (command != null)
+                commandRequest.RegisterCommand(command);
         }
     }
 }
