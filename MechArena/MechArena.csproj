@@ -50,7 +50,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AI\Action.cs" />
-    <Compile Include="AI\Condition_CanSee.cs" />
     <Compile Include="AI\Condition_Distance.cs" />
     <Compile Include="AI\Condition_Health.cs" />
     <Compile Include="AI\Condition_MoveSpeed.cs" />
@@ -134,6 +133,8 @@
     <Compile Include="UI\Menu_Main.cs" />
     <Compile Include="AI\Action_MoveTowardsEnemy.cs" />
     <Compile Include="AI\Action_AttackEnemy.cs" />
+    <Compile Include="AI\Condition_CanSeeEnemy.cs" />
+    <Compile Include="AI\Action_Delay.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
