@@ -4,6 +4,11 @@ namespace MechArena.AI
 {
     class Action_MoveTowardsEnemy : Action
     {
+        public override bool CanExecuteOn(GameQuery_Command commandQuery)
+        {
+            return commandQuery.ExecutorEntity.HasComponentOfType<Component_MechSkeleton>();
+        }
+
         public override GameEvent_Command GenerateCommand(GameQuery_Command commandQuery)
         {
             Entity target;

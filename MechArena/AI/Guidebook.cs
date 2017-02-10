@@ -19,7 +19,7 @@ namespace MechArena.AI
 
         public bool ShouldTakeAction(GameQuery_Command commandQuery)
         {
-            return !conditions.Any(c => !c.IsMet(commandQuery));
+            return this.action.CanExecuteOn(commandQuery) && !this.conditions.Any(c => !c.IsMet(commandQuery));
         }
 
         public GameEvent_Command CommandForQuery(GameQuery_Command commandQuery)

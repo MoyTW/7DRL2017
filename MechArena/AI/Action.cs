@@ -8,6 +8,7 @@ namespace MechArena.AI
 {
     abstract class Action : SingleClause
     {
+        public abstract Boolean CanExecuteOn(GameQuery_Command commandQuery);
         public abstract GameEvent_Command GenerateCommand(GameQuery_Command commandQuery);
     }
 }
