@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace MechArena.AI
 {
+    [Serializable()]
     class Condition_CanSeeEnemy : Condition
     {
         public override bool IsMet(GameQuery_Command commandQuery)

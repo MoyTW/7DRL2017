@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace MechArena.AI
 {
+    [Serializable()]
     class ActionClause
     {
         private IEnumerable<Condition> conditions;
@@ -28,6 +29,7 @@ namespace MechArena.AI
         }
     }
 
+    [Serializable()]
     class Guidebook
     {
         private List<ActionClause> builtRules;

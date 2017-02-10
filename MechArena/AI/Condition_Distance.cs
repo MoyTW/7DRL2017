@@ -23,6 +23,7 @@ namespace MechArena.AI
         GREATER_THAN
     }
 
+    [Serializable()]
     class Condition_Distance : Condition
     {
         public DistanceOption Option { get; }

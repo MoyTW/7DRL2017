@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace MechArena.AI
 {
+    [Serializable()]
     abstract class Condition : SingleClause
     {
         public abstract bool IsMet(GameQuery_Command commandQuery);

@@ -6,5 +6,6 @@ using System.Threading.Tasks;
 
 namespace MechArena.AI
 {
+    [Serializable()]
     class SingleClause { }
 }

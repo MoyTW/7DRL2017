@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace MechArena.AI
 {
+    [Serializable()]
     abstract class Action : SingleClause
     {
         public abstract Boolean CanExecuteOn(GameQuery_Command commandQuery);
