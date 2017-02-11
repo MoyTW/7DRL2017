@@ -95,6 +95,7 @@ namespace MechArena
 
             if (q.MatchesSelectors(this.attachedEntity) ||
                 q.Selectors.Contains(SubEntitiesSelector.ACTIVE_TRACKS_TIME) &&
+                this.Active &&
                 this.attachedEntity.MatchesSelector(SubEntitiesSelector.TRACKS_TIME))
             {
                 q.RegisterEntity(this.attachedEntity);
