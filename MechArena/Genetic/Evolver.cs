@@ -18,7 +18,7 @@ namespace MechArena.Genetic
         public int CurrentGeneration { get { return this.currentGeneration; } }
 
         public Evolver(int requiredFitness, Func<Individual<T>, int> fitnessFn, int maxGenerations,
-            double mutationRate, int populationSize, GeneFactory<T> factory, int chromosomeSize, int seed=1,
+            double mutationRate, int populationSize, GeneListing<T> factory, int chromosomeSize, int seed=1,
             bool keepHistory = true)
         {
             this.rand = new Random(seed);

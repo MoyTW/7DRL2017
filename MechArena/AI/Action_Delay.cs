@@ -3,7 +3,7 @@
 namespace MechArena.AI
 {
     [Serializable()]
-    class Action_Delay : Action
+    class Action_Delay : AIAction
     {
         public override bool CanExecuteOn(GameQuery_Command commandQuery)
         {

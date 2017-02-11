@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace MechArena.Genetic
 {
-    public class GeneFactory<T>
+    public class GeneListing<T>
     {
         private List<T> possibleValues;
 
-        public GeneFactory(IEnumerable<T> possibleValues)
+        public GeneListing(IEnumerable<T> possibleValues)
         {
             this.possibleValues = new List<T>(possibleValues);
         }

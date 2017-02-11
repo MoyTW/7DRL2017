@@ -3,7 +3,7 @@
 namespace MechArena.AI
 {
     [Serializable()]
-    class Action_MoveTowardsEnemy : Action
+    class Action_MoveTowardsEnemy : AIAction
     {
         public override bool CanExecuteOn(GameQuery_Command commandQuery)
         {

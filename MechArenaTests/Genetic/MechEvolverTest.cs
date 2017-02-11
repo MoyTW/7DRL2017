@@ -11,9 +11,9 @@ namespace MechArenaTests.Genetic
     public class MechEvolverTest
     {
         private Random rand = new Random();
-        private GeneFactory<Action<Entity>> factory = BuildGeneFactory();
+        private GeneListing<Action<Entity>> factory = BuildGeneFactory();
 
-        private static GeneFactory<Action<Entity>> BuildGeneFactory()
+        private static GeneListing<Action<Entity>> BuildGeneFactory()
         {
             List<Action<Entity>> allActions = new List<Action<Entity>>();
 
@@ -25,7 +25,7 @@ namespace MechArenaTests.Genetic
                 }
             }
 
-            return new GeneFactory<Action<Entity>>(allActions);
+            return new GeneListing<Action<Entity>>(allActions);
         }
 
         private void RandomMutation(Individual<Action<Entity>> mutant, Random rand)
