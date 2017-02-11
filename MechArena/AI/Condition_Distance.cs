@@ -77,5 +77,16 @@ namespace MechArena.AI
                     throw new InvalidOperationException("Condition_Distance can't handle " + this.Operator);
             }
         }
+
+        public override IEnumerable<SingleClause> EnumerateClauses()
+        {
+            foreach (var option in Enum.GetValues(typeof(DistanceOption)).Cast<DistanceOption>())
+            {
+                foreach (var op in Enum.GetValues(typeof(ComparisonOperator)).Cast<ComparisonOperator>())
+                {
+                    yield return new Condition_Distance(op, option);
+                }
+            }
+        }
     }
 }

@@ -26,5 +26,10 @@ namespace MechArena.AI
 
             return !path.Any(c => !c.IsWalkable);
         }
+
+        public override IEnumerable<SingleClause> EnumerateClauses()
+        {
+            yield return new Condition_CanSeeEnemy();
+        }
     }
 }

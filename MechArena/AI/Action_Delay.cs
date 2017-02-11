@@ -16,6 +16,11 @@ namespace MechArena.AI
             return new GameEvent_Delay(commandQuery.ArenaState.CurrentTick, commandQuery.CommandEntity,
                 commandQuery.ExecutorEntity, DelayDuration.NEXT_ACTION);
         }
+
+        public override System.Collections.Generic.IEnumerable<SingleClause> EnumerateClauses()
+        {
+            yield return new Action_Delay();
+        }
     }
 }
 

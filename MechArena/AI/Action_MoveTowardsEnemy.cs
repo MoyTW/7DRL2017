@@ -30,6 +30,11 @@ namespace MechArena.AI
             return new GameEvent_MoveSingle(commandQuery.CommandEntity, commandQuery.ArenaState.CurrentTick,
                 nextCell.X - commandPos.X, nextCell.Y - commandPos.Y, commandQuery.ArenaState);
         }
+
+        public override System.Collections.Generic.IEnumerable<SingleClause> EnumerateClauses()
+        {
+            yield return new Action_MoveTowardsEnemy();
+        }
     }
 }
 

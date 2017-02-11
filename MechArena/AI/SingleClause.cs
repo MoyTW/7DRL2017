@@ -7,5 +7,8 @@ using System.Threading.Tasks;
 namespace MechArena.AI
 {
     [Serializable()]
-    class SingleClause { }
+    public abstract class SingleClause
+    {
+        public abstract IEnumerable<SingleClause> EnumerateClauses();
+    }
 }

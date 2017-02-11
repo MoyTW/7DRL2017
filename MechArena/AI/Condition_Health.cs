@@ -13,5 +13,10 @@ namespace MechArena.AI
         {
             throw new NotImplementedException();
         }
+
+        public override IEnumerable<SingleClause> EnumerateClauses()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
