@@ -29,6 +29,8 @@ namespace MechArena.AI
         public DistanceOption Option { get; }
         public ComparisonOperator Operator { get; }
 
+        public Condition_Distance() { }
+
         public Condition_Distance(ComparisonOperator op, DistanceOption option)
         {
             this.Operator = op;

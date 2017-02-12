@@ -16,7 +16,7 @@ namespace MechArena.AI
 
         public override IEnumerable<SingleClause> EnumerateClauses()
         {
-            throw new NotImplementedException();
+            yield return new Condition_Health();
         }
     }
 }
