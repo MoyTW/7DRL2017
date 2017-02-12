@@ -30,7 +30,7 @@ namespace MechArena.AI
     }
 
     [Serializable()]
-    class Guidebook
+    public class Guidebook
     {
         private List<ActionClause> builtRules;
 

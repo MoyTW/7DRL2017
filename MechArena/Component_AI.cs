@@ -23,6 +23,11 @@ namespace MechArena
             this.book = new Guidebook(rawRules);
         }
 
+        public Component_AI(Guidebook book)
+        {
+            this.book = book;
+        }
+
         protected override IImmutableSet<SubEntitiesSelector> _MatchingSelectors()
         {
             return ImmutableHashSet<SubEntitiesSelector>.Empty;
