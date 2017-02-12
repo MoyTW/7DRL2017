@@ -135,6 +135,7 @@
     <Compile Include="AI\Action_Delay.cs" />
     <Compile Include="AI\AIAction.cs" />
     <Compile Include="Genetic\GeneListing.cs" />
+    <Compile Include="AI\AIUtils.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

@@ -9,6 +9,7 @@ namespace MechArena.Genetic
     public class GeneListing<T>
     {
         private List<T> possibleValues;
+        public IList<T> PossibleValues { get { return this.possibleValues.AsReadOnly(); } }
 
         public GeneListing(IEnumerable<T> possibleValues)
         {

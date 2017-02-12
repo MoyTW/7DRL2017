@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace MechArena.AI
 {
+    /*
     [Serializable()]
     class Condition_Health : Condition
     {
@@ -19,4 +20,5 @@ namespace MechArena.AI
             yield return new Condition_Health();
         }
     }
+    */
 }

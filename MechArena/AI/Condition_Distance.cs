@@ -37,14 +37,19 @@ namespace MechArena.AI
             this.Option = option;
         }
 
-        private int ResolveOptionDistance(GameQuery_Command commandQuery, Entity target)
+        private int? ResolveOptionDistance(GameQuery_Command commandQuery, Entity target)
         {
             switch (this.Option)
             {
                 case DistanceOption.THIS_WEAPON_RANGE:
-                    var range = commandQuery.ExecutorEntity
-                        .TryGetAttribute(EntityAttributeType.MAX_RANGE, commandQuery.ExecutorEntity);
-                    return range.Value;
+                    if (commandQuery.ExecutorEntity.HasComponentOfType<Component_Weapon>())
+                    {
+                        return commandQuery.ExecutorEntity
+                            .TryGetAttribute(EntityAttributeType.MAX_RANGE, commandQuery.ExecutorEntity)
+                            .Value;
+                    }
+                    else
+                        return null;
                 default:
                     throw new NotImplementedException();
             }
@@ -58,8 +63,13 @@ namespace MechArena.AI
                 target = commandQuery.ArenaState.Mech2;
             else
                 target = commandQuery.ArenaState.Mech1;
-            
-            int optionDistance = this.ResolveOptionDistance(commandQuery, target);
+
+            // TODO: Smooth out this int? business!
+            // It's an int? because some conditions (asking for WEAPON_RANGE on something which has no range, like a
+            // MechSkeleton, but which does get turns) are nonsensical.
+            int? optionDistance = this.ResolveOptionDistance(commandQuery, target);
+            if (optionDistance == null)
+                return true;
 
             var targetPos = target.TryGetPosition();
             var selfPos = commandQuery.CommandEntity.TryGetPosition();
