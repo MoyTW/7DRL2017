@@ -8,10 +8,11 @@ namespace MechArena.AI
 {
     enum DistanceOption
     {
-        THIS_WEAPON_RANGE
+        MELEE_RANGE,
+        THIS_WEAPON_RANGE,
         // TODO: Implement the following!
-        // MY_LONGEST_RANGE,
-        // ENEMY_LONGEST_RANGE,
+        MY_LONGEST_RANGE,
+        ENEMY_LONGEST_RANGE
         // MY_OPTIMAL_RANGE,
         // ENEMY_OPTIMAL_RANGE
     }
@@ -41,6 +42,8 @@ namespace MechArena.AI
         {
             switch (this.Option)
             {
+                case DistanceOption.MELEE_RANGE:
+                    return 1;
                 case DistanceOption.THIS_WEAPON_RANGE:
                     if (commandQuery.ExecutorEntity.HasComponentOfType<Component_Weapon>())
                     {
@@ -50,6 +53,16 @@ namespace MechArena.AI
                     }
                     else
                         return null;
+                case DistanceOption.MY_LONGEST_RANGE:
+                    return commandQuery.CommandEntity.TryGetSubEntities(SubEntitiesSelector.ACTIVE_TRACKS_TIME)
+                        .Where(e => e.HasComponentOfType<Component_Weapon>())
+                        .Select(e => e.TryGetAttribute(EntityAttributeType.MAX_RANGE, e).Value)
+                        .Max();
+                case DistanceOption.ENEMY_LONGEST_RANGE:
+                    return target.TryGetSubEntities(SubEntitiesSelector.ACTIVE_TRACKS_TIME)
+                        .Where(e => e.HasComponentOfType<Component_Weapon>())
+                        .Select(e => e.TryGetAttribute(EntityAttributeType.MAX_RANGE, e).Value)
+                        .Max();
                 default:
                     throw new NotImplementedException();
             }
@@ -77,7 +90,7 @@ namespace MechArena.AI
                 .GetCellsAlongLine(selfPos.X, selfPos.Y, targetPos.X, targetPos.Y)
                 .Count();
 
-            switch(this.Operator)
+            switch (this.Operator)
             {
                 case ComparisonOperator.EQUAL:
                     return currDist == optionDistance;
