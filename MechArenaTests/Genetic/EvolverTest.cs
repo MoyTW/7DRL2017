@@ -10,7 +10,7 @@ namespace MechArenaTests.Genetic
     {
         private string target = "Batman";
         private int chromosomeSize = 6;
-        private GeneFactory<char> factory = new GeneFactory<char>("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ");
+        private GeneListing<char> factory = new GeneListing<char>("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ");
 
         private int Fitness(Individual<char> individual)
         {

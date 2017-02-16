@@ -8,10 +8,11 @@ namespace MechArena.AI
 {
     enum DistanceOption
     {
-        THIS_WEAPON_RANGE
+        MELEE_RANGE,
+        THIS_WEAPON_RANGE,
         // TODO: Implement the following!
-        // MY_LONGEST_RANGE,
-        // ENEMY_LONGEST_RANGE,
+        MY_LONGEST_RANGE,
+        ENEMY_LONGEST_RANGE
         // MY_OPTIMAL_RANGE,
         // ENEMY_OPTIMAL_RANGE
     }
@@ -29,20 +30,39 @@ namespace MechArena.AI
         public DistanceOption Option { get; }
         public ComparisonOperator Operator { get; }
 
+        public Condition_Distance() { }
+
         public Condition_Distance(ComparisonOperator op, DistanceOption option)
         {
             this.Operator = op;
             this.Option = option;
         }
 
-        private int ResolveOptionDistance(GameQuery_Command commandQuery, Entity target)
+        private int? ResolveOptionDistance(GameQuery_Command commandQuery, Entity target)
         {
             switch (this.Option)
             {
+                case DistanceOption.MELEE_RANGE:
+                    return 1;
                 case DistanceOption.THIS_WEAPON_RANGE:
-                    var range = commandQuery.ExecutorEntity
-                        .TryGetAttribute(EntityAttributeType.MAX_RANGE, commandQuery.ExecutorEntity);
-                    return range.Value;
+                    if (commandQuery.ExecutorEntity.HasComponentOfType<Component_Weapon>())
+                    {
+                        return commandQuery.ExecutorEntity
+                            .TryGetAttribute(EntityAttributeType.MAX_RANGE, commandQuery.ExecutorEntity)
+                            .Value;
+                    }
+                    else
+                        return null;
+                case DistanceOption.MY_LONGEST_RANGE:
+                    return commandQuery.CommandEntity.TryGetSubEntities(SubEntitiesSelector.ACTIVE_TRACKS_TIME)
+                        .Where(e => e.HasComponentOfType<Component_Weapon>())
+                        .Select(e => e.TryGetAttribute(EntityAttributeType.MAX_RANGE, e).Value)
+                        .Max();
+                case DistanceOption.ENEMY_LONGEST_RANGE:
+                    return target.TryGetSubEntities(SubEntitiesSelector.ACTIVE_TRACKS_TIME)
+                        .Where(e => e.HasComponentOfType<Component_Weapon>())
+                        .Select(e => e.TryGetAttribute(EntityAttributeType.MAX_RANGE, e).Value)
+                        .Max();
                 default:
                     throw new NotImplementedException();
             }
@@ -56,8 +76,13 @@ namespace MechArena.AI
                 target = commandQuery.ArenaState.Mech2;
             else
                 target = commandQuery.ArenaState.Mech1;
-            
-            int optionDistance = this.ResolveOptionDistance(commandQuery, target);
+
+            // TODO: Smooth out this int? business!
+            // It's an int? because some conditions (asking for WEAPON_RANGE on something which has no range, like a
+            // MechSkeleton, but which does get turns) are nonsensical.
+            int? optionDistance = this.ResolveOptionDistance(commandQuery, target);
+            if (optionDistance == null)
+                return true;
 
             var targetPos = target.TryGetPosition();
             var selfPos = commandQuery.CommandEntity.TryGetPosition();
@@ -65,7 +90,7 @@ namespace MechArena.AI
                 .GetCellsAlongLine(selfPos.X, selfPos.Y, targetPos.X, targetPos.Y)
                 .Count();
 
-            switch(this.Operator)
+            switch (this.Operator)
             {
                 case ComparisonOperator.EQUAL:
                     return currDist == optionDistance;
@@ -76,6 +101,22 @@ namespace MechArena.AI
                 default:
                     throw new InvalidOperationException("Condition_Distance can't handle " + this.Operator);
             }
+        }
+
+        public override IEnumerable<SingleClause> EnumerateClauses()
+        {
+            foreach (var option in Enum.GetValues(typeof(DistanceOption)).Cast<DistanceOption>())
+            {
+                foreach (var op in Enum.GetValues(typeof(ComparisonOperator)).Cast<ComparisonOperator>())
+                {
+                    yield return new Condition_Distance(op, option);
+                }
+            }
+        }
+
+        public override string ToString()
+        {
+            return string.Format("[Condition_Distance: Option={0}, Operator={1}]", Option, Operator);
         }
     }
 }

@@ -10,9 +10,9 @@ namespace MechArena.AI
     class ActionClause
     {
         private IEnumerable<Condition> conditions;
-        private Action action;
+        private AIAction action;
 
-        public ActionClause(IEnumerable<Condition> conditions, Action action)
+        public ActionClause(IEnumerable<Condition> conditions, AIAction action)
         {
             this.conditions = conditions;
             this.action = action;
@@ -30,7 +30,7 @@ namespace MechArena.AI
     }
 
     [Serializable()]
-    class Guidebook
+    public class Guidebook
     {
         private List<ActionClause> builtRules;
 
@@ -45,9 +45,9 @@ namespace MechArena.AI
             var acc = new List<Condition>();
             foreach (var clause in rawRules)
             {
-                if (clause is Action)
+                if (clause is AIAction)
                 {
-                    builtRules.Add(new ActionClause(acc, (Action)clause));
+                    builtRules.Add(new ActionClause(acc, (AIAction)clause));
                     acc = new List<Condition>();
                 }
                 else if (clause is Condition)

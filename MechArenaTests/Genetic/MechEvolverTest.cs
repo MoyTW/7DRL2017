@@ -11,9 +11,9 @@ namespace MechArenaTests.Genetic
     public class MechEvolverTest
     {
         private Random rand = new Random();
-        private GeneFactory<Action<Entity>> factory = BuildGeneFactory();
+        private GeneListing<Action<Entity>> factory = BuildGeneFactory();
 
-        private static GeneFactory<Action<Entity>> BuildGeneFactory()
+        private static GeneListing<Action<Entity>> BuildGeneFactory()
         {
             List<Action<Entity>> allActions = new List<Action<Entity>>();
 
@@ -25,7 +25,7 @@ namespace MechArenaTests.Genetic
                 }
             }
 
-            return new GeneFactory<Action<Entity>>(allActions);
+            return new GeneListing<Action<Entity>>(allActions);
         }
 
         private void RandomMutation(Individual<Action<Entity>> mutant, Random rand)
@@ -46,7 +46,7 @@ namespace MechArenaTests.Genetic
         {
             var genes = individual.InspectGenes();
 
-            var testMech = EntityBuilder.BuildNakedMech("", false);
+            var testMech = EntityBuilder.BuildNakedMech("", false, null);
             foreach (var f in genes)
             {
                 f(testMech);
@@ -69,7 +69,7 @@ namespace MechArenaTests.Genetic
 
             var genes = individual.InspectGenes();
 
-            var testMech = EntityBuilder.BuildNakedMech("", false);
+            var testMech = EntityBuilder.BuildNakedMech("", false, null);
             foreach (var f in genes)
             {
                 f(testMech);
@@ -109,7 +109,7 @@ namespace MechArenaTests.Genetic
                 case 3:
                     return EntityBuilder.BuildAlphaStrikerMech("", false);
                 default:
-                    return EntityBuilder.BuildNakedMech("", false);
+                    return EntityBuilder.BuildNakedMech("", false, null);
             }
         }
 
@@ -117,7 +117,7 @@ namespace MechArenaTests.Genetic
         {
             var genes = individual.InspectGenes();
 
-            var individualMech = EntityBuilder.BuildNakedMech("", false);
+            var individualMech = EntityBuilder.BuildNakedMech("", false, null);
             foreach (var f in genes)
             {
                 f(individualMech);

@@ -1,5 +1,5 @@
-﻿using RogueSharp.Random;
-
+﻿using MechArena.AI;
+using RogueSharp.Random;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -224,7 +224,7 @@ namespace MechArena
                 .AddComponent(new Component_InternalStructure(internalStructure));
         }
 
-        public static Entity BuildNakedMech(string label, bool player)
+        public static Entity BuildNakedMech(string label, bool player, Guidebook book)
         {
             var mech = new Entity(label: label, typeLabel: MechTypeLabel)
                 .AddComponent(new Component_MechSkeleton())
@@ -232,6 +232,8 @@ namespace MechArena
 
             if (player)
                 mech.AddComponent(new Component_Player());
+            else if (book != null)
+                mech.AddComponent(new Component_AI(book));
             else
                 mech.AddComponent(new Component_AI());
 
@@ -248,9 +250,9 @@ namespace MechArena
 
         #endregion
 
-        public static Entity BuildArmoredMech(string label, bool player)
+        public static Entity BuildArmoredMech(string label, bool player, Guidebook book=null)
         {
-            var mech = BuildNakedMech(label, player);
+            var mech = BuildNakedMech(label, player, book);
 
             MountOntoArm(mech, BodyPartLocation.LEFT_ARM, BlueprintListing.BuildForLabel(Blueprints.RIFLE));
             MountOntoArm(mech, BodyPartLocation.RIGHT_ARM, BlueprintListing.BuildForLabel(Blueprints.RIFLE));
@@ -267,9 +269,9 @@ namespace MechArena
             return mech;
         }
 
-        public static Entity BuildKnifeMech(string label, bool player)
+        public static Entity BuildKnifeMech(string label, bool player, Guidebook book=null)
         {
-            var mech = BuildNakedMech(label, player);
+            var mech = BuildNakedMech(label, player, book);
 
             MountOntoArm(mech, BodyPartLocation.LEFT_ARM, BlueprintListing.BuildForLabel(Blueprints.DAGGER));
             MountOntoArm(mech, BodyPartLocation.RIGHT_ARM, BlueprintListing.BuildForLabel(Blueprints.DAGGER));
@@ -290,9 +292,9 @@ namespace MechArena
             return mech;
         }
 
-        public static Entity BuildPaladinMech(string label, bool player)
+        public static Entity BuildPaladinMech(string label, bool player, Guidebook book=null)
         {
-            var mech = BuildNakedMech(label, player);
+            var mech = BuildNakedMech(label, player, book);
 
             MountOntoArm(mech, BodyPartLocation.LEFT_ARM, BlueprintListing.BuildForLabel(Blueprints.SWORD));
             MountOntoArm(mech, BodyPartLocation.RIGHT_ARM, BlueprintListing.BuildForLabel(Blueprints.SWORD));
@@ -307,9 +309,9 @@ namespace MechArena
             return mech;
         }
 
-        public static Entity BuildSniperMech(string label, bool player)
+        public static Entity BuildSniperMech(string label, bool player, Guidebook book=null)
         {
-            var mech = BuildNakedMech(label, player);
+            var mech = BuildNakedMech(label, player, book);
 
             MountOntoArm(mech, BodyPartLocation.LEFT_ARM, BlueprintListing.BuildForLabel(Blueprints.SNIPER_RILFE));
             MountOntoArm(mech, BodyPartLocation.RIGHT_ARM, BlueprintListing.BuildForLabel(Blueprints.SNIPER_RILFE));
@@ -330,9 +332,9 @@ namespace MechArena
             return mech;
         }
 
-        public static Entity BuildAlphaStrikerMech(string label, bool player)
+        public static Entity BuildAlphaStrikerMech(string label, bool player, Guidebook book=null)
         {
-            var mech = BuildNakedMech(label, player);
+            var mech = BuildNakedMech(label, player, book);
 
             Func<Entity> buildRocketPod = () => BuildMountForWeapon(
                 BlueprintListing.BuildForLabel(Blueprints.ROCKET_POD));
@@ -352,23 +354,62 @@ namespace MechArena
             return mech;
         }
 
-        public static Entity BuildRandomMech(string label, bool player, IRandom rand)
+        public static Entity BuildSlowKnifeMech(string label, bool player, Guidebook book=null)
+        {
+            var mech = BuildNakedMech(label, player, book);
+
+            MountOntoArm(mech, BodyPartLocation.LEFT_ARM, BlueprintListing.BuildForLabel(Blueprints.DAGGER));
+            MountOntoArm(mech, BodyPartLocation.RIGHT_ARM, BlueprintListing.BuildForLabel(Blueprints.DAGGER));
+
+            SlotAt(mech, BodyPartLocation.LEFT_ARM, BuildMountedDagger());
+            SlotAt(mech, BodyPartLocation.RIGHT_ARM, BuildMountedDagger());
+            SlotAt(mech, BodyPartLocation.LEFT_LEG, BuildMountedDagger());
+            SlotAt(mech, BodyPartLocation.RIGHT_LEG, BuildMountedDagger());
+
+            foreach (var location in EntityBuilder.MechLocations)
+            {
+                FillLocationWith(mech, location, BuildArmorPart);
+            }
+
+            return mech;
+        }
+
+        public static Entity BuildFastPistolMech(string label, bool player, Guidebook book=null)
+        {
+            var mech = BuildNakedMech(label, player, book);
+
+            MountOntoArm(mech, BodyPartLocation.LEFT_ARM, BlueprintListing.BuildForLabel(Blueprints.PISTOL));
+            MountOntoArm(mech, BodyPartLocation.RIGHT_ARM, BlueprintListing.BuildForLabel(Blueprints.PISTOL));
+
+
+            FillLocationWith(mech, BodyPartLocation.LEFT_LEG, BuildAccelerator);
+            FillLocationWith(mech, BodyPartLocation.RIGHT_LEG, BuildAccelerator);
+
+            foreach (var location in EntityBuilder.MechLocations)
+            {
+                FillLocationWith(mech, location, BuildArmorPart);
+            }
+
+            return mech;
+        }
+
+        public static Entity BuildRandomMech(string label, bool player, IRandom rand, Guidebook book=null)
         {
             var choice = rand.Next(4);
             switch (choice)
             {
                 case 0:
-                    return BuildArmoredMech(label, player);
+                    return BuildArmoredMech(label, player, book);
                 case 1:
-                    return BuildKnifeMech(label, player);
+                    return BuildKnifeMech(label, player, book);
                 case 2:
-                    return BuildPaladinMech(label, player);
+                    return BuildPaladinMech(label, player, book);
                 case 3:
-                    return BuildAlphaStrikerMech(label, player);
+                    return BuildAlphaStrikerMech(label, player, book);
                 case 4:
-                    return BuildSniperMech(label, player);
+                    return BuildSniperMech(label, player, book);
                 default:
-                    return BuildNakedMech(label, player);
+                    return BuildNakedMech(label, player, book);
             }
         }
 

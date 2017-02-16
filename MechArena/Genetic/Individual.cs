@@ -27,7 +27,7 @@ namespace MechArena.Genetic
             }
         }
 
-        public Individual(GeneFactory<T> factory, int chromosomeSize, Func<Individual<T>, int> fitnessFn, Random rand)
+        public Individual(GeneListing<T> factory, int chromosomeSize, Func<Individual<T>, int> fitnessFn, Random rand)
         {
             this.dirty = true;
             this.FitnessFn = fitnessFn;

@@ -230,7 +230,12 @@ namespace MechArena
             var queryCommand = this.nextCommandEntity.HandleQuery(
                 new GameQuery_Command(this.nextCommandEntity, this.NextExecutorEntity, this));
             if (!queryCommand.Completed)
-                throw new ArgumentException("Didn't register AI move, something malfunctioned really bad in your AI!");
+            {
+                Log.ErrorLine("Failed to register AI command for " + this.nextExecutorEntity);
+                queryCommand.RegisterCommand(new GameEvent_Delay(this.CurrentTick, this.nextCommandEntity,
+                    this.nextExecutorEntity, DelayDuration.NEXT_ACTION));
+                this.nextCommandEntity.HandleEvent(queryCommand.Command);
+            }
             else
                 this.nextCommandEntity.HandleEvent(queryCommand.Command);
 

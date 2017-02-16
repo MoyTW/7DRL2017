@@ -3,7 +3,7 @@
 namespace MechArena.AI
 {
     [Serializable()]
-    class Action_AttackEnemy : Action
+    class Action_AttackEnemy : AIAction
     {
         public override bool CanExecuteOn(GameQuery_Command commandQuery)
         {
@@ -20,6 +20,11 @@ namespace MechArena.AI
 
             return new GameEvent_Attack(commandQuery.ArenaState.CurrentTick, commandQuery.CommandEntity, target,
                 commandQuery.ExecutorEntity, commandQuery.ArenaState.ArenaMap, commandQuery.Rand);
+        }
+
+        public override System.Collections.Generic.IEnumerable<SingleClause> EnumerateClauses()
+        {
+            yield return new Action_AttackEnemy();
         }
     }
 }

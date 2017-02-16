@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace MechArena.AI
 {
+    /*
     [Serializable()]
     class Condition_Health : Condition
     {
@@ -13,5 +14,11 @@ namespace MechArena.AI
         {
             throw new NotImplementedException();
         }
+
+        public override IEnumerable<SingleClause> EnumerateClauses()
+        {
+            yield return new Condition_Health();
+        }
     }
+    */
 }
