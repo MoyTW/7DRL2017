@@ -354,6 +354,45 @@ namespace MechArena
             return mech;
         }
 
+        public static Entity BuildSlowKnifeMech(string label, bool player, Guidebook book=null)
+        {
+            var mech = BuildNakedMech(label, player, book);
+
+            MountOntoArm(mech, BodyPartLocation.LEFT_ARM, BlueprintListing.BuildForLabel(Blueprints.DAGGER));
+            MountOntoArm(mech, BodyPartLocation.RIGHT_ARM, BlueprintListing.BuildForLabel(Blueprints.DAGGER));
+
+            SlotAt(mech, BodyPartLocation.LEFT_ARM, BuildMountedDagger());
+            SlotAt(mech, BodyPartLocation.RIGHT_ARM, BuildMountedDagger());
+            SlotAt(mech, BodyPartLocation.LEFT_LEG, BuildMountedDagger());
+            SlotAt(mech, BodyPartLocation.RIGHT_LEG, BuildMountedDagger());
+
+            foreach (var location in EntityBuilder.MechLocations)
+            {
+                FillLocationWith(mech, location, BuildArmorPart);
+            }
+
+            return mech;
+        }
+
+        public static Entity BuildFastPistolMech(string label, bool player, Guidebook book=null)
+        {
+            var mech = BuildNakedMech(label, player, book);
+
+            MountOntoArm(mech, BodyPartLocation.LEFT_ARM, BlueprintListing.BuildForLabel(Blueprints.PISTOL));
+            MountOntoArm(mech, BodyPartLocation.RIGHT_ARM, BlueprintListing.BuildForLabel(Blueprints.PISTOL));
+
+
+            FillLocationWith(mech, BodyPartLocation.LEFT_LEG, BuildAccelerator);
+            FillLocationWith(mech, BodyPartLocation.RIGHT_LEG, BuildAccelerator);
+
+            foreach (var location in EntityBuilder.MechLocations)
+            {
+                FillLocationWith(mech, location, BuildArmorPart);
+            }
+
+            return mech;
+        }
+
         public static Entity BuildRandomMech(string label, bool player, IRandom rand, Guidebook book=null)
         {
             var choice = rand.Next(4);

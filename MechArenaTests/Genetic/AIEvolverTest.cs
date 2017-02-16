@@ -38,9 +38,9 @@ namespace MechArenaTests.Genetic
         {
             Guidebook book = new Guidebook(individual.InspectGenes());
 
-            Entity individualMech = EntityBuilder.BuildSniperMech("", false, book);
+            Entity individualMech = EntityBuilder.BuildFastPistolMech("", false, book);
             // var enemyMech = BuildRandomMech(this.rand);
-            var enemyMech = EntityBuilder.BuildPaladinMech("", false);
+            var enemyMech = EntityBuilder.BuildSlowKnifeMech("", false);
 
             var arena = ArenaBuilder.BuildArena(50, 50, "0", this.rand.Next(3).ToString(), this.rand.Next(),
                 individualMech, enemyMech);
