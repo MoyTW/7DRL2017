@@ -69,12 +69,10 @@ namespace MechArenaTests.Genetic
             Console.WriteLine("Winner: " + winner);
             Console.WriteLine("End: " + DateTime.Now.ToString());
 
-            /*
             foreach (var g in winner.InspectGenes())
             {
                 Console.WriteLine(g.ToString());
             }
-            */
 
             Console.Write(" Generation: " + evolver.CurrentGeneration);
             Console.WriteLine();

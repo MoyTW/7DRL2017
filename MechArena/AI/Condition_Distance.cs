@@ -113,5 +113,10 @@ namespace MechArena.AI
                 }
             }
         }
+
+        public override string ToString()
+        {
+            return string.Format("[Condition_Distance: Option={0}, Operator={1}]", Option, Operator);
+        }
     }
 }

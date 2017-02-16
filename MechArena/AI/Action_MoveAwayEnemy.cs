@@ -24,7 +24,6 @@ namespace MechArena.AI
             var commandCell = commandQuery.ArenaState.ArenaMap.GetCell(commandPos.X, commandPos.Y);
             var targetPos = target.TryGetPosition();
             var targetCell = commandQuery.ArenaState.ArenaMap.GetCell(targetPos.X, targetPos.Y);
-            Console.WriteLine("CP: " + commandPos + " TP: " + targetPos);
 
             var myDist = commandQuery.ArenaState.ArenaPathFinder.ShortestPath(commandCell, targetCell).Length;
             var currDist = myDist;
