@@ -30,7 +30,7 @@ namespace MechArena
 
         protected override IImmutableSet<SubEntitiesSelector> _MatchingSelectors()
         {
-            return ImmutableHashSet<SubEntitiesSelector>.Empty;
+            return ImmutableHashSet<SubEntitiesSelector>.Empty.Add(SubEntitiesSelector.ATTACHABLE);
         }
 
         private void HandleQueryDestroyed(GameQuery_Destroyed q)
