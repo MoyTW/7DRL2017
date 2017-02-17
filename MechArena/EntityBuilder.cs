@@ -1,4 +1,4 @@
-﻿using MechArena.AI;
+﻿using MechArena.AI.Combat;
 using RogueSharp.Random;
 using System;
 using System.Collections.Generic;

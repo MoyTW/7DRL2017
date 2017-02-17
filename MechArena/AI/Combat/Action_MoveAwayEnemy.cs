@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace MechArena.AI
+namespace MechArena.AI.Combat
 {
     [Serializable()]
     class Action_MoveAwayEnemy : AIAction
