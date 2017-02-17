@@ -69,6 +69,17 @@ namespace MechArena
 
     public class Blueprint
     {
+        private Entity referenceEntity;
+        public Entity ReferenceEntity
+        {
+            get
+            {
+                if (this.referenceEntity == null)
+                    this.referenceEntity = this.BuildEntity();
+                return this.referenceEntity;
+            }
+        }
+
         public string Label { get; set; }
         public string TypeLabel { get; set; }
         public List<ComponentBlueprint> Components { get; set; }
@@ -76,11 +87,16 @@ namespace MechArena
         public Entity BuildEntity()
         {
             var e = new Entity(label: this.Label, typeLabel: this.TypeLabel);
-            foreach(ComponentBlueprint c in this.Components)
+            foreach (ComponentBlueprint c in this.Components)
             {
                 e.AddComponent(c.BuildComponent());
             }
             return e;
+        }
+
+        public bool MatchesSelector(SubEntitiesSelector selector)
+        {
+            return this.ReferenceEntity.MatchesSelector(selector);
         }
     }
 }
