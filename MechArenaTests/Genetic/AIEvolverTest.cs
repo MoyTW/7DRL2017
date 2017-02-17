@@ -1,5 +1,6 @@
 ﻿using MechArena;
 using MechArena.AI;
+using MechArena.AI.Combat;
 using MechArena.Genetic;
 using NUnit.Framework;
 using System;

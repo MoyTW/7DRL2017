@@ -137,6 +137,9 @@
     <Compile Include="AI\Combat\Condition_Health.cs" />
     <Compile Include="AI\Combat\Condition_MoveSpeed.cs" />
     <Compile Include="AI\Combat\Guidebook.cs" />
+    <Compile Include="AI\Hanger\Step.cs" />
+    <Compile Include="AI\Hanger\Step_SlotPart.cs" />
+    <Compile Include="AI\Hanger\Step_AttachAttachable.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -169,5 +172,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="AI\Combat\" />
+    <Folder Include="AI\Hanger\" />
   </ItemGroup>
 </Project>
