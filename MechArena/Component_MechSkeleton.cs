@@ -19,6 +19,14 @@ namespace MechArena
         };
         private Dictionary<BodyPartLocation, Entity> bodyParts;
 
+        public static IEnumerable<BodyPartLocation> TemplateLocations
+        {
+            get
+            {
+                return Component_MechSkeleton.MechTemplate.Select(t => t.Key);
+            }
+        }
+
         public Component_MechSkeleton() : base(EntityAttributeType.SPEED)
         {
             this.bodyParts = new Dictionary<BodyPartLocation, Entity>();
