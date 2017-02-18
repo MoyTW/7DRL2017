@@ -1,23 +1,47 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace MechArena.AI.Hanger
 {
 	public class Step_AttachAttachable : Step
 	{
-		public Step_AttachAttachable ()
-		{
-		}
+        public string BlueprintLabel { get; }
+        public BodyPartLocation Location { get; }
 
-		public override void ApplyStep (Entity entity)
+        public Step_AttachAttachable() { }
+
+        public Step_AttachAttachable(string blueprintLabel, BodyPartLocation location)
+        {
+            this.BlueprintLabel = blueprintLabel;
+            this.Location = location;
+        }
+
+        public override void ApplyStep (Entity entity)
 		{
-			throw new NotImplementedException ();
-		}
+            var entityToAttach = BlueprintListing.BuildForLabel(this.BlueprintLabel);
+            var matchingAttachPoint = entity.GetComponentOfType<Component_MechSkeleton>()
+                .InspectBodyPart(this.Location)
+                .HandleQuery(new GameQuery_SubEntities(SubEntitiesSelector.ATTACH_POINT))
+                .SubEntities
+                .Where(e => e.GetComponentOfType<Component_AttachPoint>().CanAttach(entityToAttach))
+                .FirstOrDefault();
+            if (matchingAttachPoint != null)
+                entity.HandleEvent(new GameEvent_Slot(entity, matchingAttachPoint, entityToAttach));
+        }
 
 		public override IEnumerable<SingleClause> EnumerateClauses ()
 		{
-			throw new NotImplementedException ();
-		}
+            var attachableLabels = BlueprintListing.GetMatchingBlueprints(SubEntitiesSelector.ATTACHABLE)
+                .Select(b => b.Label);
+            foreach (var label in attachableLabels)
+            {
+                foreach (var location in Component_MechSkeleton.TemplateLocations)
+                {
+                    yield return new Step_SlotPart(label, location);
+                }
+            }
+        }
 	}
 }
 

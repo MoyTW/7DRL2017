@@ -9,6 +9,8 @@ namespace MechArena.AI.Hanger
         public string BlueprintLabel { get; }
         public BodyPartLocation Location { get; }
 
+        public Step_SlotPart() { }
+
         public Step_SlotPart(string blueprintLabel, BodyPartLocation location)
         {
             this.BlueprintLabel = blueprintLabel;

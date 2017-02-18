@@ -15,6 +15,7 @@ namespace MechArena
         ACTIVE_TRACKS_TIME,
         DISABLED_TRACKS_TIME,
         SWAPPABLE_ATTACH_POINTS,
+        ATTACH_POINT,
         ATTACHABLE,
         SLOTTABLE
     }
