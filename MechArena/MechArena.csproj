@@ -137,6 +137,7 @@
     <Compile Include="Genetic\GeneListing.cs" />
     <Compile Include="AI\AIUtils.cs" />
     <Compile Include="AI\Action_MoveAwayEnemy.cs" />
+    <Compile Include="Component_Piloted.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

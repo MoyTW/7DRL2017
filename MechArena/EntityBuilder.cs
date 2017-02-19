@@ -224,9 +224,10 @@ namespace MechArena
                 .AddComponent(new Component_InternalStructure(internalStructure));
         }
 
-        public static Entity BuildNakedMech(string label, bool player, Guidebook book)
+        public static Entity BuildNakedMech(string label, bool player, Entity pilot, Guidebook book)
         {
             var mech = new Entity(label: label, typeLabel: MechTypeLabel)
+                .AddComponent(new Component_Piloted(pilot))
                 .AddComponent(new Component_MechSkeleton())
                 .AddComponent(new Component_Attacker());
 
@@ -252,7 +253,7 @@ namespace MechArena
 
         public static Entity BuildArmoredMech(string label, bool player, Guidebook book=null)
         {
-            var mech = BuildNakedMech(label, player, book);
+            var mech = BuildNakedMech(label, player, new Entity(), book);
 
             MountOntoArm(mech, BodyPartLocation.LEFT_ARM, BlueprintListing.BuildForLabel(Blueprints.RIFLE));
             MountOntoArm(mech, BodyPartLocation.RIGHT_ARM, BlueprintListing.BuildForLabel(Blueprints.RIFLE));
@@ -271,7 +272,7 @@ namespace MechArena
 
         public static Entity BuildKnifeMech(string label, bool player, Guidebook book=null)
         {
-            var mech = BuildNakedMech(label, player, book);
+            var mech = BuildNakedMech(label, player, new Entity(), book);
 
             MountOntoArm(mech, BodyPartLocation.LEFT_ARM, BlueprintListing.BuildForLabel(Blueprints.DAGGER));
             MountOntoArm(mech, BodyPartLocation.RIGHT_ARM, BlueprintListing.BuildForLabel(Blueprints.DAGGER));
@@ -294,7 +295,7 @@ namespace MechArena
 
         public static Entity BuildPaladinMech(string label, bool player, Guidebook book=null)
         {
-            var mech = BuildNakedMech(label, player, book);
+            var mech = BuildNakedMech(label, player, new Entity(), book);
 
             MountOntoArm(mech, BodyPartLocation.LEFT_ARM, BlueprintListing.BuildForLabel(Blueprints.SWORD));
             MountOntoArm(mech, BodyPartLocation.RIGHT_ARM, BlueprintListing.BuildForLabel(Blueprints.SWORD));
@@ -311,7 +312,7 @@ namespace MechArena
 
         public static Entity BuildSniperMech(string label, bool player, Guidebook book=null)
         {
-            var mech = BuildNakedMech(label, player, book);
+            var mech = BuildNakedMech(label, player, new Entity(), book);
 
             MountOntoArm(mech, BodyPartLocation.LEFT_ARM, BlueprintListing.BuildForLabel(Blueprints.SNIPER_RILFE));
             MountOntoArm(mech, BodyPartLocation.RIGHT_ARM, BlueprintListing.BuildForLabel(Blueprints.SNIPER_RILFE));
@@ -334,7 +335,7 @@ namespace MechArena
 
         public static Entity BuildAlphaStrikerMech(string label, bool player, Guidebook book=null)
         {
-            var mech = BuildNakedMech(label, player, book);
+            var mech = BuildNakedMech(label, player, new Entity(), book);
 
             Func<Entity> buildRocketPod = () => BuildMountForWeapon(
                 BlueprintListing.BuildForLabel(Blueprints.ROCKET_POD));
@@ -356,7 +357,7 @@ namespace MechArena
 
         public static Entity BuildSlowKnifeMech(string label, bool player, Guidebook book=null)
         {
-            var mech = BuildNakedMech(label, player, book);
+            var mech = BuildNakedMech(label, player, new Entity(), book);
 
             MountOntoArm(mech, BodyPartLocation.LEFT_ARM, BlueprintListing.BuildForLabel(Blueprints.DAGGER));
             MountOntoArm(mech, BodyPartLocation.RIGHT_ARM, BlueprintListing.BuildForLabel(Blueprints.DAGGER));
@@ -376,7 +377,7 @@ namespace MechArena
 
         public static Entity BuildFastPistolMech(string label, bool player, Guidebook book=null)
         {
-            var mech = BuildNakedMech(label, player, book);
+            var mech = BuildNakedMech(label, player, new Entity(), book);
 
             MountOntoArm(mech, BodyPartLocation.LEFT_ARM, BlueprintListing.BuildForLabel(Blueprints.PISTOL));
             MountOntoArm(mech, BodyPartLocation.RIGHT_ARM, BlueprintListing.BuildForLabel(Blueprints.PISTOL));
@@ -409,7 +410,7 @@ namespace MechArena
                 case 4:
                     return BuildSniperMech(label, player, book);
                 default:
-                    return BuildNakedMech(label, player, book);
+                    return BuildNakedMech(label, player, new Entity(), book);
             }
         }
 
