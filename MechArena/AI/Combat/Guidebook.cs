@@ -53,7 +53,7 @@ namespace MechArena.AI.Combat
                 else if (clause is Condition)
                     acc.Add((Condition)clause);
                 else
-                    throw new NotImplementedException();
+                    Log.ErrorLine("Can't process clause " + clause);
             }
             return builtRules;
         }

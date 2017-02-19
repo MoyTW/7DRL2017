@@ -36,6 +36,11 @@ namespace MechArena.AI.Hanger
                 }
             }
         }
+
+        public override string ToString()
+        {
+            return string.Format("[Step_SlotPart: BlueprintLabel={0}, Location={1}]", BlueprintLabel, Location);
+        }
     }
 }
 
