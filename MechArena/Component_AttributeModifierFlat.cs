@@ -4,7 +4,7 @@ using System.Collections.Immutable;
 namespace MechArena
 {
     [Serializable()]
-    class Component_AttributeModifierFlat : Component
+    public class Component_AttributeModifierFlat : Component
     {
         public EntityAttributeType AttributeType { get; }
         public int Value { get; }

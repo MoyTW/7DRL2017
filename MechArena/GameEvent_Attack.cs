@@ -5,7 +5,7 @@ using System;
 
 namespace MechArena
 {
-    class GameEvent_Attack : GameEvent_Command
+    public class GameEvent_Attack : GameEvent_Command
     {
         public int CurrentTick { get; }
         public Entity Target { get; }
