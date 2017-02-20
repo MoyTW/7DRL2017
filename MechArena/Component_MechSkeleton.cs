@@ -75,32 +75,27 @@ namespace MechArena
 
                 // Retarget on appropriate body part
                 if (ev.SubTarget == BodyPartLocation.ANY)
-                    ev.SubTarget = this.FindBodyPartLocationByWeight(ev.Rand);
+                    ev.RegisterRetargeting(this.FindBodyPartLocationByWeight(ev.Rand));
 
                 Entity subTargetEntity = this.bodyParts[ev.SubTarget];
 
                 // This is all damage handling
                 if (subTargetEntity.TryGetDestroyed())
-                {
-                    Log.DebugLine(
-                        String.Format("{0} ({1}) missed - the {2} of the target was already destroyed!",
-                        ev.ExecutorEntity, ev.CommandEntity, ev.SubTarget));
-                }
+                    ev.RegisterAttackResults(false, missedDueToMissingBodyPart: true);
                 else
                 {
-                    Log.DebugLine(String.Format("{0} ({1}) hit {2} in the {3} for {4}!", ev.ExecutorEntity,
-                        ev.CommandEntity, ev.Target, subTargetEntity, damage));
                     subTargetEntity.HandleEvent(new GameEvent_TakeDamage(damage, ev.Rand));
 
-                    // Detach body part from mech if destroyed
                     if (0 >= subTargetEntity.TryGetAttribute(EntityAttributeType.STRUCTURE).Value)
-                    {
-                        Log.DebugLine(String.Format("Part {0} was destroyed!", ev.SubTarget));
-                    }
+                        ev.RegisterAttackResults(true, damage: damage, destroyedBodyPart: true);
+                    else
+                        ev.RegisterAttackResults(true, damage: damage);
                 }
             }
-
-            ev.Completed = true;
+            else
+            {
+                ev.RegisterAttackResults(false);
+            }
         }
 
         // Since there is no damage transfer, will *always* complete the event!
