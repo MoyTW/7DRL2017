@@ -53,12 +53,8 @@ namespace MechArena
 
             int attackerBaseToHit = ev.CommandEntity.TryGetAttribute(EntityAttributeType.TO_HIT, ev.ExecutorEntity)
                 .Value;
-            int weaponBaseDamage = ev.ExecutorEntity.TryGetAttribute(EntityAttributeType.DAMAGE, ev.ExecutorEntity)
+            int weaponBaseDamage = ev.CommandEntity.TryGetAttribute(EntityAttributeType.DAMAGE, ev.ExecutorEntity)
                 .Value;
-
-            // Resolve pilot skills here
-            // Get pilot skill modifiers for attacker
-            // Get pilot skill modifiers for defender
 
             int targetDodge = ev.Target.TryGetAttribute(EntityAttributeType.DODGE).Value;
 

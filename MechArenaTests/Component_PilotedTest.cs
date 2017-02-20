@@ -1,0 +1,46 @@
+﻿using MechArena;
+
+using System;
+using NUnit.Framework;
+
+namespace MechArenaTests
+{
+    [TestFixture]
+    public class Component_PilotedTest
+    {
+        private Entity pilot, mech1, mech1Gun, mech2;
+        private ArenaState arena;
+
+        [SetUp]
+        public void Initialize()
+        {
+            BlueprintListing.LoadAllBlueprints();
+
+            this.pilot = new Entity();
+
+            this.mech1 = EntityBuilder.BuildNakedMech("1", false, pilot, null);
+            var mountedGun = EntityBuilder.BuildMountedPistol();
+            this.mech1Gun = mountedGun.GetComponentOfType<Component_AttachPoint>().InspectAttachedEntity();
+            EntityBuilder.SlotAt(mech1, BodyPartLocation.HEAD, mountedGun);
+            EntityBuilder.SlotAt(mech1, BodyPartLocation.LEFT_ARM, EntityBuilder.BuildMountedRifle());
+            EntityBuilder.SlotAt(mech1, BodyPartLocation.RIGHT_ARM, EntityBuilder.BuildMountedSword());
+
+            this.mech2 = EntityBuilder.BuildNakedMech("2", false, new Entity(), null);
+            this.arena = ArenaBuilder.TestArena(0, mech1, mech2);
+        }
+
+        [Test]
+        public void TestAppliesToWeapons()
+        {
+            pilot.AddComponent(new Component_AttributeModifierFlat(EntityAttributeType.DAMAGE, 4))
+                .AddComponent(new Component_AttributeModifierFlat(EntityAttributeType.TO_HIT, 100));
+
+            var attack = new GameEvent_Attack(0, mech1, mech2, this.mech1Gun, arena.ArenaMap, arena.SeededRand);
+            mech1.HandleEvent(attack);
+
+            Assert.IsTrue(attack.ResultHit);
+            Assert.AreEqual(attack.ResultDamage, 6);
+        }
+    }
+}
+
