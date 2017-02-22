@@ -9,7 +9,7 @@ namespace MechArena
     {
         private bool registeredBase = false;
         private int baseValue = 0;
-        private List<Tuple<int, Entity>> additiveModifiers = new List<Tuple<int, Entity>>();
+        private List<Tuple<double, Entity>> additiveModifiers = new List<Tuple<double, Entity>>();
         private List<Tuple<double, Entity>> multiplicativeModifiers = new List<Tuple<double, Entity>>();
 
         public Entity BaseEntity { get; }
@@ -50,9 +50,9 @@ namespace MechArena
             this.baseValue = value;
         }
 
-        public void AddFlatModifier(int value, Entity source)
+        public void AddFlatModifier(double value, Entity source)
         {
-            this.additiveModifiers.Add(new Tuple<int, Entity>(value, source));
+            this.additiveModifiers.Add(new Tuple<double, Entity>(value, source));
         }
 
         public void AddMultModifier(double value, Entity source)

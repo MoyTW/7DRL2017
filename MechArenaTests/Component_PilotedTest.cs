@@ -32,8 +32,8 @@ namespace MechArenaTests
         [Test]
         public void TestAppliesToWeapons()
         {
-            pilot.AddComponent(new Component_AttributeModifierFlat(EntityAttributeType.DAMAGE, 4))
-                .AddComponent(new Component_AttributeModifierFlat(EntityAttributeType.TO_HIT, 100));
+            pilot.AddComponent(new Component_AttributeModifier(EntityAttributeType.DAMAGE, ModifierType.FLAT, 4))
+                .AddComponent(new Component_AttributeModifier(EntityAttributeType.TO_HIT, ModifierType.FLAT, 100));
 
             var attack = new GameEvent_Attack(0, mech1, mech2, this.mech1Gun, arena.ArenaMap, arena.SeededRand);
             mech1.HandleEvent(attack);

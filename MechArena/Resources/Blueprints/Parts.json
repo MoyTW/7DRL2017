@@ -160,9 +160,10 @@
     "TypeLabel": "Slottable Part",
     "Components": [
       {
-        "ComponentClass": "MechArena.Component_AttributeModifierMult",
+        "ComponentClass": "MechArena.Component_AttributeModifier",
         "Params": {
           "attributeType": "MechArena.EntityAttributeType.SPEED",
+          "modifierType": "MechArena.ModifierType.MULTIPLIER",
           "value": 0.9
         }
       },

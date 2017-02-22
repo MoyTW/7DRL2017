@@ -3,15 +3,24 @@ using System.Collections.Immutable;
 
 namespace MechArena
 {
+    public enum ModifierType
+    {
+        FLAT,
+        MULTIPLIER
+    }
+
     [Serializable()]
-    public class Component_AttributeModifierMult : Component
+    public class Component_AttributeModifier : Component
     {
         public EntityAttributeType AttributeType { get; }
+        public ModifierType ModifierType { get; }
         public double Value { get; }
 
-        public Component_AttributeModifierMult(EntityAttributeType attributeType, double value)
+        public Component_AttributeModifier(EntityAttributeType attributeType, ModifierType modifierType,
+            double value)
         {
             this.AttributeType = attributeType;
+            this.ModifierType = modifierType;
             this.Value = value;
         }
 
@@ -23,7 +32,12 @@ namespace MechArena
         private void HandleQueryEntityAttribute(GameQuery_EntityAttribute q)
         {
             if (q.AttributeType == this.AttributeType)
-                q.AddMultModifier(this.Value, this.Parent);
+            {
+                if (this.ModifierType == ModifierType.FLAT)
+                    q.AddFlatModifier(this.Value, this.Parent);
+                else
+                    q.AddMultModifier(this.Value, this.Parent);
+            }
         }
 
         protected override GameQuery _HandleQuery(GameQuery q)
