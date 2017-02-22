@@ -15,6 +15,7 @@ namespace MechArena
         public EntityAttributeType AttributeType { get; }
         public ModifierType ModifierType { get; }
         public double Value { get; }
+        public string RequiredBaseLabel { get; }
 
         public Component_AttributeModifier(EntityAttributeType attributeType, ModifierType modifierType,
             double value)
@@ -24,6 +25,16 @@ namespace MechArena
             this.Value = value;
         }
 
+        public Component_AttributeModifier(EntityAttributeType attributeType, ModifierType modifierType,
+            double value, string requiredBaseLabel=null)
+        {
+            this.AttributeType = attributeType;
+            this.ModifierType = modifierType;
+            this.Value = value;
+            this.RequiredBaseLabel = requiredBaseLabel;
+        }
+
+
         protected override IImmutableSet<SubEntitiesSelector> _MatchingSelectors()
         {
             return ImmutableHashSet<SubEntitiesSelector>.Empty;
@@ -31,7 +42,8 @@ namespace MechArena
 
         private void HandleQueryEntityAttribute(GameQuery_EntityAttribute q)
         {
-            if (q.AttributeType == this.AttributeType)
+            if (q.AttributeType == this.AttributeType &&
+                (this.RequiredBaseLabel == null || this.RequiredBaseLabel == q.BaseEntity.Label))
             {
                 if (this.ModifierType == ModifierType.FLAT)
                     q.AddFlatModifier(this.Value, this.Parent);

@@ -41,6 +41,21 @@ namespace MechArenaTests
             Assert.IsTrue(attack.ResultHit);
             Assert.AreEqual(attack.ResultDamage, 6);
         }
+
+        [Test]
+        public void TestAppliesOnlyToSpecificBaseLabel()
+        {
+            pilot.AddComponent(new Component_AttributeModifier(EntityAttributeType.DAMAGE, ModifierType.FLAT, 4,
+                "Pstl."));
+            Assert.AreEqual(6, this.mech1.TryGetAttribute(EntityAttributeType.DAMAGE, this.mech1Gun).Value);
+
+            pilot.AddComponent(new Component_AttributeModifier(EntityAttributeType.DAMAGE, ModifierType.FLAT, 4,
+                "Swrd."));
+            Assert.AreEqual(6, this.mech1.TryGetAttribute(EntityAttributeType.DAMAGE, this.mech1Gun).Value);
+
+            pilot.AddComponent(new Component_AttributeModifier(EntityAttributeType.DAMAGE, ModifierType.FLAT, 4));
+            Assert.AreEqual(10, this.mech1.TryGetAttribute(EntityAttributeType.DAMAGE, this.mech1Gun).Value);
+        }
     }
 }
 
