@@ -145,11 +145,13 @@ namespace MechArena
                 if (part != null && !part.TryGetDestroyed())
                     part.HandleQuery(q);
             }
+            // TODO: Do not hardcode these values!
             if (q.AttributeType == EntityAttributeType.SPEED)
-            {
-                // TOOD: Base speed not hardcoded to 50!
                 q.RegisterBaseValue(50);
-            }
+            else if (q.AttributeType == EntityAttributeType.DODGE)
+                q.RegisterBaseValue(0);
+            else if (q.AttributeType == EntityAttributeType.STRUCTURE)
+                q.RegisterBaseValue(0);
         }
 
         private void HandleQuerySubEntities(GameQuery_SubEntities q)

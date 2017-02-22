@@ -20,7 +20,7 @@ namespace MechArena
         {
             get
             {
-                if (this.BaseEntity != null && !this.registeredBase)
+                if (!this.registeredBase)
                     throw new InvalidOperationException("Base was never registered for - query for " +
                         this.AttributeType + " on " + this.BaseEntity);
 
@@ -33,8 +33,6 @@ namespace MechArena
             }
         }
 
-        public GameQuery_EntityAttribute(EntityAttributeType attributeType) : this(attributeType, null) { }
-
         public GameQuery_EntityAttribute(EntityAttributeType attributeType, Entity baseEntity)
         {
             this.AttributeType = attributeType;
@@ -45,6 +43,8 @@ namespace MechArena
         {
             if (this.BaseEntity == null)
                 throw new InvalidOperationException("Can't register a base value if no base entity specified!");
+            if (this.registeredBase)
+                throw new InvalidOperationException("Can't re-register a base value!");
 
             this.registeredBase = true;
             this.baseValue = value;

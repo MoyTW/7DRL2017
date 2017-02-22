@@ -21,7 +21,8 @@ namespace MechArena
 
         private int GetRemainingSlottedStructure(Component_SlottedContainer slottedContainer)
         {
-            GameQuery q = new GameQuery_EntityAttribute(EntityAttributeType.STRUCTURE);
+            var q = new GameQuery_EntityAttribute(EntityAttributeType.STRUCTURE, slottedContainer.Parent);
+            q.RegisterBaseValue(0);
             return ((GameQuery_EntityAttribute)slottedContainer.HandleQuery(q)).Value;
         }
 

@@ -63,7 +63,7 @@ namespace MechArena
 
         public GameQuery_EntityAttribute TryGetAttribute(EntityAttributeType attributeType)
         {
-            return this.HandleQuery(new GameQuery_EntityAttribute(attributeType));
+            return this.HandleQuery(new GameQuery_EntityAttribute(attributeType, this));
         }
 
         public GameQuery_EntityAttribute TryGetAttribute(EntityAttributeType attributeType, Entity baseEntity)
