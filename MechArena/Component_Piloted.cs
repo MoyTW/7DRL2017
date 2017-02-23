@@ -6,7 +6,17 @@ namespace MechArena
     [Serializable()]
     public class Component_Piloted : Component
     {
-        public Entity Pilot { get; }
+        private Entity pilot;
+        public Entity Pilot
+        {
+            get { return this.pilot; }
+            set
+            {
+                if (this.pilot != null)
+                    Log.DebugLine("Swapping pilot " + this.pilot.Label + " of " + this.Parent + " with " + value.Label);
+                this.pilot = value;
+            }
+        }
 
         public Component_Piloted() { }
 
