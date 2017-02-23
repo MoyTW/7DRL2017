@@ -46,7 +46,7 @@ namespace MechArenaTests.Genetic
         {
             var genes = individual.InspectGenes();
 
-            var testMech = EntityBuilder.BuildNakedMech("", false, null);
+            var testMech = EntityBuilder.BuildNakedMech("", false, new Entity(), null);
             foreach (var f in genes)
             {
                 f(testMech);
@@ -69,7 +69,7 @@ namespace MechArenaTests.Genetic
 
             var genes = individual.InspectGenes();
 
-            var testMech = EntityBuilder.BuildNakedMech("", false, null);
+            var testMech = EntityBuilder.BuildNakedMech("", false, new Entity(), null);
             foreach (var f in genes)
             {
                 f(testMech);
@@ -109,7 +109,7 @@ namespace MechArenaTests.Genetic
                 case 3:
                     return EntityBuilder.BuildAlphaStrikerMech("", false);
                 default:
-                    return EntityBuilder.BuildNakedMech("", false, null);
+                    return EntityBuilder.BuildNakedMech("", false, new Entity(), null);
             }
         }
 
@@ -117,7 +117,7 @@ namespace MechArenaTests.Genetic
         {
             var genes = individual.InspectGenes();
 
-            var individualMech = EntityBuilder.BuildNakedMech("", false, null);
+            var individualMech = EntityBuilder.BuildNakedMech("", false, new Entity(), null);
             foreach (var f in genes)
             {
                 f(individualMech);

@@ -20,11 +20,15 @@ namespace MechArena.UI
             foreach (var mountedPart in mountedParts)
             {
                 var mountedPartDestroyed = mountedPart.TryGetDestroyed();
-                var structure = mountedPart.TryGetAttribute(EntityAttributeType.STRUCTURE).Value;
+                var structureQuery = mountedPart.TryGetAttribute(EntityAttributeType.STRUCTURE);
+                var outputLine = mountedPart.Label;
+                if (structureQuery.IsBaseRegistered)
+                    outputLine += ": " + structureQuery.Value;
+
                 if (mechDestroyed || bodyPartDestroyed || mountedPartDestroyed)
-                    console.Print(x + 3, y, mountedPart.Label + ":" + structure + " ", RLColor.Red);
+                    console.Print(x + 3, y, outputLine, RLColor.Red);
                 else
-                    console.Print(x + 3, y, mountedPart.Label + ":" + structure + " ", RLColor.Black);
+                    console.Print(x + 3, y, outputLine, RLColor.Black);
 
                 console.Print(x + 1, y, "+", RLColor.Black);
                 console.Print(x + 18, y, "+", RLColor.Black);

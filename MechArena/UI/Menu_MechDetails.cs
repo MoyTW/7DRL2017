@@ -86,10 +86,10 @@ namespace MechArena.UI
                 return;
 
             var holsterMount = selectedHolster.GetComponentOfType<Component_AttachPoint>();
-            var weaponFromHolster = holsterMount.InspecAttachedEntity();
+            var weaponFromHolster = holsterMount.InspectAttachedEntity();
 
             var mountMount = selectedMount.GetComponentOfType<Component_AttachPoint>();
-            var weaponFromMount = mountMount.InspecAttachedEntity();
+            var weaponFromMount = mountMount.InspectAttachedEntity();
 
             // Whew, that's silly ugly!
             if (holsterMount.Swappable &&
@@ -151,7 +151,7 @@ namespace MechArena.UI
 
                 foreach (var holster in entry.Value)
                 {
-                    var mountedEntity = holster.Item2.GetComponentOfType<Component_AttachPoint>().InspecAttachedEntity();
+                    var mountedEntity = holster.Item2.GetComponentOfType<Component_AttachPoint>().InspectAttachedEntity();
                     string mountedString;
                     if (mountedEntity != null)
                         mountedString = mountedEntity.ToString();
@@ -182,7 +182,7 @@ namespace MechArena.UI
 
                 foreach (var mount in entry.Value)
                 {
-                    var mountedEntity = mount.Item2.GetComponentOfType<Component_AttachPoint>().InspecAttachedEntity();
+                    var mountedEntity = mount.Item2.GetComponentOfType<Component_AttachPoint>().InspectAttachedEntity();
                     string mountedString;
                     if (mountedEntity != null)
                         mountedString = mountedEntity.ToString();

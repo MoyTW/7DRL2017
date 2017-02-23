@@ -61,12 +61,8 @@ namespace MechArena
 
             int attackerBaseToHit = ev.CommandEntity.TryGetAttribute(EntityAttributeType.TO_HIT, ev.ExecutorEntity)
                 .Value;
-            int weaponBaseDamage = ev.ExecutorEntity.TryGetAttribute(EntityAttributeType.DAMAGE, ev.ExecutorEntity)
+            int weaponBaseDamage = ev.CommandEntity.TryGetAttribute(EntityAttributeType.DAMAGE, ev.ExecutorEntity)
                 .Value;
-
-            // Resolve pilot skills here
-            // Get pilot skill modifiers for attacker
-            // Get pilot skill modifiers for defender
 
             int targetDodge = ev.Target.TryGetAttribute(EntityAttributeType.DODGE).Value;
 
@@ -83,32 +79,27 @@ namespace MechArena
 
                 // Retarget on appropriate body part
                 if (ev.SubTarget == BodyPartLocation.ANY)
-                    ev.SubTarget = this.FindBodyPartLocationByWeight(ev.Rand);
+                    ev.RegisterRetargeting(this.FindBodyPartLocationByWeight(ev.Rand));
 
                 Entity subTargetEntity = this.bodyParts[ev.SubTarget];
 
                 // This is all damage handling
                 if (subTargetEntity.TryGetDestroyed())
-                {
-                    Log.DebugLine(
-                        String.Format("{0} ({1}) missed - the {2} of the target was already destroyed!",
-                        ev.ExecutorEntity, ev.CommandEntity, ev.SubTarget));
-                }
+                    ev.RegisterAttackResults(false, missedDueToMissingBodyPart: true);
                 else
                 {
-                    Log.DebugLine(String.Format("{0} ({1}) hit {2} in the {3} for {4}!", ev.ExecutorEntity,
-                        ev.CommandEntity, ev.Target, subTargetEntity, damage));
                     subTargetEntity.HandleEvent(new GameEvent_TakeDamage(damage, ev.Rand));
 
-                    // Detach body part from mech if destroyed
                     if (0 >= subTargetEntity.TryGetAttribute(EntityAttributeType.STRUCTURE).Value)
-                    {
-                        Log.DebugLine(String.Format("Part {0} was destroyed!", ev.SubTarget));
-                    }
+                        ev.RegisterAttackResults(true, damage: damage, destroyedBodyPart: true);
+                    else
+                        ev.RegisterAttackResults(true, damage: damage);
                 }
             }
-
-            ev.Completed = true;
+            else
+            {
+                ev.RegisterAttackResults(false);
+            }
         }
 
         // Since there is no damage transfer, will *always* complete the event!
@@ -162,11 +153,13 @@ namespace MechArena
                 if (part != null && !part.TryGetDestroyed())
                     part.HandleQuery(q);
             }
+            // TODO: Do not hardcode these values!
             if (q.AttributeType == EntityAttributeType.SPEED)
-            {
-                // TOOD: Base speed not hardcoded to 50!
                 q.RegisterBaseValue(50);
-            }
+            else if (q.AttributeType == EntityAttributeType.DODGE)
+                q.RegisterBaseValue(0);
+            else if (q.AttributeType == EntityAttributeType.STRUCTURE)
+                q.RegisterBaseValue(0);
         }
 
         private void HandleQuerySubEntities(GameQuery_SubEntities q)

@@ -12,7 +12,7 @@ namespace MechArena
     }
 
     [Serializable()]
-    class Component_AttachPoint : Component
+    public class Component_AttachPoint : Component
     {
         private Entity attachedEntity;
 
@@ -29,7 +29,7 @@ namespace MechArena
             this.Swappable = swappable;
         }
 
-        public Entity InspecAttachedEntity()
+        public Entity InspectAttachedEntity()
         {
             return this.attachedEntity;
         }

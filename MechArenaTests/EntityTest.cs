@@ -20,12 +20,13 @@ namespace MechArenaTests
         private Entity ent;
         private Component cmp;
 
-		[SetUp()]
-		public void Initialize()
-		{
-			this.ent = new Entity ();
-			this.cmp = new TestComponent ();
-		}
+        [SetUp()]
+        public void Initialize()
+        {
+            this.ent = new Entity();
+            this.cmp = new TestComponent();
+            BlueprintListing.LoadAllBlueprints();
+        }
 
         [Test]
         public void TestAddComponent()
@@ -39,13 +40,13 @@ namespace MechArenaTests
         public void TestAddComponentDouble()
         {
             this.ent.AddComponent(this.cmp);
-			Assert.Throws<ArgumentException> (() => this.ent.AddComponent(this.cmp));
+            Assert.Throws<ArgumentException>(() => this.ent.AddComponent(this.cmp));
         }
 
         [Test]
         public void TestRemoveComponentThrows()
         {
-			Assert.Throws<ArgumentOutOfRangeException> (() => this.ent.RemoveComponent (this.cmp));
+            Assert.Throws<ArgumentOutOfRangeException>(() => this.ent.RemoveComponent(this.cmp));
         }
 
         [Test]
