@@ -24,8 +24,15 @@ namespace MechArena
         {
             BlueprintListing.LoadAllBlueprints();
 
-            _player = new CompetitorEntity(new Entity(label: "Player"),
-                EntityBuilder.BuildSniperMech("Player Mech", true));
+            var sniperModifier = new Component_AttributeModifier(EntityAttributeType.DAMAGE, ModifierType.FLAT, 100,
+                requiredBaseLabel: Blueprints.SNIPER_RILFE);
+            var sniperToHit = new Component_AttributeModifier(EntityAttributeType.TO_HIT, ModifierType.FLAT, 100,
+                requiredBaseLabel: Blueprints.SNIPER_RILFE);
+            var playerPilot = new Entity(label: "You").AddComponent(sniperModifier).AddComponent(sniperToHit);
+            var sniperMech = EntityBuilder.BuildSniperMech("Player Mech", true);
+            sniperMech.GetComponentOfType<Component_Piloted>().Pilot = playerPilot;
+
+            _player = new CompetitorEntity(playerPilot, sniperMech);
             //EntityBuilder.BuildKnifeMech("Player Knifer", true));
             //EntityBuilder.BuildDoomCannonMech("Doom Cannon Mech", true));
             _tournament = TournamentBuilder.BuildTournament(_player, new DotNetRandom(1), new DotNetRandom(2),

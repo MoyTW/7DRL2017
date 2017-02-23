@@ -13,6 +13,17 @@ namespace MechArena
         private static ConcurrentDictionary<string, Tuple<IMap, PathFinder>> seedsToMaps =
             new ConcurrentDictionary<string, Tuple<IMap, PathFinder>>(Config.NumThreads(), Config.NumMaps());
 
+        public static ArenaState TestArena(int arenaSeed, Entity baseMech1, Entity baseMech2)
+        {
+            var arenaMap = Map.Create(new RogueSharp.MapCreation.BorderOnlyMapCreationStrategy<Map>(15, 15));
+            ArenaState arena = new ArenaState(baseMech1, baseMech2, "test", arenaMap, new PathFinder(arenaMap),
+                arenaSeed, "test");
+            arena.PlaceEntityNear(baseMech1, 5, 5);
+            arena.PlaceEntityNear(baseMech2, 10, 10);
+
+            return arena;
+        }
+
         // WE ASSUME THE MAP, ONCE GENERATED, NEVER CHANGES!
         // THIS MEANS NO TERRAIN DEFORMATION WITHOUT CACHING EDITS!
         public static ArenaState BuildArena(int width, int height, string matchID, string mapID, int arenaSeed,

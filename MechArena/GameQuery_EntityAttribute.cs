@@ -7,12 +7,12 @@ namespace MechArena
 {
     public class GameQuery_EntityAttribute : GameQuery
     {
-        private bool registeredBase = false;
         private int baseValue = 0;
-        private List<Tuple<int, Entity>> additiveModifiers = new List<Tuple<int, Entity>>();
+        private List<Tuple<double, Entity>> additiveModifiers = new List<Tuple<double, Entity>>();
         private List<Tuple<double, Entity>> multiplicativeModifiers = new List<Tuple<double, Entity>>();
 
         public Entity BaseEntity { get; }
+        public bool IsBaseRegistered { get; private set; }
 
         public EntityAttributeType AttributeType { get; }
         // TODO: Do we want to round up, round down, or round nearest? Right now rounds down.
@@ -20,7 +20,7 @@ namespace MechArena
         {
             get
             {
-                if (this.BaseEntity != null && !this.registeredBase)
+                if (!this.IsBaseRegistered)
                     throw new InvalidOperationException("Base was never registered for - query for " +
                         this.AttributeType + " on " + this.BaseEntity);
 
@@ -33,26 +33,27 @@ namespace MechArena
             }
         }
 
-        public GameQuery_EntityAttribute(EntityAttributeType attributeType) : this(attributeType, null) { }
-
         public GameQuery_EntityAttribute(EntityAttributeType attributeType, Entity baseEntity)
         {
             this.AttributeType = attributeType;
             this.BaseEntity = baseEntity;
+            this.IsBaseRegistered = false;
         }
 
         public void RegisterBaseValue(int value)
         {
             if (this.BaseEntity == null)
                 throw new InvalidOperationException("Can't register a base value if no base entity specified!");
+            if (this.IsBaseRegistered)
+                throw new InvalidOperationException("Can't re-register a base value!");
 
-            this.registeredBase = true;
+            this.IsBaseRegistered = true;
             this.baseValue = value;
         }
 
-        public void AddFlatModifier(int value, Entity source)
+        public void AddFlatModifier(double value, Entity source)
         {
-            this.additiveModifiers.Add(new Tuple<int, Entity>(value, source));
+            this.additiveModifiers.Add(new Tuple<double, Entity>(value, source));
         }
 
         public void AddMultModifier(double value, Entity source)
