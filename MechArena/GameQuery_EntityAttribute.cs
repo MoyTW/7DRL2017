@@ -7,12 +7,12 @@ namespace MechArena
 {
     public class GameQuery_EntityAttribute : GameQuery
     {
-        private bool registeredBase = false;
         private int baseValue = 0;
         private List<Tuple<double, Entity>> additiveModifiers = new List<Tuple<double, Entity>>();
         private List<Tuple<double, Entity>> multiplicativeModifiers = new List<Tuple<double, Entity>>();
 
         public Entity BaseEntity { get; }
+        public bool IsBaseRegistered { get; private set; }
 
         public EntityAttributeType AttributeType { get; }
         // TODO: Do we want to round up, round down, or round nearest? Right now rounds down.
@@ -20,7 +20,7 @@ namespace MechArena
         {
             get
             {
-                if (!this.registeredBase)
+                if (!this.IsBaseRegistered)
                     throw new InvalidOperationException("Base was never registered for - query for " +
                         this.AttributeType + " on " + this.BaseEntity);
 
@@ -37,16 +37,17 @@ namespace MechArena
         {
             this.AttributeType = attributeType;
             this.BaseEntity = baseEntity;
+            this.IsBaseRegistered = false;
         }
 
         public void RegisterBaseValue(int value)
         {
             if (this.BaseEntity == null)
                 throw new InvalidOperationException("Can't register a base value if no base entity specified!");
-            if (this.registeredBase)
+            if (this.IsBaseRegistered)
                 throw new InvalidOperationException("Can't re-register a base value!");
 
-            this.registeredBase = true;
+            this.IsBaseRegistered = true;
             this.baseValue = value;
         }
 
