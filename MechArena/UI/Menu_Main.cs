@@ -49,6 +49,68 @@ namespace MechArena.UI
             return match.BuildResult(matchArena.WinnerID(), matchArena.MapID, matchArena.ArenaSeed);
         }
 
+        private void RunTournament()
+        {
+            Log.DebugLine("T Pressed!");
+            Log.DebugLine("Round: " + this.tournament.RoundNum());
+
+            var results = this.tournament.ScheduledMatches()
+                .TakeWhile(m => !m.HasCompetitor(this.player.CompetitorID))
+                // BuildArena sequential because of the RNG draws
+                .Select(m => BuildArena(m))
+                // Setting degree of parallelism not required - default is fn of # processors already
+                .AsParallel().WithDegreeOfParallelism(Config.NumThreads())
+                .Select(ma => Task.Run(() => RunArena(ma)));
+
+            // Reporting happens in order
+            foreach (var task in results)
+            {
+                Log.DebugLine("Winner of " + task.Result.OriginalMatch + " is " + task.Result.Winner);
+                this.tournament.ReportResult(task.Result);
+            }
+
+            // TODO: Get rid of _match!
+            var match = this.tournament.NextMatch();
+            // If it's a player match, resolve it or stop
+            if (match != null && match.HasCompetitor(this.player.CompetitorID))
+            {
+                if (_playPlayerMatches)
+                {
+                    Log.InfoLine("Next match is player!");
+                }
+                else
+                {
+                    var playerResult = match.BuildResult(this.player.CompetitorID, "0", 0);
+                    Log.InfoLine("Player wins match!");
+                    this.tournament.ReportResult(playerResult);
+                }
+            }
+
+            if (this.tournament.NextMatch() == null)
+            {
+                Log.InfoLine("===== WINNER IS =====");
+                Log.InfoLine("Winner is " + this.tournament.Winners()[0]);
+            }
+        }
+
+        private IDisplay TryRunNextMatch()
+        {
+            var nextMatch = this.tournament.NextMatch();
+            if (nextMatch != null)
+            {
+                var arena = ArenaBuilder.BuildArena(Menu_Arena.arenaWidth, Menu_Arena.arenaHeight,
+                    nextMatch.MatchID, this.tournament.PickMapID(), this.tournament.GenArenaSeed(),
+                    (CompetitorEntity)nextMatch.Competitor1, (CompetitorEntity)nextMatch.Competitor2);
+
+                this.arenaMenu = new Menu_Arena(this, arena, this.tournament);
+                return this.arenaMenu;
+            }
+            else
+            {
+                return this;
+            }
+        }
+
         // Put each case into own fn, this is just exceptionally unwieldy!
         private IDisplay HandleKeyPressed(RLKeyPress keyPress)
         {
@@ -60,75 +122,13 @@ namespace MechArena.UI
                 case RLKey.L:
                     Log.ToggleDebugLog();
                     return this;
-                // TODO: Don't just dump the info onto the console, actually display it
-                // argh UI work is the *worst*!
                 case RLKey.H:
                     return new Menu_CompetitorListing(this, this.player, this.tournament);
-                case RLKey.M:
-                    Log.InfoLine("########## UPCOMING PLAYER MATCHES ##########");
-                    foreach (var m in this.tournament.ScheduledMatches(this.player.CompetitorID))
-                    {
-                        Log.InfoLine(m);
-                    }
-                    return this;
                 case RLKey.T:
-                    Log.DebugLine("T Pressed!");
-                    Log.DebugLine("Round: " + this.tournament.RoundNum());
-
-                    var results = this.tournament.ScheduledMatches()
-                        .TakeWhile(m => !m.HasCompetitor(this.player.CompetitorID))
-                        // BuildArena sequential because of the RNG draws
-                        .Select(m => BuildArena(m))
-                        // Setting degree of parallelism not required - default is fn of # processors already
-                        .AsParallel().WithDegreeOfParallelism(Config.NumThreads())
-                        .Select(ma => Task.Run(() => RunArena(ma)));
-
-                    // Reporting happens in order
-                    foreach (var task in results)
-                    {
-                        Log.DebugLine("Winner of " + task.Result.OriginalMatch + " is " + task.Result.Winner);
-                        this.tournament.ReportResult(task.Result);
-                    }
-
-                    // TODO: Get rid of _match!
-                    var match = this.tournament.NextMatch();
-                    // If it's a player match, resolve it or stop
-                    if (match != null && match.HasCompetitor(this.player.CompetitorID))
-                    {
-                        if (_playPlayerMatches)
-                        {
-                            Log.InfoLine("Next match is player!");
-                        }
-                        else
-                        {
-                            var playerResult = match.BuildResult(this.player.CompetitorID, "0", 0);
-                            Log.InfoLine("Player wins match!");
-                            this.tournament.ReportResult(playerResult);
-                        }
-                    }
-
-                    if (this.tournament.NextMatch() == null)
-                    {
-                        Log.InfoLine("===== WINNER IS =====");
-                        Log.InfoLine("Winner is " + this.tournament.Winners()[0]);
-                    }
-
+                    this.RunTournament();
                     return this;
                 case RLKey.N:
-                    var nextMatch = this.tournament.NextMatch();
-                    if (nextMatch != null)
-                    {
-                        var arena = ArenaBuilder.BuildArena(Menu_Arena.arenaWidth, Menu_Arena.arenaHeight,
-                            nextMatch.MatchID, this.tournament.PickMapID(), this.tournament.GenArenaSeed(),
-                            (CompetitorEntity)nextMatch.Competitor1, (CompetitorEntity)nextMatch.Competitor2);
-
-                        this.arenaMenu = new Menu_Arena(this, arena, this.tournament);
-                        return this.arenaMenu;
-                    }
-                    else
-                    {
-                        return this;
-                    }
+                    return this.TryRunNextMatch();
                 case RLKey.R:
                     if (this.arenaMenu != null && !this.arenaMenu.MatchEnded)
                         return this.arenaMenu;
@@ -165,7 +165,6 @@ namespace MechArena.UI
             console.Print(baseX - 2, baseY + 4, "R) Return To Game", RLColor.White);
             console.Print(baseX - 2, baseY + 5, "T) Fast-Forward Tournament", RLColor.White);
             console.Print(baseX - 2, baseY + 6, "H) View Match History", RLColor.White);
-            console.Print(baseX - 2, baseY + 7, "M) View Upcoming Matches", RLColor.White);
             console.Print(baseX - 2, baseY + 8, "Esc) Quit", RLColor.White);
 
             console.Print(baseX - 4, baseY + 10, "Arena Keys", RLColor.White);
