@@ -221,6 +221,14 @@ namespace MechArena
 
         #endregion
 
+        public void RunArena(int maxTicks=Int32.MaxValue)
+        {
+            while (!this.IsMatchEnded() && this.CurrentTick < maxTicks)
+            {
+                this.TryFindAndExecuteNextCommand();
+            }
+        }
+
         public void TryFindAndExecuteNextCommand()
         {
             // If it's the player's turn we must wait on input!

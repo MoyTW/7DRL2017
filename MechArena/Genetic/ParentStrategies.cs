@@ -10,10 +10,13 @@ namespace MechArena.Genetic
     {
         public static Individual<T> Roulette<T>(Population<T> pop, Random rand)
         {
+            if (pop.CurrentSize != pop.DesiredSize)
+                throw new InvalidOperationException("Can't select from an undersize population!");
+
             int totalweight = pop.InspectIndividuals().Sum(i => i.Fitness);
             int choice = rand.Next(totalweight);
             int weightIndex = 0;
-
+            
             foreach (var individual in pop.InspectIndividuals())
             {
                 weightIndex += individual.Fitness;
@@ -22,7 +25,7 @@ namespace MechArena.Genetic
                     return individual;
             }
 
-            return null;
+            throw new InvalidOperationException("There's some bug in your picker code!");
         }
     }
 }

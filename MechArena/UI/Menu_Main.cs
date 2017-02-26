@@ -1,9 +1,9 @@
-﻿using RLNET;
-using System;
+﻿using MechArena.AI;
+using MechArena.Genetic;
 using MechArena.Tournament;
-using System.Collections.Generic;
+using RLNET;
+using System;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace MechArena.UI
@@ -99,6 +99,37 @@ namespace MechArena.UI
             }
         }
 
+        // This executes, but continually fails at beating the enemy.
+        // Hmm.
+        // 1000 randomly generated mech + behaviours don't beat a single enemy mech, ever?
+        private void EvolveSingleOpponent()
+        {
+            Console.WriteLine("Beginning evolution at " + DateTime.Now);
+
+            // TODO: Your random number generation is a total mess!
+            Random evolveRand = new Random(1);
+            Evolver<SingleClause> evolver = new Evolver<SingleClause>(200,
+                i => AIUtils.SimpleArenaFitness(i, evolveRand), 10, .5, 1000, AIUtils.geneList, 5000);
+            var winner = evolver.Evolve(ParentStrategies.Roulette, CrossoverStrategies.SinglePointCrossover,
+                AIUtils.RandomMutation, AIUtils.IsSurvivor);
+
+            Console.WriteLine("Ended evolution at " + DateTime.Now);
+
+            Console.WriteLine("Highest fitness for each generation:");
+            int generation = 1;
+            foreach (var p in evolver.InspectHistory())
+            {
+                Console.WriteLine("Gen " + generation + " Structure: " + p.HighestFitness());
+                generation++;
+            }
+
+            /*Console.WriteLine("Winner Genes:");
+            foreach (var g in winner.InspectGenes())
+            {
+                Console.WriteLine(g.ToString());
+            }*/
+        }
+
         // Put each case into own fn, this is just exceptionally unwieldy!
         private IDisplay HandleKeyPressed(RLKeyPress keyPress)
         {
@@ -107,6 +138,9 @@ namespace MechArena.UI
 
             switch (keyPress.Key)
             {
+                case RLKey.E:
+                    this.EvolveSingleOpponent();
+                    return this;
                 case RLKey.L:
                     Log.ToggleDebugLog();
                     return this;

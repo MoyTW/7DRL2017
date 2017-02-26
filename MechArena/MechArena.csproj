@@ -129,7 +129,7 @@
     <Compile Include="AI\Combat\Action_MoveAwayEnemy.cs" />
     <Compile Include="AI\Combat\Action_MoveTowardsEnemy.cs" />
     <Compile Include="AI\Combat\AIAction.cs" />
-    <Compile Include="AI\Combat\AIUtils.cs" />
+    <Compile Include="AI\AIUtils.cs" />
     <Compile Include="AI\Combat\Condition.cs" />
     <Compile Include="AI\Combat\Condition_CanSeeEnemy.cs" />
     <Compile Include="AI\Combat\Condition_Distance.cs" />
