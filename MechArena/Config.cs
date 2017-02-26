@@ -6,8 +6,11 @@ using System.Threading.Tasks;
 
 namespace MechArena
 {
-    public class Config
+    public static class Config
     {
+        public static int ArenaWidth { get { return 50; } }
+        public static int ArenaHeight { get { return 50; } }
+
         public static int NumMaps()
         {
             return 5;

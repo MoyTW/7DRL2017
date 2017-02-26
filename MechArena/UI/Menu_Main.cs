@@ -28,15 +28,6 @@ namespace MechArena.UI
             this.tournament = tournament;
         }
 
-        private Tuple<Match, ArenaState> BuildArena(Match m)
-        {
-            Console.WriteLine("Match : " + m + " mapID: " + m.MapID + " arenaSeed: ");
-            var arena = ArenaBuilder.BuildArena(Menu_Arena.arenaWidth, Menu_Arena.arenaHeight, m.MatchID,
-                this.tournament.PickMapID(), this.tournament.GenArenaSeed(), (CompetitorEntity)m.Competitor1,
-                (CompetitorEntity)m.Competitor2);
-            return new Tuple<Match, ArenaState>(m, arena);
-        }
-
         private static MatchResult RunArena(Tuple<Match, ArenaState> matchAndArena)
         {
             var match = matchAndArena.Item1;
@@ -57,7 +48,7 @@ namespace MechArena.UI
             var results = this.tournament.ScheduledMatches()
                 .TakeWhile(m => !m.HasCompetitor(this.player.CompetitorID))
                 // BuildArena sequential because of the RNG draws
-                .Select(m => BuildArena(m))
+                .Select(m => new Tuple<Match, ArenaState>(m, ArenaBuilder.BuildNewArena(this.tournament, m)))
                 // Setting degree of parallelism not required - default is fn of # processors already
                 .AsParallel().WithDegreeOfParallelism(Config.NumThreads())
                 .Select(ma => Task.Run(() => RunArena(ma)));
@@ -98,10 +89,7 @@ namespace MechArena.UI
             var nextMatch = this.tournament.NextMatch();
             if (nextMatch != null)
             {
-                var arena = ArenaBuilder.BuildArena(Menu_Arena.arenaWidth, Menu_Arena.arenaHeight,
-                    nextMatch.MatchID, this.tournament.PickMapID(), this.tournament.GenArenaSeed(),
-                    (CompetitorEntity)nextMatch.Competitor1, (CompetitorEntity)nextMatch.Competitor2);
-
+                var arena = ArenaBuilder.BuildNewArena(this.tournament, nextMatch);
                 this.arenaMenu = new Menu_Arena(this, arena, this.tournament);
                 return this.arenaMenu;
             }

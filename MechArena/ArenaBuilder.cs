@@ -4,6 +4,7 @@ using RogueSharp.Random;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using MechArena.Tournament;
 
 namespace MechArena
 {
@@ -24,9 +25,21 @@ namespace MechArena
             return arena;
         }
 
+        public static ArenaState BuildNewArena(Schedule_Tournament t, Match m)
+        {
+            return BuildArena(Config.ArenaWidth, Config.ArenaHeight, m.MatchID, t.PickMapID(), t.GenArenaSeed(),
+                (CompetitorEntity)m.Competitor1, (CompetitorEntity)m.Competitor2);
+        }
+
+        public static ArenaState BuildReplayArena(Schedule_Tournament t, MatchResult m)
+        {
+            return BuildArena(Config.ArenaWidth, Config.ArenaHeight, m.MatchID, m.MapID, m.ArenaSeed,
+                (CompetitorEntity)m.Competitor1, (CompetitorEntity)m.Competitor2);
+        }
+
         // WE ASSUME THE MAP, ONCE GENERATED, NEVER CHANGES!
         // THIS MEANS NO TERRAIN DEFORMATION WITHOUT CACHING EDITS!
-        public static ArenaState BuildArena(int width, int height, string matchID, string mapID, int arenaSeed,
+        private static ArenaState BuildArena(int width, int height, string matchID, string mapID, int arenaSeed,
             CompetitorEntity entreant1, CompetitorEntity entreant2)
         {
             return BuildArena(width, height, matchID, mapID, arenaSeed, entreant1.Mech, entreant2.Mech);

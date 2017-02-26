@@ -43,9 +43,7 @@ namespace MechArena.UI
                 }
                 else
                 {
-                    var arena = ArenaBuilder.BuildArena(Menu_Arena.arenaWidth, Menu_Arena.arenaHeight,
-                        selectedMatch.MatchID, selectedMatch.MapID, selectedMatch.ArenaSeed,
-                        (CompetitorEntity)selectedMatch.Competitor1, (CompetitorEntity)selectedMatch.Competitor2);
+                    var arena = ArenaBuilder.BuildReplayArena(this.tournament, selectedMatch);
                     return new Menu_Arena(this, arena, this.tournament);
                 }
             }

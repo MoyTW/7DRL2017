@@ -58,6 +58,7 @@ namespace MechArenaTests.Genetic
                 return -10;
         }
 
+        /*
         [Test]
         public void TestMechEvolverArena()
         {
@@ -87,6 +88,7 @@ namespace MechArenaTests.Genetic
 
             Assert.IsFalse(true);
         }
+        */
     }
 }
 
