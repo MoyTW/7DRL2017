@@ -109,7 +109,7 @@ namespace MechArena.UI
             // TODO: Your random number generation is a total mess!
             Random evolveRand = new Random(1);
             Evolver<SingleClause> evolver = new Evolver<SingleClause>(200,
-                i => AIUtils.SimpleArenaFitness(i, evolveRand), 10, .5, 1000, AIUtils.geneList, 5000);
+                i => AIUtils.SimpleArenaFitness(i, evolveRand), 5, .5, 200, AIUtils.geneList, 5000);
             var winner = evolver.Evolve(ParentStrategies.Roulette, CrossoverStrategies.SinglePointCrossover,
                 AIUtils.RandomMutation, AIUtils.IsSurvivor);
 

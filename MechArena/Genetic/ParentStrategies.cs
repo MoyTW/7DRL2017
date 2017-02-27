@@ -10,8 +10,8 @@ namespace MechArena.Genetic
     {
         public static Individual<T> Roulette<T>(Population<T> pop, Random rand)
         {
-            if (pop.CurrentSize != pop.DesiredSize)
-                throw new InvalidOperationException("Can't select from an undersize population!");
+            if (pop.CurrentSize < 2)
+                throw new InvalidOperationException("Can't select from an undersize population! (pop < 2)");
 
             int totalweight = pop.InspectIndividuals().Sum(i => i.Fitness);
             int choice = rand.Next(totalweight);

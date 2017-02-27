@@ -27,7 +27,11 @@ namespace MechArena.AI.Hanger
                 .Where(e => e.GetComponentOfType<Component_AttachPoint>().CanAttach(entityToAttach))
                 .FirstOrDefault();
             if (matchingAttachPoint != null)
-                entity.HandleEvent(new GameEvent_Slot(entity, matchingAttachPoint, entityToAttach));
+            {
+                // TODO: WHY DOESN'T THE EVENT PROPOGATE FROM THE TOP-LEVEL ENTITY
+                // OH GOD I SPENT A WHOLE DAY ON THIS
+                matchingAttachPoint.HandleEvent(new GameEvent_Slot(entity, matchingAttachPoint, entityToAttach));
+            }
         }
 
 		public override IEnumerable<SingleClause> EnumerateClauses ()
@@ -38,7 +42,7 @@ namespace MechArena.AI.Hanger
             {
                 foreach (var location in Component_MechSkeleton.TemplateLocations)
                 {
-                    yield return new Step_SlotPart(label, location);
+                    yield return new Step_AttachAttachable(label, location);
                 }
             }
         }

@@ -28,7 +28,7 @@ namespace MechArena.AI
 
         public static Entity AssembleMech(string label, bool player, Entity pilot, IEnumerable<SingleClause> rawRules)
         {
-            IEnumerable<Step> steps = rawRules.Where(c => c is Step).Cast<Step>();
+            var steps = rawRules.Where(c => c is Step);
             Entity mech = EntityBuilder.BuildNakedMech(label, player, pilot, new Guidebook(rawRules));
             foreach (Step step in steps)
             {
