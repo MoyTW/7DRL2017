@@ -104,16 +104,18 @@ namespace MechArena.UI
         // 1000 randomly generated mech + behaviours don't beat a single enemy mech, ever?
         private void EvolveSingleOpponent()
         {
-            Console.WriteLine("Beginning evolution at " + DateTime.Now);
+            var start = DateTime.Now;
+            Console.WriteLine("Beginning evolution at " + start);
 
             // TODO: Your random number generation is a total mess!
             Random evolveRand = new Random(1);
             Evolver<SingleClause> evolver = new Evolver<SingleClause>(200,
-                i => AIUtils.SimpleArenaFitness(i, evolveRand), 5, .5, 200, AIUtils.geneList, 5000);
+                i => AIUtils.SimpleArenaFitness(i, evolveRand), 5, .5, 50, AIUtils.geneList, 2000);
             var winner = evolver.Evolve(ParentStrategies.Roulette, CrossoverStrategies.SinglePointCrossover,
                 AIUtils.RandomMutation, AIUtils.IsSurvivor);
 
-            Console.WriteLine("Ended evolution at " + DateTime.Now);
+            var end = DateTime.Now;
+            Console.WriteLine("Ended evolution at " + end + " after " + end.Subtract(start));
 
             Console.WriteLine("Highest fitness for each generation:");
             int generation = 1;
