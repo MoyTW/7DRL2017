@@ -1,0 +1,52 @@
+# Last Week
+
+## Objectives
+
+### PARTIALLY COMPLETED: Pilots
+
++ Add pilots
++ Add unique bonuses to pilots
++ Save pilots and assign pilots to mechs
+
+### COMPLETED: Genetic algorim uses AI *and* Hanger builds
+
++ Combine the two
++ Evolve the two in tandem
+
+This may be pretty weird because I don't know if I want to somehow have *two*
+chromosomes, or if I want to have *one* chromosome with some weird intermixing
+of the two modes, or how to actually implement this well!
+
+### ADDED: Optimization
+
++ Make the genetic algorithm take less time to run
+
+### NOT STARTED BONUS: Equipment Diversity
+
++ Add grenades
++ Add smoke grenades
++ Weapon swapping rules & usefulness assessment
++ Tweak a bunch of equipment to encourage different strategies
+
+## Summary
+
+Dropped the pilots off in favor of hooking up the genetic algorithm to use both
+the AI and Hanger sections. Did that, and then hooked it into the main menu and
+started putting the shiny new profiler to use! Unfortunately it's a trial
+license so NProfiler will be gone in like, a week. Sad!
+
+The main impediment to actually evolving things I think is that it's *extremely*
+slow, and it doesn't converge very fast due to the very high amount of
+options. I need to find a way to speed it up, or the whole concept just won't
+work; there's no way to have interesting AI if it takes a week to bake, and if
+it takes that long to bake I won't be able to iterate on it.
+
+# This Week
+
+## Objectives
+
+### Optimization
+
++ Genetic algorithm should run faster
+
+This may involve some sacrifices on the niceness of the ECS design.
