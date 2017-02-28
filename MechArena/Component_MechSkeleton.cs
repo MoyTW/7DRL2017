@@ -17,7 +17,19 @@ namespace MechArena
             { BodyPartLocation.LEFT_LEG, 10 },
             { BodyPartLocation.RIGHT_LEG, 10 }
         };
+
         private Dictionary<BodyPartLocation, Entity> bodyParts;
+
+        public bool IsPilotKilled { get; private set; }
+        public bool IsFirepowerKilled { get; private set; }
+        public bool IsHardKilled { get; private set; }
+        public bool IsKilled
+        {
+            get
+            {
+                return this.IsPilotKilled || this.IsFirepowerKilled || this.IsHardKilled;
+            }
+        }
 
         public static IEnumerable<BodyPartLocation> TemplateLocations
         {
@@ -30,6 +42,10 @@ namespace MechArena
         public Component_MechSkeleton() : base(EntityAttributeType.SPEED)
         {
             this.bodyParts = new Dictionary<BodyPartLocation, Entity>();
+            // Not technically required, as these will default initialize to false
+            this.IsPilotKilled = false;
+            this.IsFirepowerKilled = false;
+            this.IsHardKilled = false;
 
             foreach(var bp in MechTemplate.Keys)
             {
@@ -51,6 +67,22 @@ namespace MechArena
         private BodyPartLocation FindBodyPartLocationByWeight(IRandom rand)
         {
             return rand.RandomByWeight(MechTemplate, (a => a.Value)).Key;
+        }
+
+        // ISSUE: If damage is done through any alternative avenue and the damage state is rendered dirty, then this
+        // won't pick up on it! You have to make sure to re-call this function after ANY damage is dealt to the mech.
+        private void AssessDamage()
+        {
+            this.IsPilotKilled = this.Parent.TryGetSubEntities(SubEntitiesSelector.BODY_PART)
+                .Where(e => e.GetComponentOfType<Component_BodyPartLocation>().Location == BodyPartLocation.HEAD)
+                .First()
+                .TryGetDestroyed();
+            this.IsFirepowerKilled = !this.Parent.TryGetSubEntities(SubEntitiesSelector.WEAPON)
+                .Any(e => !e.TryGetDestroyed());
+            this.IsHardKilled = this.Parent.TryGetSubEntities(SubEntitiesSelector.BODY_PART)
+                .Where(e => e.GetComponentOfType<Component_BodyPartLocation>().Location == BodyPartLocation.TORSO)
+                .First()
+                .TryGetDestroyed();
         }
 
         // All Attack logic currently handled here; might want to put it into its own class for explicit-ness.
@@ -100,6 +132,8 @@ namespace MechArena
             {
                 ev.RegisterAttackResults(false);
             }
+
+            this.AssessDamage();
         }
 
         // Since there is no damage transfer, will *always* complete the event!
@@ -110,6 +144,8 @@ namespace MechArena
                 damagedPart.HandleEvent(ev);
 
             ev.Completed = true;
+
+            this.AssessDamage();
         }
 
         private void HandleMoveSingle(GameEvent_MoveSingle ev)
