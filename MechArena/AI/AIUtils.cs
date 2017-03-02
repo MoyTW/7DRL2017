@@ -61,6 +61,8 @@ namespace MechArena.AI
                 individualMech, enemyMech);
             arena.RunArena(maxTicks);
 
+            Console.Write(".");
+
             // TODO: Your roulette function can't deal with zero/negative returns here!
             if (arena.IsMatchEnded() && arena.Mech1.EntityID == arena.WinnerID())
                 return 5 + arena.Mech1.TryGetAttribute(EntityAttributeType.STRUCTURE).Value;

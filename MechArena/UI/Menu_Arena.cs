@@ -65,7 +65,7 @@ namespace MechArena.UI
             else
             {
                 this.arena.TryFindAndExecuteNextCommand();
-                Thread.Sleep(50); // inelegant way of forcing games to display slow enough to spectate
+                //Thread.Sleep(50); // inelegant way of forcing games to display slow enough to spectate
                 return this;
             }
         }
