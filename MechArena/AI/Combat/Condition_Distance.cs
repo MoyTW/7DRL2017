@@ -21,7 +21,9 @@ namespace MechArena.AI.Combat
     {
         EQUAL,
         LESS_THAN,
-        GREATER_THAN
+        LESS_THAN_EQUAL,
+        GREATER_THAN,
+        GREATER_THAN_EQUAL
     }
 
     [Serializable()]
@@ -88,7 +90,7 @@ namespace MechArena.AI.Combat
             var selfPos = commandQuery.CommandEntity.TryGetPosition();
             int currDist = commandQuery.ArenaState.ArenaMap
                 .GetCellsAlongLine(selfPos.X, selfPos.Y, targetPos.X, targetPos.Y)
-                .Count();
+                .Count() - 1;
 
             switch (this.Operator)
             {
@@ -96,8 +98,12 @@ namespace MechArena.AI.Combat
                     return currDist == optionDistance;
                 case ComparisonOperator.LESS_THAN:
                     return currDist < optionDistance;
+                case ComparisonOperator.LESS_THAN_EQUAL:
+                    return currDist <= optionDistance;
                 case ComparisonOperator.GREATER_THAN:
                     return currDist > optionDistance;
+                case ComparisonOperator.GREATER_THAN_EQUAL:
+                    return currDist >= optionDistance;
                 default:
                     throw new InvalidOperationException("Condition_Distance can't handle " + this.Operator);
             }
