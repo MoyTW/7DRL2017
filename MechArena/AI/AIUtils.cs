@@ -49,10 +49,10 @@ namespace MechArena.AI
             return survivor.Fitness >= avg;
         }
 
-        public static int SimpleArenaFitness(Individual<SingleClause> individual, Random rand, int mapRange=3)
+        private static int SingleArena(Individual<SingleClause> individual, Random rand, int mapRange)
         {
-            //Console.WriteLine("INVOKING SIMPLE ARENA FITNESS");
             int maxTicks = 25000;
+
             Entity individualMech = AssembleMech("UnpilotedFitnessMech", false, new Entity(), individual.InspectGenes());
             var rogueRand = new RogueSharp.Random.DotNetRandom(rand.Next()); // TODO: Well this is all kinds of silly!
             var enemyMech = EntityBuilder.BuildRandomMech("UnpilotedEntityMech", false, rogueRand);
@@ -61,8 +61,6 @@ namespace MechArena.AI
                 individualMech, enemyMech);
             arena.RunArena(maxTicks);
 
-            Console.Write(".");
-
             // TODO: Your roulette function can't deal with zero/negative returns here!
             if (arena.IsMatchEnded() && arena.Mech1.EntityID == arena.WinnerID())
                 return 5 + arena.Mech1.TryGetAttribute(EntityAttributeType.STRUCTURE).Value;
@@ -70,6 +68,20 @@ namespace MechArena.AI
                 return 1;
             else
                 return 5;
+        }
+
+        public static int SimpleArenaFitness(Individual<SingleClause> individual, Random rand, int mapRange=3, int numMatches=5)
+        {
+            int score = 0;
+
+            for (int i = 0; i < numMatches; i++)
+            {
+                score += SingleArena(individual, rand, mapRange);
+            }
+
+            Console.Write(".");
+
+            return score;
         }
     }
 }
