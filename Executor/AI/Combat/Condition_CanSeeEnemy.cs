@@ -13,10 +13,10 @@ namespace Executor.AI.Combat
         {
             // TODO: This is gonna show up in a lot of conditions, and looks pretty janky.
             Entity target;
-            if (commandQuery.CommandEntity == commandQuery.ArenaState.Mech1)
+            if (commandQuery.CommandEntity == commandQuery.ArenaState.Player)
                 target = commandQuery.ArenaState.Mech2;
             else
-                target = commandQuery.ArenaState.Mech1;
+                target = commandQuery.ArenaState.Player;
 
             var targetPos = target.TryGetPosition();
             var selfPos = commandQuery.CommandEntity.TryGetPosition();

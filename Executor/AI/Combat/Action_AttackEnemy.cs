@@ -13,10 +13,10 @@ namespace Executor.AI.Combat
         public override GameEvent_Command GenerateCommand(GameQuery_Command commandQuery)
         {
             Entity target;
-            if (commandQuery.CommandEntity == commandQuery.ArenaState.Mech1)
+            if (commandQuery.CommandEntity == commandQuery.ArenaState.Player)
                 target = commandQuery.ArenaState.Mech2;
             else
-                target = commandQuery.ArenaState.Mech1;
+                target = commandQuery.ArenaState.Player;
 
             return new GameEvent_Attack(commandQuery.ArenaState.CurrentTick, commandQuery.CommandEntity, target,
                 commandQuery.ExecutorEntity, commandQuery.ArenaState.ArenaMap, commandQuery.Rand);

@@ -11,7 +11,6 @@ namespace Executor
     {
         private int currentTick;
 
-        private Entity mech1;
         private Entity mech2;
         private List<Entity> mapEntities;
         private IRandom seededRand;
@@ -24,7 +23,7 @@ namespace Executor
         // TODO: lol at exposing literally everything
         public int ArenaSeed { get; }
         public int CurrentTick { get { return this.currentTick; } }
-        public Entity Mech1 { get { return this.mech1; } }
+        public Entity Player { get; }
         public Entity Mech2 { get { return this.mech2; } }
         public Entity NextExecutorEntity { get { return this.nextExecutorEntity; } }
         public string MapID { get; }
@@ -36,7 +35,7 @@ namespace Executor
         public bool ShouldWaitForPlayerInput {
             get
             {
-                return !this.Mech1.HasComponentOfType<Component_AI>() && this.nextCommandEntity == this.Mech1;
+                return !this.Player.HasComponentOfType<Component_AI>() && this.nextCommandEntity == this.Player;
             }
         }
 
@@ -53,34 +52,24 @@ namespace Executor
 
         public bool IsMatchEnded()
         {
-            return this.Mech1.GetComponentOfType<Component_MechSkeleton>().IsKilled ||
+            return this.Player.GetComponentOfType<Component_MechSkeleton>().IsKilled ||
                 this.Mech2.GetComponentOfType<Component_MechSkeleton>().IsKilled;
         }
 
-        public string WinnerID()
-        {
-            if (this.Mech1.GetComponentOfType<Component_MechSkeleton>().IsKilled)
-                return this.Mech2.EntityID;
-            else if (this.Mech2.GetComponentOfType<Component_MechSkeleton>().IsKilled)
-                return this.Mech1.EntityID;
-            else
-                return null;
-        }
-
         // TODO: Create a "Mech/Map Blueprint" so you don't pass a literal Entity/IMap instance in!
-        public ArenaState(Entity mech1, Entity mech2, string mapID, IMap arenaMap, PathFinder arenaPathFinder,
+        public ArenaState(Entity player, Entity mech2, string mapID, IMap arenaMap, PathFinder arenaPathFinder,
             int arenaSeed, string matchID)
         {
-            if (!mech1.HasComponentOfType<Component_Player>() && !mech1.HasComponentOfType<Component_AI>())
-                throw new ArgumentException("Can't initialize Arena: Mech 1 has no player or AI!");
+            if (!player.HasComponentOfType<Component_Player>())
+                throw new ArgumentException("Can't initialize Arena: Player has no Component_Player");
             else if (!mech2.HasComponentOfType<Component_AI>())
                 throw new ArgumentNullException("Can't initialize Arena: Mech 2 has no AI!");
 
             this.currentTick = 0;
-            this.mech1 = mech1;
+            this.Player = player;
             this.mech2 = mech2;
             this.mapEntities = new List<Entity>();
-            this.mapEntities.Add(mech1);
+            this.mapEntities.Add(player);
             this.mapEntities.Add(mech2);
             this.MatchID = matchID;
             this.MapID = mapID;
@@ -97,11 +86,11 @@ namespace Executor
         private void ForwardToNextAction()
         {
             // Mech1 always moves fully before mech2 if possible! First player advantage.
-            var mech1Query = mech1.HandleQuery(new GameQuery_NextTimeTracker(this.CurrentTick));
+            var mech1Query = this.Player.HandleQuery(new GameQuery_NextTimeTracker(this.CurrentTick));
             var mech2Query = mech2.HandleQuery(new GameQuery_NextTimeTracker(this.CurrentTick));
             if (mech1Query.NextEntityTicksToLive <= mech2Query.NextEntityTicksToLive)
             {
-                this.nextCommandEntity = this.Mech1;
+                this.nextCommandEntity = this.Player;
                 this.nextExecutorEntity = mech1Query.NextEntity;
                 this.currentTick += mech1Query.NextEntityTicksToLive;
             }
@@ -189,14 +178,6 @@ namespace Executor
 
         #endregion
 
-        public void RunArena(int maxTicks=Int32.MaxValue)
-        {
-            while (!this.IsMatchEnded() && this.CurrentTick < maxTicks)
-            {
-                this.TryFindAndExecuteNextCommand();
-            }
-        }
-
         public void TryFindAndExecuteNextCommand()
         {
             // If it's the player's turn we must wait on input!
@@ -226,11 +207,11 @@ namespace Executor
             if (this.ShouldWaitForPlayerInput && this.NextExecutorEntity.HasComponentOfType<Component_Weapon>())
             {
                 Log.DebugLine("########## ATTACK INFO ##########");
-                var guns = this.mech1.HandleQuery(new GameQuery_SubEntities(SubEntitiesSelector.WEAPON)).SubEntities;
+                var guns = this.Player.HandleQuery(new GameQuery_SubEntities(SubEntitiesSelector.WEAPON)).SubEntities;
                 foreach (var gun in guns)
                 {
-                    this.mech1.HandleEvent(
-                        new GameEvent_Attack(this.currentTick, mech1, mech2, gun, this.ArenaMap, this.SeededRand));
+                    this.Player.HandleEvent(
+                        new GameEvent_Attack(this.currentTick, this.Player, mech2, gun, this.ArenaMap, this.SeededRand));
                 }
                 this.ForwardToNextAction();
             }
@@ -243,12 +224,12 @@ namespace Executor
         // TODO: Testing! Don't directly call!
         public void TryPlayerMove(int dx, int dy)
         {
-            if (this.NextExecutorEntity == mech1)
+            if (this.NextExecutorEntity == this.Player)
             {
-                var position = this.mech1.HandleQuery(new GameQuery_Position());
+                var position = this.Player.HandleQuery(new GameQuery_Position());
                 if (this.IsWalkableAndOpen(position.X + dx, position.Y + dy))
                 {
-                    this.mech1.HandleEvent(new GameEvent_MoveSingle(mech1, this.currentTick, dx, dy, this));
+                    this.Player.HandleEvent(new GameEvent_MoveSingle(this.Player, this.currentTick, dx, dy, this));
                 }
                 this.ForwardToNextAction();
             }
@@ -266,7 +247,7 @@ namespace Executor
                 foreach(var tracker in timeTrackers)
                 {
                     if (tracker.TryGetTicksToLive(this.CurrentTick) == 0)
-                        tracker.HandleEvent(new GameEvent_Delay(this.CurrentTick, this.Mech1, this.NextExecutorEntity,
+                        tracker.HandleEvent(new GameEvent_Delay(this.CurrentTick, this.Player, this.NextExecutorEntity,
                             duration));
                 }
                 this.ForwardToNextAction();

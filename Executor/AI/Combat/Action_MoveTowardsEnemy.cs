@@ -54,10 +54,10 @@ namespace Executor.AI.Combat
         public override GameEvent_Command GenerateCommand(GameQuery_Command commandQuery)
         {
             Entity target;
-            if (commandQuery.CommandEntity == commandQuery.ArenaState.Mech1)
+            if (commandQuery.CommandEntity == commandQuery.ArenaState.Player)
                 target = commandQuery.ArenaState.Mech2;
             else
-                target = commandQuery.ArenaState.Mech1;
+                target = commandQuery.ArenaState.Player;
             var targetPos = target.TryGetPosition();
 
             if (this.lastPath == null || !this.EnemyOnPath(targetPos))

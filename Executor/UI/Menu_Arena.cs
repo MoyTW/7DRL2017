@@ -80,7 +80,7 @@ namespace Executor.UI
             RLConsole.Blit(this.hudConsole, 0, 0, this.hudWidth, this.hudHeight, console,
                 Menu_Arena.arenaWidth + Menu_Arena.statusWidth, 0);
 
-            Drawer_Mech.DrawMechStatus(this.arena.Mech1, this.status1Console);
+            Drawer_Mech.DrawMechStatus(this.arena.Player, this.status1Console);
             RLConsole.Blit(this.status1Console, 0, 0, Menu_Arena.statusWidth, Menu_Arena.statusHeight, console,
                 Menu_Arena.arenaWidth, 0);
 
@@ -111,7 +111,7 @@ namespace Executor.UI
                     break;
                 case RLKey.E:
                     // Technically, this doesn't limit it to the player mech.
-                    return new Menu_MechDetails(this, this.arena.Mech1);
+                    return new Menu_MechDetails(this, this.arena.Player);
                 case RLKey.F:
                     this.arena.TryPlayerAttack();
                     break;
@@ -166,8 +166,8 @@ namespace Executor.UI
         {
             var trackers = new List<Entity>();
 
-            trackers.Add(this.arena.Mech1);
-            trackers.AddRange(this.arena.Mech1.TryGetSubEntities(SubEntitiesSelector.ACTIVE_TRACKS_TIME));
+            trackers.Add(this.arena.Player);
+            trackers.AddRange(this.arena.Player.TryGetSubEntities(SubEntitiesSelector.ACTIVE_TRACKS_TIME));
             trackers.Add(this.arena.Mech2);
             trackers.AddRange(this.arena.Mech2.TryGetSubEntities(SubEntitiesSelector.ACTIVE_TRACKS_TIME));
 
@@ -217,7 +217,7 @@ namespace Executor.UI
             var mech2Position = arena.Mech2.TryGetPosition();
 
             // Use RogueSharp to calculate the current field-of-view for the player
-            var position = arena.Mech1.TryGetPosition();
+            var position = arena.Player.TryGetPosition();
             arena.ArenaMap.ComputeFov(position.X, position.Y, 50, true);
 
             foreach (var cell in arena.ArenaMap.GetAllCells())
