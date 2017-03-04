@@ -8,17 +8,29 @@ namespace Executor.UI
 {
     class Menu_Main : IDisplay
     {
-        private readonly bool _playPlayerMatches = false;
-
         private Menu_Arena arenaMenu;
 
+        private Random rand;
         public int Width { get; }
         public int Height { get; }
 
         public Menu_Main(int width, int height)
         {
+            // TODO: maybe take entropy from outside
+            this.rand = new Random();
             this.Width = width;
             this.Height = height;
+        }
+
+        private Menu_Arena NewArenaMenu(int seed=1)
+        {
+            RogueSharp.Random.IRandom iRand = new RogueSharp.Random.DotNetRandom(seed);
+            Entity player = EntityBuilder.BuildSniperMech("Player", true);
+            Entity enemy = EntityBuilder.BuildRandomMech("Enemy", false, iRand);
+            var arena = ArenaBuilder.BuildArena(50, 50, "0", iRand.Next(4).ToString(), this.rand.Next(), player,
+                enemy);
+            this.arenaMenu = new Menu_Arena(this, arena);
+            return this.arenaMenu;
         }
 
         // Put each case into own fn, this is just exceptionally unwieldy!
@@ -33,7 +45,9 @@ namespace Executor.UI
                     Log.ToggleDebugLog();
                     return this;
                 case RLKey.N:
-                    throw new NotImplementedException ();
+                    return this.NewArenaMenu();
+                case RLKey.M:
+                    return this.NewArenaMenu(rand.Next());
                 case RLKey.R:
                     if (this.arenaMenu != null && !this.arenaMenu.MatchEnded)
                         return this.arenaMenu;
