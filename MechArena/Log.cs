@@ -6,7 +6,7 @@ namespace MechArena
     {
         private static bool printDebug = false;
         private static bool printInfo = true;
-        private static bool printError = true;
+        private static bool printError = false;
 
         public static void ToggleDebugLog() { SetDebugLog(!printDebug); }
 

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MechArena.AI
+namespace MechArena.AI.Combat
 {
     [Serializable()]
     class ActionClause
@@ -53,7 +53,7 @@ namespace MechArena.AI
                 else if (clause is Condition)
                     acc.Add((Condition)clause);
                 else
-                    throw new NotImplementedException();
+                    Log.ErrorLine("Can't process clause " + clause);
             }
             return builtRules;
         }

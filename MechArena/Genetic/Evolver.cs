@@ -60,6 +60,8 @@ namespace MechArena.Genetic
             Func<Individual<T>, Individual<T>, Random, Individual<T>> crossover, Action<Individual<T>, Random> mutate,
             Func<Population<T>, Individual<T>, bool> isSurvivor)
         {
+            Console.WriteLine("Advancing generation! Population size: " + this.currentPopulation.CurrentSize);
+
             // Breed next generation (fully replaces current generation)
             Population<T> newPopulation = new Population<T>(this.currentPopulation.DesiredSize);
             for (int i = 0; i < currentPopulation.DesiredSize; i++)
@@ -71,6 +73,8 @@ namespace MechArena.Genetic
             }
             if (this.keepHistory)
                 this.history.Add(this.currentPopulation);
+            if (newPopulation.CurrentSize != newPopulation.DesiredSize)
+                throw new InvalidOperationException("Can't proceed, population did not breed!");
             this.currentPopulation = newPopulation;
 
             // Mutate next generation

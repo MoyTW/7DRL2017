@@ -1,5 +1,6 @@
 ﻿using MechArena;
 using MechArena.AI;
+using MechArena.AI.Combat;
 using MechArena.Genetic;
 using NUnit.Framework;
 using System;
@@ -57,6 +58,7 @@ namespace MechArenaTests.Genetic
                 return -10;
         }
 
+        /*
         [Test]
         public void TestMechEvolverArena()
         {
@@ -86,6 +88,7 @@ namespace MechArenaTests.Genetic
 
             Assert.IsFalse(true);
         }
+        */
     }
 }
 

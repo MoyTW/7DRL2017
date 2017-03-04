@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MechArena.AI
+namespace MechArena.AI.Combat
 {
     /*
     [Serializable()]
-    class Condition_Health : Condition
+    class Condition_MoveSpeed : Condition
     {
         public override bool IsMet(GameQuery_Command commandQuery)
         {
@@ -17,7 +17,7 @@ namespace MechArena.AI
 
         public override IEnumerable<SingleClause> EnumerateClauses()
         {
-            yield return new Condition_Health();
+            yield return new Condition_MoveSpeed();
         }
     }
     */

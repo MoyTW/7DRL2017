@@ -36,6 +36,7 @@ namespace MechArenaTests.Genetic
             return this.Fitness(survivor) >= 2;
         }
 
+        /*
         [Test]
         public void TestEvolver()
         {
@@ -63,5 +64,6 @@ namespace MechArenaTests.Genetic
 
             Assert.AreEqual(this.target, individual.ToString());
         }
+        */
     }
 }

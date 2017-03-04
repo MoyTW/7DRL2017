@@ -31,6 +31,10 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="OpenTK, Version=2.0.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
+      <HintPath>..\packages\OpenTK.2.0.0\lib\net20\OpenTK.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed">
       <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -44,17 +48,9 @@
     <Reference Include="System.Collections.Immutable, Version=1.2.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <HintPath>..\packages\System.Collections.Immutable.1.3.1\lib\portable-net45+win8+wp8+wpa81\System.Collections.Immutable.dll</HintPath>
     </Reference>
-    <Reference Include="OpenTK">
-      <HintPath>..\packages\OpenTK.2.0.0\lib\net20\OpenTK.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AI\Condition_Distance.cs" />
-    <Compile Include="AI\Condition_Health.cs" />
-    <Compile Include="AI\Condition_MoveSpeed.cs" />
     <Compile Include="AI\SingleClause.cs" />
-    <Compile Include="AI\Condition.cs" />
-    <Compile Include="AI\Guidebook.cs" />
     <Compile Include="ArenaState.cs" />
     <Compile Include="ArenaBuilder.cs" />
     <Compile Include="BodyPartLocation.cs" />
@@ -127,14 +123,22 @@
     <Compile Include="UI\Menu_CompetitorListing.cs" />
     <Compile Include="UI\IntegerSelectionField.cs" />
     <Compile Include="UI\Menu_Main.cs" />
-    <Compile Include="AI\Action_MoveTowardsEnemy.cs" />
-    <Compile Include="AI\Action_AttackEnemy.cs" />
-    <Compile Include="AI\Condition_CanSeeEnemy.cs" />
-    <Compile Include="AI\Action_Delay.cs" />
-    <Compile Include="AI\AIAction.cs" />
     <Compile Include="Genetic\GeneListing.cs" />
+    <Compile Include="AI\Combat\Action_AttackEnemy.cs" />
+    <Compile Include="AI\Combat\Action_Delay.cs" />
+    <Compile Include="AI\Combat\Action_MoveAwayEnemy.cs" />
+    <Compile Include="AI\Combat\Action_MoveTowardsEnemy.cs" />
+    <Compile Include="AI\Combat\AIAction.cs" />
     <Compile Include="AI\AIUtils.cs" />
-    <Compile Include="AI\Action_MoveAwayEnemy.cs" />
+    <Compile Include="AI\Combat\Condition.cs" />
+    <Compile Include="AI\Combat\Condition_CanSeeEnemy.cs" />
+    <Compile Include="AI\Combat\Condition_Distance.cs" />
+    <Compile Include="AI\Combat\Condition_Health.cs" />
+    <Compile Include="AI\Combat\Condition_MoveSpeed.cs" />
+    <Compile Include="AI\Combat\Guidebook.cs" />
+    <Compile Include="AI\Hanger\Step.cs" />
+    <Compile Include="AI\Hanger\Step_SlotPart.cs" />
+    <Compile Include="AI\Hanger\Step_AttachAttachable.cs" />
     <Compile Include="Component_Piloted.cs" />
     <Compile Include="Component_AttributeModifier.cs" />
   </ItemGroup>
@@ -167,4 +171,5 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
+  <ItemGroup />
 </Project>

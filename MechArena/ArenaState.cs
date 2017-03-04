@@ -51,49 +51,17 @@ namespace MechArena
             return this.ArenaMap.IsWalkable(x, y);
         }
 
-        // Pilot is killed when the head is destroyed
-        // TODO: This is a really awkward way of looking up "Does it have ahead or not?"
-        private bool IsPilotKilled(Entity mech)
-        {
-            var isKilled = mech.TryGetSubEntities(SubEntitiesSelector.BODY_PART)
-                .Where(e => e.GetComponentOfType<Component_BodyPartLocation>().Location == BodyPartLocation.HEAD)
-                .First()
-                .TryGetDestroyed();
-
-            if (isKilled)
-                Log.DebugLine("Pilot of " + mech + " was killed!");
-
-            return isKilled;
-        }
-
-        // You're considered unable to fight if your torso goes down or you run out of weapons
-        private bool IsMechUnableToFight(Entity mech)
-        {
-            var torsoDestroyed = mech.TryGetSubEntities(SubEntitiesSelector.BODY_PART)
-                .Where(e => e.GetComponentOfType<Component_BodyPartLocation>().Location == BodyPartLocation.TORSO)
-                .First()
-                .TryGetDestroyed();
-            var noWeapons = !mech.TryGetSubEntities(SubEntitiesSelector.WEAPON).Any(e => !e.TryGetDestroyed());
-
-            if (noWeapons)
-                Log.DebugLine("Mech " + mech + " has no weapons!");
-            else if (torsoDestroyed)
-                Log.DebugLine("The torso of " + mech + " has been destroyed!");
-
-            return torsoDestroyed || noWeapons;
-        }
-
         public bool IsMatchEnded()
         {
-            return this.IsPilotKilled(this.Mech1) || this.IsMechUnableToFight(this.Mech1) ||
-                this.IsPilotKilled(this.Mech2) || this.IsMechUnableToFight(this.Mech2);
+            return this.Mech1.GetComponentOfType<Component_MechSkeleton>().IsKilled ||
+                this.Mech2.GetComponentOfType<Component_MechSkeleton>().IsKilled;
         }
 
         public string WinnerID()
         {
-            if (this.IsPilotKilled(this.Mech1) || this.IsMechUnableToFight(this.Mech1))
+            if (this.Mech1.GetComponentOfType<Component_MechSkeleton>().IsKilled)
                 return this.Mech2.EntityID;
-            else if (this.IsPilotKilled(this.Mech2) || this.IsMechUnableToFight(this.Mech2))
+            else if (this.Mech2.GetComponentOfType<Component_MechSkeleton>().IsKilled)
                 return this.Mech1.EntityID;
             else
                 return null;
@@ -220,6 +188,14 @@ namespace MechArena
         }
 
         #endregion
+
+        public void RunArena(int maxTicks=Int32.MaxValue)
+        {
+            while (!this.IsMatchEnded() && this.CurrentTick < maxTicks)
+            {
+                this.TryFindAndExecuteNextCommand();
+            }
+        }
 
         public void TryFindAndExecuteNextCommand()
         {

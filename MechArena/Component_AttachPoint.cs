@@ -43,9 +43,10 @@ namespace MechArena
         protected override IImmutableSet<SubEntitiesSelector> _MatchingSelectors()
         {
             if (this.Swappable)
-                return ImmutableHashSet<SubEntitiesSelector>.Empty.Add(SubEntitiesSelector.SWAPPABLE_ATTACH_POINTS);
+                return ImmutableHashSet<SubEntitiesSelector>.Empty.Add(SubEntitiesSelector.SWAPPABLE_ATTACH_POINTS)
+                    .Add(SubEntitiesSelector.ATTACH_POINT);
             else
-                return ImmutableHashSet<SubEntitiesSelector>.Empty;
+                return ImmutableHashSet<SubEntitiesSelector>.Empty.Add(SubEntitiesSelector.ATTACH_POINT);
         }
 
         private void HandleSlot(GameEvent_Slot ev)

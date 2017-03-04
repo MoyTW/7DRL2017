@@ -45,7 +45,7 @@ namespace MechArena
         public static void LoadAllBlueprints(string blueprintsDir=BlueprintListing.BlueprintsDir)
         {
             var files = Directory.GetFiles(blueprintsDir);
-            foreach(var f in files)
+            foreach (var f in files)
             {
                 string text = File.ReadAllText(f);
                 var deserializedBlueprints = JsonConvert.DeserializeObject<List<Blueprint>>(text);
@@ -69,6 +69,11 @@ namespace MechArena
         public static Entity BuildForLabel(string label)
         {
             return BlueprintListing.GetBlueprintByLabel(label).BuildEntity();
+        }
+
+        public static IEnumerable<Blueprint> GetMatchingBlueprints(SubEntitiesSelector selector)
+        {
+            return BlueprintListing.GetAllBlueprints().Where(b => b.MatchesSelector(selector));
         }
     }
 }
