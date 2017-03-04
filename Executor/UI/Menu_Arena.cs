@@ -1,5 +1,4 @@
-﻿using Executor.Tournament;
-using RLNET;
+﻿using RLNET;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +10,6 @@ namespace Executor.UI
     {
         private readonly IDisplay parent;
         private readonly ArenaState arena;
-        private readonly Schedule_Tournament tournament;
 
         public const int arenaWidth = 50;
         public const int arenaHeight = 50;
@@ -28,11 +26,10 @@ namespace Executor.UI
 
         public bool MatchEnded { get { return this.arena.IsMatchEnded(); } }
 
-        public Menu_Arena(IDisplay parent, ArenaState arena, Schedule_Tournament tournament)
+        public Menu_Arena(IDisplay parent, ArenaState arena)
         {
             this.parent = parent;
             this.arena = arena;
-            this.tournament = tournament;
 
             arenaConsole = new RLConsole(Menu_Arena.arenaWidth, Menu_Arena.arenaHeight);
             hudConsole = new RLConsole(this.hudWidth, this.hudHeight);
@@ -55,11 +52,7 @@ namespace Executor.UI
 
             // Logic
             if (this.arena.IsMatchEnded())
-            {
-                Log.Debug("Reporting match " + this.arena.MatchID + " to Tournament!");
-                this.tournament.ReportResult(this.arena.MatchID, this.arena.WinnerID(), this.arena.MapID, this.arena.ArenaSeed);
                 return this.parent;
-            }
             else if (keyPress != null)
                 return this.HandleKeyPressed(keyPress);
             else

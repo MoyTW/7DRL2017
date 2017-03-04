@@ -60,10 +60,6 @@
     <Compile Include="Component_SlottedContainerTest.cs" />
     <Compile Include="Component_InternalStructureTest.cs" />
     <Compile Include="Component_SlottedStructureTest.cs" />
-    <Compile Include="Tournament\SchedulerTest.cs" />
-    <Compile Include="Tournament\Schedule_RoundRobinTest.cs" />
-    <Compile Include="Tournament\Schedule_GroupStageTest.cs" />
-    <Compile Include="Tournament\Schedule_TournamentTest.cs" />
     <Compile Include="ComponentTest.cs" />
     <Compile Include="BlueprintListingTest.cs" />
     <Compile Include="Component_PilotedTest.cs" />

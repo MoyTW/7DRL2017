@@ -1,5 +1,4 @@
 ﻿using Executor.AI;
-using Executor.Tournament;
 using Executor.UI;
 using RLNET;
 using RogueSharp.Random;
@@ -17,29 +16,11 @@ namespace Executor
         // Menus
         private static IDisplay _currentDisplay;
 
-        // Tournament
-        private static ICompetitor _player;
-        private static Schedule_Tournament _tournament;
-
         public static void Main()
         {
             BlueprintListing.LoadAllBlueprints();
 
-            var sniperModifier = new Component_AttributeModifier(EntityAttributeType.DAMAGE, ModifierType.FLAT, 100,
-                requiredBaseLabel: Blueprints.SNIPER_RILFE);
-            var sniperToHit = new Component_AttributeModifier(EntityAttributeType.TO_HIT, ModifierType.FLAT, 100,
-                requiredBaseLabel: Blueprints.SNIPER_RILFE);
-            var playerPilot = new Entity(label: "You").AddComponent(sniperModifier).AddComponent(sniperToHit);
-            var sniperMech = EntityBuilder.BuildSniperMech("Player Mech", true);
-            sniperMech.GetComponentOfType<Component_Piloted>().Pilot = playerPilot;
-
-            _player = new CompetitorEntity(playerPilot, sniperMech);
-            //EntityBuilder.BuildKnifeMech("Player Knifer", true));
-            //EntityBuilder.BuildDoomCannonMech("Doom Cannon Mech", true));
-            _tournament = TournamentBuilder.BuildTournament(_player, new DotNetRandom(1), new DotNetRandom(2),
-                new TournamentMapPicker(5, new DotNetRandom(3)));
-
-            _currentDisplay = new Menu_Main(_screenWidth, _screenHeight, _player, _tournament);
+            _currentDisplay = new Menu_Main(_screenWidth, _screenHeight);
 
             // This must be the exact name of the bitmap font file we are using or it will error.
             string fontFileName = "terminal8x8.png";

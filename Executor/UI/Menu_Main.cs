@@ -1,5 +1,4 @@
 ﻿using Executor.AI;
-using Executor.Tournament;
 using RLNET;
 using System;
 using System.Linq;
@@ -11,91 +10,15 @@ namespace Executor.UI
     {
         private readonly bool _playPlayerMatches = false;
 
-        private ICompetitor player;
-        private Schedule_Tournament tournament;
-
         private Menu_Arena arenaMenu;
 
         public int Width { get; }
         public int Height { get; }
 
-        public Menu_Main(int width, int height, ICompetitor player, Schedule_Tournament tournament)
+        public Menu_Main(int width, int height)
         {
             this.Width = width;
             this.Height = height;
-            this.player = player;
-            this.tournament = tournament;
-        }
-
-        private static MatchResult RunArena(Tuple<Match, ArenaState> matchAndArena)
-        {
-            var match = matchAndArena.Item1;
-            var matchArena = matchAndArena.Item2;
-
-            while (!matchArena.IsMatchEnded())
-            {
-                matchArena.TryFindAndExecuteNextCommand();
-            }
-            return match.BuildResult(matchArena.WinnerID(), matchArena.MapID, matchArena.ArenaSeed);
-        }
-
-        private void RunTournament()
-        {
-            Log.DebugLine("T Pressed!");
-            Log.DebugLine("Round: " + this.tournament.RoundNum());
-
-            var results = this.tournament.ScheduledMatches()
-                .TakeWhile(m => !m.HasCompetitor(this.player.CompetitorID))
-                // BuildArena sequential because of the RNG draws
-                .Select(m => new Tuple<Match, ArenaState>(m, ArenaBuilder.BuildNewArena(this.tournament, m)))
-                // Setting degree of parallelism not required - default is fn of # processors already
-                .AsParallel().WithDegreeOfParallelism(Config.NumThreads())
-                .Select(ma => Task.Run(() => RunArena(ma)));
-
-            // Reporting happens in order
-            foreach (var task in results)
-            {
-                Log.DebugLine("Winner of " + task.Result.OriginalMatch + " is " + task.Result.Winner);
-                this.tournament.ReportResult(task.Result);
-            }
-
-            // TODO: Get rid of _match!
-            var match = this.tournament.NextMatch();
-            // If it's a player match, resolve it or stop
-            if (match != null && match.HasCompetitor(this.player.CompetitorID))
-            {
-                if (_playPlayerMatches)
-                {
-                    Log.InfoLine("Next match is player!");
-                }
-                else
-                {
-                    var playerResult = match.BuildResult(this.player.CompetitorID, "0", 0);
-                    Log.InfoLine("Player wins match!");
-                    this.tournament.ReportResult(playerResult);
-                }
-            }
-
-            if (this.tournament.NextMatch() == null)
-            {
-                Log.InfoLine("===== WINNER IS =====");
-                Log.InfoLine("Winner is " + this.tournament.Winners()[0]);
-            }
-        }
-
-        private IDisplay TryRunNextMatch()
-        {
-            var nextMatch = this.tournament.NextMatch();
-            if (nextMatch != null)
-            {
-                var arena = ArenaBuilder.BuildNewArena(this.tournament, nextMatch);
-                this.arenaMenu = new Menu_Arena(this, arena, this.tournament);
-                return this.arenaMenu;
-            }
-            else
-            {
-                return this;
-            }
         }
 
         // Put each case into own fn, this is just exceptionally unwieldy!
@@ -109,13 +32,8 @@ namespace Executor.UI
                 case RLKey.L:
                     Log.ToggleDebugLog();
                     return this;
-                case RLKey.H:
-                    return new Menu_CompetitorListing(this, this.player, this.tournament);
-                case RLKey.T:
-                    this.RunTournament();
-                    return this;
                 case RLKey.N:
-                    return this.TryRunNextMatch();
+                    throw new NotImplementedException ();
                 case RLKey.R:
                     if (this.arenaMenu != null && !this.arenaMenu.MatchEnded)
                         return this.arenaMenu;
