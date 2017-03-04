@@ -242,16 +242,7 @@ namespace Executor
         public void PlayerDelayAction(DelayDuration duration)
         {
             if (this.ShouldWaitForPlayerInput)
-            {
-                var timeTrackers = this.nextCommandEntity.TryGetSubEntities(SubEntitiesSelector.ACTIVE_TRACKS_TIME);
-                foreach(var tracker in timeTrackers)
-                {
-                    if (tracker.TryGetTicksToLive(this.CurrentTick) == 0)
-                        tracker.HandleEvent(new GameEvent_Delay(this.CurrentTick, this.Player, this.NextExecutorEntity,
-                            duration));
-                }
                 this.ForwardToNextAction();
-            }
         }
 
         #endregion

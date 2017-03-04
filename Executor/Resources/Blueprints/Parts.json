@@ -160,14 +160,6 @@
     "TypeLabel": "Slottable Part",
     "Components": [
       {
-        "ComponentClass": "Executor.Component_AttributeModifier",
-        "Params": {
-          "attributeType": "Executor.EntityAttributeType.SPEED",
-          "modifierType": "Executor.ModifierType.MULTIPLIER",
-          "value": 0.9
-        }
-      },
-      {
         "ComponentClass": "Executor.Component_Slottable",
         "Params": {
           "slotsRequired": 1

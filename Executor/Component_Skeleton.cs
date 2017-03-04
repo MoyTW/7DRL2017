@@ -20,14 +20,13 @@ namespace Executor
 
         private Dictionary<BodyPartLocation, Entity> bodyParts;
 
-        public bool IsPilotKilled { get; private set; }
-        public bool IsFirepowerKilled { get; private set; }
-        public bool IsHardKilled { get; private set; }
+        public bool IsHeadDestroyed { get; private set; }
+        public bool IsTorsoDestroyed { get; private set; }
         public bool IsKilled
         {
             get
             {
-                return this.IsPilotKilled || this.IsFirepowerKilled || this.IsHardKilled;
+                return this.IsHeadDestroyed || this.IsTorsoDestroyed;
             }
         }
 
@@ -43,9 +42,8 @@ namespace Executor
         {
             this.bodyParts = new Dictionary<BodyPartLocation, Entity>();
             // Not technically required, as these will default initialize to false
-            this.IsPilotKilled = false;
-            this.IsFirepowerKilled = false;
-            this.IsHardKilled = false;
+            this.IsHeadDestroyed = false;
+            this.IsTorsoDestroyed = false;
 
             foreach(var bp in MechTemplate.Keys)
             {
@@ -73,13 +71,11 @@ namespace Executor
         // won't pick up on it! You have to make sure to re-call this function after ANY damage is dealt to the mech.
         private void AssessDamage()
         {
-            this.IsPilotKilled = this.Parent.TryGetSubEntities(SubEntitiesSelector.BODY_PART)
+            this.IsHeadDestroyed = this.Parent.TryGetSubEntities(SubEntitiesSelector.BODY_PART)
                 .Where(e => e.GetComponentOfType<Component_BodyPartLocation>().Location == BodyPartLocation.HEAD)
                 .First()
                 .TryGetDestroyed();
-            this.IsFirepowerKilled = !this.Parent.TryGetSubEntities(SubEntitiesSelector.WEAPON)
-                .Any(e => !e.TryGetDestroyed());
-            this.IsHardKilled = this.Parent.TryGetSubEntities(SubEntitiesSelector.BODY_PART)
+            this.IsTorsoDestroyed = this.Parent.TryGetSubEntities(SubEntitiesSelector.BODY_PART)
                 .Where(e => e.GetComponentOfType<Component_BodyPartLocation>().Location == BodyPartLocation.TORSO)
                 .First()
                 .TryGetDestroyed();
@@ -155,11 +151,16 @@ namespace Executor
 
         private void HandleCommand(GameEvent_Command ev)
         {
-            var executor = this.Parent.TryGetSubEntities(SubEntitiesSelector.ACTIVE_TRACKS_TIME)
+            var executor = this.Parent.TryGetSubEntities(SubEntitiesSelector.ALL)
                 .Where(e => e == ev.ExecutorEntity)
                 .FirstOrDefault();
             if (executor != null)
                 executor.HandleEvent(ev);
+            else
+            {
+                throw new InvalidOperationException("Executor " + ev.ExecutorEntity + " is not in Command Entity " +
+                    ev.CommandEntity);
+            }
         }
 
         protected override GameEvent _HandleEvent(GameEvent ev)
@@ -191,7 +192,7 @@ namespace Executor
             }
             // TODO: Do not hardcode these values!
             if (q.AttributeType == EntityAttributeType.SPEED)
-                q.RegisterBaseValue(50);
+                q.RegisterBaseValue(1);
             else if (q.AttributeType == EntityAttributeType.DODGE)
                 q.RegisterBaseValue(0);
             else if (q.AttributeType == EntityAttributeType.STRUCTURE)
@@ -211,15 +212,6 @@ namespace Executor
             }
         }
 
-        private void HandleQueryNextTimeTracker(GameQuery_NextTimeTracker q)
-        {
-            var timeTrackers = this.Parent.TryGetSubEntities(SubEntitiesSelector.ACTIVE_TRACKS_TIME);
-            foreach(var tracker in timeTrackers)
-            {
-                q.RegisterEntity(tracker);
-            }
-        }
-
         // A mech is only considered "Destroyed" when its torso is gone!
         private void HandleQueryDestroyed(GameQuery_Destroyed q)
         {
@@ -234,8 +226,6 @@ namespace Executor
                 this.HandleQueryEntityAttribute((GameQuery_EntityAttribute)q);
             else if (q is GameQuery_SubEntities)
                 this.HandleQuerySubEntities((GameQuery_SubEntities)q);
-            else if (q is GameQuery_NextTimeTracker)
-                this.HandleQueryNextTimeTracker((GameQuery_NextTimeTracker)q);
             else if (q is GameQuery_Destroyed)
                 this.HandleQueryDestroyed((GameQuery_Destroyed)q);
 

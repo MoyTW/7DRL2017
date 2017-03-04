@@ -56,13 +56,11 @@ namespace Executor.AI.Combat
                     else
                         return null;
                 case DistanceOption.MY_LONGEST_RANGE:
-                    return commandQuery.CommandEntity.TryGetSubEntities(SubEntitiesSelector.ACTIVE_TRACKS_TIME)
-                        .Where(e => e.HasComponentOfType<Component_Weapon>())
+                    return commandQuery.CommandEntity.TryGetSubEntities(SubEntitiesSelector.WEAPON)
                         .Select(e => e.TryGetAttribute(EntityAttributeType.MAX_RANGE, e).Value)
                         .Max();
                 case DistanceOption.ENEMY_LONGEST_RANGE:
-                    return target.TryGetSubEntities(SubEntitiesSelector.ACTIVE_TRACKS_TIME)
-                        .Where(e => e.HasComponentOfType<Component_Weapon>())
+                    return target.TryGetSubEntities(SubEntitiesSelector.WEAPON)
                         .Select(e => e.TryGetAttribute(EntityAttributeType.MAX_RANGE, e).Value)
                         .Max();
                 default:
