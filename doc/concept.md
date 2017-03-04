@@ -1,0 +1,35 @@
+# One-Sentence Summary
+
+Scout out enemy locations, lay out your plan of attack, and then execute your
+flawless plan and bring down your foes in an instant!
+
+# Concept
+
+You need to plan, and plan well! Your character has two modes. The first mode is
+essentially a "normal" mode; you can move around, you can equip and unequip
+items, you can bump attack. In this mode you're stealthy, but weak - enemies can
+shoot you or rocket you and you won't have much chance to dodge them.
+
+When you're in the second mode, "focus" mode (I need to come up with a better
+name) you turn into a whirlwind of destruction. You can move multiple times a
+turn, deflect bullets, dodge rockets, and cut enemies to shreds as you zoom past
+them. The only catch is that you can't control your character directly in focus
+mode - instead, you lay out a plan when you enter focus mode which your
+character will execute.
+
+Entering focus mode has a certain time cost, during which you'll be
+vulnerable. Also, focus mode won't be so strict that you can't plan - you'll be
+able to build in decision points that you can switch between plans during, as
+part of your planning, and you can exit out of focus mode if you realize you've
+made a really bad plan.
+
+That's the most basic explanation. The game flow will be something like:
+
++ Scout Area
++ Discover Enemies And Observe Traits (you'll be able to tell if an enemy has
+  rockets, guns, grenades, whether they'll be liable to approach or run, etc,
+  etc)
++ Plan
++ Execute plan in Focus mode
++ Possibly abort and run away to try again
++ Repeat until mission complete
