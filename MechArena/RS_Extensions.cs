@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace MechArena
+namespace Executor
 {
     // TODO: Wrap instead of extend! Good general policy for you deps, yea?
     public static class RS_Extensions

@@ -1,12 +1,12 @@
 ﻿using RogueSharp.Random;
 
-using MechArena.Tournament;
+using Executor.Tournament;
 
 using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace MechArena
+namespace Executor
 {
     class TournamentBuilder
     {

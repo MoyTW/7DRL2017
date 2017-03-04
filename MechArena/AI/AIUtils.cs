@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using MechArena.Genetic;
-using MechArena.AI.Combat;
-using MechArena.AI.Hanger;
+using Executor.Genetic;
+using Executor.AI.Combat;
+using Executor.AI.Hanger;
 
-namespace MechArena.AI
+namespace Executor.AI
 {
     public static class AIUtils
     {

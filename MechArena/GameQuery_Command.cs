@@ -1,7 +1,7 @@
 ﻿using RogueSharp.Random;
 using System;
 
-namespace MechArena
+namespace Executor
 {
     public class GameQuery_Command : GameQuery
     {

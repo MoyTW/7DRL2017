@@ -4,15 +4,15 @@
     "TypeLabel": "Weapon",
     "Components": [
       {
-        "ComponentClass": "MechArena.Component_Attachable",
+        "ComponentClass": "Executor.Component_Attachable",
         "Params": {
-          "sizeRequired": "MechArena.AttachmentSize.LARGE"
+          "sizeRequired": "Executor.AttachmentSize.LARGE"
         }
       },
       {
-        "ComponentClass": "MechArena.Component_Weapon",
+        "ComponentClass": "Executor.Component_Weapon",
         "Params": {
-          "size": "MechArena.AttachmentSize.MEDIUM",
+          "size": "Executor.AttachmentSize.MEDIUM",
           "toHit": 1,
           "maxRange": 15,
           "damage": 4,
@@ -26,15 +26,15 @@
     "TypeLabel": "Weapon",
     "Components": [
       {
-        "ComponentClass": "MechArena.Component_Attachable",
+        "ComponentClass": "Executor.Component_Attachable",
         "Params": {
-          "sizeRequired": "MechArena.AttachmentSize.SMALL"
+          "sizeRequired": "Executor.AttachmentSize.SMALL"
         }
       },
       {
-        "ComponentClass": "MechArena.Component_Weapon",
+        "ComponentClass": "Executor.Component_Weapon",
         "Params": {
-          "size": "MechArena.AttachmentSize.SMALL",
+          "size": "Executor.AttachmentSize.SMALL",
           "toHit": 1,
           "maxRange": 10,
           "damage": 2,
@@ -48,15 +48,15 @@
     "TypeLabel": "Weapon",
     "Components": [
       {
-        "ComponentClass": "MechArena.Component_Attachable",
+        "ComponentClass": "Executor.Component_Attachable",
         "Params": {
-          "sizeRequired": "MechArena.AttachmentSize.MEDIUM"
+          "sizeRequired": "Executor.AttachmentSize.MEDIUM"
         }
       },
       {
-        "ComponentClass": "MechArena.Component_Weapon",
+        "ComponentClass": "Executor.Component_Weapon",
         "Params": {
-          "size": "MechArena.AttachmentSize.MEDIUM",
+          "size": "Executor.AttachmentSize.MEDIUM",
           "toHit": 1,
           "maxRange": 12,
           "damage": 3,
@@ -70,15 +70,15 @@
     "TypeLabel": "Weapon",
     "Components": [
       {
-        "ComponentClass": "MechArena.Component_Attachable",
+        "ComponentClass": "Executor.Component_Attachable",
         "Params": {
-          "sizeRequired": "MechArena.AttachmentSize.LARGE"
+          "sizeRequired": "Executor.AttachmentSize.LARGE"
         }
       },
       {
-        "ComponentClass": "MechArena.Component_Weapon",
+        "ComponentClass": "Executor.Component_Weapon",
         "Params": {
-          "size": "MechArena.AttachmentSize.LARGE",
+          "size": "Executor.AttachmentSize.LARGE",
           "toHit": 6,
           "maxRange": 20,
           "damage": 8,
@@ -92,15 +92,15 @@
     "TypeLabel": "Weapon",
     "Components": [
       {
-        "ComponentClass": "MechArena.Component_Attachable",
+        "ComponentClass": "Executor.Component_Attachable",
         "Params": {
-          "sizeRequired": "MechArena.AttachmentSize.LARGE"
+          "sizeRequired": "Executor.AttachmentSize.LARGE"
         }
       },
       {
-        "ComponentClass": "MechArena.Component_Weapon",
+        "ComponentClass": "Executor.Component_Weapon",
         "Params": {
-          "size": "MechArena.AttachmentSize.LARGE",
+          "size": "Executor.AttachmentSize.LARGE",
           "toHit": -2,
           "maxRange": 14,
           "damage": 1,
@@ -114,15 +114,15 @@
     "TypeLabel": "Weapon",
     "Components": [
       {
-        "ComponentClass": "MechArena.Component_Attachable",
+        "ComponentClass": "Executor.Component_Attachable",
         "Params": {
-          "sizeRequired": "MechArena.AttachmentSize.MEDIUM"
+          "sizeRequired": "Executor.AttachmentSize.MEDIUM"
         }
       },
       {
-        "ComponentClass": "MechArena.Component_Weapon",
+        "ComponentClass": "Executor.Component_Weapon",
         "Params": {
-          "size": "MechArena.AttachmentSize.MEDIUM",
+          "size": "Executor.AttachmentSize.MEDIUM",
           "toHit": 3,
           "maxRange": 8,
           "damage": 6,
@@ -136,15 +136,15 @@
     "TypeLabel": "Weapon",
     "Components": [
       {
-        "ComponentClass": "MechArena.Component_Attachable",
+        "ComponentClass": "Executor.Component_Attachable",
         "Params": {
-          "sizeRequired": "MechArena.AttachmentSize.SMALL"
+          "sizeRequired": "Executor.AttachmentSize.SMALL"
         }
       },
       {
-        "ComponentClass": "MechArena.Component_Weapon",
+        "ComponentClass": "Executor.Component_Weapon",
         "Params": {
-          "size": "MechArena.AttachmentSize.SMALL",
+          "size": "Executor.AttachmentSize.SMALL",
           "toHit": 2,
           "maxRange": 8,
           "damage": 2,
@@ -158,15 +158,15 @@
     "TypeLabel": "Weapon",
     "Components": [
       {
-        "ComponentClass": "MechArena.Component_Attachable",
+        "ComponentClass": "Executor.Component_Attachable",
         "Params": {
-          "sizeRequired": "MechArena.AttachmentSize.SMALL"
+          "sizeRequired": "Executor.AttachmentSize.SMALL"
         }
       },
       {
-        "ComponentClass": "MechArena.Component_Weapon",
+        "ComponentClass": "Executor.Component_Weapon",
         "Params": {
-          "size": "MechArena.AttachmentSize.SMALL",
+          "size": "Executor.AttachmentSize.SMALL",
           "toHit": -3,
           "maxRange": 6,
           "damage": 9,
@@ -180,15 +180,15 @@
     "TypeLabel": "Weapon",
     "Components": [
       {
-        "ComponentClass": "MechArena.Component_Attachable",
+        "ComponentClass": "Executor.Component_Attachable",
         "Params": {
-          "sizeRequired": "MechArena.AttachmentSize.SMALL"
+          "sizeRequired": "Executor.AttachmentSize.SMALL"
         }
       },
       {
-        "ComponentClass": "MechArena.Component_Weapon",
+        "ComponentClass": "Executor.Component_Weapon",
         "Params": {
-          "size": "MechArena.AttachmentSize.SMALL",
+          "size": "Executor.AttachmentSize.SMALL",
           "toHit": 2,
           "maxRange": 1,
           "damage": 2,
@@ -202,15 +202,15 @@
     "TypeLabel": "Weapon",
     "Components": [
       {
-        "ComponentClass": "MechArena.Component_Attachable",
+        "ComponentClass": "Executor.Component_Attachable",
         "Params": {
-          "sizeRequired": "MechArena.AttachmentSize.MEDIUM"
+          "sizeRequired": "Executor.AttachmentSize.MEDIUM"
         }
       },
       {
-        "ComponentClass": "MechArena.Component_Weapon",
+        "ComponentClass": "Executor.Component_Weapon",
         "Params": {
-          "size": "MechArena.AttachmentSize.MEDIUM",
+          "size": "Executor.AttachmentSize.MEDIUM",
           "toHit": 0,
           "maxRange": 1,
           "damage": 6,
@@ -224,15 +224,15 @@
     "TypeLabel": "Weapon",
     "Components": [
       {
-        "ComponentClass": "MechArena.Component_Attachable",
+        "ComponentClass": "Executor.Component_Attachable",
         "Params": {
-          "sizeRequired": "MechArena.AttachmentSize.LARGE"
+          "sizeRequired": "Executor.AttachmentSize.LARGE"
         }
       },
       {
-        "ComponentClass": "MechArena.Component_Weapon",
+        "ComponentClass": "Executor.Component_Weapon",
         "Params": {
-          "size": "MechArena.AttachmentSize.LARGE",
+          "size": "Executor.AttachmentSize.LARGE",
           "toHit": -1,
           "maxRange": 1,
           "damage": 9,

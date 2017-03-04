@@ -1,14 +1,14 @@
-﻿using MechArena;
-using MechArena.AI;
-using MechArena.AI.Combat;
-using MechArena.Genetic;
+﻿using Executor;
+using Executor.AI;
+using Executor.AI.Combat;
+using Executor.Genetic;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace MechArenaTests.Genetic
+namespace ExecutorTests.Genetic
 {
     [TestFixture]
     public class AIEvolverTest

@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Immutable;
 
-namespace MechArena
+namespace Executor
 {
     // Depends on Component_SlottedContainer! Find some way to codify this in your EC system!
     // Assumes that slotted items have Componenet_InternalStructure! Ugh, TERRIBLE!

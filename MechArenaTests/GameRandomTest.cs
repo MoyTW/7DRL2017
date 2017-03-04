@@ -1,12 +1,12 @@
 ﻿using RogueSharp.Random;
 
-using MechArena;
+using Executor;
 
 using System;
 using System.Collections.Generic;
 using NUnit.Framework;
 
-namespace MechArenaTests
+namespace ExecutorTests
 {
     [TestFixture]
     public class GameRandomTest

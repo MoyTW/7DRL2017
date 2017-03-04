@@ -1,7 +1,7 @@
-﻿using MechArena;
+﻿using Executor;
 using System;
 
-namespace MechArena.AI.Hanger
+namespace Executor.AI.Hanger
 {
 	public abstract class Step : SingleClause
 	{

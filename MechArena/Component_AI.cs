@@ -1,11 +1,11 @@
-﻿using MechArena.AI;
-using MechArena.AI.Combat;
+﻿using Executor.AI;
+using Executor.AI.Combat;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 
-namespace MechArena
+namespace Executor
 {
     [Serializable()]
     class Component_AI : Component

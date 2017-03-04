@@ -1,10 +1,10 @@
-﻿using MechArena;
+﻿using Executor;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 
-namespace MechArenaTests
+namespace ExecutorTests
 {
     class TestComponent : Component
     {

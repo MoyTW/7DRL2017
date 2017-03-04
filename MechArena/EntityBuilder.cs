@@ -1,11 +1,11 @@
-﻿using MechArena.AI.Combat;
+﻿using Executor.AI.Combat;
 using RogueSharp.Random;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace MechArena
+namespace Executor
 {
     public static class EntityBuilder
     {

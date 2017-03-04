@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace MechArena.Tournament
+namespace Executor.Tournament
 {
     public class Schedule_Tournament : ISchedule
     {

@@ -1,10 +1,10 @@
 ﻿using System;
-using MechArena;
+using Executor;
 using System.Collections.Generic;
 using NUnit.Framework;
 using Newtonsoft.Json;
 
-namespace MechArenaTests
+namespace ExecutorTests
 {
     [TestFixture]
     public class BlueprintListingTest
@@ -30,9 +30,9 @@ namespace MechArenaTests
             }
             Assert.AreEqual(blueprint.Label, "a");
             Assert.AreEqual(blueprint.TypeLabel, "b");
-            Assert.AreEqual("MechArena.Component_Attachable", blueprint.Components[0].ComponentClass);
-            Assert.AreEqual("MechArena.AttachmentSize.LARGE", blueprint.Components[0].Params["sizeRequired"]);
-            Assert.AreEqual("MechArena.Component_Weapon", blueprint.Components[1].ComponentClass);
+            Assert.AreEqual("Executor.Component_Attachable", blueprint.Components[0].ComponentClass);
+            Assert.AreEqual("Executor.AttachmentSize.LARGE", blueprint.Components[0].Params["sizeRequired"]);
+            Assert.AreEqual("Executor.Component_Weapon", blueprint.Components[1].ComponentClass);
             Assert.AreEqual("5", blueprint.Components[1].Params["damage"]);
 
             var constructed = blueprint.BuildEntity();

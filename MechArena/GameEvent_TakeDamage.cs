@@ -2,7 +2,7 @@
 
 using System;
 
-namespace MechArena
+namespace Executor
 {
     public class GameEvent_TakeDamage : GameEvent
     {

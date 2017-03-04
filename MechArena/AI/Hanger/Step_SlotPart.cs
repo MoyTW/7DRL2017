@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace MechArena.AI.Hanger
+namespace Executor.AI.Hanger
 {
     public class Step_SlotPart : Step
     {

@@ -1,11 +1,11 @@
-﻿using MechArena;
-using MechArena.Genetic;
+﻿using Executor;
+using Executor.Genetic;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace MechArenaTests.Genetic
+namespace ExecutorTests.Genetic
 {
     [TestFixture]
     public class MechEvolverTest

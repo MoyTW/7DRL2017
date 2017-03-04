@@ -3,7 +3,7 @@ using RogueSharp.Random;
 
 using System;
 
-namespace MechArena
+namespace Executor
 {
     public class GameEvent_Attack : GameEvent_Command
     {

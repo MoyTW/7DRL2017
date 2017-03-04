@@ -1,9 +1,9 @@
-﻿using MechArena.Tournament;
+﻿using Executor.Tournament;
 using NUnit.Framework;
 using RogueSharp.Random;
 using System.Collections.Generic;
 
-namespace MechArenaTests.Tournament
+namespace ExecutorTests.Tournament
 {
     [TestFixture]
     public class Schedule_TournamentTest

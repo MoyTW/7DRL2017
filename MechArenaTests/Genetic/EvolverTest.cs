@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Linq;
-using MechArena.Genetic;
+using Executor.Genetic;
 using NUnit.Framework;
 
-namespace MechArenaTests.Genetic
+namespace ExecutorTests.Genetic
 {
     [TestFixture]
     public class EvolverTest

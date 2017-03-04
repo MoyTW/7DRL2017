@@ -1,8 +1,8 @@
-﻿using MechArena.Tournament;
+﻿using Executor.Tournament;
 
 using System;
 
-namespace MechArena
+namespace Executor
 {
     public class CompetitorEntity : ICompetitor
     {

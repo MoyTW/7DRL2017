@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MechArena.AI.Combat
+namespace Executor.AI.Combat
 {
     [Serializable()]
     abstract class AIAction : SingleClause

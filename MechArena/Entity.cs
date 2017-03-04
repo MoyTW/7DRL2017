@@ -4,7 +4,7 @@ using System.Linq;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 
-namespace MechArena
+namespace Executor
 {
     [Serializable()]
     public class Entity

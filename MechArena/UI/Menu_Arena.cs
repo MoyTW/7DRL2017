@@ -1,11 +1,11 @@
-﻿using MechArena.Tournament;
+﻿using Executor.Tournament;
 using RLNET;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 
-namespace MechArena.UI
+namespace Executor.UI
 {
     class Menu_Arena : IDisplay
     {

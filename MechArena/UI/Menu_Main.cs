@@ -1,12 +1,12 @@
-﻿using MechArena.AI;
-using MechArena.Genetic;
-using MechArena.Tournament;
+﻿using Executor.AI;
+using Executor.Genetic;
+using Executor.Tournament;
 using RLNET;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace MechArena.UI
+namespace Executor.UI
 {
     class Menu_Main : IDisplay
     {

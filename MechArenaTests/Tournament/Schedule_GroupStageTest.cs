@@ -1,10 +1,10 @@
-﻿using MechArena.Tournament;
+﻿using Executor.Tournament;
 
 using System;
 using System.Collections.Generic;
 using NUnit.Framework;
 
-namespace MechArenaTests.Tournament
+namespace ExecutorTests.Tournament
 {
     [TestFixture]
     public class Schedule_GroupStageTest

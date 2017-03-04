@@ -1,10 +1,10 @@
-﻿using MechArena.AI;
-using MechArena.Tournament;
-using MechArena.UI;
+﻿using Executor.AI;
+using Executor.Tournament;
+using Executor.UI;
 using RLNET;
 using RogueSharp.Random;
 
-namespace MechArena
+namespace Executor
 {
     public class Program
     {

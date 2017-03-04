@@ -4,9 +4,9 @@ using RogueSharp.Random;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using MechArena.Tournament;
+using Executor.Tournament;
 
-namespace MechArena
+namespace Executor
 {
     public static class ArenaBuilder
     {

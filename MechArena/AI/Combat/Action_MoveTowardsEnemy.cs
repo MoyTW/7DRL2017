@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MechArena.AI.Combat
+namespace Executor.AI.Combat
 {
     [Serializable()]
     class Action_MoveTowardsEnemy : AIAction

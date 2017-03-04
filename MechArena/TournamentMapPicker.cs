@@ -1,4 +1,4 @@
-﻿using MechArena.Tournament;
+﻿using Executor.Tournament;
 using RogueSharp.Random;
 
 using System;
@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MechArena
+namespace Executor
 {
     class TournamentMapPicker : IMapPicker
     {

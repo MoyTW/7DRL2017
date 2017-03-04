@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MechArena.Genetic
+namespace Executor.Genetic
 {
     public class Population<T>
     {

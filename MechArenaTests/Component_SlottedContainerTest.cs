@@ -1,9 +1,9 @@
-﻿using MechArena;
+﻿using Executor;
 
 using System;
 using NUnit.Framework;
 
-namespace MechArenaTests
+namespace ExecutorTests
 {
     // I don't know how to design in OO any more! The fact that I have one test class for 4(!) different classes is a
     // serious smell!

@@ -1,9 +1,9 @@
-﻿using MechArena;
+﻿using Executor;
 using System.Collections.Immutable;
 using System;
 using NUnit.Framework;
 
-namespace MechArenaTests
+namespace ExecutorTests
 {
     [TestFixture]
     public class ComponentTest

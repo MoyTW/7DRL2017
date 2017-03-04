@@ -4,15 +4,15 @@
     "TypeLabel": "b",
     "Components": [
       {
-        "ComponentClass": "MechArena.Component_Attachable",
+        "ComponentClass": "Executor.Component_Attachable",
         "Params": {
-          "sizeRequired": "MechArena.AttachmentSize.LARGE"
+          "sizeRequired": "Executor.AttachmentSize.LARGE"
         }
       },
       {
-        "ComponentClass": "MechArena.Component_Weapon",
+        "ComponentClass": "Executor.Component_Weapon",
         "Params": {
-          "size": "MechArena.AttachmentSize.LARGE",
+          "size": "Executor.AttachmentSize.LARGE",
           "toHit": 0,
           "maxRange": 10,
           "damage": 5,

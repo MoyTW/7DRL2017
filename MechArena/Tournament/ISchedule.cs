@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MechArena.Tournament
+namespace Executor.Tournament
 {
     public interface ISchedule
     {

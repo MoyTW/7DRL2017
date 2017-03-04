@@ -2,7 +2,7 @@
 using System.Collections.Immutable;
 using System.Linq;
 
-namespace MechArena
+namespace Executor
 {
     [Serializable()]
     class Component_Attacker : Component

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MechArena.AI
+namespace Executor.AI
 {
     [Serializable()]
     public abstract class SingleClause

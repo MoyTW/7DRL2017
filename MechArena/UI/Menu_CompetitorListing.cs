@@ -1,4 +1,4 @@
-﻿using MechArena.Tournament;
+﻿using Executor.Tournament;
 
 using RLNET;
 using System;
@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MechArena.UI
+namespace Executor.UI
 {
     class Menu_CompetitorListing : IDisplay
     {

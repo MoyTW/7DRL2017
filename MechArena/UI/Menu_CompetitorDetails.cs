@@ -1,7 +1,7 @@
-﻿using MechArena.Tournament;
+﻿using Executor.Tournament;
 using RLNET;
 
-namespace MechArena.UI
+namespace Executor.UI
 {
     class Menu_CompetitorDetails : IDisplay
     {

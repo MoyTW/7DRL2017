@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace MechArena.Genetic
+namespace Executor.Genetic
 {
     public class Individual<T>
     {

@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace MechArena.UI
+namespace Executor.UI
 {
     class Menu_MechDetails : IDisplay
     {
@@ -44,7 +44,7 @@ namespace MechArena.UI
                     {
                         if (!this.mountsDict.ContainsKey(location))
                             this.mountsDict.Add(location, new List<Tuple<char, Entity>>());
-                        this.mountsDict[location].Add(new Tuple<char, MechArena.Entity>(letters[mountIdx], mount));
+                        this.mountsDict[location].Add(new Tuple<char, Executor.Entity>(letters[mountIdx], mount));
                         mountIdx++;
                     }
                     else

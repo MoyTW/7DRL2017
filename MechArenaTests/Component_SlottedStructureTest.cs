@@ -1,11 +1,11 @@
 ﻿using RogueSharp.Random;
 
-using MechArena;
+using Executor;
 
 using System;
 using NUnit.Framework;
 
-namespace MechArenaTests
+namespace ExecutorTests
 {
     [TestFixture]
     public class Component_SlottedStructureTest

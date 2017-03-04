@@ -2,7 +2,7 @@
 using System.Collections.Immutable;
 using System.Linq;
 
-namespace MechArena
+namespace Executor
 {
     public enum AttachmentSize
     {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 
-namespace MechArena
+namespace Executor
 {
     [Serializable()]
     public class Component_Weapon : Component_TracksTime

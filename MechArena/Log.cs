@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MechArena
+namespace Executor
 {
     public static class Log
     {

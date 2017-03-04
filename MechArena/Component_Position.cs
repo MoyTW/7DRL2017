@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Immutable;
 
-namespace MechArena
+namespace Executor
 {
     [Serializable()]
     class Component_Position : Component

@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace MechArena
+namespace Executor
 {
     [Serializable()]
     class Component_MechSkeleton : Component_TracksTime
