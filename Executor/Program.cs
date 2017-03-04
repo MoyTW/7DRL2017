@@ -24,7 +24,6 @@ namespace Executor
         public static void Main()
         {
             BlueprintListing.LoadAllBlueprints();
-            AIUtils.Initialize();
 
             var sniperModifier = new Component_AttributeModifier(EntityAttributeType.DAMAGE, ModifierType.FLAT, 100,
                 requiredBaseLabel: Blueprints.SNIPER_RILFE);

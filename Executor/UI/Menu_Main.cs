@@ -1,5 +1,4 @@
 ﻿using Executor.AI;
-using Executor.Genetic;
 using Executor.Tournament;
 using RLNET;
 using System;
@@ -99,39 +98,6 @@ namespace Executor.UI
             }
         }
 
-        // This executes, but continually fails at beating the enemy.
-        // Hmm.
-        // 1000 randomly generated mech + behaviours don't beat a single enemy mech, ever?
-        private void EvolveSingleOpponent()
-        {
-            var start = DateTime.Now;
-            Console.WriteLine("Beginning evolution at " + start);
-
-            // TODO: Your random number generation is a total mess!
-            Random evolveRand = new Random(1);
-            Evolver<SingleClause> evolver = new Evolver<SingleClause>(200,
-                i => AIUtils.SimpleArenaFitness(i, evolveRand), 5, .5, 50, AIUtils.geneList, 2000);
-            var winner = evolver.Evolve(ParentStrategies.Roulette, CrossoverStrategies.SinglePointCrossover,
-                AIUtils.RandomMutation, AIUtils.IsSurvivor);
-
-            var end = DateTime.Now;
-            Console.WriteLine("Ended evolution at " + end + " after " + end.Subtract(start));
-
-            Console.WriteLine("Highest fitness for each generation:");
-            int generation = 1;
-            foreach (var p in evolver.InspectHistory())
-            {
-                Console.WriteLine("Gen " + generation + " Structure: " + p.HighestFitness());
-                generation++;
-            }
-
-            /*Console.WriteLine("Winner Genes:");
-            foreach (var g in winner.InspectGenes())
-            {
-                Console.WriteLine(g.ToString());
-            }*/
-        }
-
         // Put each case into own fn, this is just exceptionally unwieldy!
         private IDisplay HandleKeyPressed(RLKeyPress keyPress)
         {
@@ -140,9 +106,6 @@ namespace Executor.UI
 
             switch (keyPress.Key)
             {
-                case RLKey.E:
-                    this.EvolveSingleOpponent();
-                    return this;
                 case RLKey.L:
                     Log.ToggleDebugLog();
                     return this;

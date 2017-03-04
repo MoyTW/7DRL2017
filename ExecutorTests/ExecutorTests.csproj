@@ -54,9 +54,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Genetic\AIEvolverTest.cs" />
-    <Compile Include="Genetic\EvolverTest.cs" />
-    <Compile Include="Genetic\MechEvolverTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="GameRandomTest.cs" />
     <Compile Include="EntityTest.cs" />

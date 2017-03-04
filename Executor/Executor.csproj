@@ -59,11 +59,6 @@
     <Compile Include="Component_AttachPoint.cs" />
     <Compile Include="Component_Attachable.cs" />
     <Compile Include="Config.cs" />
-    <Compile Include="Genetic\CrossoverStrategies.cs" />
-    <Compile Include="Genetic\Evolver.cs" />
-    <Compile Include="Genetic\Individual.cs" />
-    <Compile Include="Genetic\ParentStrategies.cs" />
-    <Compile Include="Genetic\Population.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="TournamentBuilder.cs" />
     <Compile Include="Component.cs" />
@@ -122,7 +117,6 @@
     <Compile Include="UI\Menu_CompetitorListing.cs" />
     <Compile Include="UI\IntegerSelectionField.cs" />
     <Compile Include="UI\Menu_Main.cs" />
-    <Compile Include="Genetic\GeneListing.cs" />
     <Compile Include="AI\Combat\Action_AttackEnemy.cs" />
     <Compile Include="AI\Combat\Action_Delay.cs" />
     <Compile Include="AI\Combat\Action_MoveAwayEnemy.cs" />
