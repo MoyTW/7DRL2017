@@ -18,7 +18,7 @@ namespace ExecutorTests
 
             this.pilot = new Entity();
 
-            this.mech1 = EntityBuilder.BuildNakedMech("1", false, pilot, null);
+            this.mech1 = EntityBuilder.BuildNakedMech("1", true, pilot, null);
             var mountedGun = EntityBuilder.BuildMountedPistol();
             this.mech1Gun = mountedGun.GetComponentOfType<Component_AttachPoint>().InspectAttachedEntity();
             EntityBuilder.SlotAt(mech1, BodyPartLocation.HEAD, mountedGun);
@@ -32,13 +32,11 @@ namespace ExecutorTests
         [Test]
         public void TestAppliesToWeapons()
         {
-            pilot.AddComponent(new Component_AttributeModifier(EntityAttributeType.DAMAGE, ModifierType.FLAT, 4))
-                .AddComponent(new Component_AttributeModifier(EntityAttributeType.TO_HIT, ModifierType.FLAT, 100));
+            pilot.AddComponent(new Component_AttributeModifier(EntityAttributeType.DAMAGE, ModifierType.FLAT, 4));
 
-            var attack = new GameEvent_Attack(0, mech1, mech2, this.mech1Gun, arena.ArenaMap, arena.SeededRand);
+            var attack = new GameEvent_Attack(0, mech1, mech2, this.mech1Gun, arena.ArenaMap, BodyPartLocation.TORSO);
             mech1.HandleEvent(attack);
 
-            Assert.IsTrue(attack.ResultHit);
             Assert.AreEqual(attack.ResultDamage, 6);
         }
 

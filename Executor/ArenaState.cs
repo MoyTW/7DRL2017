@@ -216,7 +216,7 @@ namespace Executor
                 if (equippedWeapon != null)
                 {
                     var attack = new GameEvent_Attack(this.CurrentTick, this.Player, this.Mech2, equippedWeapon,
-                        this.ArenaMap, this.SeededRand);
+                        this.ArenaMap, BodyPartLocation.TORSO);
                     this.Player.HandleEvent(attack);
                 }
 

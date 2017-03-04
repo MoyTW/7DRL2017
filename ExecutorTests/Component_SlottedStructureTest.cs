@@ -10,7 +10,6 @@ namespace ExecutorTests
     [TestFixture]
     public class Component_SlottedStructureTest
     {
-        IRandom rand = new DotNetRandom();
         int slotSpace = 5;
         int structureMax = 10;
         Entity bodyPart;
@@ -42,7 +41,7 @@ namespace ExecutorTests
         [Test]
         public void TestTakeDamageWithNoSlottedEntities()
         {
-            var ev = new GameEvent_TakeDamage(3, this.rand);
+            var ev = new GameEvent_TakeDamage(3);
             this.bodyPart.HandleEvent(ev);
             Assert.AreEqual(0, ev.DamageRemaining);
             Assert.IsTrue(ev.Completed);
@@ -55,7 +54,7 @@ namespace ExecutorTests
         {
             Entity slotted = this.SlotEntityWithStructure(this.bodyPart, 5);
 
-            var ev = new GameEvent_TakeDamage(3, this.rand);
+            var ev = new GameEvent_TakeDamage(3);
             this.bodyPart.HandleEvent(ev);
             Assert.AreEqual(0, ev.DamageRemaining);
             Assert.IsTrue(ev.Completed);
@@ -71,7 +70,7 @@ namespace ExecutorTests
             Entity tinySlotted = this.SlotEntityWithStructure(this.bodyPart, 3);
             Entity hugeSlotted = this.SlotEntityWithStructure(this.bodyPart, 9999);
 
-            var ev = new GameEvent_TakeDamage(100, this.rand);
+            var ev = new GameEvent_TakeDamage(100);
             this.bodyPart.HandleEvent(ev);
             Assert.AreEqual(0, ev.DamageRemaining);
             Assert.IsTrue(ev.Completed);
@@ -87,7 +86,7 @@ namespace ExecutorTests
         {
             Entity tinySlotted = this.SlotEntityWithStructure(this.bodyPart, 5);
 
-            var ev = new GameEvent_TakeDamage(100, this.rand);
+            var ev = new GameEvent_TakeDamage(100);
             this.bodyPart.HandleEvent(ev);
             Assert.AreEqual(85, ev.DamageRemaining);
             Assert.IsFalse(ev.Completed);

@@ -17,7 +17,6 @@ namespace Executor
         {
             this.Size = size;
             this.WeaponAttributes = new Dictionary<EntityAttributeType, int>() {
-                { EntityAttributeType.TO_HIT, toHit },
                 { EntityAttributeType.MAX_RANGE, maxRange },
                 { EntityAttributeType.DAMAGE, damage },
                 { EntityAttributeType.REFIRE_TICKS, refireTicks },

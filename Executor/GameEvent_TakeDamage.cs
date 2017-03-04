@@ -10,13 +10,11 @@ namespace Executor
 
         public int TotalDamage { get; }
         public int DamageRemaining { get { return this.damageRemaining; } }
-        public IRandom Rand { get; }
 
-        public GameEvent_TakeDamage(int totalDamage, IRandom rand)
+        public GameEvent_TakeDamage(int totalDamage)
         {
             this.TotalDamage = totalDamage;
             this.damageRemaining = totalDamage;
-            this.Rand = rand;
         }
 
         public void Notify_DamageTaken(int applied)

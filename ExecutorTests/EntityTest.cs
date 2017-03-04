@@ -67,7 +67,9 @@ namespace ExecutorTests
             Assert.AreEqual(mech.TryGetAttribute(EntityAttributeType.STRUCTURE).Value,
                 deepCopy.TryGetAttribute(EntityAttributeType.STRUCTURE).Value);
 
-            mech.HandleEvent(new GameEvent_TakeDamage(9999, new RogueSharp.Random.DotNetRandom()));
+            var damageEvent = new GameEvent_TakeDamage(10);
+            mech.GetComponentOfType<Component_Skeleton>().InspectBodyPart(BodyPartLocation.TORSO)
+                .HandleEvent(damageEvent);
             Assert.AreNotEqual(mech.TryGetAttribute(EntityAttributeType.STRUCTURE).Value,
                 deepCopy.TryGetAttribute(EntityAttributeType.STRUCTURE).Value);
         }

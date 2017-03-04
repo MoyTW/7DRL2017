@@ -7,7 +7,7 @@ using System.Linq;
 namespace Executor
 {
     [Serializable()]
-    class Component_Skeleton : Component_TracksTime
+    public class Component_Skeleton : Component_TracksTime
     {
         private static Dictionary<BodyPartLocation, int> MechTemplate = new Dictionary<BodyPartLocation, int>() {
             { BodyPartLocation.HEAD, 2 },
@@ -86,47 +86,27 @@ namespace Executor
         {
             if (ev.Target != this.Parent)
                 return;
-
-            int attackerBaseToHit = ev.CommandEntity.TryGetAttribute(EntityAttributeType.TO_HIT, ev.ExecutorEntity)
-                .Value;
+            
             int weaponBaseDamage = ev.CommandEntity.TryGetAttribute(EntityAttributeType.DAMAGE, ev.ExecutorEntity)
                 .Value;
 
-            int targetDodge = ev.Target.TryGetAttribute(EntityAttributeType.DODGE).Value;
+            Log.DebugLine(String.Format("{0} attacked {1}!", ev.ExecutorEntity, ev.SubTarget));
 
-            int roll = ev.Rand.Next(1, 20);
-            int toHit = attackerBaseToHit;
-            int dodge = targetDodge;
+            int damage = weaponBaseDamage; // Possible damage modifiers
 
-            Log.DebugLine(String.Format("{0} attacked {1} - {2} roll+toHit v. {3} dodge, hit? {4}", ev.ExecutorEntity,
-                ev.SubTarget, roll + toHit, 10 + dodge, roll + toHit > 10 + dodge));
+            Entity subTargetEntity = this.bodyParts[ev.SubTarget];
 
-            if (roll + toHit > 10 + dodge)
-            {
-                int damage = weaponBaseDamage; // Possible damage modifiers
-
-                // Retarget on appropriate body part
-                if (ev.SubTarget == BodyPartLocation.ANY)
-                    ev.RegisterRetargeting(this.FindBodyPartLocationByWeight(ev.Rand));
-
-                Entity subTargetEntity = this.bodyParts[ev.SubTarget];
-
-                // This is all damage handling
-                if (subTargetEntity.TryGetDestroyed())
-                    ev.RegisterAttackResults(false, missedDueToMissingBodyPart: true);
-                else
-                {
-                    subTargetEntity.HandleEvent(new GameEvent_TakeDamage(damage, ev.Rand));
-
-                    if (0 >= subTargetEntity.TryGetAttribute(EntityAttributeType.STRUCTURE).Value)
-                        ev.RegisterAttackResults(true, damage: damage, destroyedBodyPart: true);
-                    else
-                        ev.RegisterAttackResults(true, damage: damage);
-                }
-            }
+            // This is all damage handling
+            if (subTargetEntity.TryGetDestroyed())
+                ev.RegisterAttackResults(false, missedDueToMissingBodyPart: true);
             else
             {
-                ev.RegisterAttackResults(false);
+                subTargetEntity.HandleEvent(new GameEvent_TakeDamage(damage));
+
+                if (0 >= subTargetEntity.TryGetAttribute(EntityAttributeType.STRUCTURE).Value)
+                    ev.RegisterAttackResults(true, damage: damage, destroyedBodyPart: true);
+                else
+                    ev.RegisterAttackResults(true, damage: damage);
             }
 
             this.AssessDamage();
@@ -135,13 +115,7 @@ namespace Executor
         // Since there is no damage transfer, will *always* complete the event!
         private void HandleTakeDamage(GameEvent_TakeDamage ev)
         {
-            Entity damagedPart = this.bodyParts[this.FindBodyPartLocationByWeight(ev.Rand)];
-            if (damagedPart != null)
-                damagedPart.HandleEvent(ev);
-
-            ev.Completed = true;
-
-            this.AssessDamage();
+            throw new NotImplementedException();
         }
 
         private void HandleMoveSingle(GameEvent_MoveSingle ev)
@@ -193,8 +167,6 @@ namespace Executor
             // TODO: Do not hardcode these values!
             if (q.AttributeType == EntityAttributeType.SPEED)
                 q.RegisterBaseValue(1);
-            else if (q.AttributeType == EntityAttributeType.DODGE)
-                q.RegisterBaseValue(0);
             else if (q.AttributeType == EntityAttributeType.STRUCTURE)
                 q.RegisterBaseValue(0);
         }

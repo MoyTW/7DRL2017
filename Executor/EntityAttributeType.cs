@@ -12,10 +12,8 @@ namespace Executor
 
         // Mech Attribute Types
         SPEED,
-        DODGE,
 
         // Weapon Attribute Types
-        TO_HIT,
         DAMAGE,
         MAX_RANGE,
         REFIRE_TICKS

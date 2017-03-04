@@ -1,6 +1,7 @@
 ﻿using RogueSharp.Random;
 using System;
 using System.Collections.Immutable;
+using System.Linq;
 
 namespace Executor
 {
@@ -26,11 +27,15 @@ namespace Executor
             return ((GameQuery_EntityAttribute)slottedContainer.HandleQuery(q)).Value;
         }
 
-        private void AssignDamagePoint(Component_SlottedContainer slottedContainer, IRandom rand)
+        private void AssignDamagePoint(Component_SlottedContainer slottedContainer)
         {
-            var target = rand.RandomByWeight<Entity>(slottedContainer.InspectStoredEntities(),
-                (e => this.GetRemainingInternalStructure(e)));
-            var damageEvent = new GameEvent_TakeDamage(1, rand);
+            // Damge from the BOTTOM UP, so that the hand goes last
+            // TODO: Maybe kinda counterintuitive?
+            var target = slottedContainer.InspectStoredEntities()
+                .Where(e => this.GetRemainingInternalStructure(e) > 0)
+                .Reverse()
+                .First();
+            var damageEvent = new GameEvent_TakeDamage(1);
             target.HandleEvent(damageEvent);
 
             if (!damageEvent.Completed)
@@ -53,7 +58,7 @@ namespace Executor
                 ev.Notify_DamageTaken(remainingSlottedStructure);
                 for (int i = 0; i < remainingSlottedStructure; i++)
                 {
-                    this.AssignDamagePoint(slottedContainer, ev.Rand);
+                    this.AssignDamagePoint(slottedContainer);
                 }
             }
             else
@@ -61,7 +66,7 @@ namespace Executor
                 int damageToTake = ev.DamageRemaining;
                 for (int i = 0; i < damageToTake; i++)
                 {
-                    this.AssignDamagePoint(slottedContainer, ev.Rand);
+                    this.AssignDamagePoint(slottedContainer);
                 }
                 ev.Notify_DamageTaken(damageToTake);
             }

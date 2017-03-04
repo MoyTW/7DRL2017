@@ -19,7 +19,7 @@ namespace Executor.AI.Combat
                 target = commandQuery.ArenaState.Player;
 
             return new GameEvent_Attack(commandQuery.ArenaState.CurrentTick, commandQuery.CommandEntity, target,
-                commandQuery.ExecutorEntity, commandQuery.ArenaState.ArenaMap, commandQuery.Rand);
+                commandQuery.ExecutorEntity, commandQuery.ArenaState.ArenaMap, BodyPartLocation.TORSO);
         }
 
         public override System.Collections.Generic.IEnumerable<SingleClause> EnumerateClauses()

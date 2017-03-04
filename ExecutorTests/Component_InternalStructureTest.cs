@@ -9,7 +9,6 @@ namespace ExecutorTests
     [TestFixture]
     public class Component_InternalStructureTest
     {
-        IRandom rand = new DotNetRandom();
         int structureMax = 10;
         Entity internalStructure;
 
@@ -30,14 +29,14 @@ namespace ExecutorTests
         [Test]
         public void CanTakeDamage()
         {
-            var ev = new GameEvent_TakeDamage(3, this.rand);
+            var ev = new GameEvent_TakeDamage(3);
             this.internalStructure.HandleEvent(ev);
             Assert.AreEqual(0, ev.DamageRemaining);
             Assert.IsTrue(ev.Completed);
             Assert.AreEqual(7,
                 this.internalStructure.GetComponentOfType<Component_InternalStructure>().StructureRemaining);
 
-            var ev1 = new GameEvent_TakeDamage(5, this.rand);
+            var ev1 = new GameEvent_TakeDamage(5);
             this.internalStructure.HandleEvent(ev1);
             Assert.AreEqual(0, ev1.DamageRemaining);
             Assert.IsTrue(ev1.Completed);
@@ -48,7 +47,7 @@ namespace ExecutorTests
         [Test]
         public void CanTakeExactDamage()
         {
-            var ev = new GameEvent_TakeDamage(10, this.rand);
+            var ev = new GameEvent_TakeDamage(10);
             this.internalStructure.HandleEvent(ev);
             Assert.AreEqual(0, ev.DamageRemaining);
             Assert.IsTrue(ev.Completed);
@@ -59,7 +58,7 @@ namespace ExecutorTests
         [Test]
         public void CanTakeDamageOverflowsProperly()
         {
-            var ev = new GameEvent_TakeDamage(20, this.rand);
+			var ev = new GameEvent_TakeDamage(20);
             this.internalStructure.HandleEvent(ev);
             Assert.AreEqual(10, ev.DamageRemaining);
             Assert.IsFalse(ev.Completed);
