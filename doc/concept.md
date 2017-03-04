@@ -33,3 +33,36 @@ That's the most basic explanation. The game flow will be something like:
 + Execute plan in Focus mode
 + Possibly abort and run away to try again
 + Repeat until mission complete
+
+# Turns and Time
+
+Both in "normal" and "focus" mode, enemies and you will take turns in order,
+with turn order being super boring and standard (you go, each one of them goes,
+then you go, repeat).
+
+However, in focus, you will have the ability to execute an increased number of
+actions per turn.
+
+This actually boils down to the concept of AP! In normal mode, everything
+(moving, attacking, observing) takes one point of AP. In focus mode, you have a
+bunch more AP and optional abilities that aren't available to normal mode.
+
+Spitballing at AP costs:
+
+## Normal Mode: 1 AP/turn
+
++ Move: 1
++ Observe: 1
++ Attack: 1
++ Stealth Kill: 1
+
+## Focus Mode: 4 AP/Turn
+
++ Move Silently: 1
++ Move Fast: First 2 moves free, 1 for rest
++ Deflect Bullet: First 3 free
++ Vault: 2
++ Cut: 2
++ Dodge Rockets: 1
++ Deflect Grenades: 1
++ Throw Back Grenades: 2
