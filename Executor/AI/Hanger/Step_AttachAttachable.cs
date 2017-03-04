@@ -20,7 +20,7 @@ namespace Executor.AI.Hanger
         public override void ApplyStep (Entity entity)
 		{
             var entityToAttach = BlueprintListing.BuildForLabel(this.BlueprintLabel);
-            var matchingAttachPoint = entity.GetComponentOfType<Component_MechSkeleton>()
+            var matchingAttachPoint = entity.GetComponentOfType<Component_Skeleton>()
                 .InspectBodyPart(this.Location)
                 .HandleQuery(new GameQuery_SubEntities(SubEntitiesSelector.ATTACH_POINT))
                 .SubEntities
@@ -40,7 +40,7 @@ namespace Executor.AI.Hanger
                 .Select(b => b.Label);
             foreach (var label in attachableLabels)
             {
-                foreach (var location in Component_MechSkeleton.TemplateLocations)
+                foreach (var location in Component_Skeleton.TemplateLocations)
                 {
                     yield return new Step_AttachAttachable(label, location);
                 }

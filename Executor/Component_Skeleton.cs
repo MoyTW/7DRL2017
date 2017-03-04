@@ -7,7 +7,7 @@ using System.Linq;
 namespace Executor
 {
     [Serializable()]
-    class Component_MechSkeleton : Component_TracksTime
+    class Component_Skeleton : Component_TracksTime
     {
         private static Dictionary<BodyPartLocation, int> MechTemplate = new Dictionary<BodyPartLocation, int>() {
             { BodyPartLocation.HEAD, 5 },
@@ -35,11 +35,11 @@ namespace Executor
         {
             get
             {
-                return Component_MechSkeleton.MechTemplate.Select(t => t.Key);
+                return Component_Skeleton.MechTemplate.Select(t => t.Key);
             }
         }
 
-        public Component_MechSkeleton() : base(EntityAttributeType.SPEED)
+        public Component_Skeleton() : base(EntityAttributeType.SPEED)
         {
             this.bodyParts = new Dictionary<BodyPartLocation, Entity>();
             // Not technically required, as these will default initialize to false

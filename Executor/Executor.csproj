@@ -66,7 +66,6 @@
     <Compile Include="Component_Attacker.cs" />
     <Compile Include="Component_BodyPartLocation.cs" />
     <Compile Include="Component_InternalStructure.cs" />
-    <Compile Include="Component_MechSkeleton.cs" />
     <Compile Include="Component_Position.cs" />
     <Compile Include="Component_SlottedContainer.cs" />
     <Compile Include="Component_Slottable.cs" />
@@ -118,6 +117,7 @@
     <Compile Include="AI\Hanger\Step_AttachAttachable.cs" />
     <Compile Include="Component_Piloted.cs" />
     <Compile Include="Component_AttributeModifier.cs" />
+    <Compile Include="Component_Skeleton.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

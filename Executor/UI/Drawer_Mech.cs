@@ -60,7 +60,7 @@ namespace Executor.UI
             line++;
             line++;
 
-            var skeleton = mech.GetComponentOfType<Component_MechSkeleton>();
+            var skeleton = mech.GetComponentOfType<Component_Skeleton>();
             Drawer_Mech.DrawBodyPartStatus(skeleton.InspectBodyPart(BodyPartLocation.LEFT_ARM), 0, line + 2, mechDestroyed, console);
             Drawer_Mech.DrawBodyPartStatus(skeleton.InspectBodyPart(BodyPartLocation.LEFT_LEG), 0, line + 20, mechDestroyed, console);
 

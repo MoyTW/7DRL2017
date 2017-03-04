@@ -20,7 +20,7 @@ namespace Executor.AI.Hanger
         public override void ApplyStep(Entity entity)
         {
             var slottable = BlueprintListing.BuildForLabel(this.BlueprintLabel);
-            var container = entity.GetComponentOfType<Component_MechSkeleton>().InspectBodyPart(this.Location);
+            var container = entity.GetComponentOfType<Component_Skeleton>().InspectBodyPart(this.Location);
             entity.HandleEvent(new GameEvent_Slot(entity, container, slottable));
         }
 
@@ -30,7 +30,7 @@ namespace Executor.AI.Hanger
                 .Select(b => b.Label);
             foreach (var label in slottableLabels)
             {
-                foreach (var location in Component_MechSkeleton.TemplateLocations)
+                foreach (var location in Component_Skeleton.TemplateLocations)
                 {
                     yield return new Step_SlotPart(label, location);
                 }

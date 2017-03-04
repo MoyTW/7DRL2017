@@ -19,7 +19,7 @@ namespace Executor.UI
 
         public Menu_MechDetails(IDisplay parentDisplay, Entity mech)
         {
-            if (!mech.HasComponentOfType<Component_MechSkeleton>())
+            if (!mech.HasComponentOfType<Component_Skeleton>())
                 throw new ArgumentException("Entity " + mech + " passed into Menu_ArenaEquipment is not a mech!");
 
             this.statusConsole = new RLConsole(Menu_Arena.statusWidth, Menu_Arena.statusHeight);
@@ -32,7 +32,7 @@ namespace Executor.UI
 
             this.holstersDict = new Dictionary<BodyPartLocation, List<Tuple<char, Entity>>>();
             this.mountsDict = new Dictionary<BodyPartLocation, List<Tuple<char, Entity>>>();
-            var skeleton = this.mech.GetComponentOfType<Component_MechSkeleton>();
+            var skeleton = this.mech.GetComponentOfType<Component_Skeleton>();
             int holsterIdx = 0, mountIdx = 0;
             foreach (var location in EntityBuilder.MechLocations)
             {

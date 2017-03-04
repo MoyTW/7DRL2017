@@ -52,8 +52,8 @@ namespace Executor
 
         public bool IsMatchEnded()
         {
-            return this.Player.GetComponentOfType<Component_MechSkeleton>().IsKilled ||
-                this.Mech2.GetComponentOfType<Component_MechSkeleton>().IsKilled;
+            return this.Player.GetComponentOfType<Component_Skeleton>().IsKilled ||
+                this.Mech2.GetComponentOfType<Component_Skeleton>().IsKilled;
         }
 
         // TODO: Create a "Mech/Map Blueprint" so you don't pass a literal Entity/IMap instance in!
