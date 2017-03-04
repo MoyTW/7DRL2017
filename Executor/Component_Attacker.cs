@@ -52,6 +52,7 @@ namespace Executor
                 }
 
                 ev.ExecutorEntity.GetComponentOfType<Component_TracksTime>().RegisterActivated(ev.CurrentTick);
+                ev.CommandEntity.GetComponentOfType<Component_TracksTime>().RegisterActivated(ev.CurrentTick);
             }
         }
 

@@ -112,11 +112,11 @@ namespace Executor.UI
                 case RLKey.E:
                     // Technically, this doesn't limit it to the player mech.
                     return new Menu_MechDetails(this, this.arena.Player);
-                case RLKey.F:
+                case RLKey.A:
                     this.arena.TryPlayerAttack();
                     break;
-                case RLKey.W:
-                    Console.WriteLine("Attempting to Wield Weapon!");
+                case RLKey.F:
+                    this.arena.TryPlayerAttack();
                     break;
                 case RLKey.Keypad1:
                 case RLKey.B:

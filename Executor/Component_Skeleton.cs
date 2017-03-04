@@ -10,12 +10,12 @@ namespace Executor
     class Component_Skeleton : Component_TracksTime
     {
         private static Dictionary<BodyPartLocation, int> MechTemplate = new Dictionary<BodyPartLocation, int>() {
-            { BodyPartLocation.HEAD, 5 },
-            { BodyPartLocation.TORSO, 15 },
-            { BodyPartLocation.LEFT_ARM, 8 },
-            { BodyPartLocation.RIGHT_ARM, 8 },
-            { BodyPartLocation.LEFT_LEG, 10 },
-            { BodyPartLocation.RIGHT_LEG, 10 }
+            { BodyPartLocation.HEAD, 2 },
+            { BodyPartLocation.TORSO, 6 },
+            { BodyPartLocation.LEFT_ARM, 3 },
+            { BodyPartLocation.RIGHT_ARM, 3 },
+            { BodyPartLocation.LEFT_LEG, 4 },
+            { BodyPartLocation.RIGHT_LEG, 4 }
         };
 
         private Dictionary<BodyPartLocation, Entity> bodyParts;

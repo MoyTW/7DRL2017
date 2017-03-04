@@ -204,20 +204,23 @@ namespace Executor
         // TODO: Testing! Don't directly call!
         public void TryPlayerAttack()
         {
-            if (this.ShouldWaitForPlayerInput && this.NextExecutorEntity.HasComponentOfType<Component_Weapon>())
+            if (this.ShouldWaitForPlayerInput)
             {
                 Log.DebugLine("########## ATTACK INFO ##########");
-                var guns = this.Player.HandleQuery(new GameQuery_SubEntities(SubEntitiesSelector.WEAPON)).SubEntities;
-                foreach (var gun in guns)
+
+                // TODO: Equipped items are *not* "Whatever is held in right right arm"
+                var equippedWeapon = this.Player.GetComponentOfType<Component_Skeleton>()
+                    .InspectBodyPart(BodyPartLocation.RIGHT_ARM)
+                    .TryGetSubEntities(SubEntitiesSelector.WEAPON)
+                    .FirstOrDefault();
+                if (equippedWeapon != null)
                 {
-                    this.Player.HandleEvent(
-                        new GameEvent_Attack(this.currentTick, this.Player, mech2, gun, this.ArenaMap, this.SeededRand));
+                    var attack = new GameEvent_Attack(this.CurrentTick, this.Player, this.Mech2, equippedWeapon,
+                        this.ArenaMap, this.SeededRand);
+                    this.Player.HandleEvent(attack);
                 }
+
                 this.ForwardToNextAction();
-            }
-            else
-            {
-                Log.DebugLine("CANNOT ATTACK GUNS NOT NEXT!");
             }
         }
 
