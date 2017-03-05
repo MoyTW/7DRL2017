@@ -8,7 +8,6 @@ namespace Executor
     public class GameEvent_Attack : GameEvent_Command
     {
         // Attack info
-        public int CommandTick { get; }
         public Entity Target { get; }
         public BodyPartLocation SubTarget { get; private set; }
         public IMap GameMap { get; }
@@ -24,7 +23,6 @@ namespace Executor
             if (!weapon.HasComponentOfType<Component_Weapon>())
                 throw new ArgumentException("Can't build attack event - weapon has no Weapon component!");
 
-            this.CommandTick = commandTick;
             this.Target = target;
             this.SubTarget = subTarget;
             this.GameMap = gameMap;

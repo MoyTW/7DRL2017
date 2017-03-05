@@ -31,36 +31,25 @@ namespace ExecutorTests
         public void CanSlot()
         {
             var small = this.SlottableRequiring(2);
-            var ev = new GameEvent_Slot(null, this.slottedContainer, small);
+            var ev = new GameEvent_Slot(this.slottedContainer, this.slottedContainer, small);
             this.slottedContainer.HandleEvent(ev);
             Assert.IsTrue(ev.Completed);
             Assert.AreEqual(3, this.slottedContainer.GetComponentOfType<Component_SlottedContainer>().SlotsRemaining);
 
             var perfect = this.SlottableRequiring(3);
-            var ev1 = new GameEvent_Slot(null, this.slottedContainer, perfect);
+            var ev1 = new GameEvent_Slot(this.slottedContainer, this.slottedContainer, perfect);
             this.slottedContainer.HandleEvent(ev1);
             Assert.IsTrue(ev1.Completed);
             Assert.AreEqual(0, this.slottedContainer.GetComponentOfType<Component_SlottedContainer>().SlotsRemaining);
         }
 
         [Test]
-        public void CanGracefullyPassIfHuge()
-        {
-            var huge = this.SlottableRequiring(999);
-            var ev = new GameEvent_Slot(null, this.slottedContainer, huge);
-            this.slottedContainer.HandleEvent(ev);
-            Assert.IsFalse(ev.Completed);
-            Assert.AreEqual(this.containerSize, 
-                this.slottedContainer.GetComponentOfType<Component_SlottedContainer>().SlotsRemaining);
-        }
-
-        [Test]
         public void CannotDoubleSlot()
         {
             var small = this.SlottableRequiring(2);
-            var ev = new GameEvent_Slot(null, this.slottedContainer, small);
+            var ev = new GameEvent_Slot(this.slottedContainer, this.slottedContainer, small);
             this.slottedContainer.HandleEvent(ev);
-			var slotEvent = new GameEvent_Slot (null, this.slottedContainer, small);
+			var slotEvent = new GameEvent_Slot (this.slottedContainer, this.slottedContainer, small);
 			Assert.Throws<ArgumentException> (() => this.slottedContainer.HandleEvent(slotEvent));
         }
 
@@ -68,10 +57,10 @@ namespace ExecutorTests
         public void CanUnslot()
         {
             var small = this.SlottableRequiring(2);
-            var ev = new GameEvent_Slot(null, this.slottedContainer, small);
+            var ev = new GameEvent_Slot(this.slottedContainer, this.slottedContainer, small);
             this.slottedContainer.HandleEvent(ev);
             
-            var unslot = new GameEvent_Unslot(null, this.slottedContainer, small);
+            var unslot = new GameEvent_Unslot(this.slottedContainer, this.slottedContainer, small);
             this.slottedContainer.HandleEvent(unslot);
             Assert.IsTrue(unslot.Completed);
             Assert.AreEqual(this.containerSize,
