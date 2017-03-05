@@ -9,8 +9,9 @@ namespace Executor
     {
         public Entity EntityToSlot { get; }
 
-        public GameEvent_Slot(Entity topContainer, Entity subContainer, Entity entityToSlot)
-            : base(topContainer, subContainer)
+        // TODO: Slot's currently "free" so the tick is always 0!
+        public GameEvent_Slot(Entity topContainer, Entity subContainer, Entity entityToSlot, int commandTick=0)
+            : base(commandTick, topContainer, subContainer)
         {
             if (!subContainer.HasComponentOfType<Component_SlottedContainer>() &&
                 !subContainer.HasComponentOfType<Component_AttachPoint>())

@@ -120,7 +120,7 @@ namespace Executor
 
         private void HandleMoveSingle(GameEvent_MoveSingle ev)
         {
-            this.RegisterActivated(ev.CurrentTick);
+            this.RegisterActivated(ev.CommandTick);
         }
 
         private void HandleCommand(GameEvent_Command ev)

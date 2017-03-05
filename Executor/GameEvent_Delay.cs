@@ -17,8 +17,8 @@ namespace Executor
         public int DelayTicks { get; }
         public DelayDuration Duration { get; }
 
-        public GameEvent_Delay(int currentTick, Entity commandEntity, Entity delayEntity, DelayDuration duration)
-            : base(commandEntity, delayEntity)
+        public GameEvent_Delay(int commandTick, Entity commandEntity, Entity delayEntity, DelayDuration duration)
+            : base(commandTick, commandEntity, delayEntity)
         {
             this.Duration = duration;
             if (this.Duration == DelayDuration.SINGLE_TICK)
@@ -33,12 +33,12 @@ namespace Executor
                 timeTrackers.Remove(delayEntity);
 
                 var nextEntity = timeTrackers.Where(e => !e.TryGetDestroyed())
-                    .Where(e => e.TryGetTicksToLive(currentTick) > 0)
-                    .OrderBy(e => e.TryGetTicksToLive(currentTick))
+                    .Where(e => e.TryGetTicksToLive(commandTick) > 0)
+                    .OrderBy(e => e.TryGetTicksToLive(commandTick))
                     .FirstOrDefault();
 
                 if (nextEntity != null)
-                    this.DelayTicks = nextEntity.TryGetTicksToLive(currentTick);
+                    this.DelayTicks = nextEntity.TryGetTicksToLive(commandTick);
                 else
                     this.DelayTicks = delayEntity.HandleQuery(new GameQuery_TicksCooldown()).Value;
             }

@@ -29,7 +29,7 @@ namespace Executor
                 {
                     Log.DebugLine("Attack missed due to range! Distance: " + distance + " Range: " + weaponRange);
                     ev.Completed = true;
-                    ev.ExecutorEntity.GetComponentOfType<Component_TracksTime>().RegisterActivated(ev.CurrentTick);
+                    ev.ExecutorEntity.GetComponentOfType<Component_TracksTime>().RegisterActivated(ev.CommandTick);
                     return;
                 }
 
@@ -39,7 +39,7 @@ namespace Executor
                 {
                     Log.DebugLine("Attack missed due to intervening terrain!");
                     ev.Completed = true;
-                    ev.ExecutorEntity.GetComponentOfType<Component_TracksTime>().RegisterActivated(ev.CurrentTick);
+                    ev.ExecutorEntity.GetComponentOfType<Component_TracksTime>().RegisterActivated(ev.CommandTick);
                     return;
                 }
 
@@ -51,8 +51,8 @@ namespace Executor
                     ev.Completed = true;
                 }
 
-                ev.ExecutorEntity.GetComponentOfType<Component_TracksTime>().RegisterActivated(ev.CurrentTick);
-                ev.CommandEntity.GetComponentOfType<Component_TracksTime>().RegisterActivated(ev.CurrentTick);
+                ev.ExecutorEntity.GetComponentOfType<Component_TracksTime>().RegisterActivated(ev.CommandTick);
+                ev.CommandEntity.GetComponentOfType<Component_TracksTime>().RegisterActivated(ev.CommandTick);
             }
         }
 

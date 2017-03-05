@@ -16,21 +16,19 @@
 
     public class GameEvent_MoveSingle : GameEvent_Command
     {
-        public int CurrentTick { get; }
         public XDirection X { get; }
         public YDirection Y { get; }
         public ArenaState GameArena { get; }
 
-        public GameEvent_MoveSingle(Entity mover, int currentTick, XDirection x, YDirection y, ArenaState gameArena)
-            : base(mover)
+        public GameEvent_MoveSingle(Entity mover, int commandTick, XDirection x, YDirection y, ArenaState gameArena)
+            : base(commandTick, mover)
         {
-            this.CurrentTick = currentTick;
             this.X = x;
             this.Y = y;
             this.GameArena = gameArena;
         }
 
-        public GameEvent_MoveSingle(Entity mover, int currentTick, int x, int y, ArenaState gameArena)
-            : this(mover, currentTick, (XDirection)x, (YDirection)y, gameArena) { }
+        public GameEvent_MoveSingle(Entity mover, int commandTick, int x, int y, ArenaState gameArena)
+            : this(mover, commandTick, (XDirection)x, (YDirection)y, gameArena) { }
     }
 }
