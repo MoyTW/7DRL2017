@@ -58,6 +58,8 @@ namespace Executor
                     this.storedEntities.Add(ev.EntityToSlot);
                     ev.Completed = true;
                 }
+                else
+                    throw new InvalidOperationException("Can't slot item " + ev.EntityToSlot + " in " + this.Parent);
             }
         }
 
