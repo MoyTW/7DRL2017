@@ -10,6 +10,7 @@ namespace Executor.UI
     {
         private readonly IDisplay parent;
         private readonly ArenaState arena;
+        private readonly Menu_Targeting targetingMenu;
 
         public const int arenaWidth = 50;
         public const int arenaHeight = 50;
@@ -30,6 +31,7 @@ namespace Executor.UI
         {
             this.parent = parent;
             this.arena = arena;
+            this.targetingMenu = new Menu_Targeting(this, 50, 23);
 
             arenaConsole = new RLConsole(Menu_Arena.arenaWidth, Menu_Arena.arenaHeight);
             hudConsole = new RLConsole(this.hudWidth, this.hudHeight);
@@ -53,6 +55,12 @@ namespace Executor.UI
             // Logic
             if (this.arena.IsMatchEnded())
                 return this.parent;
+            else if (this.targetingMenu.TargetedLocation != null)
+            {
+                this.arena.TryPlayerAttack((BodyPartLocation)this.targetingMenu.TargetedLocation);
+                this.targetingMenu.Reset();
+                return this;
+            }
             else if (keyPress != null)
                 return this.HandleKeyPressed(keyPress);
             else
@@ -113,11 +121,11 @@ namespace Executor.UI
                     // Technically, this doesn't limit it to the player mech.
                     return new Menu_MechDetails(this, this.arena.Player);
                 case RLKey.A:
-                    this.arena.TryPlayerAttack();
-                    break;
+                    this.targetingMenu.SetTarget(this.arena.Mech2);
+                    return this.targetingMenu;
                 case RLKey.F:
-                    this.arena.TryPlayerAttack();
-                    break;
+                    this.targetingMenu.SetTarget(this.arena.Mech2);
+                    return this.targetingMenu;
                 case RLKey.Keypad1:
                 case RLKey.B:
                     this.arena.TryPlayerMove(-1, 1);

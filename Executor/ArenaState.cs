@@ -202,7 +202,7 @@ namespace Executor
         #region Player Commands
 
         // TODO: Testing! Don't directly call!
-        public void TryPlayerAttack()
+        public void TryPlayerAttack(BodyPartLocation location)
         {
             if (this.ShouldWaitForPlayerInput)
             {
@@ -216,7 +216,7 @@ namespace Executor
                 if (equippedWeapon != null)
                 {
                     var attack = new GameEvent_Attack(this.CurrentTick, this.Player, this.Mech2, equippedWeapon,
-                        this.ArenaMap, BodyPartLocation.TORSO);
+                        this.ArenaMap, location);
                     this.Player.HandleEvent(attack);
                 }
 

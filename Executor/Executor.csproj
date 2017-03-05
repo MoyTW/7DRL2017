@@ -117,6 +117,7 @@
     <Compile Include="Component_Piloted.cs" />
     <Compile Include="Component_AttributeModifier.cs" />
     <Compile Include="Component_Skeleton.cs" />
+    <Compile Include="UI\Menu_Targeting.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
