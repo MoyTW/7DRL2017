@@ -15,11 +15,6 @@ namespace Executor
             this.CooldownAttribute = cooldownAttribute;
         }
 
-        public void RegisterActivated(int activationTick)
-        {
-            this.lastActivationTick = activationTick;
-        }
-
         protected override IImmutableSet<SubEntitiesSelector> _MatchingSelectors()
         {
             return ImmutableHashSet<SubEntitiesSelector>.Empty.Add(SubEntitiesSelector.TRACKS_TIME);
@@ -34,10 +29,21 @@ namespace Executor
             }
         }
 
+        // TODO: This means that if you fire a gun, the skeleton's turn never ends! Address that with AP!
+        private void HandleActivation(GameEvent_Activation ev)
+        {
+            if (ev.ExecutorEntity == this.Parent)
+            {
+                this.lastActivationTick = ev.CommandTick;
+            }
+        }
+
         protected override GameEvent _HandleEvent(GameEvent ev)
         {
             if (ev is GameEvent_Delay)
                 this.HandleDelay((GameEvent_Delay)ev);
+            if (ev is GameEvent_Activation)
+                this.HandleActivation((GameEvent_Activation)ev);
 
             return ev;
         }

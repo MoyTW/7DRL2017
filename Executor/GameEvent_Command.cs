@@ -12,6 +12,15 @@ namespace Executor
         public Entity CommandEntity { get; }
         public Entity ExecutorEntity { get; }
 
+        public override bool Completed
+        {
+            set
+            {
+                base.Completed = value;
+                this.CommandEntity.HandleEvent(new GameEvent_Activation(this));
+            }
+        }
+
         public GameEvent_Command(int commandTick, Entity commandEntity)
             : this(commandTick, commandEntity, commandEntity) { }
 

@@ -58,6 +58,7 @@
     <Compile Include="Component_AttachPoint.cs" />
     <Compile Include="Component_Attachable.cs" />
     <Compile Include="Config.cs" />
+    <Compile Include="GameEvent_Activation.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="Component.cs" />
     <Compile Include="Component_AI.cs" />

@@ -118,18 +118,17 @@ namespace Executor
             throw new NotImplementedException();
         }
 
-        private void HandleMoveSingle(GameEvent_MoveSingle ev)
-        {
-            this.RegisterActivated(ev.CommandTick);
-        }
-
         private void HandleCommand(GameEvent_Command ev)
         {
             var executor = this.Parent.TryGetSubEntities(SubEntitiesSelector.ALL)
                 .Where(e => e == ev.ExecutorEntity)
                 .FirstOrDefault();
-            if (executor != null)
-                executor.HandleEvent(ev);
+            if (executor != null || ev.CommandEntity == ev.ExecutorEntity)
+            {
+                ev.ExecutorEntity.HandleEvent(ev);
+                if (!ev.Completed)
+                    throw new InvalidOperationException("Executor " + ev.ExecutorEntity + " couldn't complete event!");
+            }
             else
             {
                 throw new InvalidOperationException("Executor " + ev.ExecutorEntity + " is not in Command Entity " +
@@ -146,7 +145,7 @@ namespace Executor
             else if (ev is GameEvent_TakeDamage)
                 this.HandleTakeDamage((GameEvent_TakeDamage)ev);
             else if (ev is GameEvent_MoveSingle)
-                this.HandleMoveSingle((GameEvent_MoveSingle)ev);
+                return ev;
             else if (ev is GameEvent_Command)
                 this.HandleCommand((GameEvent_Command)ev);
 
