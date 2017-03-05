@@ -12,7 +12,7 @@ namespace Executor
             return ImmutableHashSet<SubEntitiesSelector>.Empty;
         }
 
-        private void HandleAttack(GameEvent_Attack ev)
+        private void HandleAttack(GameEvent_PrepareAttack ev)
         {
             if (ev.CommandEntity == this.Parent)
             {
@@ -53,8 +53,8 @@ namespace Executor
 
         protected override GameEvent _HandleEvent(GameEvent ev)
         {
-            if (ev is GameEvent_Attack)
-                this.HandleAttack((GameEvent_Attack)ev);
+            if (ev is GameEvent_PrepareAttack)
+                this.HandleAttack((GameEvent_PrepareAttack)ev);
 
             return ev;
         }

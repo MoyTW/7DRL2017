@@ -76,7 +76,7 @@
     <Compile Include="EntityAttributeType.cs" />
     <Compile Include="EntityBuilder.cs" />
     <Compile Include="GameEvent.cs" />
-    <Compile Include="GameEvent_Attack.cs" />
+    <Compile Include="GameEvent_PrepareAttack.cs" />
     <Compile Include="GameEvent_Command.cs" />
     <Compile Include="GameEvent_Delay.cs" />
     <Compile Include="GameEvent_MoveSingle.cs" />

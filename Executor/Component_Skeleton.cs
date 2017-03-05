@@ -82,7 +82,7 @@ namespace Executor
         }
 
         // All Attack logic currently handled here; might want to put it into its own class for explicit-ness.
-        private void HandleAttack(GameEvent_Attack ev)
+        private void HandleAttack(GameEvent_PrepareAttack ev)
         {
             if (ev.Target != this.Parent)
                 return;
@@ -140,8 +140,8 @@ namespace Executor
         {
             // TODO: Move off inheritance
             base._HandleEvent(ev);
-            if (ev is GameEvent_Attack)
-                this.HandleAttack((GameEvent_Attack)ev);
+            if (ev is GameEvent_PrepareAttack)
+                this.HandleAttack((GameEvent_PrepareAttack)ev);
             else if (ev is GameEvent_TakeDamage)
                 this.HandleTakeDamage((GameEvent_TakeDamage)ev);
             else if (ev is GameEvent_MoveSingle)

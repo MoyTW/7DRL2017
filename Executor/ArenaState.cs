@@ -215,7 +215,7 @@ namespace Executor
                     .FirstOrDefault();
                 if (equippedWeapon != null)
                 {
-                    var attack = new GameEvent_Attack(this.CurrentTick, this.Player, this.Mech2, equippedWeapon,
+                    var attack = new GameEvent_PrepareAttack(this.CurrentTick, this.Player, this.Mech2, equippedWeapon,
                         this.ArenaMap, location);
                     this.Player.HandleEvent(attack);
                 }

@@ -18,7 +18,7 @@ namespace Executor.AI.Combat
             else
                 target = commandQuery.ArenaState.Player;
 
-            return new GameEvent_Attack(commandQuery.ArenaState.CurrentTick, commandQuery.CommandEntity, target,
+            return new GameEvent_PrepareAttack(commandQuery.ArenaState.CurrentTick, commandQuery.CommandEntity, target,
                 commandQuery.ExecutorEntity, commandQuery.ArenaState.ArenaMap, BodyPartLocation.TORSO);
         }
 

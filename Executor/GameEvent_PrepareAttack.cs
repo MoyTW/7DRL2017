@@ -5,7 +5,7 @@ using System;
 
 namespace Executor
 {
-    public class GameEvent_Attack : GameEvent_Command
+    public class GameEvent_PrepareAttack : GameEvent_Command
     {
         // Attack info
         public Entity Target { get; }
@@ -17,7 +17,7 @@ namespace Executor
         public bool ResultDestroyedBodyPart { get; private set; }
         public int ResultDamage { get; private set; }
 
-        public GameEvent_Attack(int commandTick, Entity attacker, Entity target, Entity weapon, IMap gameMap,
+        public GameEvent_PrepareAttack(int commandTick, Entity attacker, Entity target, Entity weapon, IMap gameMap,
             BodyPartLocation subTarget) : base(commandTick, attacker, weapon)
         {
             if (!weapon.HasComponentOfType<Component_Weapon>())
