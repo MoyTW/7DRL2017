@@ -197,20 +197,9 @@ namespace Executor
         // TODO: Whoops, I designed the stubs badly. I should swap the resolution function to the stub classes.
         public void ResolveStub(CommandStub stub)
         {
-            if (stub is CommandStub_MoveSingle)
-            {
-                var gameEvent = GameEvent_MoveSingle.ResolveStub((CommandStub_MoveSingle)stub, this);
-                gameEvent.CommandEntity.HandleEvent(gameEvent);
-                this.ForwardToNextAction();
-            }
-            else if (stub is CommandStub_PrepareAttack)
-            {
-                var gameEvent = GameEvent_PrepareAttack.ResolveStub((CommandStub_PrepareAttack)stub, this);
-                gameEvent.CommandEntity.HandleEvent(gameEvent);
-                this.ForwardToNextAction();
-            }
-            else
-                throw new NotImplementedException();
+            var gameEvent = stub.ReifyStub(this);
+            gameEvent.CommandEntity.HandleEvent(gameEvent);
+            this.ForwardToNextAction();
         }
     }
 }
