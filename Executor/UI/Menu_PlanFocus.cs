@@ -29,6 +29,13 @@ namespace Executor.UI
             return this.focusCommands.AsReadOnly();
         }
 
+        public CommandStub PopStub()
+        {
+            var stub = this.focusCommands[0];
+            this.focusCommands.RemoveAt(0);
+            return stub;
+        }
+
         private void QueueMoveCommand(int dx, int dy)
         {
             this.focusCommands.Add(new CommandStub_MoveSingle(this.arena.Player, dx, dy));
@@ -43,6 +50,9 @@ namespace Executor.UI
             {
                 case RLKey.Escape:
                     this.focusCommands.Clear();
+                    return this.parent;
+                case RLKey.Enter:
+                case RLKey.KeypadEnter:
                     return this.parent;
                 case RLKey.A:
                     this.targetingMenu.SetTarget(this.arena.Mech2);

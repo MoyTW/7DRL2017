@@ -68,6 +68,14 @@ namespace Executor.UI
                 this.targetingMenu.Reset();
                 return this;
             }
+            else if (this.planFocusMenu.InspectFocusCommands().Count != 0 &&
+                this.arena.NextCommandEntity == this.arena.Player)
+            {
+                this.arena.ResolveStub(this.planFocusMenu.PopStub());
+                // TODO: hahaha turns!
+                Thread.Sleep(25);
+                return this;
+            }
             else if (keyPress != null)
                 return this.HandleKeyPressed(keyPress);
             else

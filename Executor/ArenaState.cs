@@ -16,8 +16,9 @@ namespace Executor
         private IRandom seededRand;
 
         // Turn state
-        // TODO: Don't have Command + Executor, it's awkard as heck!
         private Entity nextCommandEntity;
+
+        public Entity NextCommandEntity { get { return this.nextCommandEntity; } }
 
         // TODO: lol at exposing literally everything
         public int ArenaSeed { get; }
@@ -194,6 +195,25 @@ namespace Executor
         }
 
         #region Player Commands
+
+        // TODO: Whoops, I designed the stubs badly. I should swap the resolution function to the stub classes.
+        public void ResolveStub(CommandStub stub)
+        {
+            if (stub is CommandStub_MoveSingle)
+            {
+                var gameEvent = GameEvent_MoveSingle.ResolveStub((CommandStub_MoveSingle)stub, this);
+                gameEvent.CommandEntity.HandleEvent(gameEvent);
+                this.ForwardToNextAction();
+            }
+            else if (stub is CommandStub_PrepareAttack)
+            {
+                var gameEvent = GameEvent_PrepareAttack.ResolveStub((CommandStub_PrepareAttack)stub, this);
+                gameEvent.CommandEntity.HandleEvent(gameEvent);
+                this.ForwardToNextAction();
+            }
+            else
+                throw new NotImplementedException();
+        }
 
         // TODO: Testing! Don't directly call!
         public void TryPlayerAttack(BodyPartLocation location)
