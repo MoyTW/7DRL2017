@@ -55,6 +55,7 @@
     <Compile Include="BodyPartLocation.cs" />
     <Compile Include="Blueprint.cs" />
     <Compile Include="BlueprintListing.cs" />
+    <Compile Include="Component_ActionExecutor.cs" />
     <Compile Include="Component_AttachPoint.cs" />
     <Compile Include="Component_Attachable.cs" />
     <Compile Include="Config.cs" />

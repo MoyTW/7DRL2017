@@ -211,8 +211,8 @@ namespace Executor
         {
             var mech = new Entity(label: label, typeLabel: MechTypeLabel)
                 .AddComponent(new Component_Piloted(pilot))
-                .AddComponent(new Component_Skeleton())
-                .AddComponent(new Component_Attacker());
+                .AddComponent(new Component_ActionExecutor(2))
+                .AddComponent(new Component_Skeleton());
 
             if (player)
                 mech.AddComponent(new Component_Player());

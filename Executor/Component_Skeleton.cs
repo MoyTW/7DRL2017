@@ -117,24 +117,6 @@ namespace Executor
             throw new NotImplementedException();
         }
 
-        private void HandleCommand(GameEvent_Command ev)
-        {
-            var executor = this.Parent.TryGetSubEntities(SubEntitiesSelector.ALL)
-                .Where(e => e == ev.ExecutorEntity)
-                .FirstOrDefault();
-            if (executor != null || ev.CommandEntity == ev.ExecutorEntity)
-            {
-                ev.ExecutorEntity.HandleEvent(ev);
-                if (!ev.Completed)
-                    throw new InvalidOperationException("Executor " + ev.ExecutorEntity + " couldn't complete event!");
-            }
-            else
-            {
-                throw new InvalidOperationException("Executor " + ev.ExecutorEntity + " is not in Command Entity " +
-                    ev.CommandEntity);
-            }
-        }
-
         protected override GameEvent _HandleEvent(GameEvent ev)
         {
             // TODO: Move off inheritance
@@ -145,8 +127,6 @@ namespace Executor
                 this.HandleTakeDamage((GameEvent_TakeDamage)ev);
             else if (ev is GameEvent_MoveSingle)
                 return ev;
-            else if (ev is GameEvent_Command)
-                this.HandleCommand((GameEvent_Command)ev);
 
             return ev;
         }
