@@ -11,6 +11,7 @@ namespace Executor.UI
         private readonly IDisplay parent;
         private readonly ArenaState arena;
         private readonly Menu_Targeting targetingMenu;
+        private readonly Menu_PlanFocus planFocusMenu;
 
         public const int arenaWidth = 50;
         public const int arenaHeight = 50;
@@ -19,6 +20,10 @@ namespace Executor.UI
         private readonly int hudWidth = 20;
         private readonly int hudHeight = 90;
         private RLConsole hudConsole;
+
+        private readonly int focusListWidth = 30;
+        private readonly int focusListHeight = 90;
+        private RLConsole focusListConsole;
 
         public const int statusWidth = 60;
         public const int statusHeight = 45;
@@ -31,10 +36,12 @@ namespace Executor.UI
         {
             this.parent = parent;
             this.arena = arena;
-            this.targetingMenu = new Menu_Targeting(this, 50, 23);
+            this.targetingMenu = new Menu_Targeting(this, Config.TargetingWindowX, Config.TargetingWindowY);
+            this.planFocusMenu = new Menu_PlanFocus(this, arena);
 
             arenaConsole = new RLConsole(Menu_Arena.arenaWidth, Menu_Arena.arenaHeight);
             hudConsole = new RLConsole(this.hudWidth, this.hudHeight);
+            this.focusListConsole = new RLConsole(this.focusListWidth, this.focusListWidth);
             status1Console = new RLConsole(Menu_Arena.statusWidth, Menu_Arena.statusHeight);
             status2Console = new RLConsole(Menu_Arena.statusWidth, Menu_Arena.statusHeight);
         }
@@ -76,17 +83,21 @@ namespace Executor.UI
             this.arenaConsole.SetBackColor(0, 0, Menu_Arena.arenaWidth, Menu_Arena.arenaHeight, RLColor.Black);
             this.arenaConsole.Print(1, 1, "Arena", RLColor.White);
 
-            this.hudConsole.SetBackColor(0, 0, this.hudWidth, this.hudHeight, RLColor.LightGray);
-
             this.status1Console.SetBackColor(0, 0, Menu_Arena.statusWidth, Menu_Arena.statusHeight, RLColor.LightBlue);
             this.status2Console.SetBackColor(0, 0, Menu_Arena.statusWidth, Menu_Arena.statusHeight, RLColor.LightCyan);
 
             this.DrawArena(this.arenaConsole);
             RLConsole.Blit(this.arenaConsole, 0, 0, Menu_Arena.arenaWidth, Menu_Arena.arenaHeight, console, 0, 0);
 
+            this.hudConsole.SetBackColor(0, 0, this.hudWidth, this.hudHeight, RLColor.LightGray);
             this.DrawHUD(this.hudConsole);
             RLConsole.Blit(this.hudConsole, 0, 0, this.hudWidth, this.hudHeight, console,
                 Menu_Arena.arenaWidth + Menu_Arena.statusWidth, 0);
+
+            this.focusListConsole.SetBackColor(0, 0, this.focusListWidth, this.focusListHeight, RLColor.LightMagenta);
+            this.DrawFocusList(this.focusListConsole);
+            RLConsole.Blit(this.focusListConsole, 0, 0, this.focusListWidth, this.focusListHeight, console,
+                Menu_Arena.arenaWidth + Menu_Arena.statusWidth + this.hudWidth, 0);
 
             Drawer_Mech.DrawMechStatus(this.arena.Player, this.status1Console);
             RLConsole.Blit(this.status1Console, 0, 0, Menu_Arena.statusWidth, Menu_Arena.statusHeight, console,
@@ -124,8 +135,7 @@ namespace Executor.UI
                     this.targetingMenu.SetTarget(this.arena.Mech2);
                     return this.targetingMenu;
                 case RLKey.F:
-                    this.targetingMenu.SetTarget(this.arena.Mech2);
-                    return this.targetingMenu;
+                    return this.planFocusMenu;
                 case RLKey.Keypad1:
                 case RLKey.B:
                     this.arena.TryPlayerMove(-1, 1);
@@ -179,6 +189,35 @@ namespace Executor.UI
 
             return trackers.Select(e => new Tuple<Entity,int>(e, e.TryGetTicksToLive(this.arena.CurrentTick)))
                 .OrderBy(t => t.Item2);
+        }
+
+        public void DrawFocusList(RLConsole console)
+        {
+            int line = 0;
+            console.Print(0, line,   "##############################", RLColor.Black);
+            console.Print(0, ++line, "#                            #", RLColor.Black);
+            console.Print(0, ++line, "#         FOCUS LIST         #", RLColor.Black);
+            console.Print(0, ++line, "#                            #", RLColor.Black);
+            console.Print(0, ++line, "##############################", RLColor.Black);
+            console.Print(0, ++line, "+----------------------------+", RLColor.Black);
+            line++;
+
+            foreach (var stub in this.planFocusMenu.InspectFocusCommands())
+            {
+                console.Print(2, line, stub.ToString() + "                  ", RLColor.Black);
+                console.Print(0, line, "|", RLColor.Black);
+                console.Print(29, line, "|", RLColor.Black);
+                line++;
+                console.Print(0, line, "+----------------------------+", RLColor.Black);
+                line++;
+            }
+
+            // This is awkward. I'm not sure how to best do it better. Alas I am time-limited.
+            // I mean, it's not very efficient, but at this scale the inefficiency? Literally too small to notice.
+            for (int i = this.focusListHeight; i > line - 1; i--)
+            {
+                console.Print(0, i, "                              ", RLColor.Black);
+            }
         }
 
         public void DrawHUD(RLConsole console)

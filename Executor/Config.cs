@@ -14,6 +14,9 @@ namespace Executor
         public static int ArenaWidth { get { return 50; } }
         public static int ArenaHeight { get { return 50; } }
 
+        public static int TargetingWindowX { get { return 50; } }
+        public static int TargetingWindowY { get { return 23; } }
+
         public static int NumMaps()
         {
             return 5;
