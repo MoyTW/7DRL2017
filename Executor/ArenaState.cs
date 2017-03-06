@@ -194,8 +194,6 @@ namespace Executor
             this.ForwardToNextAction();
         }
 
-        #region Player Commands
-
         // TODO: Whoops, I designed the stubs badly. I should swap the resolution function to the stub classes.
         public void ResolveStub(CommandStub stub)
         {
@@ -214,56 +212,5 @@ namespace Executor
             else
                 throw new NotImplementedException();
         }
-
-        // TODO: Testing! Don't directly call!
-        public void TryPlayerAttack(BodyPartLocation location)
-        {
-            if (this.ShouldWaitForPlayerInput)
-            {
-                Log.DebugLine("########## ATTACK INFO ##########");
-
-                // TODO: Equipped items are *not* "Whatever is held in right right arm"
-                var equippedWeapon = this.Player.GetComponentOfType<Component_Skeleton>()
-                    .InspectBodyPart(BodyPartLocation.RIGHT_ARM)
-                    .TryGetSubEntities(SubEntitiesSelector.WEAPON)
-                    .FirstOrDefault();
-                if (equippedWeapon != null)
-                {
-                    var stub = new CommandStub_PrepareAttack(this.Player, this.mech2, location);
-                    var attack = GameEvent_PrepareAttack.ResolveStub(stub, this);
-                    this.Player.HandleEvent(attack);
-                }
-
-                this.ForwardToNextAction();
-            }
-        }
-
-        // TODO: Testing! Don't directly call!
-        public void TryPlayerMove(int dx, int dy)
-        {
-            if (this.nextCommandEntity == this.Player)
-            {
-                var position = this.Player.HandleQuery(new GameQuery_Position());
-                if (this.IsWalkableAndOpen(position.X + dx, position.Y + dy))
-                {
-                    var stub = new CommandStub_MoveSingle(this.Player, dx, dy);
-                    var move = GameEvent_MoveSingle.ResolveStub(stub, this);
-                    this.Player.HandleEvent(move);
-                }
-                this.ForwardToNextAction();
-            }
-            else
-            {
-                Log.DebugLine("CANNOT MOVE MOVE NOT NEXT!");
-            }
-        }
-
-        public void PlayerDelayAction(DelayDuration duration)
-        {
-            if (this.ShouldWaitForPlayerInput)
-                this.ForwardToNextAction();
-        }
-
-        #endregion
     }
 }

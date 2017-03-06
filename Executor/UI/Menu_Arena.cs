@@ -64,7 +64,9 @@ namespace Executor.UI
                 return this.parent;
             else if (this.targetingMenu.TargetedLocation != null)
             {
-                this.arena.TryPlayerAttack((BodyPartLocation)this.targetingMenu.TargetedLocation);
+                var stub = new CommandStub_PrepareAttack(this.arena.Player, this.arena.Mech2,
+                    (BodyPartLocation)this.targetingMenu.TargetedLocation);
+                this.arena.ResolveStub(stub);
                 this.targetingMenu.Reset();
                 return this;
             }
@@ -118,6 +120,12 @@ namespace Executor.UI
 
         #endregion
 
+        private void TryPlayerMove(int dx, int dy)
+        {
+            var stub = new CommandStub_MoveSingle(this.arena.Player, dx, dy);
+            this.arena.ResolveStub(stub);
+        }
+
         private IDisplay HandleKeyPressed(RLKeyPress keyPress)
         {
             if (keyPress == null)
@@ -127,15 +135,11 @@ namespace Executor.UI
             {
                 case RLKey.Escape:
                     return this.parent;
+                    /*
                 case RLKey.P:
                     this.arena.PlayerDelayAction(DelayDuration.SINGLE_TICK);
                     break;
-                case RLKey.Space:
-                    this.arena.PlayerDelayAction(DelayDuration.NEXT_ACTION);
-                    break;
-                case RLKey.Enter:
-                    this.arena.PlayerDelayAction(DelayDuration.FULL_INTERVAL);
-                    break;
+                    */
                 case RLKey.E:
                     // Technically, this doesn't limit it to the player mech.
                     return new Menu_MechDetails(this, this.arena.Player);
@@ -146,39 +150,39 @@ namespace Executor.UI
                     return this.planFocusMenu;
                 case RLKey.Keypad1:
                 case RLKey.B:
-                    this.arena.TryPlayerMove(-1, 1);
+                    this.TryPlayerMove(-1, 1);
                     break;
                 case RLKey.Keypad2:
                 case RLKey.Down:
                 case RLKey.J:
-                    this.arena.TryPlayerMove(0, 1);
+                    this.TryPlayerMove(0, 1);
                     break;
                 case RLKey.Keypad3:
                 case RLKey.N:
-                    this.arena.TryPlayerMove(1, 1);
+                    this.TryPlayerMove(1, 1);
                     break;
                 case RLKey.Keypad4:
                 case RLKey.H:
                 case RLKey.Left:
-                    this.arena.TryPlayerMove(-1, 0);
+                    this.TryPlayerMove(-1, 0);
                     break;
                 case RLKey.Keypad6:
                 case RLKey.Right:
                 case RLKey.L:
-                    this.arena.TryPlayerMove(1, 0);
+                    this.TryPlayerMove(1, 0);
                     break;
                 case RLKey.Keypad7:
                 case RLKey.Y:
-                    this.arena.TryPlayerMove(-1, -1);
+                    this.TryPlayerMove(-1, -1);
                     break;
                 case RLKey.Keypad8:
                 case RLKey.Up:
                 case RLKey.K:
-                    this.arena.TryPlayerMove(0, -1);
+                    this.TryPlayerMove(0, -1);
                     break;
                 case RLKey.Keypad9:
                 case RLKey.U:
-                    this.arena.TryPlayerMove(1, -1);
+                    this.TryPlayerMove(1, -1);
                     break;
                 default:
                     break;
