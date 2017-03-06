@@ -232,7 +232,7 @@ namespace Executor
                 var position = this.Player.HandleQuery(new GameQuery_Position());
                 if (this.IsWalkableAndOpen(position.X + dx, position.Y + dy))
                 {
-                    this.Player.HandleEvent(new GameEvent_MoveSingle(this.Player, this.currentTick, dx, dy, this));
+                    this.Player.HandleEvent(new GameEvent_MoveSingle(this.CurrentTick, Config.ONE, this.Player, dx, dy, this));
                 }
                 this.ForwardToNextAction();
             }

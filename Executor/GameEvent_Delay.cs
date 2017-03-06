@@ -17,8 +17,9 @@ namespace Executor
         public int DelayTicks { get; }
         public DelayDuration Duration { get; }
 
+        // TODO: Delay is weird! Convert over to "Delay = Use All AP"
         public GameEvent_Delay(int commandTick, Entity commandEntity, Entity delayEntity, DelayDuration duration)
-            : base(commandTick, commandEntity, delayEntity)
+            : base(commandTick, Config.ONE, commandEntity, delayEntity)
         {
             this.Duration = duration;
             if (this.Duration == DelayDuration.SINGLE_TICK)

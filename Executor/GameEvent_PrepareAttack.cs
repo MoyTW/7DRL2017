@@ -11,7 +11,7 @@ namespace Executor
         public IMap GameMap { get; }
 
         public GameEvent_PrepareAttack(int commandTick, Entity attacker, Entity target, Entity weapon, IMap gameMap,
-            BodyPartLocation subTarget) : base(commandTick, attacker, weapon)
+            BodyPartLocation subTarget) : base(commandTick, Config.ONE, attacker, weapon)
         {
             if (!weapon.HasComponentOfType<Component_Weapon>())
                 throw new ArgumentException("Can't build attack event - weapon has no Weapon component!");

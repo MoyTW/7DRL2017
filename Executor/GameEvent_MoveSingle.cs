@@ -20,15 +20,15 @@
         public YDirection Y { get; }
         public ArenaState GameArena { get; }
 
-        public GameEvent_MoveSingle(Entity mover, int commandTick, XDirection x, YDirection y, ArenaState gameArena)
-            : base(commandTick, mover)
+        public GameEvent_MoveSingle(int commandTick, int APCost, Entity mover, XDirection x, YDirection y, ArenaState gameArena)
+            : base(commandTick, APCost, mover)
         {
             this.X = x;
             this.Y = y;
             this.GameArena = gameArena;
         }
 
-        public GameEvent_MoveSingle(Entity mover, int commandTick, int x, int y, ArenaState gameArena)
-            : this(mover, commandTick, (XDirection)x, (YDirection)y, gameArena) { }
+        public GameEvent_MoveSingle(int commandTick, int APCost, Entity mover, int x, int y, ArenaState gameArena)
+            : this(commandTick, APCost, mover, (XDirection)x, (YDirection)y, gameArena) { }
     }
 }

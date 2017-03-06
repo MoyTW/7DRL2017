@@ -37,7 +37,8 @@ namespace ExecutorTests
             var attack = new GameEvent_PrepareAttack(0, mech1, mech2, this.mech1Gun, arena.ArenaMap, BodyPartLocation.TORSO);
             mech1.HandleEvent(attack);
 
-            Assert.AreEqual(attack.ResultDamage, 6);
+            // Assert.AreEqual(attack.ResultDamage, 6);
+            Assert.AreEqual(0, 1);
         }
 
         [Test]

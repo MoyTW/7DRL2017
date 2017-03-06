@@ -49,7 +49,7 @@ namespace Executor.AI.Combat
 
             if (currDist > myDist)
             {
-                return new GameEvent_MoveSingle(commandQuery.CommandEntity, commandQuery.ArenaState.CurrentTick,
+                return new GameEvent_MoveSingle(commandQuery.ArenaState.CurrentTick, Config.ONE, commandQuery.CommandEntity,
                     awayX - commandPos.X, awayY - commandPos.Y, commandQuery.ArenaState);
             }
             else

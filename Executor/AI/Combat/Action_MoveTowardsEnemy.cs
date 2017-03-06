@@ -33,7 +33,7 @@ namespace Executor.AI.Combat
                 path.StepForward();
             }
 
-            return new GameEvent_MoveSingle(commandQuery.CommandEntity, commandQuery.ArenaState.CurrentTick,
+            return new GameEvent_MoveSingle(commandQuery.ArenaState.CurrentTick, Config.ONE, commandQuery.CommandEntity, 
                 nextCell.X - commandPos.X, nextCell.Y - commandPos.Y, commandQuery.ArenaState);
         }
 
