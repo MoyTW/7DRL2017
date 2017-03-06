@@ -14,13 +14,27 @@
         NONE = 0
     }
 
+    public class CommandStub_MoveSingle : CommandStub
+    {
+        public Entity Mover { get; }
+        public XDirection X { get; }
+        public YDirection Y { get; }
+
+        public CommandStub_MoveSingle(Entity mover, int x, int y)
+        {
+            this.Mover = mover;
+            this.X = (XDirection)x;
+            this.Y = (YDirection)y;
+        }
+    }
+
     public class GameEvent_MoveSingle : GameEvent_Command
     {
         public XDirection X { get; }
         public YDirection Y { get; }
         public ArenaState GameArena { get; }
 
-        public GameEvent_MoveSingle(int commandTick, int APCost, Entity mover, XDirection x, YDirection y, ArenaState gameArena)
+        private GameEvent_MoveSingle(int commandTick, int APCost, Entity mover, XDirection x, YDirection y, ArenaState gameArena)
             : base(commandTick, APCost, mover)
         {
             this.X = x;
@@ -28,7 +42,9 @@
             this.GameArena = gameArena;
         }
 
-        public GameEvent_MoveSingle(int commandTick, int APCost, Entity mover, int x, int y, ArenaState gameArena)
-            : this(commandTick, APCost, mover, (XDirection)x, (YDirection)y, gameArena) { }
+        public static GameEvent_MoveSingle ResolveStub(CommandStub_MoveSingle stub, ArenaState arena)
+        {
+            return new GameEvent_MoveSingle(arena.CurrentTick, Config.ONE, stub.Mover, stub.X, stub.Y, arena);
+        }
     }
 }

@@ -33,8 +33,8 @@ namespace Executor.AI.Combat
                 path.StepForward();
             }
 
-            return new GameEvent_MoveSingle(commandQuery.ArenaState.CurrentTick, Config.ONE, commandQuery.CommandEntity, 
-                nextCell.X - commandPos.X, nextCell.Y - commandPos.Y, commandQuery.ArenaState);
+            var stub = new CommandStub_MoveSingle(commandQuery.CommandEntity, nextCell.X - commandPos.X, nextCell.Y - commandPos.Y);
+            return GameEvent_MoveSingle.ResolveStub(stub, commandQuery.ArenaState);
         }
 
         private bool EnemyOnPath(GameQuery_Position targetPos)

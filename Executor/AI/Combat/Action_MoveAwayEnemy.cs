@@ -49,8 +49,9 @@ namespace Executor.AI.Combat
 
             if (currDist > myDist)
             {
-                return new GameEvent_MoveSingle(commandQuery.ArenaState.CurrentTick, Config.ONE, commandQuery.CommandEntity,
-                    awayX - commandPos.X, awayY - commandPos.Y, commandQuery.ArenaState);
+                // TODO: Just return a stub!
+                var stub = new CommandStub_MoveSingle(commandQuery.CommandEntity, awayX - commandPos.X, awayY - commandPos.Y);
+                return GameEvent_MoveSingle.ResolveStub(stub, commandQuery.ArenaState);
             }
             else
                 return null;

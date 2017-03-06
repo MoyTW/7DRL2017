@@ -226,7 +226,9 @@ namespace Executor
                 var position = this.Player.HandleQuery(new GameQuery_Position());
                 if (this.IsWalkableAndOpen(position.X + dx, position.Y + dy))
                 {
-                    this.Player.HandleEvent(new GameEvent_MoveSingle(this.CurrentTick, Config.ONE, this.Player, dx, dy, this));
+                    var stub = new CommandStub_MoveSingle(this.Player, dx, dy);
+                    var move = GameEvent_MoveSingle.ResolveStub(stub, this);
+                    this.Player.HandleEvent(move);
                 }
                 this.ForwardToNextAction();
             }
