@@ -209,8 +209,8 @@ namespace Executor
                     .FirstOrDefault();
                 if (equippedWeapon != null)
                 {
-                    var attack = new GameEvent_PrepareAttack(this.CurrentTick, this.Player, this.Mech2, equippedWeapon,
-                        this.ArenaMap, location);
+                    var stub = new CommandStub_PrepareAttack(this.Player, this.mech2, location);
+                    var attack = GameEvent_PrepareAttack.ResolveStub(stub, this);
                     this.Player.HandleEvent(attack);
                 }
 

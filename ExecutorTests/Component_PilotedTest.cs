@@ -34,7 +34,8 @@ namespace ExecutorTests
         {
             pilot.AddComponent(new Component_AttributeModifier(EntityAttributeType.DAMAGE, ModifierType.FLAT, 4));
 
-            var attack = new GameEvent_PrepareAttack(0, mech1, mech2, this.mech1Gun, arena.ArenaMap, BodyPartLocation.TORSO);
+            var stub = new CommandStub_PrepareAttack(mech1, mech2, BodyPartLocation.TORSO);
+            var attack = GameEvent_PrepareAttack.ResolveStub(stub, this.arena);
             mech1.HandleEvent(attack);
 
             // Assert.AreEqual(attack.ResultDamage, 6);

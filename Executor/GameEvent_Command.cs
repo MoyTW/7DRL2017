@@ -3,6 +3,8 @@ using System.Linq;
 
 namespace Executor
 {
+    public class CommandStub { }
+
     public class GameEvent_Command : GameEvent
     {
         public int CommandTick { get; }
