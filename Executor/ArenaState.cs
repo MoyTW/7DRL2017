@@ -25,7 +25,6 @@ namespace Executor
         public Entity Player { get; }
         public Entity Mech2 { get { return this.mech2; } }
         public string MapID { get; }
-        public string MatchID { get; }
         public IMap ArenaMap { get; }
         public PathFinder ArenaPathFinder { get; }
         public IRandom SeededRand { get { return this.seededRand; } }
@@ -69,7 +68,6 @@ namespace Executor
             this.mapEntities = new List<Entity>();
             this.mapEntities.Add(player);
             this.mapEntities.Add(mech2);
-            this.MatchID = matchID;
             this.MapID = mapID;
             this.ArenaMap = arenaMap;
             this.ArenaPathFinder = arenaPathFinder;

@@ -16,7 +16,7 @@ namespace Executor.UI
         public const int arenaHeight = 50;
         private RLConsole arenaConsole;
 
-        private readonly int hudWidth = 30;
+        private readonly int hudWidth = 20;
         private readonly int hudHeight = 90;
         private RLConsole hudConsole;
 
@@ -186,19 +186,15 @@ namespace Executor.UI
             int line = 0;
 
             // HUD line
-            console.Print(0, line,      "##############################", RLColor.Black);
-            console.Print(0, ++line, "#                            #", RLColor.Black);
-            console.Print(0, ++line, "#       ACTION QUEUE         #", RLColor.Black);
-            console.Print(0, ++line, "#                            #", RLColor.Black);
-            console.Print(0, ++line, "#     Current Tick: " + arena.CurrentTick + "           ", RLColor.Black);
-            console.Print(29, line, "#", RLColor.Black);
-            console.Print(0, ++line, "#                            #", RLColor.Black);
-            console.Print(0, ++line, "##############################", RLColor.Black);
-            console.Print(0, ++line, "#                #     #     #", RLColor.Black);
-            console.Print(0, ++line, "#    ENTITY      # CD  # TTL #", RLColor.Black);
-            console.Print(0, ++line, "#                #     #     #", RLColor.Black);
-            console.Print(0, ++line, "##############################", RLColor.Black);
-            console.Print(0, ++line, "------------------------------", RLColor.Black);
+            console.Print(0, line,   "####################", RLColor.Black);
+            console.Print(0, ++line, "#                  #", RLColor.Black);
+            console.Print(0, ++line, "#    TURN ORDER    #", RLColor.Black);
+            console.Print(0, ++line, "#                  #", RLColor.Black);
+            console.Print(0, ++line, "#     Turn: " + arena.CurrentTick + "           ", RLColor.Black);
+            console.Print(19, line, "#", RLColor.Black);
+            console.Print(0, ++line, "#                  #", RLColor.Black);
+            console.Print(0, ++line, "####################", RLColor.Black);
+            console.Print(0, ++line, "+------------------+", RLColor.Black);
             line++;
 
             var trackers = this.ArenaTimeTrackers();
@@ -206,14 +202,10 @@ namespace Executor.UI
             {
                 var cd = tracker.Item1.HandleQuery(new GameQuery_TicksCooldown()).Value;
                 console.Print(2, line, tracker.Item1.Label + "                  ", RLColor.Black);
-                console.Print(19, line, cd + "        ", RLColor.Black);
-                console.Print(25, line, tracker.Item2 + "                  ", RLColor.Black);
                 console.Print(0, line, "|", RLColor.Black);
-                console.Print(17, line, "|", RLColor.Black);
-                console.Print(23, line, "|", RLColor.Black);
-                console.Print(29, line, "|", RLColor.Black);
+                console.Print(19, line, "|", RLColor.Black);
                 line++;
-                console.Print(0, line, "------------------------------", RLColor.Black);
+                console.Print(0, line, "+------------------+", RLColor.Black);
                 line++;
             }
         }
