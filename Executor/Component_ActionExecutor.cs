@@ -24,26 +24,26 @@ namespace Executor
             return ImmutableHashSet<SubEntitiesSelector>.Empty;
         }
 
-        private void SpendAP(int cost)
+        private void EndTurn(int spendTick)
+        {
+            this.Parent.HandleEvent(new GameEvent_EndTurn(spendTick, this.Parent));
+            this.CurrentAP = this.MaxAP;
+        }
+
+        private void SpendAP(int spendTick, int cost)
         {
             this.CurrentAP -= cost;
             Log.DebugLine(this.Parent + " spent " + cost + " AP, AP Remaining: " + this.CurrentAP);
             if (this.CurrentAP < 0)
                 throw new InvalidOperationException("Can't overspend AP!");
             else if (this.CurrentAP == 0)
-                Console.WriteLine("Here the turn of " + this.Parent + " should end!");
+                this.EndTurn(spendTick);
         }
 
         private void HandleCommand(GameEvent_Command ev)
         {
-            // I don't like this! It can't ensure that ev was completed, because to re-dispatch to the parent would
-            // trap it in an infinite loop, and to put it at the bottom would mean if the event *is* completed it never
-            // reaches this code. Eugh!
             if (this.Parent == ev.ExecutorEntity)
-            {
-                this.SpendAP(ev.APCost);
                 return;
-            }
 
             var executor = this.Parent.TryGetSubEntities(SubEntitiesSelector.ALL)
                 .Where(e => e == ev.ExecutorEntity)
@@ -54,7 +54,6 @@ namespace Executor
                 ev.ExecutorEntity.HandleEvent(ev);
                 if (!ev.Completed)
                     throw new InvalidOperationException("Executor " + ev.ExecutorEntity + " couldn't complete event!");
-                this.SpendAP(ev.APCost);
             }
             else
             {
@@ -63,10 +62,17 @@ namespace Executor
             }
         }
 
+        private void HandleActivation(GameEvent_Activation ev)
+        {
+            this.SpendAP(ev.CommandTick, ev.APCost);
+        }
+
         protected override GameEvent _HandleEvent(GameEvent ev)
         {
             if (ev is GameEvent_Command)
                 this.HandleCommand((GameEvent_Command)ev);
+            else if (ev is GameEvent_Activation)
+                this.HandleActivation((GameEvent_Activation)ev);
 
             return ev;
         }

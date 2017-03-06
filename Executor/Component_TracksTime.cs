@@ -29,12 +29,11 @@ namespace Executor
             }
         }
 
-        // TODO: This means that if you fire a gun, the skeleton's turn never ends! Address that with AP!
-        private void HandleActivation(GameEvent_Activation ev)
+        private void HandleEndTurn(GameEvent_EndTurn ev)
         {
-            if (ev.ExecutorEntity == this.Parent)
+            if (ev.CommandEntity == this.Parent)
             {
-                this.lastActivationTick = ev.CommandTick;
+                this.lastActivationTick = ev.TurnTick;
             }
         }
 
@@ -42,8 +41,8 @@ namespace Executor
         {
             if (ev is GameEvent_Delay)
                 this.HandleDelay((GameEvent_Delay)ev);
-            if (ev is GameEvent_Activation)
-                this.HandleActivation((GameEvent_Activation)ev);
+            if (ev is GameEvent_EndTurn)
+                this.HandleEndTurn((GameEvent_EndTurn)ev);
 
             return ev;
         }

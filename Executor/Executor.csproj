@@ -60,6 +60,7 @@
     <Compile Include="Component_Attachable.cs" />
     <Compile Include="Config.cs" />
     <Compile Include="GameEvent_Activation.cs" />
+    <Compile Include="GameEvent_EndTurn.cs" />
     <Compile Include="GameEvent_ReceiveAttack.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="Component.cs" />

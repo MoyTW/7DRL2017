@@ -6,6 +6,7 @@ namespace Executor
     class GameEvent_Activation : GameEvent
     {
         public int CommandTick { get; }
+        public int APCost { get; }
         public Entity CommandEntity { get; }
         public Entity ExecutorEntity { get; }
 
@@ -19,6 +20,7 @@ namespace Executor
             }
 
             this.CommandTick = ev.CommandTick;
+            this.APCost = ev.APCost;
             this.CommandEntity = ev.CommandEntity;
             this.ExecutorEntity = ev.ExecutorEntity;
         }
