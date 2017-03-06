@@ -14,7 +14,7 @@ namespace Executor
 
         private void HandleAttack(GameEvent_PrepareAttack ev)
         {
-            if (ev.CommandEntity == this.Parent)
+            if (ev.ExecutorEntity == this.Parent)
             {
                 // Get all intervening modifiers (Inspect map for LOS & Terrain Bonuses)
                 var targetPos = ev.Target.TryGetPosition();
@@ -42,12 +42,12 @@ namespace Executor
                 }
 
                 // Forward the attack to the target
-                ev.Target.HandleEvent(ev);
-                if (!ev.Completed)
-                {
-                    Log.DebugLine("Could not resolve attack against " + ev.Target.ToString());
+                var receiveAttack = new GameEvent_ReceiveAttack(ev);
+                ev.Target.HandleEvent(receiveAttack);
+                if (receiveAttack.Completed)
                     ev.Completed = true;
-                }
+                else
+                    Log.DebugLine("Could not resolve attack against " + ev.Target.ToString());
             }
         }
 

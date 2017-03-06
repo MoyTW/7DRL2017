@@ -18,6 +18,10 @@
           "damage": 4,
           "refireTicks": 100
         }
+      },
+      {
+        "ComponentClass": "Executor.Component_Attacker",
+        "Params": { }
       }
     ]
   },
@@ -40,6 +44,10 @@
           "damage": 2,
           "refireTicks": 75
         }
+      },
+      {
+        "ComponentClass": "Executor.Component_Attacker",
+        "Params": { }
       }
     ]
   },
@@ -62,6 +70,10 @@
           "damage": 3,
           "refireTicks": 80
         }
+      },
+      {
+        "ComponentClass": "Executor.Component_Attacker",
+        "Params": { }
       }
     ]
   },
@@ -84,6 +96,10 @@
           "damage": 8,
           "refireTicks": 250
         }
+      },
+      {
+        "ComponentClass": "Executor.Component_Attacker",
+        "Params": { }
       }
     ]
   },
@@ -106,6 +122,10 @@
           "damage": 1,
           "refireTicks": 20
         }
+      },
+      {
+        "ComponentClass": "Executor.Component_Attacker",
+        "Params": { }
       }
     ]
   },
@@ -128,6 +148,10 @@
           "damage": 6,
           "refireTicks": 100
         }
+      },
+      {
+        "ComponentClass": "Executor.Component_Attacker",
+        "Params": { }
       }
     ]
   },
@@ -150,6 +174,10 @@
           "damage": 2,
           "refireTicks": 65
         }
+      },
+      {
+        "ComponentClass": "Executor.Component_Attacker",
+        "Params": { }
       }
     ]
   },
@@ -172,6 +200,10 @@
           "damage": 9,
           "refireTicks": 170
         }
+      },
+      {
+        "ComponentClass": "Executor.Component_Attacker",
+        "Params": { }
       }
     ]
   },
@@ -194,6 +226,10 @@
           "damage": 2,
           "refireTicks": 15
         }
+      },
+      {
+        "ComponentClass": "Executor.Component_Attacker",
+        "Params": { }
       }
     ]
   },
@@ -216,6 +252,10 @@
           "damage": 6,
           "refireTicks": 30
         }
+      },
+      {
+        "ComponentClass": "Executor.Component_Attacker",
+        "Params": { }
       }
     ]
   },
@@ -238,6 +278,10 @@
           "damage": 9,
           "refireTicks": 60
         }
+      },
+      {
+        "ComponentClass": "Executor.Component_Attacker",
+        "Params": { }
       }
     ]
   }

@@ -82,15 +82,14 @@ namespace Executor
         }
 
         // All Attack logic currently handled here; might want to put it into its own class for explicit-ness.
-        private void HandleAttack(GameEvent_PrepareAttack ev)
+        private void HandleReceiveAttack(GameEvent_ReceiveAttack ev)
         {
             if (ev.Target != this.Parent)
                 return;
             
-            int weaponBaseDamage = ev.CommandEntity.TryGetAttribute(EntityAttributeType.DAMAGE, ev.ExecutorEntity)
-                .Value;
+            int weaponBaseDamage = ev.Attacker.TryGetAttribute(EntityAttributeType.DAMAGE, ev.Weapon).Value;
 
-            Log.DebugLine(String.Format("{0} attacked {1}!", ev.ExecutorEntity, ev.SubTarget));
+            Log.DebugLine(String.Format("{0} attacked {1}!", ev.Attacker, ev.SubTarget));
 
             int damage = weaponBaseDamage; // Possible damage modifiers
 
@@ -140,8 +139,8 @@ namespace Executor
         {
             // TODO: Move off inheritance
             base._HandleEvent(ev);
-            if (ev is GameEvent_PrepareAttack)
-                this.HandleAttack((GameEvent_PrepareAttack)ev);
+            if (ev is GameEvent_ReceiveAttack)
+                this.HandleReceiveAttack((GameEvent_ReceiveAttack)ev);
             else if (ev is GameEvent_TakeDamage)
                 this.HandleTakeDamage((GameEvent_TakeDamage)ev);
             else if (ev is GameEvent_MoveSingle)
