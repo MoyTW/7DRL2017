@@ -14,7 +14,7 @@ namespace Executor.AI.Combat
         public override GameEvent_Command GenerateCommand(GameQuery_Command commandQuery)
         {
             return new GameEvent_Delay(commandQuery.ArenaState.CurrentTick, commandQuery.CommandEntity,
-                commandQuery.ExecutorEntity, DelayDuration.NEXT_ACTION);
+                commandQuery.CommandEntity, DelayDuration.NEXT_ACTION);
         }
 
         public override System.Collections.Generic.IEnumerable<SingleClause> EnumerateClauses()

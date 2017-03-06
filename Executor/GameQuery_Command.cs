@@ -8,16 +8,14 @@ namespace Executor
         private GameEvent_Command command;
 
         public Entity CommandEntity { get; }
-        public Entity ExecutorEntity { get; }
         public ArenaState ArenaState { get; }
         public IRandom Rand { get { return this.ArenaState.SeededRand; } }
 
         public GameEvent_Command Command { get { return this.command; } }
 
-        public GameQuery_Command(Entity commandEntity, Entity executorEntity, ArenaState arenaState)
+        public GameQuery_Command(Entity commandEntity, ArenaState arenaState)
         {
             this.CommandEntity = commandEntity;
-            this.ExecutorEntity = executorEntity;
             this.ArenaState = arenaState;
         }
 

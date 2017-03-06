@@ -8,7 +8,7 @@ namespace Executor.AI.Combat
     {
         public override bool CanExecuteOn(GameQuery_Command commandQuery)
         {
-            return commandQuery.ExecutorEntity.HasComponentOfType<Component_Skeleton>();
+            return commandQuery.CommandEntity.HasComponentOfType<Component_Skeleton>();
         }
 
         public override GameEvent_Command GenerateCommand(GameQuery_Command commandQuery)

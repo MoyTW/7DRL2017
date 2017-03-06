@@ -18,14 +18,12 @@ namespace Executor
         // Turn state
         // TODO: Don't have Command + Executor, it's awkard as heck!
         private Entity nextCommandEntity;
-        private Entity nextExecutorEntity;
 
         // TODO: lol at exposing literally everything
         public int ArenaSeed { get; }
         public int CurrentTick { get { return this.currentTick; } }
         public Entity Player { get; }
         public Entity Mech2 { get { return this.mech2; } }
-        public Entity NextExecutorEntity { get { return this.nextExecutorEntity; } }
         public string MapID { get; }
         public string MatchID { get; }
         public IMap ArenaMap { get; }
@@ -91,13 +89,11 @@ namespace Executor
             if (mech1Query.TicksToLive <= mech2Query.TicksToLive)
             {
                 this.nextCommandEntity = this.Player;
-                this.nextExecutorEntity = this.Player;
                 this.currentTick += mech1Query.TicksToLive;
             }
             else
             {
                 this.nextCommandEntity = this.Mech2;
-                this.nextExecutorEntity = this.Mech2;
                 this.currentTick += mech2Query.TicksToLive;
             }
         }
@@ -185,12 +181,12 @@ namespace Executor
                 return;
 
             var queryCommand = this.nextCommandEntity.HandleQuery(
-                new GameQuery_Command(this.nextCommandEntity, this.NextExecutorEntity, this));
+                new GameQuery_Command(this.nextCommandEntity, this));
             if (!queryCommand.Completed)
             {
-                Log.ErrorLine("Failed to register AI command for " + this.nextExecutorEntity);
+                Log.ErrorLine("Failed to register AI command for " + this.nextCommandEntity);
                 queryCommand.RegisterCommand(new GameEvent_Delay(this.CurrentTick, this.nextCommandEntity,
-                    this.nextExecutorEntity, DelayDuration.NEXT_ACTION));
+                    this.nextCommandEntity, DelayDuration.NEXT_ACTION));
                 this.nextCommandEntity.HandleEvent(queryCommand.Command);
             }
             else
@@ -227,7 +223,7 @@ namespace Executor
         // TODO: Testing! Don't directly call!
         public void TryPlayerMove(int dx, int dy)
         {
-            if (this.NextExecutorEntity == this.Player)
+            if (this.nextCommandEntity == this.Player)
             {
                 var position = this.Player.HandleQuery(new GameQuery_Position());
                 if (this.IsWalkableAndOpen(position.X + dx, position.Y + dy))

@@ -17,7 +17,7 @@ namespace Executor
             List<SingleClause> rawRules = new List<SingleClause>();
             rawRules.Add(new Action_MoveTowardsEnemy());
             rawRules.Add(new Condition_CanSeeEnemy());
-            rawRules.Add(new Condition_Distance(ComparisonOperator.LESS_THAN_EQUAL, DistanceOption.THIS_WEAPON_RANGE));
+            rawRules.Add(new Condition_Distance(ComparisonOperator.LESS_THAN_EQUAL, DistanceOption.MY_LONGEST_RANGE));
             rawRules.Add(new Action_AttackEnemy());
             rawRules.Add(new Action_Delay());
 

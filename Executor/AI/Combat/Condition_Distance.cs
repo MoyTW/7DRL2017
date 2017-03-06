@@ -9,7 +9,6 @@ namespace Executor.AI.Combat
     enum DistanceOption
     {
         MELEE_RANGE,
-        THIS_WEAPON_RANGE,
         // TODO: Implement the following!
         MY_LONGEST_RANGE,
         ENEMY_LONGEST_RANGE
@@ -46,15 +45,6 @@ namespace Executor.AI.Combat
             {
                 case DistanceOption.MELEE_RANGE:
                     return 1;
-                case DistanceOption.THIS_WEAPON_RANGE:
-                    if (commandQuery.ExecutorEntity.HasComponentOfType<Component_Weapon>())
-                    {
-                        return commandQuery.ExecutorEntity
-                            .TryGetAttribute(EntityAttributeType.MAX_RANGE, commandQuery.ExecutorEntity)
-                            .Value;
-                    }
-                    else
-                        return null;
                 case DistanceOption.MY_LONGEST_RANGE:
                     return commandQuery.CommandEntity.TryGetSubEntities(SubEntitiesSelector.WEAPON)
                         .Select(e => e.TryGetAttribute(EntityAttributeType.MAX_RANGE, e).Value)

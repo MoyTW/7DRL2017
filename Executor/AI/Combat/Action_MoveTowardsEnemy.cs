@@ -10,7 +10,7 @@ namespace Executor.AI.Combat
 
         public override bool CanExecuteOn(GameQuery_Command commandQuery)
         {
-            return commandQuery.ExecutorEntity.HasComponentOfType<Component_Skeleton>();
+            return commandQuery.CommandEntity.HasComponentOfType<Component_Skeleton>();
         }
 
         private static RogueSharp.Path GeneratePath(GameQuery_Command commandQuery, GameQuery_Position targetPos)

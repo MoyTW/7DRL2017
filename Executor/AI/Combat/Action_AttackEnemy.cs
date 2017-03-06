@@ -7,7 +7,7 @@ namespace Executor.AI.Combat
     {
         public override bool CanExecuteOn(GameQuery_Command commandQuery)
         {
-            return commandQuery.ExecutorEntity.HasComponentOfType<Component_Weapon>();
+            throw new NotImplementedException();
         }
 
         public override GameEvent_Command GenerateCommand(GameQuery_Command commandQuery)
@@ -18,8 +18,11 @@ namespace Executor.AI.Combat
             else
                 target = commandQuery.ArenaState.Player;
 
+            throw new NotImplementedException();
+            /*
             return new GameEvent_PrepareAttack(commandQuery.ArenaState.CurrentTick, commandQuery.CommandEntity, target,
                 commandQuery.ExecutorEntity, commandQuery.ArenaState.ArenaMap, BodyPartLocation.TORSO);
+            */
         }
 
         public override System.Collections.Generic.IEnumerable<SingleClause> EnumerateClauses()
