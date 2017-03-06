@@ -89,7 +89,6 @@
     <Compile Include="GameQuery_Command.cs" />
     <Compile Include="GameQuery_Destroyed.cs" />
     <Compile Include="GameQuery_EntityAttribute.cs" />
-    <Compile Include="GameQuery_NextTimeTracker.cs" />
     <Compile Include="GameQuery_Position.cs" />
     <Compile Include="GameQuery_SubEntities.cs" />
     <Compile Include="GameQuery_TicksCooldown.cs" />

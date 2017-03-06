@@ -86,19 +86,19 @@ namespace Executor
         private void ForwardToNextAction()
         {
             // Mech1 always moves fully before mech2 if possible! First player advantage.
-            var mech1Query = this.Player.HandleQuery(new GameQuery_NextTimeTracker(this.CurrentTick));
-            var mech2Query = mech2.HandleQuery(new GameQuery_NextTimeTracker(this.CurrentTick));
-            if (mech1Query.NextEntityTicksToLive <= mech2Query.NextEntityTicksToLive)
+            var mech1Query = this.Player.HandleQuery(new GameQuery_TicksToLive(this.CurrentTick));
+            var mech2Query = mech2.HandleQuery(new GameQuery_TicksToLive(this.CurrentTick));
+            if (mech1Query.TicksToLive <= mech2Query.TicksToLive)
             {
                 this.nextCommandEntity = this.Player;
-                this.nextExecutorEntity = mech1Query.NextEntity;
-                this.currentTick += mech1Query.NextEntityTicksToLive;
+                this.nextExecutorEntity = this.Player;
+                this.currentTick += mech1Query.TicksToLive;
             }
             else
             {
                 this.nextCommandEntity = this.Mech2;
-                this.nextExecutorEntity = mech2Query.NextEntity;
-                this.currentTick += mech2Query.NextEntityTicksToLive;
+                this.nextExecutorEntity = this.Mech2;
+                this.currentTick += mech2Query.TicksToLive;
             }
         }
 
