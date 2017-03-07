@@ -25,7 +25,7 @@ namespace ExecutorTests
             EntityBuilder.BuildMountedRifle(mech1, BodyPartLocation.LEFT_ARM);
 
             this.mech2 = EntityBuilder.BuildNakedMech("2", false, new Entity(), null);
-            this.arena = ArenaBuilder.TestArena(0, mech1, mech2);
+            this.arena = ArenaBuilder.TestArena(mech1, mech2);
         }
 
         [Test]

@@ -13,18 +13,17 @@ namespace Executor
         private static ConcurrentDictionary<string, Tuple<IMap, PathFinder>> seedsToMaps =
             new ConcurrentDictionary<string, Tuple<IMap, PathFinder>>(Config.NumThreads(), Config.NumMaps());
 
-        public static ArenaState TestArena(int arenaSeed, Entity baseMech1, Entity baseMech2)
+        public static ArenaState TestArena(Entity baseMech1, Entity baseMech2)
         {
             var arenaMap = Map.Create(new RogueSharp.MapCreation.BorderOnlyMapCreationStrategy<Map>(15, 15));
-            ArenaState arena = new ArenaState(baseMech1, baseMech2, "test", arenaMap, new PathFinder(arenaMap),
-                arenaSeed, "test");
+            ArenaState arena = new ArenaState(baseMech1, baseMech2, "test", arenaMap, new PathFinder(arenaMap));
             arena.PlaceEntityNear(baseMech1, 5, 5);
             arena.PlaceEntityNear(baseMech2, 10, 10);
 
             return arena;
         }
 
-        public static ArenaState BuildArena(int width, int height, string matchID, string mapID, int arenaSeed,
+        public static ArenaState BuildArena(int width, int height, string mapID, int arenaSeed,
             Entity baseMech1, Entity baseMech2)
         {
             if (!seedsToMaps.ContainsKey(mapID))
@@ -37,8 +36,7 @@ namespace Executor
 
             var mech1 = baseMech1.DeepCopy();
             var mech2 = baseMech2.DeepCopy();
-            ArenaState arena = new ArenaState(mech1, mech2, mapID, seedsToMaps[mapID].Item1, seedsToMaps[mapID].Item2,
-				arenaSeed, matchID);
+            ArenaState arena = new ArenaState(mech1, mech2, mapID, seedsToMaps[mapID].Item1, seedsToMaps[mapID].Item2);
 
             arena.PlaceEntityNear(mech1, width - 15, height - 15);
             arena.PlaceEntityNear(mech2, 15, 15);

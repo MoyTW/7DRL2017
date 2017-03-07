@@ -13,7 +13,6 @@ namespace Executor
 
         private Entity mech2;
         private List<Entity> mapEntities;
-        private IRandom seededRand;
 
         // Turn state
         private Entity nextCommandEntity;
@@ -21,14 +20,12 @@ namespace Executor
         public Entity NextCommandEntity { get { return this.nextCommandEntity; } }
 
         // TODO: lol at exposing literally everything
-        public int ArenaSeed { get; }
         public int CurrentTick { get { return this.currentTick; } }
         public Entity Player { get; }
         public Entity Mech2 { get { return this.mech2; } }
         public string MapID { get; }
         public IMap ArenaMap { get; }
         public PathFinder ArenaPathFinder { get; }
-        public IRandom SeededRand { get { return this.seededRand; } }
 
         public bool ShouldWaitForPlayerInput {
             get
@@ -55,8 +52,7 @@ namespace Executor
         }
 
         // TODO: Create a "Mech/Map Blueprint" so you don't pass a literal Entity/IMap instance in!
-        public ArenaState(Entity player, Entity mech2, string mapID, IMap arenaMap, PathFinder arenaPathFinder,
-            int arenaSeed, string matchID)
+        public ArenaState(Entity player, Entity mech2, string mapID, IMap arenaMap, PathFinder arenaPathFinder)
         {
             if (!player.HasComponentOfType<Component_Player>())
                 throw new ArgumentException("Can't initialize Arena: Player has no Component_Player");
@@ -72,11 +68,16 @@ namespace Executor
             this.MapID = mapID;
             this.ArenaMap = arenaMap;
             this.ArenaPathFinder = arenaPathFinder;
-            this.ArenaSeed = arenaSeed;
-            this.seededRand = new DotNetRandom(arenaSeed);
 
             ForwardToNextAction();
         }
+
+        public ArenaState DeepCopy()
+        {
+            return new ArenaState(this.Player.DeepCopy(), this.Mech2.DeepCopy(), this.MapID, this.ArenaMap.Clone(),
+                this.ArenaPathFinder);
+        }
+
 
         #region State Changes
 

@@ -9,7 +9,6 @@ namespace Executor
 
         public Entity CommandEntity { get; }
         public ArenaState ArenaState { get; }
-        public IRandom Rand { get { return this.ArenaState.SeededRand; } }
 
         public GameEvent_Command Command { get { return this.command; } }
 

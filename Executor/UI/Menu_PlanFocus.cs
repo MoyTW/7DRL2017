@@ -11,6 +11,7 @@ namespace Executor.UI
     {
         private readonly IDisplay parent;
         private readonly ArenaState arena;
+        private ArenaState copyArena;
 
         private readonly Menu_Targeting targetingMenu;
         private List<CommandStub> focusCommands;
@@ -19,6 +20,7 @@ namespace Executor.UI
         {
             this.parent = parent;
             this.arena = arena;
+            this.copyArena = arena.DeepCopy();
 
             this.targetingMenu = new Menu_Targeting(this, Config.TargetingWindowX, Config.TargetingWindowY);
             this.focusCommands = new List<CommandStub>();
@@ -31,6 +33,7 @@ namespace Executor.UI
 
         public void ResetFocusPlan()
         {
+            this.copyArena = arena.DeepCopy();
             this.focusCommands.Clear();
             this.focusCommands.Add(new CommandStub_FocusBegin(this.arena.Player));
         }
