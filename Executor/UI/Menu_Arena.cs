@@ -41,7 +41,7 @@ namespace Executor.UI
 
             arenaConsole = new RLConsole(Menu_Arena.arenaWidth, Menu_Arena.arenaHeight);
             hudConsole = new RLConsole(this.hudWidth, this.hudHeight);
-            this.focusListConsole = new RLConsole(this.focusListWidth, this.focusListWidth);
+            this.focusListConsole = new RLConsole(this.focusListWidth, this.focusListHeight);
             status1Console = new RLConsole(Menu_Arena.statusWidth, Menu_Arena.statusHeight);
             status2Console = new RLConsole(Menu_Arena.statusWidth, Menu_Arena.statusHeight);
         }

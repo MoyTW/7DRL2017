@@ -23,20 +23,11 @@ namespace Executor
             return ImmutableHashSet<SubEntitiesSelector>.Empty;
         }
 
-        private void EndTurn(int spendTick)
+        private void HandleFocusEnd(GameEvent_FocusEnd ev)
         {
-            this.Parent.HandleEvent(new GameEvent_EndTurn(spendTick, this.Parent));
-            this.currentAP = this.maxAP;
-        }
-
-        private void SpendAP(int spendTick, int cost)
-        {
-            this.currentAP -= cost;
-            Log.DebugLine(this.Parent + " spent " + cost + " AP, AP Remaining: " + this.currentAP);
-            if (this.currentAP < 0)
-                throw new InvalidOperationException("Can't overspend AP!");
-            else if (this.currentAP == 0)
-                this.EndTurn(spendTick);
+            if (this.Parent != ev.ExecutorEntity)
+                throw new InvalidOperationException("Why is a focus end being broadcast to the wrong entity?");
+            this.currentAP = 0;
         }
 
         private void HandleCommand(GameEvent_Command ev)
@@ -61,6 +52,22 @@ namespace Executor
             }
         }
 
+        private void EndTurn(int spendTick)
+        {
+            this.Parent.HandleEvent(new GameEvent_EndTurn(spendTick, this.Parent));
+            this.currentAP = this.Parent.TryGetAttribute(EntityAttributeType.MAX_AP).Value;
+        }
+
+        private void SpendAP(int spendTick, int cost)
+        {
+            this.currentAP -= cost;
+            Log.DebugLine(this.Parent + " spent " + cost + " AP, AP Remaining: " + this.currentAP);
+            if (this.currentAP < 0)
+                throw new InvalidOperationException("Can't overspend AP!");
+            else if (this.currentAP == 0)
+                this.EndTurn(spendTick);
+        }
+
         private void HandleActivation(GameEvent_Activation ev)
         {
             this.SpendAP(ev.CommandTick, ev.APCost);
@@ -68,7 +75,9 @@ namespace Executor
 
         protected override GameEvent _HandleEvent(GameEvent ev)
         {
-            if (ev is GameEvent_Command)
+            if (ev is GameEvent_FocusEnd)
+                this.HandleFocusEnd((GameEvent_FocusEnd)ev);
+            else if (ev is GameEvent_Command)
                 this.HandleCommand((GameEvent_Command)ev);
             else if (ev is GameEvent_Activation)
                 this.HandleActivation((GameEvent_Activation)ev);

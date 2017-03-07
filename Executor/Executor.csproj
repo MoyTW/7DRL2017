@@ -124,6 +124,7 @@
     <Compile Include="UI\Menu_Targeting.cs" />
     <Compile Include="GameEvent_FocusEnd.cs" />
     <Compile Include="GameEvent_FocusBegin.cs" />
+    <Compile Include="Component_FocusUser.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

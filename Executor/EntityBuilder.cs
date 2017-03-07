@@ -165,7 +165,10 @@ namespace Executor
                 .AddComponent(new Component_Skeleton());
 
             if (player)
+            {
                 mech.AddComponent(new Component_Player());
+                mech.AddComponent(new Component_FocusUser());
+            }
             else if (book != null)
                 mech.AddComponent(new Component_AI(book));
             else
