@@ -10,6 +10,11 @@ namespace Executor
         {
             return new GameEvent_FocusEnd(arena.CurrentTick, arena.ResolveEID(this.CommandEID));
         }
+
+        public override string ToString()
+        {
+            return string.Format("End Focus");
+        }
     }
 
     public class GameEvent_FocusEnd : GameEvent_Command

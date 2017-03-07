@@ -141,7 +141,7 @@ namespace Executor.UI
             if (this.targetingMenu.TargetedLocation != null)
             {
                 this.QueueStub(new CommandStub_PrepareAttack(this.arena.Player.EntityID, this.arena.Mech2.EntityID,
-                    (BodyPartLocation)this.targetingMenu.TargetedLocation));
+                    this.arena.Mech2.Label, (BodyPartLocation)this.targetingMenu.TargetedLocation));
                 this.targetingMenu.Reset();
             }
 

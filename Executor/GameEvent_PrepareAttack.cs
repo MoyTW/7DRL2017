@@ -7,13 +7,16 @@ namespace Executor
     public class CommandStub_PrepareAttack : CommandStub
     {
         public string AttackerEID { get; }
+        public string TargetLabel { get; }
         public string TargetEID { get; }
         public BodyPartLocation SubTarget { get; }
 
-        public CommandStub_PrepareAttack(string attackerEID, string targetEID, BodyPartLocation subTarget)
+        public CommandStub_PrepareAttack(string attackerEID, string targetEID, string targetLabel,
+            BodyPartLocation subTarget)
             : base(attackerEID)
         {
             this.AttackerEID = attackerEID;
+            this.TargetLabel = targetLabel;
             this.TargetEID = targetEID;
             this.SubTarget = subTarget;
         }
@@ -28,6 +31,11 @@ namespace Executor
 
             return new GameEvent_PrepareAttack(arena.CurrentTick, arena.ResolveEID(this.AttackerEID),
                 arena.ResolveEID(this.TargetEID), equippedWeapon, arena.ArenaMap, this.SubTarget);
+        }
+
+        public override string ToString()
+        {
+            return string.Format("Attack {0}'s {1}", this.TargetLabel, SubTarget);
         }
     }
 

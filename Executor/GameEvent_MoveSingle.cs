@@ -30,6 +30,11 @@
             return new GameEvent_MoveSingle(arena.CurrentTick, Config.ONE, arena.ResolveEID(this.CommandEID), this.X,
                 this.Y, arena);
         }
+
+        public override string ToString()
+        {
+            return string.Format("Move {0}, {1}", X, Y);
+        }
     }
 
     public class GameEvent_MoveSingle : GameEvent_Command
