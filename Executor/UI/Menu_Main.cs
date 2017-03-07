@@ -26,7 +26,7 @@ namespace Executor.UI
         {
             RogueSharp.Random.IRandom iRand = new RogueSharp.Random.DotNetRandom(seed);
             Entity player = EntityBuilder.BuildSniperMech("Player", true);
-            Entity enemy = EntityBuilder.BuildRandomMech("Enemy", false, iRand);
+            Entity enemy = EntityBuilder.BuildSniperMech("Enemy", false);
             var arena = ArenaBuilder.BuildArena(50, 50, "0", iRand.Next(4).ToString(), this.rand.Next(), player,
                 enemy);
             this.arenaMenu = new Menu_Arena(this, arena);

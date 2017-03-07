@@ -116,16 +116,6 @@ namespace Executor
 
         #region Weapons
 
-        public static Entity BuildMountedMissile(Entity mech, BodyPartLocation location)
-        {
-            return BuildMountForWeapon(mech, location, BlueprintListing.BuildForLabel(Blueprints.MISSILE_RACK));
-        }
-
-        public static Entity BuildMountedMiniMissile(Entity mech, BodyPartLocation location)
-        {
-            return BuildMountForWeapon(mech, location, BlueprintListing.BuildForLabel(Blueprints.MINI_MISSILE));
-        }
-
         public static Entity BuildMountedSniperRifle(Entity mech, BodyPartLocation location)
         {
             return BuildMountForWeapon(mech, location, BlueprintListing.BuildForLabel(Blueprints.SNIPER_RILFE));
@@ -136,54 +126,14 @@ namespace Executor
             return BuildMountForWeapon(mech, location, BlueprintListing.BuildForLabel(Blueprints.RIFLE));
         }
 
-        public static Entity BuildMountedMachinegun(Entity mech, BodyPartLocation location)
-        {
-            return BuildMountForWeapon(mech, location, BlueprintListing.BuildForLabel(Blueprints.MACHINEGUN));
-        }
-
-        public static Entity BuildMountedShotgun(Entity mech, BodyPartLocation location)
-        {
-            return BuildMountForWeapon(mech, location, BlueprintListing.BuildForLabel(Blueprints.SHOTGUN));
-        }
-
         public static Entity BuildMountedPistol(Entity mech, BodyPartLocation location)
         {
             return BuildMountForWeapon(mech, location, BlueprintListing.BuildForLabel(Blueprints.PISTOL));
         }
 
-        public static Entity BuildMountedRockets(Entity mech, BodyPartLocation location)
-        {
-            return BuildMountForWeapon(mech, location, BlueprintListing.BuildForLabel(Blueprints.ROCKET_POD));
-        }
-
-        public static Entity BuildMountedDagger(Entity mech, BodyPartLocation location)
-        {
-            return BuildMountForWeapon(mech, location, BlueprintListing.BuildForLabel(Blueprints.DAGGER));
-        }
-
-        public static Entity BuildMountedSword(Entity mech, BodyPartLocation location)
-        {
-            return BuildMountForWeapon(mech, location, BlueprintListing.BuildForLabel(Blueprints.SWORD));
-        }
-
-        public static Entity BuildMountedHammer(Entity mech, BodyPartLocation location)
-        {
-            return BuildMountForWeapon(mech, location, BlueprintListing.BuildForLabel(Blueprints.HAMMER));
-        }
-
         #endregion
 
         #region Other Parts
-
-        public static Entity BuildAccelerator()
-        {
-            return BlueprintListing.BuildForLabel(Blueprints.ACCELERATOR);
-        }
-
-        public static Entity BuildSensorPackage()
-        {
-            return BlueprintListing.BuildForLabel(Blueprints.SENSOR_PACKAGE);
-        }
 
         public static Entity BuildArmorPart()
         {
@@ -211,7 +161,7 @@ namespace Executor
         {
             var mech = new Entity(label: label, typeLabel: MechTypeLabel)
                 .AddComponent(new Component_Piloted(pilot))
-                .AddComponent(new Component_ActionExecutor(2))
+                .AddComponent(new Component_ActionExecutor(1))
                 .AddComponent(new Component_Skeleton());
 
             if (player)
@@ -220,13 +170,9 @@ namespace Executor
                 mech.AddComponent(new Component_AI(book));
             else
                 mech.AddComponent(new Component_AI());
-
-            SlotAt(mech, BodyPartLocation.HEAD, BuildSensorPackage());
-            SlotAt(mech, BodyPartLocation.TORSO, BlueprintListing.BuildForLabel(Blueprints.POWER_PLANT));
+            
             SlotAt(mech, BodyPartLocation.LEFT_ARM, BlueprintListing.BuildForLabel(Blueprints.ARM_ACTUATOR));
             SlotAt(mech, BodyPartLocation.RIGHT_ARM, BlueprintListing.BuildForLabel(Blueprints.ARM_ACTUATOR));
-            SlotAt(mech, BodyPartLocation.LEFT_LEG, BlueprintListing.BuildForLabel(Blueprints.LEG_ACTUATOR));
-            SlotAt(mech, BodyPartLocation.RIGHT_LEG, BlueprintListing.BuildForLabel(Blueprints.LEG_ACTUATOR));
 
             // Slot in all the required components
             return mech;
@@ -253,41 +199,6 @@ namespace Executor
             return mech;
         }
 
-        public static Entity BuildKnifeMech(string label, bool player, Guidebook book=null)
-        {
-            var mech = BuildNakedMech(label, player, new Entity(), book);
-
-            MountOntoArm(mech, BodyPartLocation.LEFT_ARM, BlueprintListing.BuildForLabel(Blueprints.DAGGER));
-            MountOntoArm(mech, BodyPartLocation.RIGHT_ARM, BlueprintListing.BuildForLabel(Blueprints.DAGGER));
-
-            FillLocationWith(mech, BodyPartLocation.LEFT_LEG, BuildAccelerator);
-            FillLocationWith(mech, BodyPartLocation.RIGHT_LEG, BuildAccelerator);
-
-            foreach (var location in EntityBuilder.MechLocations)
-            {
-                FillLocationWith(mech, location, BuildArmorPart);
-            }
-
-            return mech;
-        }
-
-        public static Entity BuildPaladinMech(string label, bool player, Guidebook book=null)
-        {
-            var mech = BuildNakedMech(label, player, new Entity(), book);
-
-            MountOntoArm(mech, BodyPartLocation.LEFT_ARM, BlueprintListing.BuildForLabel(Blueprints.SWORD));
-            MountOntoArm(mech, BodyPartLocation.RIGHT_ARM, BlueprintListing.BuildForLabel(Blueprints.SWORD));
-
-            BuildMountedPistol(mech, BodyPartLocation.HEAD);
-
-            foreach (var location in EntityBuilder.MechLocations)
-            {
-                FillLocationWith(mech, location, BuildArmorPart);
-            }
-
-            return mech;
-        }
-
         public static Entity BuildSniperMech(string label, bool player, Guidebook book=null)
         {
             var mech = BuildNakedMech(label, player, new Entity(), book);
@@ -295,75 +206,12 @@ namespace Executor
             MountOntoArm(mech, BodyPartLocation.LEFT_ARM, BlueprintListing.BuildForLabel(Blueprints.SNIPER_RILFE));
             MountOntoArm(mech, BodyPartLocation.RIGHT_ARM, BlueprintListing.BuildForLabel(Blueprints.SNIPER_RILFE));
 
-            //SlotHolsterForWeapon(mech, BodyPartLocation.LEFT_ARM, BlueprintListing.BuildForLabel(Blueprints.HAMMER));
-            //SlotHolsterForWeapon(mech, BodyPartLocation.RIGHT_ARM, BlueprintListing.BuildForLabel(Blueprints.HAMMER));
-
-            FillLocationWith(mech, BodyPartLocation.LEFT_LEG, BuildAccelerator);
-            FillLocationWith(mech, BodyPartLocation.RIGHT_LEG, BuildAccelerator);
-
             foreach (var location in EntityBuilder.MechLocations)
             {
                 FillLocationWith(mech, location, BuildArmorPart);
             }
 
             return mech;
-        }
-
-        public static Entity BuildSlowKnifeMech(string label, bool player, Guidebook book=null)
-        {
-            var mech = BuildNakedMech(label, player, new Entity(), book);
-
-            MountOntoArm(mech, BodyPartLocation.LEFT_ARM, BlueprintListing.BuildForLabel(Blueprints.DAGGER));
-            MountOntoArm(mech, BodyPartLocation.RIGHT_ARM, BlueprintListing.BuildForLabel(Blueprints.DAGGER));
-
-            BuildMountedDagger(mech, BodyPartLocation.LEFT_ARM);
-            BuildMountedDagger(mech, BodyPartLocation.RIGHT_ARM);
-            BuildMountedDagger(mech, BodyPartLocation.LEFT_LEG);
-            BuildMountedDagger(mech, BodyPartLocation.RIGHT_LEG);
-
-            foreach (var location in EntityBuilder.MechLocations)
-            {
-                FillLocationWith(mech, location, BuildArmorPart);
-            }
-
-            return mech;
-        }
-
-        public static Entity BuildFastPistolMech(string label, bool player, Guidebook book=null)
-        {
-            var mech = BuildNakedMech(label, player, new Entity(), book);
-
-            MountOntoArm(mech, BodyPartLocation.LEFT_ARM, BlueprintListing.BuildForLabel(Blueprints.PISTOL));
-            MountOntoArm(mech, BodyPartLocation.RIGHT_ARM, BlueprintListing.BuildForLabel(Blueprints.PISTOL));
-
-
-            FillLocationWith(mech, BodyPartLocation.LEFT_LEG, BuildAccelerator);
-            FillLocationWith(mech, BodyPartLocation.RIGHT_LEG, BuildAccelerator);
-
-            foreach (var location in EntityBuilder.MechLocations)
-            {
-                FillLocationWith(mech, location, BuildArmorPart);
-            }
-
-            return mech;
-        }
-
-        public static Entity BuildRandomMech(string label, bool player, IRandom rand, Guidebook book=null)
-        {
-            var choice = rand.Next(4);
-            switch (choice)
-            {
-                case 0:
-                    return BuildArmoredMech(label, player, book);
-                case 1:
-                    return BuildKnifeMech(label, player, book);
-                case 2:
-                    return BuildPaladinMech(label, player, book);
-                case 4:
-                    return BuildSniperMech(label, player, book);
-                default:
-                    return BuildNakedMech(label, player, new Entity(), book);
-            }
         }
 
         #endregion

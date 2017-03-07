@@ -23,7 +23,6 @@ namespace ExecutorTests
             this.mech1Gun = mountedGun.GetComponentOfType<Component_AttachPoint>().InspectAttachedEntity();
             EntityBuilder.SlotAt(mech1, BodyPartLocation.HEAD, mountedGun);
             EntityBuilder.BuildMountedRifle(mech1, BodyPartLocation.LEFT_ARM);
-            EntityBuilder.BuildMountedSword(mech1, BodyPartLocation.RIGHT_ARM);
 
             this.mech2 = EntityBuilder.BuildNakedMech("2", false, new Entity(), null);
             this.arena = ArenaBuilder.TestArena(0, mech1, mech2);
