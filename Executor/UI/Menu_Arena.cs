@@ -209,6 +209,19 @@ namespace Executor.UI
             int line = 0;
             console.Print(0, line,   "##############################", RLColor.Black);
             console.Print(0, ++line, "#                            #", RLColor.Black);
+            console.Print(0, ++line, "#        FOCUS STATUS        #", RLColor.Black);
+            console.Print(0, ++line, "#                            #", RLColor.Black);
+            line++;
+            console.Print(0, line, "#", RLColor.Black);
+            console.Print(2, line, "Turn: " + this.planFocusMenu.EndTick + "           ", RLColor.Black);
+            console.Print(16, line, "AP: " + this.planFocusMenu.RemainingAP + "           ", RLColor.Black);
+            console.Print(29, line, "#", RLColor.Black);
+            console.Print(0, ++line, "#                            #", RLColor.Black);
+            console.Print(0, ++line, "##############################", RLColor.Black);
+
+
+            console.Print(0, line,   "##############################", RLColor.Black);
+            console.Print(0, ++line, "#                            #", RLColor.Black);
             console.Print(0, ++line, "#         FOCUS LIST         #", RLColor.Black);
             console.Print(0, ++line, "#                            #", RLColor.Black);
             console.Print(0, ++line, "##############################", RLColor.Black);

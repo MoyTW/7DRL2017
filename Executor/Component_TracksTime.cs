@@ -6,12 +6,12 @@ namespace Executor
     [Serializable()]
     public class Component_TracksTime : Component
     {
-        private int lastActivationTick;
+        public int LastActivationTick { get; private set; }
         private EntityAttributeType CooldownAttribute { get; }
 
         public Component_TracksTime(EntityAttributeType cooldownAttribute)
         {
-            this.lastActivationTick = -9999;
+            this.LastActivationTick = -9999;
             this.CooldownAttribute = cooldownAttribute;
         }
 
@@ -24,7 +24,7 @@ namespace Executor
         {
             if (ev.ExecutorEntity == this.Parent)
             {
-                this.lastActivationTick += ev.DelayTicks;
+                this.LastActivationTick += ev.DelayTicks;
                 ev.Completed = true;
             }
         }
@@ -33,7 +33,7 @@ namespace Executor
         {
             if (ev.CommandEntity == this.Parent)
             {
-                this.lastActivationTick = ev.TurnTick;
+                this.LastActivationTick = ev.TurnTick;
             }
         }
 
@@ -51,11 +51,11 @@ namespace Executor
         {
             // THIS IS A MESS! Hard to tell at what level this should be called at!
             var cooldown = this.Parent.TryGetAttribute(this.CooldownAttribute, this.Parent).Value;
-            var ticksToLive = this.lastActivationTick + cooldown - q.CurrentTick;
+            var ticksToLive = this.LastActivationTick + cooldown - q.CurrentTick;
 
-            if (q.CurrentTick == 0 && this.lastActivationTick == -9999)
+            if (q.CurrentTick == 0 && this.LastActivationTick == -9999)
             {
-                this.lastActivationTick -= ticksToLive;
+                this.LastActivationTick -= ticksToLive;
                 q.RegisterTicksToLive(0);
             }
             else

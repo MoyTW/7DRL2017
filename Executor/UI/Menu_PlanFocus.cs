@@ -11,7 +11,16 @@ namespace Executor.UI
     {
         private readonly IDisplay parent;
         private readonly ArenaState arena;
+
         private ArenaState copyArena;
+        public int StartTick { get; private set; }
+        public int EndTick { get; private set; }
+        public int RemainingAP { 
+            get
+            { 
+                return this.copyArena.Player.TryGetAttribute(EntityAttributeType.CURRENT_AP).Value; 
+            } 
+        }
 
         private readonly Menu_Targeting targetingMenu;
         private List<CommandStub> focusCommands;
@@ -34,13 +43,14 @@ namespace Executor.UI
         public void ResetFocusPlan()
         {
             this.copyArena = arena.DeepCopy();
+            this.StartTick = arena.CurrentTick;
             this.focusCommands.Clear();
-            this.focusCommands.Add(new CommandStub_FocusBegin(this.arena.Player.EntityID));
+            this.QueueStub(new CommandStub_FocusBegin(this.arena.Player.EntityID));
         }
 
         public void FinalizeFocusPlan()
         {
-            this.focusCommands.Add(new CommandStub_FocusEnd(this.arena.Player.EntityID));
+            this.QueueStub(new CommandStub_FocusEnd(this.arena.Player.EntityID));
         }
 
         public CommandStub PopStub()
@@ -50,9 +60,20 @@ namespace Executor.UI
             return stub;
         }
 
+        private void QueueStub(CommandStub stub)
+        {
+            this.focusCommands.Add(stub);
+            this.copyArena.ResolveStub(stub);
+            while (!this.copyArena.ShouldWaitForPlayerInput)
+            {
+                this.copyArena.TryFindAndExecuteNextCommand();
+            }
+            this.EndTick = this.copyArena.CurrentTick;
+        }
+
         private void QueueMoveCommand(int dx, int dy)
         {
-            this.focusCommands.Add(new CommandStub_MoveSingle(this.arena.Player.EntityID, dx, dy));
+            this.QueueStub(new CommandStub_MoveSingle(this.arena.Player.EntityID, dx, dy));
         }
 
         private IDisplay HandleKeyPressed(RLKeyPress keyPress)
@@ -119,8 +140,8 @@ namespace Executor.UI
         {
             if (this.targetingMenu.TargetedLocation != null)
             {
-                this.focusCommands.Add(new CommandStub_PrepareAttack(this.arena.Player.EntityID,
-                    this.arena.Mech2.EntityID, (BodyPartLocation)this.targetingMenu.TargetedLocation));
+                this.QueueStub(new CommandStub_PrepareAttack(this.arena.Player.EntityID, this.arena.Mech2.EntityID,
+                    (BodyPartLocation)this.targetingMenu.TargetedLocation));
                 this.targetingMenu.Reset();
             }
 
