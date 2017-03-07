@@ -23,7 +23,7 @@ namespace Executor.AI.Combat
             return commandQuery.ArenaState.ArenaPathFinder.ShortestPath(commandCell, targetCell);
         }
 
-        private GameEvent_MoveSingle MoveEventForPath(GameQuery_Command commandQuery, RogueSharp.Path path)
+        private GameEvent_Command MoveEventForPath(GameQuery_Command commandQuery, RogueSharp.Path path)
         {
             var commandPos = commandQuery.CommandEntity.TryGetPosition();
             var nextCell = path.CurrentStep;
@@ -34,7 +34,7 @@ namespace Executor.AI.Combat
             }
 
             var stub = new CommandStub_MoveSingle(commandQuery.CommandEntity, nextCell.X - commandPos.X, nextCell.Y - commandPos.Y);
-            return GameEvent_MoveSingle.ResolveStub(stub, commandQuery.ArenaState);
+            return (stub.ReifyStub(commandQuery.ArenaState));
         }
 
         private bool EnemyOnPath(GameQuery_Position targetPos)
