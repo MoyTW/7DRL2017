@@ -147,6 +147,7 @@ namespace Executor.UI
                     this.targetingMenu.SetTarget(this.arena.Mech2);
                     return this.targetingMenu;
                 case RLKey.F:
+                    this.planFocusMenu.ResetFocusPlan();
                     return this.planFocusMenu;
                 case RLKey.Keypad1:
                 case RLKey.B:

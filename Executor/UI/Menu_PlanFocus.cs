@@ -29,6 +29,17 @@ namespace Executor.UI
             return this.focusCommands.AsReadOnly();
         }
 
+        public void ResetFocusPlan()
+        {
+            this.focusCommands.Clear();
+            this.focusCommands.Add(new CommandStub_FocusBegin(this.arena.Player));
+        }
+
+        public void FinalizeFocusPlan()
+        {
+            this.focusCommands.Add(new CommandStub_FocusEnd(this.arena.Player));
+        }
+
         public CommandStub PopStub()
         {
             var stub = this.focusCommands[0];
@@ -53,6 +64,7 @@ namespace Executor.UI
                     return this.parent;
                 case RLKey.Enter:
                 case RLKey.KeypadEnter:
+                    this.FinalizeFocusPlan();
                     return this.parent;
                 case RLKey.A:
                     this.targetingMenu.SetTarget(this.arena.Mech2);
