@@ -47,8 +47,9 @@ namespace Executor
 
         public bool IsMatchEnded()
         {
-            return this.Player.GetComponentOfType<Component_Skeleton>().IsKilled ||
-                this.Mech2.GetComponentOfType<Component_Skeleton>().IsKilled;
+            bool survivingAIs = this.mapEntities.Where(e => e.HasComponentOfType<Component_AI>())
+                .Any(e => !e.GetComponentOfType<Component_Skeleton>().IsKilled);
+            return this.Player.GetComponentOfType<Component_Skeleton>().IsKilled || !survivingAIs;
         }
 
         // TODO: Create a "Mech/Map Blueprint" so you don't pass a literal Entity/IMap instance in!
@@ -82,19 +83,21 @@ namespace Executor
 
         private void ForwardToNextAction()
         {
-            // Mech1 always moves fully before mech2 if possible! First player advantage.
-            var mech1Query = this.Player.HandleQuery(new GameQuery_TicksToLive(this.CurrentTick));
-            var mech2Query = mech2.HandleQuery(new GameQuery_TicksToLive(this.CurrentTick));
-            if (mech1Query.TicksToLive <= mech2Query.TicksToLive)
+            int leastTTL = 9999;
+            Entity next = null;
+
+            foreach (var entity in this.mapEntities)
             {
-                this.nextCommandEntity = this.Player;
-                this.currentTick += mech1Query.TicksToLive;
+                var nextTTL = entity.HandleQuery(new GameQuery_TicksToLive(this.CurrentTick)).TicksToLive;
+                if (nextTTL < leastTTL)
+                {
+                    leastTTL = nextTTL;
+                    next = entity;
+                }
             }
-            else
-            {
-                this.nextCommandEntity = this.Mech2;
-                this.currentTick += mech2Query.TicksToLive;
-            }
+
+            this.nextCommandEntity = next;
+            this.currentTick += leastTTL;
         }
 
         public Tuple<int, int> EmptyCellNear(int x, int y)
