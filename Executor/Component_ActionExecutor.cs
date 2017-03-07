@@ -10,13 +10,12 @@ namespace Executor
     [Serializable()]
     class Component_ActionExecutor : Component
     {
-        public int MaxAP { get; private set; }
-        public int CurrentAP { get; private set; }
+        private int maxAP, currentAP;
 
         public Component_ActionExecutor(int maxAP)
         {
-            this.MaxAP = maxAP;
-            this.CurrentAP = maxAP;
+            this.maxAP = maxAP;
+            this.currentAP = maxAP;
         }
 
         protected override IImmutableSet<SubEntitiesSelector> _MatchingSelectors()
@@ -27,16 +26,16 @@ namespace Executor
         private void EndTurn(int spendTick)
         {
             this.Parent.HandleEvent(new GameEvent_EndTurn(spendTick, this.Parent));
-            this.CurrentAP = this.MaxAP;
+            this.currentAP = this.maxAP;
         }
 
         private void SpendAP(int spendTick, int cost)
         {
-            this.CurrentAP -= cost;
-            Log.DebugLine(this.Parent + " spent " + cost + " AP, AP Remaining: " + this.CurrentAP);
-            if (this.CurrentAP < 0)
+            this.currentAP -= cost;
+            Log.DebugLine(this.Parent + " spent " + cost + " AP, AP Remaining: " + this.currentAP);
+            if (this.currentAP < 0)
                 throw new InvalidOperationException("Can't overspend AP!");
-            else if (this.CurrentAP == 0)
+            else if (this.currentAP == 0)
                 this.EndTurn(spendTick);
         }
 
@@ -77,5 +76,23 @@ namespace Executor
             return ev;
         }
 
+        private void HandleQueryEntityAttribute(GameQuery_EntityAttribute q)
+        {
+            if (this.Parent == q.BaseEntity)
+            {
+                if (q.AttributeType == EntityAttributeType.CURRENT_AP)
+                    q.RegisterBaseValue(this.currentAP);
+                else if (q.AttributeType == EntityAttributeType.MAX_AP)
+                    q.RegisterBaseValue(this.maxAP);
+            }
+        }
+
+        protected override GameQuery _HandleQuery(GameQuery q)
+        {
+            if (q is GameQuery_EntityAttribute)
+                this.HandleQueryEntityAttribute((GameQuery_EntityAttribute)q);
+
+            return q;
+        }
     }
 }

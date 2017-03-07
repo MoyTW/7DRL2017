@@ -11,6 +11,8 @@ namespace Executor
         STRUCTURE,
 
         // Mech Attribute Types
+        CURRENT_AP,
+        MAX_AP,
         SPEED,
 
         // Weapon Attribute Types
