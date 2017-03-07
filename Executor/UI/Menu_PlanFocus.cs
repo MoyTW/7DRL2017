@@ -35,12 +35,12 @@ namespace Executor.UI
         {
             this.copyArena = arena.DeepCopy();
             this.focusCommands.Clear();
-            this.focusCommands.Add(new CommandStub_FocusBegin(this.arena.Player));
+            this.focusCommands.Add(new CommandStub_FocusBegin(this.arena.Player.EntityID));
         }
 
         public void FinalizeFocusPlan()
         {
-            this.focusCommands.Add(new CommandStub_FocusEnd(this.arena.Player));
+            this.focusCommands.Add(new CommandStub_FocusEnd(this.arena.Player.EntityID));
         }
 
         public CommandStub PopStub()
@@ -52,7 +52,7 @@ namespace Executor.UI
 
         private void QueueMoveCommand(int dx, int dy)
         {
-            this.focusCommands.Add(new CommandStub_MoveSingle(this.arena.Player, dx, dy));
+            this.focusCommands.Add(new CommandStub_MoveSingle(this.arena.Player.EntityID, dx, dy));
         }
 
         private IDisplay HandleKeyPressed(RLKeyPress keyPress)
@@ -119,8 +119,8 @@ namespace Executor.UI
         {
             if (this.targetingMenu.TargetedLocation != null)
             {
-                this.focusCommands.Add(new CommandStub_PrepareAttack(this.arena.Player, this.arena.Mech2,
-                    (BodyPartLocation)this.targetingMenu.TargetedLocation));
+                this.focusCommands.Add(new CommandStub_PrepareAttack(this.arena.Player.EntityID,
+                    this.arena.Mech2.EntityID, (BodyPartLocation)this.targetingMenu.TargetedLocation));
                 this.targetingMenu.Reset();
             }
 

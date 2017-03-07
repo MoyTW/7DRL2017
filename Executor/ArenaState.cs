@@ -78,7 +78,6 @@ namespace Executor
                 this.ArenaPathFinder);
         }
 
-
         #region State Changes
 
         private void ForwardToNextAction()
@@ -193,6 +192,11 @@ namespace Executor
                 this.nextCommandEntity.HandleEvent(queryCommand.Command);
 
             this.ForwardToNextAction();
+        }
+
+        public Entity ResolveEID(string eid)
+        {
+            return this.mapEntities.Where(e => e.EntityID == eid).First();
         }
 
         // TODO: Whoops, I designed the stubs badly. I should swap the resolution function to the stub classes.

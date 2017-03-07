@@ -64,7 +64,7 @@ namespace Executor.UI
                 return this.parent;
             else if (this.targetingMenu.TargetedLocation != null)
             {
-                var stub = new CommandStub_PrepareAttack(this.arena.Player, this.arena.Mech2,
+                var stub = new CommandStub_PrepareAttack(this.arena.Player.EntityID, this.arena.Mech2.EntityID,
                     (BodyPartLocation)this.targetingMenu.TargetedLocation);
                 this.arena.ResolveStub(stub);
                 this.targetingMenu.Reset();
@@ -122,7 +122,7 @@ namespace Executor.UI
 
         private void TryPlayerMove(int dx, int dy)
         {
-            var stub = new CommandStub_MoveSingle(this.arena.Player, dx, dy);
+            var stub = new CommandStub_MoveSingle(this.arena.Player.EntityID, dx, dy);
             this.arena.ResolveStub(stub);
         }
 

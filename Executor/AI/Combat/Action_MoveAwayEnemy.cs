@@ -50,7 +50,7 @@ namespace Executor.AI.Combat
             if (currDist > myDist)
             {
                 // TODO: Just return a stub!
-                var stub = new CommandStub_MoveSingle(commandQuery.CommandEntity, awayX - commandPos.X, 
+                var stub = new CommandStub_MoveSingle(commandQuery.CommandEntity.EntityID, awayX - commandPos.X, 
                     awayY - commandPos.Y);
                 return stub.ReifyStub(commandQuery.ArenaState);
             }

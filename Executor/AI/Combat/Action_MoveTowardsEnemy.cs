@@ -33,7 +33,8 @@ namespace Executor.AI.Combat
                 path.StepForward();
             }
 
-            var stub = new CommandStub_MoveSingle(commandQuery.CommandEntity, nextCell.X - commandPos.X, nextCell.Y - commandPos.Y);
+            var stub = new CommandStub_MoveSingle(commandQuery.CommandEntity.EntityID, nextCell.X - commandPos.X,
+                nextCell.Y - commandPos.Y);
             return (stub.ReifyStub(commandQuery.ArenaState));
         }
 

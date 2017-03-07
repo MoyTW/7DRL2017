@@ -4,11 +4,11 @@ namespace Executor
 {
     public class CommandStub_FocusEnd : CommandStub
     {
-        public CommandStub_FocusEnd(Entity commandEntity) : base(commandEntity) { }
+        public CommandStub_FocusEnd(string commandEID) : base(commandEID) { }
 
         public override GameEvent_Command ReifyStub(ArenaState arena)
         {
-            return new GameEvent_FocusEnd(arena.CurrentTick, this.CommandEntity);
+            return new GameEvent_FocusEnd(arena.CurrentTick, arena.ResolveEID(this.CommandEID));
         }
     }
 

@@ -5,11 +5,11 @@ namespace Executor
 {
     abstract public class CommandStub
     {
-        public Entity CommandEntity { get; }
+        public string CommandEID { get; }
 
-        public CommandStub(Entity commandEntity)
+        public CommandStub(string commandEID)
         {
-            this.CommandEntity = commandEntity;
+            this.CommandEID = commandEID;
         }
 
         abstract public GameEvent_Command ReifyStub(ArenaState arena);

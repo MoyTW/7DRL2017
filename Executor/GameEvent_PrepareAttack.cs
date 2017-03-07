@@ -6,14 +6,15 @@ namespace Executor
 {
     public class CommandStub_PrepareAttack : CommandStub
     {
-        public Entity Attacker { get; }
-        public Entity Target { get; }
+        public string AttackerEID { get; }
+        public string TargetEID { get; }
         public BodyPartLocation SubTarget { get; }
 
-        public CommandStub_PrepareAttack(Entity attacker, Entity target, BodyPartLocation subTarget) : base(attacker)
+        public CommandStub_PrepareAttack(string attackerEID, string targetEID, BodyPartLocation subTarget)
+            : base(attackerEID)
         {
-            this.Attacker = attacker;
-            this.Target = target;
+            this.AttackerEID = attackerEID;
+            this.TargetEID = targetEID;
             this.SubTarget = subTarget;
         }
 
@@ -25,8 +26,8 @@ namespace Executor
                     .TryGetSubEntities(SubEntitiesSelector.WEAPON)
                     .FirstOrDefault();
 
-            return new GameEvent_PrepareAttack(arena.CurrentTick, this.Attacker, this.Target, equippedWeapon,
-                arena.ArenaMap, this.SubTarget);
+            return new GameEvent_PrepareAttack(arena.CurrentTick, arena.ResolveEID(this.AttackerEID),
+                arena.ResolveEID(this.TargetEID), equippedWeapon, arena.ArenaMap, this.SubTarget);
         }
     }
 

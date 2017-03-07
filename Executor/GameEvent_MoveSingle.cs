@@ -16,20 +16,19 @@
 
     public class CommandStub_MoveSingle : CommandStub
     {
-        public Entity Mover { get; }
         public XDirection X { get; }
         public YDirection Y { get; }
 
-        public CommandStub_MoveSingle(Entity mover, int x, int y) : base(mover)
+        public CommandStub_MoveSingle(string moverEID, int x, int y) : base(moverEID)
         {
-            this.Mover = mover;
             this.X = (XDirection)x;
             this.Y = (YDirection)y;
         }
 
         public override GameEvent_Command ReifyStub(ArenaState arena)
         {
-            return new GameEvent_MoveSingle(arena.CurrentTick, Config.ONE, this.Mover, this.X, this.Y, arena);
+            return new GameEvent_MoveSingle(arena.CurrentTick, Config.ONE, arena.ResolveEID(this.CommandEID), this.X,
+                this.Y, arena);
         }
     }
 
