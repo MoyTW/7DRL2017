@@ -20,11 +20,16 @@
         public XDirection X { get; }
         public YDirection Y { get; }
 
-        public CommandStub_MoveSingle(Entity mover, int x, int y)
+        public CommandStub_MoveSingle(Entity mover, int x, int y) : base(mover)
         {
             this.Mover = mover;
             this.X = (XDirection)x;
             this.Y = (YDirection)y;
+        }
+
+        public override GameEvent_Command ReifyStub(ArenaState arena)
+        {
+            return new GameEvent_MoveSingle(arena.CurrentTick, Config.ONE, this.Mover, this.X, this.Y, arena);
         }
     }
 
@@ -34,17 +39,12 @@
         public YDirection Y { get; }
         public ArenaState GameArena { get; }
 
-        private GameEvent_MoveSingle(int commandTick, int APCost, Entity mover, XDirection x, YDirection y, ArenaState gameArena)
+        public GameEvent_MoveSingle(int commandTick, int APCost, Entity mover, XDirection x, YDirection y, ArenaState gameArena)
             : base(commandTick, APCost, mover)
         {
             this.X = x;
             this.Y = y;
             this.GameArena = gameArena;
-        }
-
-        public static GameEvent_MoveSingle ResolveStub(CommandStub_MoveSingle stub, ArenaState arena)
-        {
-            return new GameEvent_MoveSingle(arena.CurrentTick, Config.ONE, stub.Mover, stub.X, stub.Y, arena);
         }
     }
 }

@@ -3,7 +3,17 @@ using System.Linq;
 
 namespace Executor
 {
-    public class CommandStub { }
+    abstract public class CommandStub
+    {
+        public Entity CommandEntity { get; }
+
+        public CommandStub(Entity commandEntity)
+        {
+            this.CommandEntity = commandEntity;
+        }
+
+        abstract public GameEvent_Command ReifyStub(ArenaState arena);
+    }
 
     public class GameEvent_Command : GameEvent
     {
