@@ -4,16 +4,52 @@ using System.Linq;
 
 namespace Executor
 {
-    public class CommandStub_PrepareAttack : CommandStub
+    public class CommandStub_PrepareDirectionalAttack : CommandStub
+    {
+        public string AttackerEID { get; }
+        public int x { get; }
+        public int y { get; }
+        public BodyPartLocation SubTarget { get; }
+
+        public CommandStub_PrepareDirectionalAttack(string attackerEID, int x, int y, BodyPartLocation subTarget)
+            : base (attackerEID)
+        {
+            this.AttackerEID = attackerEID;
+            this.x = x;
+            this.y = y;
+            this.SubTarget = subTarget;
+        }
+
+        public override GameEvent_Command ReifyStub(ArenaState arena)
+        {
+            var equippedWeapon = arena.Player.GetComponentOfType<Component_Skeleton>()
+                .InspectBodyPart(BodyPartLocation.RIGHT_ARM)
+                .TryGetSubEntities(SubEntitiesSelector.WEAPON)
+                .FirstOrDefault();
+
+            // TODO: Don't require exact square
+            var attackerEntity = arena.ResolveEID(this.AttackerEID);
+            var attackerPosition = attackerEntity.TryGetPosition();
+            var targetEntity = arena.EntityAtPosition(attackerPosition.X + this.x, attackerPosition.Y + this.y);
+            if (targetEntity != null)
+            {
+                return new GameEvent_PrepareAttack(arena.CurrentTick, attackerEntity, targetEntity, equippedWeapon, 
+                    arena.ArenaMap, this.SubTarget);
+            }
+            else
+                return null;
+        }
+    }
+
+    public class CommandStub_PrepareTargetedAttack : CommandStub
     {
         public string AttackerEID { get; }
         public string TargetLabel { get; }
         public string TargetEID { get; }
         public BodyPartLocation SubTarget { get; }
 
-        public CommandStub_PrepareAttack(string attackerEID, string targetEID, string targetLabel,
-            BodyPartLocation subTarget)
-            : base(attackerEID)
+        public CommandStub_PrepareTargetedAttack(string attackerEID, string targetEID, string targetLabel,
+            BodyPartLocation subTarget) : base(attackerEID)
         {
             this.AttackerEID = attackerEID;
             this.TargetLabel = targetLabel;

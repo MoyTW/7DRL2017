@@ -45,6 +45,17 @@ namespace Executor
             return this.ArenaMap.IsWalkable(x, y);
         }
 
+        public Entity EntityAtPosition(int x, int y)
+        {
+            foreach (var en in mapEntities)
+            {
+                var position = (GameQuery_Position)en.HandleQuery(new GameQuery_Position());
+                if (position != null && position.X == x && position.Y == y)
+                    return en;
+            }
+            return null;
+        }
+
         public bool IsMatchEnded()
         {
             bool survivingAIs = this.mapEntities.Where(e => e.HasComponentOfType<Component_AI>())

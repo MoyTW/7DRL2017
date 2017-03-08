@@ -64,7 +64,7 @@ namespace Executor.UI
                 return this.parent;
             else if (this.targetingMenu.TargetedLocation != null)
             {
-                var stub = new CommandStub_PrepareAttack(this.arena.Player.EntityID, this.arena.Mech2.EntityID,
+                var stub = new CommandStub_PrepareTargetedAttack(this.arena.Player.EntityID, this.arena.Mech2.EntityID,
                     this.arena.Mech2.Label, (BodyPartLocation)this.targetingMenu.TargetedLocation);
                 this.arena.ResolveStub(stub);
                 this.targetingMenu.Reset();
