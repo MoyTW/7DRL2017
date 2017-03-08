@@ -62,10 +62,11 @@ namespace Executor.UI
             // Logic
             if (this.arena.IsMatchEnded())
                 return this.parent;
-            else if (this.targetingMenu.TargetedLocation != null)
+            else if (this.targetingMenu.CompletedTargeting)
             {
-                var stub = new CommandStub_PrepareTargetedAttack(this.arena.Player.EntityID, this.arena.Mech2.EntityID,
-                    this.arena.Mech2.Label, (BodyPartLocation)this.targetingMenu.TargetedLocation);
+                var stub = new CommandStub_PrepareDirectionalAttack(this.arena.Player.EntityID, 
+                    this.targetingMenu.TargetedX, this.targetingMenu.TargetedY,
+                    (BodyPartLocation)this.targetingMenu.TargetedLocation);
                 this.arena.ResolveStub(stub);
                 this.targetingMenu.Reset();
                 return this;
@@ -144,7 +145,7 @@ namespace Executor.UI
                     // Technically, this doesn't limit it to the player mech.
                     return new Menu_MechDetails(this, this.arena.Player);
                 case RLKey.A:
-                    this.targetingMenu.SetTarget(this.arena.Mech2);
+                    this.targetingMenu.Reset();
                     return this.targetingMenu;
                 case RLKey.F:
                     this.planFocusMenu.ResetFocusPlan();

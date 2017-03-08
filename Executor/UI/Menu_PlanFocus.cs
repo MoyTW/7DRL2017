@@ -91,7 +91,7 @@ namespace Executor.UI
                     this.FinalizeFocusPlan();
                     return this.parent;
                 case RLKey.A:
-                    this.targetingMenu.SetTarget(this.arena.Mech2);
+                    this.targetingMenu.Reset();
                     return this.targetingMenu;
                 case RLKey.Keypad1:
                 case RLKey.B:
@@ -138,10 +138,11 @@ namespace Executor.UI
 
         public IDisplay OnRootConsoleUpdate(RLConsole console, RLKeyPress keyPress)
         {
-            if (this.targetingMenu.TargetedLocation != null)
+            if (this.targetingMenu.CompletedTargeting)
             {
-                this.QueueStub(new CommandStub_PrepareTargetedAttack(this.arena.Player.EntityID, this.arena.Mech2.EntityID,
-                    this.arena.Mech2.Label, (BodyPartLocation)this.targetingMenu.TargetedLocation));
+                this.QueueStub(new CommandStub_PrepareDirectionalAttack(this.arena.Player.EntityID,
+                    this.targetingMenu.TargetedX, this.targetingMenu.TargetedY,
+                    (BodyPartLocation)this.targetingMenu.TargetedLocation));
                 this.targetingMenu.Reset();
             }
 

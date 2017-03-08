@@ -224,7 +224,10 @@ namespace Executor
         public void ResolveStub(CommandStub stub)
         {
             var gameEvent = stub.ReifyStub(this);
-            gameEvent.CommandEntity.HandleEvent(gameEvent);
+            if (gameEvent != null)
+                gameEvent.CommandEntity.HandleEvent(gameEvent);
+            else
+                Console.WriteLine("Couldn't resolve stub: " + stub.ToString());
             this.ForwardToNextAction();
         }
     }

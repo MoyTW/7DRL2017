@@ -7,7 +7,6 @@ namespace Executor.UI
 {
     class Menu_Targeting : IDisplay
     {
-        private Entity target;
         private readonly IDisplay parent;
         private RLConsole targetingConsole;
 
@@ -15,7 +14,12 @@ namespace Executor.UI
         public const int targetingHeight = 45;
         public readonly int x, y;
 
+        public int TargetedX { get; private set; }
+        public int TargetedY { get; private set; }
         public BodyPartLocation? TargetedLocation { get; private set; }
+        public bool CompletedDirection { get { return !(this.TargetedX == 0 && this.TargetedY == 0); } }
+        public bool CompletedLocation { get { return this.TargetedLocation != null; } }
+        public bool CompletedTargeting { get { return this.CompletedDirection && this.CompletedLocation; } }
 
         public Menu_Targeting(IDisplay parent, int x, int y)
         {
@@ -26,15 +30,10 @@ namespace Executor.UI
             this.y = y;
         }
 
-        public void SetTarget(Entity target)
-        {
-            this.target = target;
-            this.TargetedLocation = null;
-        }
-
         public void Reset()
         {
-            this.target = null;
+            this.TargetedX = 0;
+            this.TargetedY = 0;
             this.TargetedLocation = null;
         }
 
@@ -52,9 +51,95 @@ namespace Executor.UI
 
             this.targetingConsole.SetBackColor(0, 0, targetingWidth, targetingHeight, RLColor.White);
 
-            Drawer_Mech.DrawMechStatus(this.target, this.targetingConsole);
+            //Drawer_Mech.DrawMechStatus(this.target, this.targetingConsole);
             RLConsole.Blit(this.targetingConsole, 0, 0, Menu_Arena.statusWidth, Menu_Arena.statusHeight, console,
                 this.x, this.y);
+        }
+
+        private void TargetDirection(int x, int y)
+        {
+            this.TargetedX = x;
+            this.TargetedY = y;
+        }
+
+        private void HandleTargetDirection(RLKeyPress keyPress)
+        {
+            switch (keyPress.Key)
+            {
+                case RLKey.Keypad1:
+                case RLKey.B:
+                    this.TargetDirection(-1, 1);
+                    break;
+                case RLKey.Keypad2:
+                case RLKey.Down:
+                case RLKey.J:
+                    this.TargetDirection(0, 1);
+                    break;
+                case RLKey.Keypad3:
+                case RLKey.N:
+                    this.TargetDirection(1, 1);
+                    break;
+                case RLKey.Keypad4:
+                case RLKey.H:
+                case RLKey.Left:
+                    this.TargetDirection(-1, 0);
+                    break;
+                case RLKey.Keypad6:
+                case RLKey.Right:
+                case RLKey.L:
+                    this.TargetDirection(1, 0);
+                    break;
+                case RLKey.Keypad7:
+                case RLKey.Y:
+                    this.TargetDirection(-1, -1);
+                    break;
+                case RLKey.Keypad8:
+                case RLKey.Up:
+                case RLKey.K:
+                    this.TargetDirection(0, -1);
+                    break;
+                case RLKey.Keypad9:
+                case RLKey.U:
+                    this.TargetDirection(1, -1);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void HandleTargetLocation(RLKeyPress keyPress)
+        {
+            switch (keyPress.Key)
+            {
+                case RLKey.Keypad1:
+                case RLKey.B:
+                    this.TargetedLocation = BodyPartLocation.LEFT_LEG;
+                    break;
+                case RLKey.Keypad3:
+                case RLKey.N:
+                    this.TargetedLocation = BodyPartLocation.RIGHT_LEG;
+                    break;
+                case RLKey.Keypad4:
+                case RLKey.H:
+                case RLKey.Left:
+                    this.TargetedLocation = BodyPartLocation.LEFT_ARM;
+                    break;
+                case RLKey.Keypad5:
+                    this.TargetedLocation = BodyPartLocation.TORSO;
+                    break;
+                case RLKey.Keypad6:
+                case RLKey.Right:
+                case RLKey.L:
+                    this.TargetedLocation = BodyPartLocation.RIGHT_ARM;
+                    break;
+                case RLKey.Keypad8:
+                case RLKey.Up:
+                case RLKey.K:
+                    this.TargetedLocation = BodyPartLocation.HEAD;
+                    break;
+                default:
+                    break;
+            }
         }
 
         private IDisplay HandleKeyPressed(RLKeyPress keyPress)
@@ -66,36 +151,17 @@ namespace Executor.UI
             {
                 case RLKey.Escape:
                     return this.parent;
-                case RLKey.Keypad1:
-                case RLKey.B:
-                    this.TargetedLocation = BodyPartLocation.LEFT_LEG;
-                    return this.parent;
-                case RLKey.Keypad3:
-                case RLKey.N:
-                    this.TargetedLocation = BodyPartLocation.RIGHT_LEG;
-                    return this.parent;
-                case RLKey.Keypad4:
-                case RLKey.H:
-                case RLKey.Left:
-                    this.TargetedLocation = BodyPartLocation.LEFT_ARM;
-                    return this.parent;
-                case RLKey.Keypad5:
-                    this.TargetedLocation = BodyPartLocation.TORSO;
-                    return this.parent;
-                case RLKey.Keypad6:
-                case RLKey.Right:
-                case RLKey.L:
-                    this.TargetedLocation = BodyPartLocation.RIGHT_ARM;
-                    return this.parent;
-                case RLKey.Keypad8:
-                case RLKey.Up:
-                case RLKey.K:
-                    this.TargetedLocation = BodyPartLocation.HEAD;
-                    return this.parent;
-                default:
-                    break;
             }
-            return this;
+
+            if (!this.CompletedDirection)
+                this.HandleTargetDirection(keyPress);
+            else
+                this.HandleTargetLocation(keyPress);
+
+            if (this.CompletedTargeting)
+                return this.parent;
+            else
+                return this;
         }
     }
 }
