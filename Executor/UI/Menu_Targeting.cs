@@ -51,7 +51,7 @@ namespace Executor.UI
 
             this.targetingConsole.SetBackColor(0, 0, targetingWidth, targetingHeight, RLColor.White);
 
-            //Drawer_Mech.DrawMechStatus(this.target, this.targetingConsole);
+            this.DrawTargetingMenu(this.targetingConsole);
             RLConsole.Blit(this.targetingConsole, 0, 0, Menu_Arena.statusWidth, Menu_Arena.statusHeight, console,
                 this.x, this.y);
         }
@@ -162,6 +162,40 @@ namespace Executor.UI
                 return this.parent;
             else
                 return this;
+        }
+
+        private void DrawTargetingMenu(RLConsole console)
+        {
+            int centerX = console.Width / 2;
+            int centerY = console.Height / 2;
+
+            for (int tx = -1; tx < 2; tx++)
+            {
+                for (int ty = -1; ty < 2; ty++)
+                {
+                    console.Print(centerX - 5 + tx * 4, centerY + ty * 4, " ", RLColor.White);
+                }
+            }
+
+            console.Print(centerX - 7, centerY - 2, "\\ | /", RLColor.Black);
+            console.Print(centerX - 7, centerY, "- @ -", RLColor.Black);
+            console.Print(centerX - 7, centerY + 2, "/ | \\", RLColor.Black);
+
+            console.Print(centerX + 3, centerY - 2, "  H  ", RLColor.Black);
+            console.Print(centerX + 3, centerY,     "A T A", RLColor.Black);
+            console.Print(centerX + 3, centerY + 2, "L   L", RLColor.Black);
+
+            if (!this.CompletedDirection)
+            {
+                console.Print(centerX - 9, centerY - 6, "Select A Direction              ", RLColor.Black);
+            }
+            else if (this.CompletedDirection)
+            {
+                console.Print(centerX - 9, centerY - 6, "Select A Body Part              ", RLColor.Black);
+                console.Print(centerX - 5 + this.TargetedX * 4, centerY + this.TargetedY * 4, "#", RLColor.Green);
+            }
+
+            console.Print(centerX - 13, centerY + 6, "Note: Target with move key", RLColor.Black);
         }
     }
 }
