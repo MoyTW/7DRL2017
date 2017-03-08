@@ -34,6 +34,9 @@ namespace Executor
 
         public bool IsWalkableAndOpen(int x, int y)
         {
+            if (x < 0 || y < 0 || x >= this.ArenaMap.Width || y >= this.ArenaMap.Height)
+                return false;
+
             foreach (var en in mapEntities)
             {
                 var position = (GameQuery_Position)en.HandleQuery(new GameQuery_Position());

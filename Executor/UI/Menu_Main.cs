@@ -1,6 +1,7 @@
 ﻿using Executor.AI;
 using RLNET;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -25,10 +26,13 @@ namespace Executor.UI
         private Menu_Arena NewArenaMenu(int seed=1)
         {
             RogueSharp.Random.IRandom iRand = new RogueSharp.Random.DotNetRandom(seed);
-            Entity player = EntityBuilder.BuildSniperMech("Player", true);
-            Entity enemy = EntityBuilder.BuildSniperMech("Enemy", false);
-            var arena = ArenaBuilder.BuildArena(50, 50, iRand.Next(4).ToString(), this.rand.Next(), player,
-                enemy);
+
+            var entities = new List<Entity>() { EntityBuilder.BuildSniperMech("Player", true) };
+            for (int i = 0; i < iRand.Next(3) + 5; i++)
+            {
+                entities.Add(EntityBuilder.BuildSniperMech("Enemy " + i, false));
+            }
+            var arena = ArenaBuilder.BuildArena(50, 50, iRand.Next(4).ToString(), entities);
             this.arenaMenu = new Menu_Arena(this, arena);
             return this.arenaMenu;
         }

@@ -24,8 +24,7 @@ namespace Executor
             return arena;
         }
 
-        public static ArenaState BuildArena(int width, int height, string mapID, int arenaSeed,
-            Entity baseMech1, Entity baseMech2)
+        public static ArenaState BuildArena(int width, int height, string mapID, IEnumerable<Entity> entities)
         {
             if (!seedsToMaps.ContainsKey(mapID))
             {
@@ -35,15 +34,29 @@ namespace Executor
                 seedsToMaps[mapID] = new Tuple<IMap, PathFinder>(map, pathFinder);
             }
 
-            var mech1 = baseMech1.DeepCopy();
-            var mech2 = baseMech2.DeepCopy();
-            var mapEntities = new List<Entity>() { mech1, mech2 };
+            var mapEntities = new List<Entity>();
+            foreach (var e in entities)
+            {
+                mapEntities.Add(e.DeepCopy());
+            }
             ArenaState arena = new ArenaState(mapEntities, mapID, seedsToMaps[mapID].Item1, seedsToMaps[mapID].Item2);
 
-            arena.PlaceEntityNear(mech1, width - 15, height - 15);
-            arena.PlaceEntityNear(mech2, 15, 15);
+            var placementRand = new DotNetRandom(Int32.Parse(mapID));
+            foreach (var e in mapEntities)
+            {
+                while (!e.HasComponentOfType<Component_Position>())
+                {
+                    arena.PlaceEntityNear(e, placementRand.Next(width - 1), placementRand.Next(height - 1));
+                }
+            }
 
             return arena;
+        }
+
+        public static ArenaState BuildArena(int width, int height, string mapID, int arenaSeed,
+            Entity baseMech1, Entity baseMech2)
+        {
+            return ArenaBuilder.BuildArena(width, height, mapID, new List<Entity>() { baseMech1, baseMech2 });
         }
     }
 }
