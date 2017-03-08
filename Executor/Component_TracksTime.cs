@@ -20,15 +20,6 @@ namespace Executor
             return ImmutableHashSet<SubEntitiesSelector>.Empty.Add(SubEntitiesSelector.TRACKS_TIME);
         }
 
-        private void HandleDelay(GameEvent_Delay ev)
-        {
-            if (ev.ExecutorEntity == this.Parent)
-            {
-                this.LastActivationTick += ev.DelayTicks;
-                ev.Completed = true;
-            }
-        }
-
         private void HandleEndTurn(GameEvent_EndTurn ev)
         {
             if (ev.CommandEntity == this.Parent)
@@ -39,8 +30,6 @@ namespace Executor
 
         protected override GameEvent _HandleEvent(GameEvent ev)
         {
-            if (ev is GameEvent_Delay)
-                this.HandleDelay((GameEvent_Delay)ev);
             if (ev is GameEvent_EndTurn)
                 this.HandleEndTurn((GameEvent_EndTurn)ev);
 

@@ -209,8 +209,9 @@ namespace Executor
             if (!queryCommand.Completed)
             {
                 Log.ErrorLine("Failed to register AI command for " + this.nextCommandEntity);
-                queryCommand.RegisterCommand(new GameEvent_Delay(this.CurrentTick, this.nextCommandEntity,
-                    this.nextCommandEntity, DelayDuration.NEXT_ACTION));
+                var remainingAP = this.nextCommandEntity.TryGetAttribute(EntityAttributeType.CURRENT_AP).Value;
+                queryCommand.RegisterCommand(new GameEvent_Delay(this.CurrentTick, remainingAP,
+                    this.nextCommandEntity));
                 this.nextCommandEntity.HandleEvent(queryCommand.Command);
             }
             else
@@ -231,7 +232,7 @@ namespace Executor
             if (gameEvent != null)
                 gameEvent.CommandEntity.HandleEvent(gameEvent);
             else
-                Console.WriteLine("Couldn't resolve stub: " + stub.ToString());
+                throw new NullReferenceException("Stub " + stub + " reified to null; instead, return a delay!");
             this.ForwardToNextAction();
         }
     }

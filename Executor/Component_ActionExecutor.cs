@@ -73,9 +73,17 @@ namespace Executor
             this.SpendAP(ev.CommandTick, ev.APCost);
         }
 
+        private void HandleDelay(GameEvent_Delay ev)
+        {
+            if (ev.CommandEntity == this.Parent)
+                this.SpendAP(ev.CommandTick, ev.APCost);
+        }
+
         protected override GameEvent _HandleEvent(GameEvent ev)
         {
-            if (ev is GameEvent_FocusEnd)
+            if (ev is GameEvent_Delay)
+                this.HandleDelay((GameEvent_Delay)ev);
+            else if (ev is GameEvent_FocusEnd)
                 this.HandleFocusEnd((GameEvent_FocusEnd)ev);
             else if (ev is GameEvent_Command)
                 this.HandleCommand((GameEvent_Command)ev);

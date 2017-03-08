@@ -6,47 +6,12 @@ using System.Threading.Tasks;
 
 namespace Executor
 {
-    public enum DelayDuration
-    {
-        SINGLE_TICK = 0,
-        NEXT_ACTION,
-        FULL_INTERVAL
-    }
     class GameEvent_Delay : GameEvent_Command
     {
         public int DelayTicks { get; }
-        public DelayDuration Duration { get; }
-
-        // TODO: Delay is weird! Convert over to "Delay = Use All AP"
-        public GameEvent_Delay(int commandTick, Entity commandEntity, Entity delayEntity, DelayDuration duration)
-            : base(commandTick, Config.ONE, commandEntity, delayEntity)
-        {
-            this.Duration = duration;
-            if (this.Duration == DelayDuration.SINGLE_TICK)
-            {
-                this.DelayTicks = 1;
-            }
-            else if (this.Duration == DelayDuration.NEXT_ACTION)
-            {
-                var timeTrackers = new List<Entity>(commandEntity.TryGetSubEntities(SubEntitiesSelector.ACTIVE_TRACKS_TIME));
-                if (commandEntity.HasComponentOfType<Component_TracksTime>())
-                    timeTrackers.Add(commandEntity);
-                timeTrackers.Remove(delayEntity);
-
-                var nextEntity = timeTrackers.Where(e => !e.TryGetDestroyed())
-                    .Where(e => e.TryGetTicksToLive(commandTick) > 0)
-                    .OrderBy(e => e.TryGetTicksToLive(commandTick))
-                    .FirstOrDefault();
-
-                if (nextEntity != null)
-                    this.DelayTicks = nextEntity.TryGetTicksToLive(commandTick);
-                else
-                    this.DelayTicks = delayEntity.HandleQuery(new GameQuery_TicksCooldown()).Value;
-            }
-            else
-            {
-                this.DelayTicks = delayEntity.HandleQuery(new GameQuery_TicksCooldown()).Value;
-            }
-        }
+ 
+        public GameEvent_Delay(int commandTick, int APCost, Entity commandEntity)
+            : base(commandTick, APCost, commandEntity)
+        { }
     }
 }

@@ -33,11 +33,11 @@ namespace Executor
             var targetEntity = arena.EntityAtPosition(attackerPosition.X + this.x, attackerPosition.Y + this.y);
             if (targetEntity != null)
             {
-                return new GameEvent_PrepareAttack(arena.CurrentTick, attackerEntity, targetEntity, equippedWeapon, 
-                    arena.ArenaMap, this.SubTarget);
+                return new GameEvent_PrepareAttack(arena.CurrentTick, Config.ONE, attackerEntity, targetEntity,
+                    equippedWeapon, arena.ArenaMap, this.SubTarget);
             }
             else
-                return null;
+                return new GameEvent_Delay(arena.CurrentTick, Config.ONE, attackerEntity);
         }
     }
 
@@ -65,7 +65,7 @@ namespace Executor
                     .TryGetSubEntities(SubEntitiesSelector.WEAPON)
                     .FirstOrDefault();
 
-            return new GameEvent_PrepareAttack(arena.CurrentTick, arena.ResolveEID(this.AttackerEID),
+            return new GameEvent_PrepareAttack(arena.CurrentTick, Config.ONE, arena.ResolveEID(this.AttackerEID),
                 arena.ResolveEID(this.TargetEID), equippedWeapon, arena.ArenaMap, this.SubTarget);
         }
 
@@ -82,8 +82,8 @@ namespace Executor
         public BodyPartLocation SubTarget { get; private set; }
         public IMap GameMap { get; }
 
-        public GameEvent_PrepareAttack(int commandTick, Entity attacker, Entity target, Entity weapon, IMap gameMap,
-            BodyPartLocation subTarget) : base(commandTick, Config.ONE, attacker, weapon)
+        public GameEvent_PrepareAttack(int commandTick, int APCost, Entity attacker, Entity target, Entity weapon, IMap gameMap,
+            BodyPartLocation subTarget) : base(commandTick, APCost, attacker, weapon)
         {
             if (!weapon.HasComponentOfType<Component_Weapon>())
                 throw new ArgumentException("Can't build attack event - weapon has no Weapon component!");

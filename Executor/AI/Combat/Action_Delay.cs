@@ -13,8 +13,8 @@ namespace Executor.AI.Combat
 
         public override GameEvent_Command GenerateCommand(GameQuery_Command commandQuery)
         {
-            return new GameEvent_Delay(commandQuery.ArenaState.CurrentTick, commandQuery.CommandEntity,
-                commandQuery.CommandEntity, DelayDuration.NEXT_ACTION);
+            var remainingAP = commandQuery.CommandEntity.TryGetAttribute(EntityAttributeType.CURRENT_AP).Value;
+            return new GameEvent_Delay(commandQuery.ArenaState.CurrentTick, remainingAP, commandQuery.CommandEntity);
         }
 
         public override System.Collections.Generic.IEnumerable<SingleClause> EnumerateClauses()
