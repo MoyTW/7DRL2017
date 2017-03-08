@@ -53,30 +53,37 @@ namespace Executor
         }
 
         // TODO: Create a "Mech/Map Blueprint" so you don't pass a literal Entity/IMap instance in!
-        public ArenaState(Entity player, Entity mech2, string mapID, IMap arenaMap, PathFinder arenaPathFinder)
+        public ArenaState(IEnumerable<Entity> mapEntities, string mapID, IMap arenaMap, PathFinder arenaPathFinder)
         {
-            if (!player.HasComponentOfType<Component_Player>())
-                throw new ArgumentException("Can't initialize Arena: Player has no Component_Player");
-            else if (!mech2.HasComponentOfType<Component_AI>())
-                throw new ArgumentNullException("Can't initialize Arena: Mech 2 has no AI!");
-
             this.currentTick = 0;
-            this.Player = player;
-            this.mech2 = mech2;
+
             this.mapEntities = new List<Entity>();
-            this.mapEntities.Add(player);
-            this.mapEntities.Add(mech2);
+            foreach (Entity e in mapEntities)
+            {
+                if (e.HasComponentOfType<Component_Player>())
+                    this.Player = e;
+                this.mapEntities.Add(e);
+            }
+
+            if (this.Player == null)
+                throw new ArgumentException("Can't initialize Arena: Could not find player!");
+
+
+            this.mech2 = this.mapEntities[1];
             this.MapID = mapID;
             this.ArenaMap = arenaMap;
             this.ArenaPathFinder = arenaPathFinder;
-
             ForwardToNextAction();
         }
 
         public ArenaState DeepCopy()
         {
-            return new ArenaState(this.Player.DeepCopy(), this.Mech2.DeepCopy(), this.MapID, this.ArenaMap.Clone(),
-                this.ArenaPathFinder);
+            List<Entity> copyList = new List<Entity>();
+            foreach (var e in this.mapEntities)
+            {
+                copyList.Add(e.DeepCopy());
+            }
+            return new ArenaState(copyList, this.MapID, this.ArenaMap.Clone(), this.ArenaPathFinder);
         }
 
         #region State Changes

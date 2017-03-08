@@ -16,7 +16,8 @@ namespace Executor
         public static ArenaState TestArena(Entity baseMech1, Entity baseMech2)
         {
             var arenaMap = Map.Create(new RogueSharp.MapCreation.BorderOnlyMapCreationStrategy<Map>(15, 15));
-            ArenaState arena = new ArenaState(baseMech1, baseMech2, "test", arenaMap, new PathFinder(arenaMap));
+            var mapEntities = new List<Entity>() { baseMech1, baseMech2 };
+            ArenaState arena = new ArenaState(mapEntities, "test", arenaMap, new PathFinder(arenaMap));
             arena.PlaceEntityNear(baseMech1, 5, 5);
             arena.PlaceEntityNear(baseMech2, 10, 10);
 
@@ -36,7 +37,8 @@ namespace Executor
 
             var mech1 = baseMech1.DeepCopy();
             var mech2 = baseMech2.DeepCopy();
-            ArenaState arena = new ArenaState(mech1, mech2, mapID, seedsToMaps[mapID].Item1, seedsToMaps[mapID].Item2);
+            var mapEntities = new List<Entity>() { mech1, mech2 };
+            ArenaState arena = new ArenaState(mapEntities, mapID, seedsToMaps[mapID].Item1, seedsToMaps[mapID].Item2);
 
             arena.PlaceEntityNear(mech1, width - 15, height - 15);
             arena.PlaceEntityNear(mech2, 15, 15);
