@@ -11,7 +11,7 @@ namespace Executor.AI.Combat
             return commandQuery.CommandEntity.HasComponentOfType<Component_Skeleton>();
         }
 
-        public override GameEvent_Command GenerateCommand(GameQuery_Command commandQuery)
+        public override CommandStub GenerateCommand(GameQuery_Command commandQuery)
         {
             Entity target = commandQuery.ArenaState.Player;
 
@@ -45,10 +45,8 @@ namespace Executor.AI.Combat
 
             if (currDist > myDist)
             {
-                // TODO: Just return a stub!
-                var stub = new CommandStub_MoveSingle(commandQuery.CommandEntity.EntityID, awayX - commandPos.X, 
+                return new CommandStub_MoveSingle(commandQuery.CommandEntity.EntityID, awayX - commandPos.X, 
                     awayY - commandPos.Y);
-                return stub.ReifyStub(commandQuery.ArenaState);
             }
             else
                 return null;

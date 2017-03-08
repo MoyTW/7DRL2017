@@ -11,10 +11,10 @@ namespace Executor.AI.Combat
             return true;
         }
 
-        public override GameEvent_Command GenerateCommand(GameQuery_Command commandQuery)
+        public override CommandStub GenerateCommand(GameQuery_Command commandQuery)
         {
             var remainingAP = commandQuery.CommandEntity.TryGetAttribute(EntityAttributeType.CURRENT_AP).Value;
-            return new GameEvent_Delay(commandQuery.ArenaState.CurrentTick, remainingAP, commandQuery.CommandEntity);
+            return new CommandStub_Delay(commandQuery.CommandEntity.EntityID, remainingAP);
         }
 
         public override System.Collections.Generic.IEnumerable<SingleClause> EnumerateClauses()

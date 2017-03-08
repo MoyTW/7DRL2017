@@ -5,12 +5,10 @@ namespace Executor
 {
     public class GameQuery_Command : GameQuery
     {
-        private GameEvent_Command command;
-
         public Entity CommandEntity { get; }
         public ArenaState ArenaState { get; }
 
-        public GameEvent_Command Command { get { return this.command; } }
+        public CommandStub Command { get; private set; }
 
         public GameQuery_Command(Entity commandEntity, ArenaState arenaState)
         {
@@ -18,12 +16,12 @@ namespace Executor
             this.ArenaState = arenaState;
         }
 
-        public void RegisterCommand(GameEvent_Command command)
+        public void RegisterCommand(CommandStub stub)
         {
-            if (this.command != null)
+            if (this.Command != null)
                 throw new InvalidOperationException("Can't double-register commands!");
 
-            this.command = command;
+            this.Command = stub;
             this.Completed = true;
         }
     }

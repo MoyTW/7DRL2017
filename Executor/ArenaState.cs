@@ -212,14 +212,9 @@ namespace Executor
             {
                 Log.ErrorLine("Failed to register AI command for " + this.nextCommandEntity);
                 var remainingAP = this.nextCommandEntity.TryGetAttribute(EntityAttributeType.CURRENT_AP).Value;
-                queryCommand.RegisterCommand(new GameEvent_Delay(this.CurrentTick, remainingAP,
-                    this.nextCommandEntity));
-                this.nextCommandEntity.HandleEvent(queryCommand.Command);
+                queryCommand.RegisterCommand(new CommandStub_Delay(this.nextCommandEntity.EntityID, remainingAP));
             }
-            else
-                this.nextCommandEntity.HandleEvent(queryCommand.Command);
-
-            this.ForwardToNextAction();
+            this.ResolveStub(queryCommand.Command);
         }
 
         public Entity ResolveEID(string eid)

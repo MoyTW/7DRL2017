@@ -10,7 +10,7 @@ namespace Executor.AI.Combat
             throw new NotImplementedException();
         }
 
-        public override GameEvent_Command GenerateCommand(GameQuery_Command commandQuery)
+        public override CommandStub GenerateCommand(GameQuery_Command commandQuery)
         {
             /*
             Entity target;

@@ -23,7 +23,7 @@ namespace Executor.AI.Combat
             return this.action.CanExecuteOn(commandQuery) && !this.conditions.Any(c => !c.IsMet(commandQuery));
         }
 
-        public GameEvent_Command CommandForQuery(GameQuery_Command commandQuery)
+        public CommandStub CommandForQuery(GameQuery_Command commandQuery)
         {
             return this.action.GenerateCommand(commandQuery);
         }
@@ -60,7 +60,7 @@ namespace Executor.AI.Combat
 
         public void TryRegisterCommand(GameQuery_Command commandRequest)
         {
-            GameEvent_Command command = this.builtRules.Where(r => r.ShouldTakeAction(commandRequest))
+            CommandStub command = this.builtRules.Where(r => r.ShouldTakeAction(commandRequest))
                 .Select(r => r.CommandForQuery(commandRequest))
                 .FirstOrDefault();
             if (command != null)
