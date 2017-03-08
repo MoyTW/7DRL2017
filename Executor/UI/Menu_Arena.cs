@@ -28,7 +28,6 @@ namespace Executor.UI
         public const int statusWidth = 60;
         public const int statusHeight = 45;
         private RLConsole status1Console;
-        private RLConsole status2Console;
 
         public bool MatchEnded { get { return this.arena.IsMatchEnded(); } }
 
@@ -43,7 +42,6 @@ namespace Executor.UI
             hudConsole = new RLConsole(this.hudWidth, this.hudHeight);
             this.focusListConsole = new RLConsole(this.focusListWidth, this.focusListHeight);
             status1Console = new RLConsole(Menu_Arena.statusWidth, Menu_Arena.statusHeight);
-            status2Console = new RLConsole(Menu_Arena.statusWidth, Menu_Arena.statusHeight);
         }
 
         #region IDisplay Fns
@@ -57,7 +55,6 @@ namespace Executor.UI
             this.hudConsole.SetBackColor(0, 0, this.hudWidth, this.hudHeight, RLColor.LightGray);
 
             this.status1Console.SetBackColor(0, 0, Menu_Arena.statusWidth, Menu_Arena.statusHeight, RLColor.LightBlue);
-            this.status2Console.SetBackColor(0, 0, Menu_Arena.statusWidth, Menu_Arena.statusHeight, RLColor.LightCyan);
 
             // Logic
             if (this.arena.IsMatchEnded())
@@ -95,7 +92,6 @@ namespace Executor.UI
             this.arenaConsole.Print(1, 1, "Arena", RLColor.White);
 
             this.status1Console.SetBackColor(0, 0, Menu_Arena.statusWidth, Menu_Arena.statusHeight, RLColor.LightBlue);
-            this.status2Console.SetBackColor(0, 0, Menu_Arena.statusWidth, Menu_Arena.statusHeight, RLColor.LightCyan);
 
             this.DrawArena(this.arenaConsole);
             RLConsole.Blit(this.arenaConsole, 0, 0, Menu_Arena.arenaWidth, Menu_Arena.arenaHeight, console, 0, 0);
@@ -113,10 +109,6 @@ namespace Executor.UI
             Drawer_Mech.DrawMechStatus(this.arena.Player, this.status1Console);
             RLConsole.Blit(this.status1Console, 0, 0, Menu_Arena.statusWidth, Menu_Arena.statusHeight, console,
                 Menu_Arena.arenaWidth, 0);
-
-            Drawer_Mech.DrawMechStatus(this.arena.Mech2, this.status2Console);
-            RLConsole.Blit(this.status2Console, 0, 0, Menu_Arena.statusWidth, Menu_Arena.statusHeight, console,
-                Menu_Arena.arenaWidth, Menu_Arena.statusHeight);
         }
 
         #endregion
@@ -196,12 +188,8 @@ namespace Executor.UI
 
         private IEnumerable<Tuple<Entity,int>> ArenaTimeTrackers()
         {
-            var trackers = new List<Entity>();
-
-            trackers.Add(this.arena.Player);
-            trackers.Add(this.arena.Mech2);
-
-            return trackers.Select(e => new Tuple<Entity,int>(e, e.TryGetTicksToLive(this.arena.CurrentTick)))
+            return this.arena.InspectMapEntities()
+                .Select(e => new Tuple<Entity,int>(e, e.TryGetTicksToLive(this.arena.CurrentTick)))
                 .OrderBy(t => t.Item2);
         }
 
@@ -285,8 +273,6 @@ namespace Executor.UI
 
         public void DrawArena(RLConsole console)
         {
-            var mech2Position = arena.Mech2.TryGetPosition();
-
             // Use RogueSharp to calculate the current field-of-view for the player
             var position = arena.Player.TryGetPosition();
             arena.ArenaMap.ComputeFov(position.X, position.Y, 50, true);
@@ -322,11 +308,15 @@ namespace Executor.UI
 
             // Set the player's symbol after the map symbol to make sure it is draw
             console.Set(position.X, position.Y, RLColor.LightGreen, null, '@');
+            foreach (var e in arena.InspectMapEntities().Where(e => e != arena.Player))
+            {
+                var entityPosition = e.TryGetPosition();
+                if (e.TryGetDestroyed())
+                    console.Set(entityPosition.X, entityPosition.Y, RLColor.LightGreen, null, 'D');
+                else
+                    console.Set(entityPosition.X, entityPosition.Y, RLColor.LightGreen, null, 'E');
+            }
 
-            if (arena.Mech2.TryGetDestroyed())
-                console.Set(mech2Position.X, mech2Position.Y, RLColor.LightGreen, null, 'D');
-            else
-                console.Set(mech2Position.X, mech2Position.Y, RLColor.LightGreen, null, 'E');
         }
     }
 

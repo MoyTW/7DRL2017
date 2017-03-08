@@ -11,7 +11,6 @@ namespace Executor
     {
         private int currentTick;
 
-        private Entity mech2;
         private List<Entity> mapEntities;
 
         // Turn state
@@ -22,7 +21,6 @@ namespace Executor
         // TODO: lol at exposing literally everything
         public int CurrentTick { get { return this.currentTick; } }
         public Entity Player { get; }
-        public Entity Mech2 { get { return this.mech2; } }
         public string MapID { get; }
         public IMap ArenaMap { get; }
         public PathFinder ArenaPathFinder { get; }
@@ -43,6 +41,11 @@ namespace Executor
                     return false;
             }
             return this.ArenaMap.IsWalkable(x, y);
+        }
+
+        public IList<Entity> InspectMapEntities()
+        {
+            return this.mapEntities.AsReadOnly();
         }
 
         public Entity EntityAtPosition(int x, int y)
@@ -79,8 +82,6 @@ namespace Executor
             if (this.Player == null)
                 throw new ArgumentException("Can't initialize Arena: Could not find player!");
 
-
-            this.mech2 = this.mapEntities[1];
             this.MapID = mapID;
             this.ArenaMap = arenaMap;
             this.ArenaPathFinder = arenaPathFinder;

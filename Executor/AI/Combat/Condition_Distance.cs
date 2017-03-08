@@ -61,11 +61,7 @@ namespace Executor.AI.Combat
         public override bool IsMet(GameQuery_Command commandQuery)
         {
             // TODO: This is gonna show up in a lot of conditions, and looks pretty janky.
-            Entity target;
-            if (commandQuery.CommandEntity == commandQuery.ArenaState.Player)
-                target = commandQuery.ArenaState.Mech2;
-            else
-                target = commandQuery.ArenaState.Player;
+            Entity target = commandQuery.ArenaState.Player;
 
             // TODO: Smooth out this int? business!
             // It's an int? because some conditions (asking for WEAPON_RANGE on something which has no range, like a
