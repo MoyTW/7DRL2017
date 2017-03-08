@@ -28,6 +28,7 @@ namespace Executor.UI
         public const int statusWidth = 60;
         public const int statusHeight = 45;
         private RLConsole status1Console;
+        private RLConsole logConsole;
 
         public bool MatchEnded { get { return this.arena.IsMatchEnded(); } }
 
@@ -42,6 +43,7 @@ namespace Executor.UI
             hudConsole = new RLConsole(this.hudWidth, this.hudHeight);
             this.focusListConsole = new RLConsole(this.focusListWidth, this.focusListHeight);
             status1Console = new RLConsole(Menu_Arena.statusWidth, Menu_Arena.statusHeight);
+            this.logConsole = new RLConsole(Menu_Arena.statusWidth, Menu_Arena.statusHeight);
         }
 
         #region IDisplay Fns
@@ -55,6 +57,7 @@ namespace Executor.UI
             this.hudConsole.SetBackColor(0, 0, this.hudWidth, this.hudHeight, RLColor.LightGray);
 
             this.status1Console.SetBackColor(0, 0, Menu_Arena.statusWidth, Menu_Arena.statusHeight, RLColor.LightBlue);
+            this.logConsole.SetBackColor(0, 0, Menu_Arena.statusWidth, Menu_Arena.statusHeight, RLColor.Black);
 
             // Logic
             if (this.arena.IsMatchEnded())
@@ -109,6 +112,10 @@ namespace Executor.UI
             Drawer_Mech.DrawMechStatus(this.arena.Player, this.status1Console);
             RLConsole.Blit(this.status1Console, 0, 0, Menu_Arena.statusWidth, Menu_Arena.statusHeight, console,
                 Menu_Arena.arenaWidth, 0);
+
+            this.DrawLog(this.logConsole);
+            RLConsole.Blit(this.logConsole, 0, 0, Menu_Arena.statusWidth, Menu_Arena.statusHeight, console,
+                Menu_Arena.arenaWidth, Menu_Arena.statusHeight);
         }
 
         #endregion
@@ -239,6 +246,20 @@ namespace Executor.UI
             for (int i = this.focusListHeight; i > line - 1; i--)
             {
                 console.Print(0, i, "                              ", RLColor.Black);
+            }
+        }
+
+        public void DrawLog(RLConsole console)
+        {
+            var log = this.arena.ArenaLog;
+            int i = log.Count - 1;
+            for (int line = console.Height - 1; line > 0; line--)
+            {
+                if (i >= 0)
+                {
+                    console.Print(0, line, log[i], RLColor.White);
+                    i--;
+                }
             }
         }
 

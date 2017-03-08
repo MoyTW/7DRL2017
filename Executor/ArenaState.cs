@@ -24,6 +24,7 @@ namespace Executor
         public string MapID { get; }
         public IMap ArenaMap { get; }
         public PathFinder ArenaPathFinder { get; }
+        public List<String> ArenaLog { get; }
 
         public bool ShouldWaitForPlayerInput {
             get
@@ -69,7 +70,6 @@ namespace Executor
             return this.Player.GetComponentOfType<Component_Skeleton>().IsKilled || !survivingAIs;
         }
 
-        // TODO: Create a "Mech/Map Blueprint" so you don't pass a literal Entity/IMap instance in!
         public ArenaState(IEnumerable<Entity> mapEntities, string mapID, IMap arenaMap, PathFinder arenaPathFinder)
         {
             this.currentTick = 0;
@@ -88,6 +88,8 @@ namespace Executor
             this.MapID = mapID;
             this.ArenaMap = arenaMap;
             this.ArenaPathFinder = arenaPathFinder;
+            this.ArenaLog = new List<String>();
+
             ForwardToNextAction();
         }
 
@@ -230,7 +232,10 @@ namespace Executor
         {
             var gameEvent = stub.ReifyStub(this);
             if (gameEvent != null)
+            {
                 gameEvent.CommandEntity.HandleEvent(gameEvent);
+                this.ArenaLog.Add(gameEvent.ToString());
+            }
             else
                 throw new NullReferenceException("Stub " + stub + " reified to null; instead, return a delay!");
             this.ForwardToNextAction();
