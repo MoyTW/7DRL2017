@@ -108,15 +108,11 @@
     <Compile Include="AI\Combat\Action_MoveAwayEnemy.cs" />
     <Compile Include="AI\Combat\Action_MoveTowardsEnemy.cs" />
     <Compile Include="AI\Combat\AIAction.cs" />
-    <Compile Include="AI\AIUtils.cs" />
     <Compile Include="AI\Combat\Condition.cs" />
     <Compile Include="AI\Combat\Condition_CanSeeEnemy.cs" />
     <Compile Include="AI\Combat\Condition_Distance.cs" />
     <Compile Include="AI\Combat\Condition_Health.cs" />
     <Compile Include="AI\Combat\Guidebook.cs" />
-    <Compile Include="AI\Hanger\Step.cs" />
-    <Compile Include="AI\Hanger\Step_SlotPart.cs" />
-    <Compile Include="AI\Hanger\Step_AttachAttachable.cs" />
     <Compile Include="Component_Piloted.cs" />
     <Compile Include="Component_AttributeModifier.cs" />
     <Compile Include="Component_Skeleton.cs" />
