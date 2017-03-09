@@ -257,7 +257,7 @@ namespace Executor.UI
             {
                 if (i >= 0)
                 {
-                    console.Print(0, line, log[i], RLColor.White);
+                    console.Print(0, line, log[i] + "                                               ", RLColor.White);
                     i--;
                 }
             }

@@ -28,6 +28,15 @@ namespace Executor
 
     class GameEvent_Delay : GameEvent_Command
     {
+        public override bool ShouldLog { get { return true; } }
+        protected override string _LogMessage
+        {
+            get
+            {
+                return string.Format("{0} delayed for {1} AP", this.CommandEntity.Label, this.APCost);
+            }
+        }
+
         public GameEvent_Delay(int commandTick, int APCost, Entity commandEntity)
             : base(commandTick, APCost, commandEntity)
         { }

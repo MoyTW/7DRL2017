@@ -229,7 +229,8 @@ namespace Executor
             if (gameEvent != null)
             {
                 gameEvent.CommandEntity.HandleEvent(gameEvent);
-                this.ArenaLog.Add(gameEvent.ToString());
+                if (gameEvent.ShouldLog)
+                    this.ArenaLog.Add(gameEvent.LogMessage);
             }
             else
                 throw new NullReferenceException("Stub " + stub + " reified to null; instead, return a delay!");

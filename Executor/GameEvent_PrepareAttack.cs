@@ -82,6 +82,16 @@ namespace Executor
         public BodyPartLocation SubTarget { get; private set; }
         public IMap GameMap { get; }
 
+        public override bool ShouldLog { get { return true; } }
+        protected override string _LogMessage
+        {
+            get
+            {
+                return string.Format("{0} attacked {1}'s {2}", this.CommandEntity.Label, this.Target.Label,
+                    this.SubTarget);
+            }
+        }
+
         public GameEvent_PrepareAttack(int commandTick, int APCost, Entity attacker, Entity target, Entity weapon, IMap gameMap,
             BodyPartLocation subTarget) : base(commandTick, APCost, attacker, weapon)
         {

@@ -43,6 +43,15 @@
         public YDirection Y { get; }
         public ArenaState GameArena { get; }
 
+        public override bool ShouldLog { get { return false; } }
+        protected override string _LogMessage
+        {
+            get
+            {
+                return string.Format("{0} moved [{1}, {2}]", this.CommandEntity.Label, this.X, this.Y);
+            }
+        }
+
         public GameEvent_MoveSingle(int commandTick, int APCost, Entity mover, XDirection x, YDirection y, ArenaState gameArena)
             : base(commandTick, APCost, mover)
         {

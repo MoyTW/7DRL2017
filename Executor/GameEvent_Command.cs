@@ -15,12 +15,23 @@ namespace Executor
         abstract public GameEvent_Command ReifyStub(ArenaState arena);
     }
 
-    public class GameEvent_Command : GameEvent
+    public abstract class GameEvent_Command : GameEvent
     {
         public int CommandTick { get; }
         public int APCost { get; }
         public Entity CommandEntity { get; }
         public Entity ExecutorEntity { get; }
+        public abstract bool ShouldLog { get; }
+        public String LogMessage
+        {
+            get
+            {
+                if (!this.Completed)
+                    throw new InvalidOperationException("Can't log an uncompleted event!");
+                return this._LogMessage;
+            }
+        }
+        protected abstract String _LogMessage { get; }
 
         public override bool Completed
         {

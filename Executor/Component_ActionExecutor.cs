@@ -76,7 +76,10 @@ namespace Executor
         private void HandleDelay(GameEvent_Delay ev)
         {
             if (ev.CommandEntity == this.Parent)
+            {
                 this.SpendAP(ev.CommandTick, ev.APCost);
+                ev.Completed = true;
+            }
         }
 
         protected override GameEvent _HandleEvent(GameEvent ev)

@@ -9,6 +9,16 @@ namespace Executor
     {
         public Entity EntityToSlot { get; }
 
+        public override bool ShouldLog { get { return true; } }
+        protected override string _LogMessage
+        {
+            get
+            {
+                return string.Format("{0} equipped {1} on {2}", this.CommandEntity.Label, this.EntityToSlot.Label,
+                    this.ExecutorEntity.Label);
+            }
+        }
+
         // TODO: Slot's currently "free" so the tick is always 0!
         public GameEvent_Slot(Entity topContainer, Entity subContainer, Entity entityToSlot, int commandTick=0)
             : base(commandTick, Config.ZERO, topContainer, subContainer)

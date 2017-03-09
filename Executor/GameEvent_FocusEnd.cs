@@ -19,6 +19,15 @@ namespace Executor
 
     public class GameEvent_FocusEnd : GameEvent_Command
     {
+        public override bool ShouldLog { get { return true; } }
+        protected override string _LogMessage
+        {
+            get
+            {
+                return string.Format("{0}'s focus has ended", this.CommandEntity.Label);
+            }
+        }
+        
         public GameEvent_FocusEnd(int commandTick, Entity commandEntity)
             : base(commandTick, Config.ZERO, commandEntity)
         {
