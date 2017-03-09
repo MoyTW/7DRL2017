@@ -280,7 +280,7 @@ namespace Executor.UI
             line++;
 
             var trackers = this.ArenaTimeTrackers();
-            foreach (var tracker in trackers)
+            foreach (var tracker in trackers.Where(e => !e.Item1.TryGetDestroyed()))
             {
                 var cd = tracker.Item1.HandleQuery(new GameQuery_TicksCooldown()).Value;
                 console.Print(2, line, tracker.Item1.Label + "                  ", RLColor.Black);
@@ -327,8 +327,6 @@ namespace Executor.UI
                 }
             }
 
-            // Set the player's symbol after the map symbol to make sure it is draw
-            console.Set(position.X, position.Y, RLColor.LightGreen, null, '@');
             foreach (var e in arena.InspectMapEntities().Where(e => e != arena.Player))
             {
                 var entityPosition = e.TryGetPosition();
@@ -337,7 +335,7 @@ namespace Executor.UI
                 else
                     console.Set(entityPosition.X, entityPosition.Y, RLColor.LightGreen, null, 'E');
             }
-
+            console.Set(position.X, position.Y, RLColor.LightGreen, null, '@');
         }
     }
 

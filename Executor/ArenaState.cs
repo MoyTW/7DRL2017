@@ -56,9 +56,12 @@ namespace Executor
         {
             foreach (var en in mapEntities)
             {
-                var position = (GameQuery_Position)en.HandleQuery(new GameQuery_Position());
-                if (position != null && position.X == x && position.Y == y)
-                    return en;
+                if (!en.TryGetDestroyed())
+                {
+                    var position = (GameQuery_Position)en.HandleQuery(new GameQuery_Position());
+                    if (position != null && position.X == x && position.Y == y)
+                        return en;
+                }
             }
             return null;
         }
@@ -66,8 +69,8 @@ namespace Executor
         public bool IsMatchEnded()
         {
             bool survivingAIs = this.mapEntities.Where(e => e.HasComponentOfType<Component_AI>())
-                .Any(e => !e.GetComponentOfType<Component_Skeleton>().IsKilled);
-            return this.Player.GetComponentOfType<Component_Skeleton>().IsKilled || !survivingAIs;
+                .Any(e => !e.TryGetDestroyed());
+            return this.Player.TryGetDestroyed() || !survivingAIs;
         }
 
         public ArenaState(IEnumerable<Entity> mapEntities, string mapID, IMap arenaMap, PathFinder arenaPathFinder)

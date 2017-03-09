@@ -125,6 +125,7 @@
     <Compile Include="GameEvent_FocusEnd.cs" />
     <Compile Include="GameEvent_FocusBegin.cs" />
     <Compile Include="Component_FocusUser.cs" />
+    <Compile Include="GameEvent_Destroy.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

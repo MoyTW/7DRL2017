@@ -22,7 +22,7 @@ namespace Executor
 
         public bool IsHeadDestroyed { get; private set; }
         public bool IsTorsoDestroyed { get; private set; }
-        public bool IsKilled
+        private bool IsKilled
         {
             get
             {
@@ -79,6 +79,8 @@ namespace Executor
                 .Where(e => e.GetComponentOfType<Component_BodyPartLocation>().Location == BodyPartLocation.TORSO)
                 .First()
                 .TryGetDestroyed();
+            if (this.IsKilled)
+                this.Parent.HandleEvent(new GameEvent_Destroy());
         }
 
         // All Attack logic currently handled here; might want to put it into its own class for explicit-ness.
@@ -165,7 +167,8 @@ namespace Executor
         // A mech is only considered "Destroyed" when its torso is gone!
         private void HandleQueryDestroyed(GameQuery_Destroyed q)
         {
-            this.bodyParts[BodyPartLocation.TORSO].HandleQuery(q);
+            if (this.IsKilled)
+                q.RegisterDestroyed();
         }
 
         protected override GameQuery _HandleQuery(GameQuery q)

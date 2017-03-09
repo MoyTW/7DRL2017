@@ -6,18 +6,17 @@ namespace Executor
     [Serializable()]
     class Component_Position : Component
     {
-        private int x, y;
-        private bool blocksMovement;
+        public int X { get; private set; }
+        public int Y { get; private set; }
+        public bool BlocksMovement { get; private set; }
+        public bool BlocksMovementWhenDestroyed { get; }
 
-        public int X { get { return this.x; } }
-        public int Y { get { return this.y; } }
-        public bool BlocksMovement { get { return this.blocksMovement; } }
-
-        public Component_Position(int x, int y, bool blocksMovement)
+        public Component_Position(int x, int y, bool blocksMovement, bool blocksMovementWhenDestroyed=false)
         {
-            this.x = x;
-            this.y = y;
-            this.blocksMovement = blocksMovement;
+            this.X = x;
+            this.Y = y;
+            this.BlocksMovement = blocksMovement;
+            this.BlocksMovementWhenDestroyed = blocksMovementWhenDestroyed;
         }
 
         protected override IImmutableSet<SubEntitiesSelector> _MatchingSelectors()
@@ -27,25 +26,32 @@ namespace Executor
 
         private void HandleMove(GameEvent_MoveSingle ev)
         {
-            if (ev.GameArena.IsWalkableAndOpen(this.x + (int)ev.X, this.y + (int)ev.Y))
+            if (ev.GameArena.IsWalkableAndOpen(this.X + (int)ev.X, this.Y + (int)ev.Y))
             {
-                this.x += (int)ev.X;
-                this.y += (int)ev.Y;
+                this.X += (int)ev.X;
+                this.Y += (int)ev.Y;
             }
             ev.Completed = true;
+        }
+
+        private void HandleDestroy(GameEvent_Destroy ev)
+        {
+            this.BlocksMovement = this.BlocksMovementWhenDestroyed;
         }
 
         protected override GameEvent _HandleEvent(GameEvent ev)
         {
             if (ev is GameEvent_MoveSingle)
                 this.HandleMove((GameEvent_MoveSingle)ev);
+            if (ev is GameEvent_Destroy)
+                this.HandleDestroy((GameEvent_Destroy)ev);
 
             return ev;
         }
 
         private void HandleQueryPosition(GameQuery_Position q)
         {
-            q.RegisterPosition(this.x, this.y, this.blocksMovement);
+            q.RegisterPosition(this.X, this.Y, this.BlocksMovement);
         }
 
         protected override GameQuery _HandleQuery(GameQuery q)

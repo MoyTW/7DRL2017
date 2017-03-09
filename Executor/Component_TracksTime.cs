@@ -28,10 +28,17 @@ namespace Executor
             }
         }
 
+        private void HandleDestroy(GameEvent_Destroy ev)
+        {
+            this.LastActivationTick = Int32.MaxValue;
+        }
+
         protected override GameEvent _HandleEvent(GameEvent ev)
         {
             if (ev is GameEvent_EndTurn)
                 this.HandleEndTurn((GameEvent_EndTurn)ev);
+            else if (ev is GameEvent_Destroy)
+                this.HandleDestroy((GameEvent_Destroy)ev);
 
             return ev;
         }
