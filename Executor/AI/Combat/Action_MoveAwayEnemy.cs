@@ -51,11 +51,6 @@ namespace Executor.AI.Combat
             else
                 return null;
         }
-
-        public override System.Collections.Generic.IEnumerable<SingleClause> EnumerateClauses()
-        {
-            yield return new Action_MoveAwayEnemy();
-        }
     }
 }
 

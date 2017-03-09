@@ -16,11 +16,6 @@ namespace Executor.AI.Combat
             var remainingAP = commandQuery.CommandEntity.TryGetAttribute(EntityAttributeType.CURRENT_AP).Value;
             return new CommandStub_Delay(commandQuery.CommandEntity.EntityID, remainingAP);
         }
-
-        public override System.Collections.Generic.IEnumerable<SingleClause> EnumerateClauses()
-        {
-            yield return new Action_Delay();
-        }
     }
 }
 

@@ -26,11 +26,6 @@ namespace Executor.AI.Combat
                 commandQuery.ExecutorEntity, commandQuery.ArenaState.ArenaMap, BodyPartLocation.TORSO);
             */
         }
-
-        public override System.Collections.Generic.IEnumerable<SingleClause> EnumerateClauses()
-        {
-            yield return new Action_AttackEnemy();
-        }
     }
 }
 

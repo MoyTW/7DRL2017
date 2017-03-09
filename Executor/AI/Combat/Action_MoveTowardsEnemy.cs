@@ -60,11 +60,6 @@ namespace Executor.AI.Combat
                 this.lastPath = Action_MoveTowardsEnemy.GeneratePath(commandQuery, targetPos);
             return this.MoveEventForPath(commandQuery, this.lastPath);
         }
-
-        public override System.Collections.Generic.IEnumerable<SingleClause> EnumerateClauses()
-        {
-            yield return new Action_MoveTowardsEnemy();
-        }
     }
 }
 

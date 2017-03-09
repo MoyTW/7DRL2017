@@ -93,17 +93,6 @@ namespace Executor.AI.Combat
             }
         }
 
-        public override IEnumerable<SingleClause> EnumerateClauses()
-        {
-            foreach (var option in Enum.GetValues(typeof(DistanceOption)).Cast<DistanceOption>())
-            {
-                foreach (var op in Enum.GetValues(typeof(ComparisonOperator)).Cast<ComparisonOperator>())
-                {
-                    yield return new Condition_Distance(op, option);
-                }
-            }
-        }
-
         public override string ToString()
         {
             return string.Format("[Condition_Distance: Option={0}, Operator={1}]", Option, Operator);

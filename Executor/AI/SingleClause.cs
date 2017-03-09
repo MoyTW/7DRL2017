@@ -9,6 +9,5 @@ namespace Executor.AI
     [Serializable()]
     public abstract class SingleClause
     {
-        public abstract IEnumerable<SingleClause> EnumerateClauses();
     }
 }

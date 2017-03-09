@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 
 namespace Executor.AI.Combat
 {
-    /*
     [Serializable()]
     class Condition_Health : Condition
     {
@@ -14,11 +13,5 @@ namespace Executor.AI.Combat
         {
             throw new NotImplementedException();
         }
-
-        public override IEnumerable<SingleClause> EnumerateClauses()
-        {
-            yield return new Condition_Health();
-        }
     }
-    */
 }
