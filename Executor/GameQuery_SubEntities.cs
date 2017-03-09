@@ -29,17 +29,17 @@ namespace Executor
         }
 
         private SubEntitiesSelector[] selectors;
-        private List<Entity> subEntities;
+        private HashSet<Entity> subEntities;
 
         public IReadOnlyCollection<SubEntitiesSelector> Selectors { get { return Array.AsReadOnly(this.selectors); } }
 
-        public IList<Entity> SubEntities { get { return this.subEntities.AsReadOnly(); } }
+        public ISet<Entity> SubEntities { get { return this.subEntities; } }
 
         public GameQuery_SubEntities(params SubEntitiesSelector [] selectors)
         {
             if (selectors.Count() == 0)
                 throw new ArgumentException("No selectors sent to GameQuery_SubEntities! What'cha doin?");
-            this.subEntities = new List<Entity>();
+            this.subEntities = new HashSet<Entity>();
             this.selectors = selectors;
         }
 
