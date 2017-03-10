@@ -1,0 +1,15 @@
+* very bad
+** exception on path not findable
+
+I *think* this is caused when you have a NPC blocking another one from the
+player/its destination, it will do a path not findable and the program will
+crash
+
+** 2 AP for missed attacks in focus
+
+I dunno what's going on here
+
+* UI stuff
+** dead space
+
+whoo spooky dead space spook alert
