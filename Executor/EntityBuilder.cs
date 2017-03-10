@@ -190,11 +190,7 @@ namespace Executor
 
             MountOntoArm(mech, BodyPartLocation.LEFT_ARM, BlueprintListing.BuildForLabel(Blueprints.RIFLE));
             MountOntoArm(mech, BodyPartLocation.RIGHT_ARM, BlueprintListing.BuildForLabel(Blueprints.RIFLE));
-
-            BuildMountedPistol(mech, BodyPartLocation.HEAD);
-            BuildMountedPistol(mech, BodyPartLocation.LEFT_ARM);
-            BuildMountedPistol(mech, BodyPartLocation.RIGHT_ARM);
-
+            
             foreach (var location in EntityBuilder.MechLocations)
             {
                 FillLocationWith(mech, location, BuildArmorPart);
