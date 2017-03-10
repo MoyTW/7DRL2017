@@ -11,6 +11,8 @@ namespace Executor
         public const int ZERO = 0;
         public const int ONE = 1;
 
+        public const int DefaultPlayerStartingStructure = 30;
+
         public const int DefaultEntityAP = 1;
         public const int DefaultFocusAPBonus = 3;
         public const int DefaultFocusFreeMoves = 2;

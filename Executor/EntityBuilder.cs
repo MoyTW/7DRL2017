@@ -162,18 +162,23 @@ namespace Executor
             var mech = new Entity(label: label, typeLabel: MechTypeLabel)
                 .AddComponent(new Component_Buffable())
                 .AddComponent(new Component_Piloted(pilot))
-                .AddComponent(new Component_ActionExecutor(Config.DefaultEntityAP))
-                .AddComponent(new Component_Skeleton());
+                .AddComponent(new Component_ActionExecutor(Config.DefaultEntityAP));
 
             if (player)
             {
-                mech.AddComponent(new Component_Player());
-                mech.AddComponent(new Component_FocusUser());
+                mech.AddComponent(new Component_Skeleton(false, Config.DefaultPlayerStartingStructure))
+                    .AddComponent(new Component_Player())
+                    .AddComponent(new Component_FocusUser());
             }
-            else if (book != null)
-                mech.AddComponent(new Component_AI(book));
             else
-                mech.AddComponent(new Component_AI());
+            {
+                mech.AddComponent(new Component_Skeleton(true));
+
+                if (book != null)
+                    mech.AddComponent(new Component_AI(book));
+                else
+                    mech.AddComponent(new Component_AI());
+            }
             
             SlotAt(mech, BodyPartLocation.LEFT_ARM, BlueprintListing.BuildForLabel(Blueprints.ARM_ACTUATOR));
             SlotAt(mech, BodyPartLocation.RIGHT_ARM, BlueprintListing.BuildForLabel(Blueprints.ARM_ACTUATOR));

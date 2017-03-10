@@ -20,13 +20,17 @@ namespace Executor
 
         private Dictionary<BodyPartLocation, Entity> bodyParts;
 
-        public bool IsHeadDestroyed { get; private set; }
-        public bool IsTorsoDestroyed { get; private set; }
+        public bool UsesComponentsForStructure { get; }
+        public int StructureMax { get; }
+        public int StructureRemaining { get; private set; }
+
+        private bool IsHeadDestroyed { get; set; }
+        private bool IsTorsoDestroyed { get; set; }
         private bool IsKilled
         {
             get
             {
-                return this.IsHeadDestroyed || this.IsTorsoDestroyed;
+                return this.StructureRemaining <= 0 && (this.IsHeadDestroyed || this.IsTorsoDestroyed);
             }
         }
 
@@ -38,8 +42,12 @@ namespace Executor
             }
         }
 
-        public Component_Skeleton() : base(EntityAttributeType.SPEED)
+        public Component_Skeleton(bool usesComponentsForStructure, int structureMax=0) : base(EntityAttributeType.SPEED)
         {
+            this.UsesComponentsForStructure = usesComponentsForStructure;
+            this.StructureMax = structureMax;
+            this.StructureRemaining = structureMax;
+
             this.bodyParts = new Dictionary<BodyPartLocation, Entity>();
             // Not technically required, as these will default initialize to false
             this.IsHeadDestroyed = false;
@@ -71,14 +79,17 @@ namespace Executor
         // won't pick up on it! You have to make sure to re-call this function after ANY damage is dealt to the mech.
         private void AssessDamage()
         {
-            this.IsHeadDestroyed = this.Parent.TryGetSubEntities(SubEntitiesSelector.BODY_PART)
-                .Where(e => e.GetComponentOfType<Component_BodyPartLocation>().Location == BodyPartLocation.HEAD)
-                .First()
-                .TryGetDestroyed();
-            this.IsTorsoDestroyed = this.Parent.TryGetSubEntities(SubEntitiesSelector.BODY_PART)
-                .Where(e => e.GetComponentOfType<Component_BodyPartLocation>().Location == BodyPartLocation.TORSO)
-                .First()
-                .TryGetDestroyed();
+            if (this.UsesComponentsForStructure)
+            {
+                this.IsHeadDestroyed = this.Parent.TryGetSubEntities(SubEntitiesSelector.BODY_PART)
+                    .Where(e => e.GetComponentOfType<Component_BodyPartLocation>().Location == BodyPartLocation.HEAD)
+                    .First()
+                    .TryGetDestroyed();
+                this.IsTorsoDestroyed = this.Parent.TryGetSubEntities(SubEntitiesSelector.BODY_PART)
+                    .Where(e => e.GetComponentOfType<Component_BodyPartLocation>().Location == BodyPartLocation.TORSO)
+                    .First()
+                    .TryGetDestroyed();
+            }
             if (this.IsKilled)
                 this.Parent.HandleEvent(new GameEvent_Destroy());
         }
@@ -93,20 +104,17 @@ namespace Executor
 
             int damage = weaponBaseDamage; // Possible damage modifiers
 
+            // Target appropriately
             Entity subTargetEntity = this.bodyParts[ev.SubTarget];
-
-            // This is all damage handling
             if (subTargetEntity.TryGetDestroyed())
-                ev.RegisterAttackResults("MISS (limb missing)");
-            else
-            {
-                subTargetEntity.HandleEvent(new GameEvent_TakeDamage(damage));
+                subTargetEntity = this.Parent;
+            
+            subTargetEntity.HandleEvent(new GameEvent_TakeDamage(damage));
 
-                if (0 >= subTargetEntity.TryGetAttribute(EntityAttributeType.STRUCTURE).Value)
-                    ev.RegisterAttackResults("HIT (" + damage + " dmg, destroyed limb)");
-                else
-                    ev.RegisterAttackResults("HIT (" + damage + " dmg)");
-            }
+            if (0 >= subTargetEntity.TryGetAttribute(EntityAttributeType.STRUCTURE).Value)
+                ev.RegisterAttackResults("HIT (" + damage + " dmg, destroyed limb)");
+            else
+                ev.RegisterAttackResults("HIT (" + damage + " dmg)");
 
             this.AssessDamage();
         }
@@ -114,7 +122,10 @@ namespace Executor
         // Since there is no damage transfer, will *always* complete the event!
         private void HandleTakeDamage(GameEvent_TakeDamage ev)
         {
-            throw new NotImplementedException();
+            Console.WriteLine("Structure: " + this.StructureRemaining + " going to take damage " + ev.DamageRemaining);
+            this.StructureRemaining -= ev.DamageRemaining;
+            Console.WriteLine("After taking damage, structure: " + this.StructureRemaining);
+            ev.Completed = true;
         }
 
         protected override GameEvent _HandleEvent(GameEvent ev)
@@ -146,7 +157,9 @@ namespace Executor
             if (q.AttributeType == EntityAttributeType.SPEED)
                 q.RegisterBaseValue(1);
             else if (q.AttributeType == EntityAttributeType.STRUCTURE)
-                q.RegisterBaseValue(0);
+            {
+                q.RegisterBaseValue(this.StructureRemaining);
+            }
         }
 
         private void HandleQuerySubEntities(GameQuery_SubEntities q)
