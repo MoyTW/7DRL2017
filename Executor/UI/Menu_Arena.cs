@@ -57,6 +57,12 @@ namespace Executor.UI
             // Logic
             if (this.arena.IsMatchEnded())
                 return this.parent;
+
+            if (!this.arena.ShouldWaitForPlayerInput)
+            {
+                this.arena.TryFindAndExecuteNextCommand();
+                return this;
+            }   
             else if (this.targetingMenu.CompletedTargeting)
             {
                 var stub = new CommandStub_PrepareDirectionalAttack(this.arena.Player.EntityID, 
@@ -66,8 +72,7 @@ namespace Executor.UI
                 this.targetingMenu.Reset();
                 return this;
             }
-            else if (this.planFocusMenu.InspectFocusCommands().Count() != 0 &&
-                this.arena.NextCommandEntity == this.arena.Player)
+            else if (this.planFocusMenu.InspectFocusCommands().Count() != 0)
             {
                 this.arena.ResolveStub(this.planFocusMenu.PopStub());
                 // TODO: hahaha turns!
@@ -79,7 +84,6 @@ namespace Executor.UI
             else
             {
                 this.arena.TryFindAndExecuteNextCommand();
-                //Thread.Sleep(50); // inelegant way of forcing games to display slow enough to spectate
                 return this;
             }
         }

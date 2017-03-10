@@ -89,6 +89,24 @@ namespace Executor.UI
             this.QueueStub(new CommandStub_MoveSingle(this.arena.Player.EntityID, dx, dy));
         }
 
+        private void UndoLastCommand()
+        {
+            if (this.focusCommands.Count == 1)
+                return;
+            else
+            {
+                var holder = new List<Tuple<CommandStub,GameQuery_Position>>(this.focusCommands);
+                this.ResetFocusPlan();
+                holder.RemoveAt(0);
+                holder.RemoveAt(holder.Count - 1);
+                foreach (var tuple in holder)
+                {
+                    Console.WriteLine("Holder: " + tuple.Item1);
+                    this.QueueStub(tuple.Item1);
+                }
+            }
+        }
+
         private IDisplay HandleKeyPressed(RLKeyPress keyPress)
         {
             if (keyPress == null)
@@ -99,6 +117,9 @@ namespace Executor.UI
                 case RLKey.Escape:
                     this.focusCommands.Clear();
                     return this.parent;
+                case RLKey.BackSpace:
+                    this.UndoLastCommand();
+                    break;
                 case RLKey.Enter:
                 case RLKey.KeypadEnter:
                     this.FinalizeFocusPlan();

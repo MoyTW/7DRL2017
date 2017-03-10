@@ -239,11 +239,17 @@ namespace Executor
         public void ResolveStub(CommandStub stub)
         {
             var gameEvent = stub.ReifyStub(this);
-            if (gameEvent != null)
+                
+            if (gameEvent != null && gameEvent.CommandEntity == this.nextCommandEntity)
             {
                 gameEvent.CommandEntity.HandleEvent(gameEvent);
                 if (gameEvent.ShouldLog)
                     this.ArenaLog.Add(gameEvent.LogMessage);
+            }
+            else if (gameEvent != null)
+            {
+                Log.ErrorLine("Can't resolve stub " + stub + " against entity " + gameEvent.CommandEntity +
+                    " as next Entity is " + this.nextCommandEntity);
             }
             else
                 throw new NullReferenceException("Stub " + stub + " reified to null; instead, return a delay!");
