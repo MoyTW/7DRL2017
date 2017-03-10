@@ -19,9 +19,8 @@ character will execute.
 
 Entering focus mode has a certain time cost, during which you'll be
 vulnerable. Also, focus mode won't be so strict that you can't plan - you'll be
-able to build in decision points that you can switch between plans during, as
-part of your planning, and you can exit out of focus mode if you realize you've
-made a really bad plan.
+able to have a certain number of 'instant' moves to reposition, and you can exit
+out of focus mode if you realize you've made a really bad plan.
 
 That's the most basic explanation. The game flow will be something like:
 
@@ -54,15 +53,17 @@ Spitballing at AP costs:
 + Move: 1
 + Observe: 1
 + Attack: 1
-+ Stealth Kill: 1
 
 ## Focus Mode: 4 AP/Turn
 
-+ Move Silently: 1
-+ Move Fast: First 2 moves free, 1 for rest
-+ Deflect Bullet: First 3 free
-+ Vault: 2
-+ Cut: 2
++ Move: First 2 moves free, 1 for rest
++ Deflect Bullet: First 3 free, 1/3?
++ Vault?: 2
++ Cut Head?: 2
++ Cut Limb/Torso?: 1
 + Dodge Rockets: 1
+
+Don't know if grenades will have time to go in, but:
+
 + Deflect Grenades: 1
 + Throw Back Grenades: 2
