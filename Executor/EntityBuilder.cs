@@ -154,7 +154,7 @@ namespace Executor
             else if (book != null)
                 mech.AddComponent(new Component_AI(book));
             else
-                mech.AddComponent(new Component_AI());
+                throw new InvalidOperationException("book can't be null!");
             
             SlotAt(mech, BodyPartLocation.LEFT_ARM, BlueprintListing.BuildForLabel(Blueprints.HAND));
             SlotAt(mech, BodyPartLocation.RIGHT_ARM, BlueprintListing.BuildForLabel(Blueprints.HAND));

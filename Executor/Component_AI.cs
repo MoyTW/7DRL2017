@@ -13,16 +13,6 @@ namespace Executor
 
         public IEnumerable<ActionClause> ActionClauses { get { return this.book.ActionClauses; } }
 
-        public Component_AI()
-        {
-            List<ActionClause> clauses = new List<ActionClause>();
-            clauses.Add(new ActionClause_SeekMaxWeaponRange());
-            clauses.Add(new ActionClause_Attack());
-            clauses.Add(new ActionClause_Approach());
-
-            this.book = new Guidebook(clauses);
-        }
-
         public Component_AI(Guidebook book)
         {
             this.book = book;
