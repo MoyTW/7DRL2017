@@ -160,6 +160,7 @@ namespace Executor
         public static Entity BuildNakedMech(string label, bool player, Entity pilot, Guidebook book)
         {
             var mech = new Entity(label: label, typeLabel: MechTypeLabel)
+                .AddComponent(new Component_Buffable())
                 .AddComponent(new Component_Piloted(pilot))
                 .AddComponent(new Component_ActionExecutor(1))
                 .AddComponent(new Component_Skeleton());

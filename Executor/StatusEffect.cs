@@ -2,16 +2,18 @@
 
 namespace Executor
 {
-    abstract public class Component_StatusEffect : Component
+    [Serializable()]
+    // TODO: Should have a IHandlesEvents or something
+    abstract public class StatusEffect : Component
     {
-        public int DurationMax { get; }
-        public int DurationRemaining { get; private set; }
+        public int Duration { get; private set; }
+        public bool Expired { get { return this.Duration <= 0; } }
+
         abstract public string EffectLabel { get; }
 
-        public Component_StatusEffect(int durationMax)
+        public StatusEffect(int duration)
         {
-            this.DurationMax = durationMax;
-            this.DurationRemaining = durationMax;
+            this.Duration = duration;
         }
 
         abstract protected void _HandleEndTurn(GameEvent_EndTurn ev);
@@ -20,9 +22,7 @@ namespace Executor
         {
             this._HandleEndTurn(ev);
 
-            this.DurationRemaining--;
-            if (this.DurationRemaining == 0)
-                this.Parent.RemoveComponent(this);
+            this.Duration--;
         }
 
         protected override GameEvent _HandleEvent(GameEvent ev)

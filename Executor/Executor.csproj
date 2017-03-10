@@ -122,9 +122,10 @@
     <Compile Include="GameEvent_FocusBegin.cs" />
     <Compile Include="Component_FocusUser.cs" />
     <Compile Include="GameEvent_Destroy.cs" />
-    <Compile Include="Component_StatusEffect.cs" />
-    <Compile Include="Component_BlockBullets.cs" />
     <Compile Include="GameEvent_ReceiveStatusEffect.cs" />
+    <Compile Include="Component_Buffable.cs" />
+    <Compile Include="StatusEffect.cs" />
+    <Compile Include="StatusEffect_Blocking.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

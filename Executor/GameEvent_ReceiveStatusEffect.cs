@@ -7,10 +7,10 @@ namespace Executor
         public string TargetEID { get; }
         public string TargetLabel { get; }
         public string CasterEID { get; }
-        public Component_StatusEffect StatusEffect { get; }
+        public StatusEffect StatusEffect { get; }
 
         public CommandStub_ReceiveStatusEffect(string targetEID, string targetLabel, string casterEID,
-            Component_StatusEffect statusEffect)
+            StatusEffect statusEffect)
             : base(targetEID)
         {
             this.TargetEID = targetEID;
@@ -33,7 +33,7 @@ namespace Executor
 
     public class GameEvent_ReceiveStatusEffect : GameEvent_Command
     {
-        public Component_StatusEffect StatusEffect { get; }
+        public StatusEffect Effect { get; }
 
         public override bool ShouldLog { get { return true; } }
         protected override string _LogMessage
@@ -41,19 +41,19 @@ namespace Executor
             get
             {
                 return string.Format("{0} is now {1} (Source {2})", this.CommandEntity.Label,
-                    this.StatusEffect.EffectLabel, this.ExecutorEntity.Label);
+                    this.Effect.EffectLabel, this.ExecutorEntity.Label);
             }
         }
 
         public GameEvent_ReceiveStatusEffect(int commandTick, int APCost, Entity commandEntity, 
-            Component_StatusEffect statusEffect) : this(commandTick, APCost, commandEntity, commandEntity, statusEffect)
+            StatusEffect effect) : this(commandTick, APCost, commandEntity, commandEntity, effect)
         { }
 
         public GameEvent_ReceiveStatusEffect(int commandTick, int APCost, Entity commandEntity, Entity executorEntity,
-            Component_StatusEffect statusEffect)
+            StatusEffect effect)
             : base(commandTick, APCost, commandEntity, executorEntity)
         {
-            this.StatusEffect = statusEffect;
+            this.Effect = effect;
         }
     }
 }

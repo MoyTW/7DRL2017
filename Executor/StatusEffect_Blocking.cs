@@ -3,7 +3,7 @@ using System.Collections.Immutable;
 
 namespace Executor
 {
-    public class Component_BlockBullets : Component_StatusEffect
+    public class StatusEffect_Blocking : StatusEffect
     {
         public int BlocksMax { get; }
         public int BlocksRemaining { get; private set; }
@@ -15,7 +15,7 @@ namespace Executor
             }
         }
 
-        public Component_BlockBullets(int duration, int blocksMax) : base(duration)
+        public StatusEffect_Blocking(int duration, int blocksMax) : base(duration)
         {
             this.BlocksMax = blocksMax;
             this.BlocksRemaining = blocksMax;

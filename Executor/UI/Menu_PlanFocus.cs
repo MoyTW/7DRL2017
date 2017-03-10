@@ -95,7 +95,7 @@ namespace Executor.UI
                     this.targetingMenu.Reset();
                     return this.targetingMenu;
                 case RLKey.D:
-                    var blockEffect = new Component_BlockBullets(1, 3);
+                    var blockEffect = new StatusEffect_Blocking(1, 3);
                     this.QueueStub(new CommandStub_ReceiveStatusEffect(this.arena.Player.EntityID,
                             this.arena.Player.Label, this.arena.Player.EntityID, blockEffect));
                     break;
