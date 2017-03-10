@@ -119,6 +119,16 @@ namespace Executor
             throw new NotImplementedException();
         }
 
+        public void HandleReceiveStatusEffect(GameEvent_ReceiveStatusEffect ev)
+        {
+            Console.WriteLine("STATUS IN SKELETON " + ev.CommandEntity + " PARENT " + this.Parent);
+            if (this.Parent == ev.CommandEntity)
+            {
+                this.Parent.AddComponentAtTop(ev.StatusEffect);
+                ev.Completed = true;
+            }
+        }
+
         protected override GameEvent _HandleEvent(GameEvent ev)
         {
             // TODO: Move off inheritance
@@ -129,6 +139,8 @@ namespace Executor
                 this.HandleTakeDamage((GameEvent_TakeDamage)ev);
             else if (ev is GameEvent_MoveSingle)
                 return ev;
+            else if (ev is GameEvent_ReceiveStatusEffect)
+                this.HandleReceiveStatusEffect((GameEvent_ReceiveStatusEffect)ev);
 
             return ev;
         }

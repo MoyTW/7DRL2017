@@ -130,6 +130,20 @@ namespace Executor
             return this;
         }
 
+        // Note that ordering is controlled *only* by the order in which this is called!
+        public Entity AddComponentAtTop(Component comp)
+        {
+            if (this.orderedComponents.Contains(comp))
+            {
+                throw new ArgumentException("Cannot add " + comp.ToString() + " to entity " + this.ToString() +
+                    " as it is already added!");
+            }
+
+            this.orderedComponents.Insert(0, comp);
+            comp.Notify_Added(this);
+            return this;
+        }
+
         public Entity RemoveComponent(Component comp)
         {
             if (!this.orderedComponents.Contains(comp))

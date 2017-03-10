@@ -231,6 +231,7 @@ namespace Executor
             var gameEvent = stub.ReifyStub(this);
             if (gameEvent != null)
             {
+                Console.WriteLine("COmmand" + gameEvent.CommandEntity + " event " + gameEvent);
                 gameEvent.CommandEntity.HandleEvent(gameEvent);
                 if (gameEvent.ShouldLog)
                     this.ArenaLog.Add(gameEvent.LogMessage);

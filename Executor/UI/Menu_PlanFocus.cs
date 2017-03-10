@@ -90,9 +90,16 @@ namespace Executor.UI
                 case RLKey.KeypadEnter:
                     this.FinalizeFocusPlan();
                     return this.parent;
+                // Actions
                 case RLKey.A:
                     this.targetingMenu.Reset();
                     return this.targetingMenu;
+                case RLKey.D:
+                    var blockEffect = new Component_BlockBullets(1, 3);
+                    this.QueueStub(new CommandStub_ReceiveStatusEffect(this.arena.Player.EntityID,
+                            this.arena.Player.Label, this.arena.Player.EntityID, blockEffect));
+                    break;
+                // Movement
                 case RLKey.Keypad1:
                 case RLKey.B:
                     this.QueueMoveCommand(-1, 1);
