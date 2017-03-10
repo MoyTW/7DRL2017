@@ -11,6 +11,10 @@ namespace Executor
         public const int ZERO = 0;
         public const int ONE = 1;
 
+        public const int DefaultEntityAP = 1;
+        public const int DefaultFocusAPBonus = 3;
+        public const int DefaultFocusFreeMoves = 2;
+
         public static int ArenaWidth { get { return 50; } }
         public static int ArenaHeight { get { return 50; } }
 

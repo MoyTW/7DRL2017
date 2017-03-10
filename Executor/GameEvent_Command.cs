@@ -18,7 +18,7 @@ namespace Executor
     public abstract class GameEvent_Command : GameEvent
     {
         public int CommandTick { get; }
-        public int APCost { get; }
+        public int APCost { get; private set; }
         public Entity CommandEntity { get; }
         public Entity ExecutorEntity { get; }
         public abstract bool ShouldLog { get; }
@@ -58,6 +58,11 @@ namespace Executor
             this.APCost = APCost;
             this.CommandEntity = commandEntity;
             this.ExecutorEntity = executorEntity;
+        }
+
+        public void MakeFreeAction()
+        {
+            this.APCost = 0;
         }
     }
 }

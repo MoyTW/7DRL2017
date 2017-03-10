@@ -6,13 +6,16 @@ namespace Executor
     [Serializable()]
     public class Component_FocusUser : Component
     {
-        private int focusAPBonus;
+        private int focusAPBonus, focusFreeMovesMax, focusFreeMovesCurrent;
 
         public bool InFocus { get; private set; }
 
-        public Component_FocusUser(int focusAPBonus=6) 
+        public Component_FocusUser(int focusAPBonus=Config.DefaultFocusAPBonus,
+            int focusFreeMoves=Config.DefaultFocusFreeMoves) 
         {
             this.focusAPBonus = focusAPBonus;
+            this.focusFreeMovesMax = focusFreeMoves;
+            this.focusFreeMovesCurrent = focusFreeMoves;
             this.InFocus = false;
         }
 
@@ -33,12 +36,32 @@ namespace Executor
             ev.Completed = true;
         }
 
+        private void HandleEndTurn(GameEvent_EndTurn ev)
+        {
+            this.focusFreeMovesCurrent = this.focusFreeMovesMax;
+        }
+
+        private void HandleMoveSingle(GameEvent_MoveSingle ev)
+        {
+            if (ev.CommandEntity != this.Parent)
+                throw new InvalidOperationException("!?");
+            if (this.InFocus && this.focusFreeMovesCurrent > 0)
+            {
+                ev.MakeFreeAction();
+                this.focusFreeMovesCurrent--;
+            }
+        }
+
         protected override GameEvent _HandleEvent(GameEvent ev)
         {
             if (ev is GameEvent_FocusBegin)
                 this.HandleFocusBegin((GameEvent_FocusBegin)ev);
             else if (ev is GameEvent_FocusEnd)
                 this.HandleFocusEnd((GameEvent_FocusEnd)ev);
+            else if (ev is GameEvent_EndTurn)
+                this.HandleEndTurn((GameEvent_EndTurn)ev);
+            else if (ev is GameEvent_MoveSingle)
+                this.HandleMoveSingle((GameEvent_MoveSingle)ev);
 
             return ev;
         }
