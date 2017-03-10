@@ -54,21 +54,21 @@ namespace Executor.UI
 
             var mechDestroyed = mech.TryGetDestroyed();
             if (mechDestroyed)
-                console.Print(1, line, mech.ToString(), RLColor.Red);
+                console.Print(1, line, mech.ToString() + "             ", RLColor.Red);
             else
-                console.Print(1, line, mech.ToString(), RLColor.Black);
+                console.Print(1, line, mech.ToString() + "             ", RLColor.Black);
             line++;
             line++;
 
             var skeleton = mech.GetComponentOfType<Component_Skeleton>();
-            Drawer_Mech.DrawBodyPartStatus(skeleton.InspectBodyPart(BodyPartLocation.LEFT_ARM), 0, line + 2, mechDestroyed, console);
-            Drawer_Mech.DrawBodyPartStatus(skeleton.InspectBodyPart(BodyPartLocation.LEFT_LEG), 0, line + 20, mechDestroyed, console);
+            Drawer_Mech.DrawBodyPartStatus(skeleton.InspectBodyPart(BodyPartLocation.LEFT_ARM), 0, line + 4, mechDestroyed, console);
+            Drawer_Mech.DrawBodyPartStatus(skeleton.InspectBodyPart(BodyPartLocation.LEFT_LEG), 0, line + 14, mechDestroyed, console);
 
             Drawer_Mech.DrawBodyPartStatus(skeleton.InspectBodyPart(BodyPartLocation.HEAD), 20, line, mechDestroyed, console);
-            Drawer_Mech.DrawBodyPartStatus(skeleton.InspectBodyPart(BodyPartLocation.TORSO), 20, line + 12, mechDestroyed, console);
+            Drawer_Mech.DrawBodyPartStatus(skeleton.InspectBodyPart(BodyPartLocation.TORSO), 20, line + 8, mechDestroyed, console);
 
-            Drawer_Mech.DrawBodyPartStatus(skeleton.InspectBodyPart(BodyPartLocation.RIGHT_ARM), 40, line + 2, mechDestroyed, console);
-            Drawer_Mech.DrawBodyPartStatus(skeleton.InspectBodyPart(BodyPartLocation.RIGHT_LEG), 40, line + 20, mechDestroyed, console);
+            Drawer_Mech.DrawBodyPartStatus(skeleton.InspectBodyPart(BodyPartLocation.RIGHT_ARM), 40, line + 4, mechDestroyed, console);
+            Drawer_Mech.DrawBodyPartStatus(skeleton.InspectBodyPart(BodyPartLocation.RIGHT_LEG), 40, line + 14, mechDestroyed, console);
         }
     }
 }

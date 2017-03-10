@@ -127,6 +127,7 @@
     <Compile Include="AI\Condition_Health.cs" />
     <Compile Include="AI\Guidebook.cs" />
     <Compile Include="AI\ActionClause.cs" />
+    <Compile Include="UI\Menu_Examine.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

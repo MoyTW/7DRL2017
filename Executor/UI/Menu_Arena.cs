@@ -12,6 +12,7 @@ namespace Executor.UI
         private readonly ArenaState arena;
         private readonly Menu_Targeting targetingMenu;
         private readonly Menu_PlanFocus planFocusMenu;
+        private readonly Menu_Examine examineMenu;
 
         private const int arenaConsoleWidth = 70;
         private const int arenaConsoleHeight = 70;
@@ -34,6 +35,7 @@ namespace Executor.UI
             this.arena = arena;
             this.targetingMenu = new Menu_Targeting(this, Config.TargetingWindowX, Config.TargetingWindowY);
             this.planFocusMenu = new Menu_PlanFocus(this, arena);
+            this.examineMenu = new Menu_Examine(this, arena);
 
             arenaConsole = new RLConsole(Menu_Arena.arenaConsoleWidth, Menu_Arena.arenaConsoleHeight);
             this.focusListConsole = new RLConsole(this.focusListWidth, this.focusListHeight);
@@ -97,7 +99,7 @@ namespace Executor.UI
             RLConsole.Blit(this.focusListConsole, 0, 0, this.focusListWidth, this.focusListHeight, console,
                 Menu_Arena.arenaConsoleWidth + Menu_Arena.statusWidth, 0);
 
-            Drawer_Mech.DrawMechStatus(this.arena.Player, this.status1Console);
+            Drawer_Mech.DrawMechStatus(this.examineMenu.ExaminedEntity, this.status1Console);
             RLConsole.Blit(this.status1Console, 0, 0, Menu_Arena.statusWidth, Menu_Arena.statusHeight, console,
                 Menu_Arena.arenaConsoleWidth, 0);
 
@@ -129,8 +131,8 @@ namespace Executor.UI
                     break;
                     */
                 case RLKey.E:
-                    // Technically, this doesn't limit it to the player mech.
-                    return new Menu_MechDetails(this, this.arena.Player);
+                    this.examineMenu.Start();
+                    return this.examineMenu;
                 case RLKey.A:
                     this.targetingMenu.Reset();
                     return this.targetingMenu;
@@ -304,6 +306,7 @@ namespace Executor.UI
                     console.Set(entityPosition.X, entityPosition.Y, RLColor.Red, null, 'E');
             }
 
+            // Draw focus path
             var paths = this.planFocusMenu.InspectFocusPath().ToList();
             for (int i = 0; i < paths.Count; i++)
             {
@@ -311,7 +314,16 @@ namespace Executor.UI
                 var fp = paths[i];
                 console.SetBackColor(fp.X, fp.Y, FadeColor(RLColor.LightGreen, v));
             }
+
+            // Draw player
             console.Set(position.X, position.Y, RLColor.Green, null, '@');
+
+            // Highlight examined
+            if (this.examineMenu.Examining)
+            {
+                var examinedPostion = this.examineMenu.ExaminedEntity.TryGetPosition();
+                console.SetBackColor(examinedPostion.X, examinedPostion.Y, RLColor.Yellow);
+            }
         }
     }
 
