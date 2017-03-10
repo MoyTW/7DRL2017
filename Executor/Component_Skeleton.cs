@@ -91,23 +91,21 @@ namespace Executor
             
             int weaponBaseDamage = ev.Attacker.TryGetAttribute(EntityAttributeType.DAMAGE, ev.Weapon).Value;
 
-            Log.DebugLine(String.Format("{0} attacked {1}!", ev.Attacker, ev.SubTarget));
-
             int damage = weaponBaseDamage; // Possible damage modifiers
 
             Entity subTargetEntity = this.bodyParts[ev.SubTarget];
 
             // This is all damage handling
             if (subTargetEntity.TryGetDestroyed())
-                ev.RegisterAttackResults(false, missedDueToMissingBodyPart: true);
+                ev.RegisterAttackResults("MISSED (limb missing)");
             else
             {
                 subTargetEntity.HandleEvent(new GameEvent_TakeDamage(damage));
 
                 if (0 >= subTargetEntity.TryGetAttribute(EntityAttributeType.STRUCTURE).Value)
-                    ev.RegisterAttackResults(true, damage: damage, destroyedBodyPart: true);
+                    ev.RegisterAttackResults("HIT (destroyed limb)");
                 else
-                    ev.RegisterAttackResults(true, damage: damage);
+                    ev.RegisterAttackResults("HIT (" + damage + "damage)");
             }
 
             this.AssessDamage();

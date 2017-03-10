@@ -78,6 +78,8 @@ namespace Executor
 
     public class GameEvent_PrepareAttack : GameEvent_Command
     {
+        private string resultMessage;
+
         // Attack info
         public Entity Target { get; }
         public BodyPartLocation SubTarget { get; private set; }
@@ -88,13 +90,21 @@ namespace Executor
         {
             get
             {
-                return string.Format("{0} attacked {1}'s {2}", this.CommandEntity.Label, this.Target.Label,
-                    this.SubTarget);
+                return String.Format("{0} attacked {1}'s {2}: {3}", this.CommandEntity.Label, this.Target.Label,
+                    this.SubTarget, this.resultMessage);
             }
         }
 
-        public GameEvent_PrepareAttack(int commandTick, int APCost, Entity attacker, Entity target, Entity weapon, IMap gameMap,
-            BodyPartLocation subTarget) : base(commandTick, APCost, attacker, weapon)
+        public override bool Completed
+        {
+            set
+            {
+                throw new InvalidOperationException("Need to return results");
+            }
+        }
+
+        public GameEvent_PrepareAttack(int commandTick, int APCost, Entity attacker, Entity target, Entity weapon,
+            IMap gameMap, BodyPartLocation subTarget) : base(commandTick, APCost, attacker, weapon)
         {
             if (!weapon.HasComponentOfType<Component_Weapon>())
                 throw new ArgumentException("Can't build attack event - weapon has no Weapon component!");
@@ -102,6 +112,12 @@ namespace Executor
             this.Target = target;
             this.SubTarget = subTarget;
             this.GameMap = gameMap;
+        }
+
+        public void RegisterResult(string resultMessage)
+        {
+            this.resultMessage = resultMessage;
+            base.Completed = true;
         }
     }
 }

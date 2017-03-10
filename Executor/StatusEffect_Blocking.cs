@@ -36,8 +36,8 @@ namespace Executor
         {
             if (this.BlocksRemaining > 0)
             {
-                ev.RegisterAttackResults(false);
                 this.BlocksRemaining--;
+                ev.RegisterAttackResults(String.Format("BLOCKED ({0} remaining)", this.BlocksRemaining));
             }
         }
 

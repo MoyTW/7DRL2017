@@ -27,8 +27,7 @@ namespace Executor
                 var distance = lineCells.Count() - 1;
                 if (distance > weaponRange)
                 {
-                    Log.DebugLine("Attack missed due to range! Distance: " + distance + " Range: " + weaponRange);
-                    ev.Completed = true;
+                    ev.RegisterResult("MISS (out of range)");
                     return;
                 }
 
@@ -36,17 +35,14 @@ namespace Executor
                 // If any of the cells isn't walkable, then your shot is blocked and the attack stops
                 if (lineCells.Any(c => !c.IsWalkable))
                 {
-                    Log.DebugLine("Attack missed due to intervening terrain!");
-                    ev.Completed = true;
+                    ev.RegisterResult("MISS (no straight shot)");
                     return;
                 }
 
                 // Forward the attack to the target
                 var receiveAttack = new GameEvent_ReceiveAttack(ev);
                 ev.Target.HandleEvent(receiveAttack);
-                if (receiveAttack.Completed)
-                    ev.Completed = true;
-                else
+                if (!receiveAttack.Completed)
                     Log.DebugLine("Could not resolve attack against " + ev.Target.ToString());
             }
         }
