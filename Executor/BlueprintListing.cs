@@ -11,19 +11,11 @@ namespace Executor
     public static class Blueprints
     {
         public const string POWER_PLANT = "Pwr.Plnt.";
-        public const string ARM_ACTUATOR = "Arm.Actr.";
+        public const string HAND = "Hand";
         public const string LEG_ACTUATOR = "Lg.Actr.";
-        public const string MISSILE_RACK = "Mssl.Rck.";
-        public const string MINI_MISSILE = "Mn.Mssl.";
-        public const string SNIPER_RILFE = "Snpr.Rfl.";
         public const string RIFLE = "Rfl.";
         public const string MACHINEGUN = "Mchngn.";
-        public const string SHOTGUN = "Shtgn";
         public const string PISTOL = "Pstl.";
-        public const string ROCKET_POD = "Rckt.Pd.";
-        public const string DAGGER = "Dggr.";
-        public const string SWORD = "Swrd.";
-        public const string HAMMER = "Hmmr.";
         public const string SMALL_MOUNT = "Smll.Mnt.";
         public const string MEDIUM_MOUNT = "Mdm.Mnt.";
         public const string LARGE_MOUNT = "Lrg.Mnt.";
@@ -32,7 +24,7 @@ namespace Executor
         public const string LARGE_HOLSTER = "Lrg.Hlstr.";
         public const string ACCELERATOR = "Acclrtr.";
         public const string SENSOR_PACKAGE = "Snsr.Pckg.";
-        public const string ARMOR = "Armr.";
+        public const string ARMOR = "Armor";
     }
 
     public static class BlueprintListing

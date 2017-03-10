@@ -104,7 +104,7 @@ namespace Executor
         {
             var armActuator = GetBodyPart(mech, location)
                 .TryGetSubEntities(SubEntitiesSelector.SWAPPABLE_ATTACH_POINTS)
-                .Where(e => e.Label == Blueprints.ARM_ACTUATOR)
+                .Where(e => e.Label == Blueprints.HAND)
                 .First();
             armActuator.HandleEvent(new GameEvent_Slot(mech, armActuator, mountable));
             return mech;
@@ -113,15 +113,6 @@ namespace Executor
         #endregion
 
         #region Slottable Parts
-
-        #region Weapons
-
-        public static Entity BuildMountedSniperRifle(Entity mech, BodyPartLocation location)
-        {
-            return BuildMountForWeapon(mech, location, BlueprintListing.BuildForLabel(Blueprints.SNIPER_RILFE));
-        }
-
-        #endregion
 
         #region Other Parts
 
@@ -165,10 +156,24 @@ namespace Executor
             else
                 mech.AddComponent(new Component_AI());
             
-            SlotAt(mech, BodyPartLocation.LEFT_ARM, BlueprintListing.BuildForLabel(Blueprints.ARM_ACTUATOR));
-            SlotAt(mech, BodyPartLocation.RIGHT_ARM, BlueprintListing.BuildForLabel(Blueprints.ARM_ACTUATOR));
+            SlotAt(mech, BodyPartLocation.LEFT_ARM, BlueprintListing.BuildForLabel(Blueprints.HAND));
+            SlotAt(mech, BodyPartLocation.RIGHT_ARM, BlueprintListing.BuildForLabel(Blueprints.HAND));
 
             // Slot in all the required components
+            return mech;
+        }
+
+        public static Entity BuildPlayerEntity()
+        {
+            var mech = BuildNakedMech("You", true, new Entity(), null);
+
+            MountOntoArm(mech, BodyPartLocation.RIGHT_ARM, EntityBuilderWeapons.BuildHFBlade());
+
+            foreach (var location in EntityBuilder.MechLocations)
+            {
+                FillLocationWith(mech, location, BuildArmorPart);
+            }
+
             return mech;
         }
 
@@ -181,21 +186,6 @@ namespace Executor
             MountOntoArm(mech, BodyPartLocation.LEFT_ARM, BlueprintListing.BuildForLabel(Blueprints.RIFLE));
             MountOntoArm(mech, BodyPartLocation.RIGHT_ARM, BlueprintListing.BuildForLabel(Blueprints.RIFLE));
             
-            foreach (var location in EntityBuilder.MechLocations)
-            {
-                FillLocationWith(mech, location, BuildArmorPart);
-            }
-
-            return mech;
-        }
-
-        public static Entity BuildSniperMech(string label, bool player, Guidebook book=null)
-        {
-            var mech = BuildNakedMech(label, player, new Entity(), book);
-
-            MountOntoArm(mech, BodyPartLocation.LEFT_ARM, BlueprintListing.BuildForLabel(Blueprints.SNIPER_RILFE));
-            MountOntoArm(mech, BodyPartLocation.RIGHT_ARM, BlueprintListing.BuildForLabel(Blueprints.SNIPER_RILFE));
-
             foreach (var location in EntityBuilder.MechLocations)
             {
                 FillLocationWith(mech, location, BuildArmorPart);

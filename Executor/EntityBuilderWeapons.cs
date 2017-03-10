@@ -13,6 +13,11 @@ namespace Executor
                 .AddComponent(new Component_Attacker());
         }
 
+        public static Entity BuildHFBlade()
+        {
+            return EntityBuilderWeapons.BuildWeapon("H.F. Blade", AttachmentSize.MEDIUM, 1, 10, 0);
+        }
+
         public static Entity BuildPistol()
         {
             return EntityBuilderWeapons.BuildWeapon("Pistol", AttachmentSize.SMALL, 20, 3, 0);
