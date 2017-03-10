@@ -6,16 +6,18 @@ namespace Executor
     [Serializable()]
     public class Component_FocusUser : Component
     {
-        private int focusAPBonus, focusFreeMovesMax, focusFreeMovesCurrent;
+        private int focusAPBonus;
 
         public bool InFocus { get; private set; }
+        public int MaxFreeMoves { get; }
+        public int CurrentFreeMoves { get; private set; }
 
         public Component_FocusUser(int focusAPBonus=Config.DefaultFocusAPBonus,
             int focusFreeMoves=Config.DefaultFocusFreeMoves) 
         {
             this.focusAPBonus = focusAPBonus;
-            this.focusFreeMovesMax = focusFreeMoves;
-            this.focusFreeMovesCurrent = focusFreeMoves;
+            this.MaxFreeMoves = focusFreeMoves;
+            this.CurrentFreeMoves = focusFreeMoves;
             this.InFocus = false;
         }
 
@@ -38,17 +40,17 @@ namespace Executor
 
         private void HandleEndTurn(GameEvent_EndTurn ev)
         {
-            this.focusFreeMovesCurrent = this.focusFreeMovesMax;
+            this.CurrentFreeMoves = this.MaxFreeMoves;
         }
 
         private void HandleMoveSingle(GameEvent_MoveSingle ev)
         {
             if (ev.CommandEntity != this.Parent)
                 throw new InvalidOperationException("!?");
-            if (this.InFocus && this.focusFreeMovesCurrent > 0)
+            if (this.InFocus && this.CurrentFreeMoves > 0)
             {
                 ev.MakeFreeAction();
-                this.focusFreeMovesCurrent--;
+                this.CurrentFreeMoves--;
             }
         }
 

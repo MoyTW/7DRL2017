@@ -15,6 +15,12 @@ namespace Executor.UI
         private ArenaState copyArena;
         public int StartTick { get; private set; }
         public int EndTick { get; private set; }
+        public int RemainingFreeMoves {
+            get
+            {
+                return this.copyArena.Player.GetComponentOfType<Component_FocusUser>().CurrentFreeMoves;
+            }
+        }
         public int RemainingAP { 
             get
             { 

@@ -211,8 +211,9 @@ namespace Executor.UI
             if (this.planFocusMenu.InspectFocusCommands().Count != 0)
             {
                 console.Print(0, line, "#", RLColor.Black);
-                console.Print(7, line, "Turn: " + this.planFocusMenu.EndTick + "           ", RLColor.Black);
-                console.Print(18, line, "AP: " + this.planFocusMenu.RemainingAP + "           ", RLColor.Black);
+                console.Print(3, line, "Turn: " + this.planFocusMenu.EndTick + "           ", RLColor.Black);
+                console.Print(12, line, "Moves: " + this.planFocusMenu.RemainingFreeMoves + "         ", RLColor.Black);
+                console.Print(22, line, "AP: " + this.planFocusMenu.RemainingAP + "           ", RLColor.Black);
                 console.Print(29, line, "#", RLColor.Black);
             }
             else
