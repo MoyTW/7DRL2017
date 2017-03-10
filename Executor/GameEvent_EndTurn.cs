@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Executor
 {
-    class GameEvent_EndTurn : GameEvent
+    public class GameEvent_EndTurn : GameEvent
     {
         public int TurnTick { get; }
         public Entity CommandEntity { get; }
