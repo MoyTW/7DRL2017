@@ -4,6 +4,7 @@ using RogueSharp.Random;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Executor
 {
@@ -41,12 +42,14 @@ namespace Executor
             }
             ArenaState arena = new ArenaState(mapEntities, mapID, seedsToMaps[mapID].Item1, seedsToMaps[mapID].Item2);
 
+            var openCells = arena.ArenaMap.GetAllCells().Where(c => c.IsWalkable).ToList();
             var placementRand = new DotNetRandom(Int32.Parse(mapID));
             foreach (var e in mapEntities)
             {
                 while (!e.HasComponentOfType<Component_Position>())
                 {
-                    arena.PlaceEntityNear(e, placementRand.Next(width - 1), placementRand.Next(height - 1));
+                    var cell = openCells[placementRand.Next(openCells.Count - 1)];
+                    arena.PlaceEntityNear(e, cell.X, cell.Y);
                 }
             }
 

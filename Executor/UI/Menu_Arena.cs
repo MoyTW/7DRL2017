@@ -13,13 +13,9 @@ namespace Executor.UI
         private readonly Menu_Targeting targetingMenu;
         private readonly Menu_PlanFocus planFocusMenu;
 
-        public const int arenaWidth = 50;
-        public const int arenaHeight = 50;
+        private const int arenaConsoleWidth = 70;
+        private const int arenaConsoleHeight = 70;
         private RLConsole arenaConsole;
-
-        private readonly int hudWidth = 20;
-        private readonly int hudHeight = 90;
-        private RLConsole hudConsole;
 
         private readonly int focusListWidth = 30;
         private readonly int focusListHeight = 90;
@@ -39,8 +35,7 @@ namespace Executor.UI
             this.targetingMenu = new Menu_Targeting(this, Config.TargetingWindowX, Config.TargetingWindowY);
             this.planFocusMenu = new Menu_PlanFocus(this, arena);
 
-            arenaConsole = new RLConsole(Menu_Arena.arenaWidth, Menu_Arena.arenaHeight);
-            hudConsole = new RLConsole(this.hudWidth, this.hudHeight);
+            arenaConsole = new RLConsole(Menu_Arena.arenaConsoleWidth, Menu_Arena.arenaConsoleHeight);
             this.focusListConsole = new RLConsole(this.focusListWidth, this.focusListHeight);
             status1Console = new RLConsole(Menu_Arena.statusWidth, Menu_Arena.statusHeight);
             this.logConsole = new RLConsole(Menu_Arena.statusWidth, Menu_Arena.statusHeight);
@@ -51,10 +46,8 @@ namespace Executor.UI
         public IDisplay OnRootConsoleUpdate(RLConsole console, RLKeyPress keyPress)
         {
             // Drawing sets
-            this.arenaConsole.SetBackColor(0, 0, Menu_Arena.arenaWidth, Menu_Arena.arenaHeight, RLColor.Black);
+            this.arenaConsole.SetBackColor(0, 0, Menu_Arena.arenaConsoleWidth, Menu_Arena.arenaConsoleHeight, RLColor.Black);
             this.arenaConsole.Print(1, 1, "Arena", RLColor.White);
-
-            this.hudConsole.SetBackColor(0, 0, this.hudWidth, this.hudHeight, RLColor.LightGray);
 
             this.status1Console.SetBackColor(0, 0, Menu_Arena.statusWidth, Menu_Arena.statusHeight, RLColor.LightBlue);
             this.logConsole.SetBackColor(0, 0, Menu_Arena.statusWidth, Menu_Arena.statusHeight, RLColor.Black);
@@ -91,31 +84,26 @@ namespace Executor.UI
 
         public void Blit(RLConsole console)
         {
-            this.arenaConsole.SetBackColor(0, 0, Menu_Arena.arenaWidth, Menu_Arena.arenaHeight, RLColor.Black);
+            this.arenaConsole.SetBackColor(0, 0, Menu_Arena.arenaConsoleWidth, Menu_Arena.arenaConsoleHeight, RLColor.Black);
             this.arenaConsole.Print(1, 1, "Arena", RLColor.White);
 
             this.status1Console.SetBackColor(0, 0, Menu_Arena.statusWidth, Menu_Arena.statusHeight, RLColor.LightBlue);
 
             this.DrawArena(this.arenaConsole);
-            RLConsole.Blit(this.arenaConsole, 0, 0, Menu_Arena.arenaWidth, Menu_Arena.arenaHeight, console, 0, 0);
-
-            this.hudConsole.SetBackColor(0, 0, this.hudWidth, this.hudHeight, RLColor.LightGray);
-            this.DrawHUD(this.hudConsole);
-            RLConsole.Blit(this.hudConsole, 0, 0, this.hudWidth, this.hudHeight, console,
-                Menu_Arena.arenaWidth + Menu_Arena.statusWidth, 0);
+            RLConsole.Blit(this.arenaConsole, 0, 0, Menu_Arena.arenaConsoleWidth, Menu_Arena.arenaConsoleHeight, console, 0, 0);
 
             this.focusListConsole.SetBackColor(0, 0, this.focusListWidth, this.focusListHeight, RLColor.LightMagenta);
             this.DrawFocusList(this.focusListConsole);
             RLConsole.Blit(this.focusListConsole, 0, 0, this.focusListWidth, this.focusListHeight, console,
-                Menu_Arena.arenaWidth + Menu_Arena.statusWidth + this.hudWidth, 0);
+                Menu_Arena.arenaConsoleWidth + Menu_Arena.statusWidth, 0);
 
             Drawer_Mech.DrawMechStatus(this.arena.Player, this.status1Console);
             RLConsole.Blit(this.status1Console, 0, 0, Menu_Arena.statusWidth, Menu_Arena.statusHeight, console,
-                Menu_Arena.arenaWidth, 0);
+                Menu_Arena.arenaConsoleWidth, 0);
 
             this.DrawLog(this.logConsole);
             RLConsole.Blit(this.logConsole, 0, 0, Menu_Arena.statusWidth, Menu_Arena.statusHeight, console,
-                Menu_Arena.arenaWidth, Menu_Arena.statusHeight);
+                Menu_Arena.arenaConsoleWidth, Menu_Arena.statusHeight);
         }
 
         #endregion
@@ -264,35 +252,6 @@ namespace Executor.UI
                     console.Print(0, line, log[i] + "                                               ", RLColor.White);
                     i--;
                 }
-            }
-        }
-
-        public void DrawHUD(RLConsole console)
-        {
-            int line = 0;
-
-            // HUD line
-            console.Print(0, line,   "####################", RLColor.Black);
-            console.Print(0, ++line, "#                  #", RLColor.Black);
-            console.Print(0, ++line, "#    TURN ORDER    #", RLColor.Black);
-            console.Print(0, ++line, "#                  #", RLColor.Black);
-            console.Print(0, ++line, "#     Turn: " + arena.CurrentTick + "           ", RLColor.Black);
-            console.Print(19, line, "#", RLColor.Black);
-            console.Print(0, ++line, "#                  #", RLColor.Black);
-            console.Print(0, ++line, "####################", RLColor.Black);
-            console.Print(0, ++line, "+------------------+", RLColor.Black);
-            line++;
-
-            var trackers = this.ArenaTimeTrackers();
-            foreach (var tracker in trackers.Where(e => !e.Item1.TryGetDestroyed()))
-            {
-                var cd = tracker.Item1.HandleQuery(new GameQuery_TicksCooldown()).Value;
-                console.Print(2, line, tracker.Item1.Label + "                  ", RLColor.Black);
-                console.Print(0, line, "|", RLColor.Black);
-                console.Print(19, line, "|", RLColor.Black);
-                line++;
-                console.Print(0, line, "+------------------+", RLColor.Black);
-                line++;
             }
         }
 

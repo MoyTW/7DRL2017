@@ -15,8 +15,8 @@ namespace Executor
         public const int DefaultFocusAPBonus = 3;
         public const int DefaultFocusFreeMoves = 2;
 
-        public static int ArenaWidth { get { return 50; } }
-        public static int ArenaHeight { get { return 50; } }
+        public static int ArenaWidth { get { return 60; } }
+        public static int ArenaHeight { get { return 60; } }
 
         public static int TargetingWindowX { get { return 50; } }
         public static int TargetingWindowY { get { return 23; } }

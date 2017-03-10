@@ -32,7 +32,8 @@ namespace Executor.UI
             {
                 entities.Add(EntityBuilder.BuildSniperMech("Enemy " + i, false));
             }
-            var arena = ArenaBuilder.BuildArena(50, 50, iRand.Next(4).ToString(), entities);
+            var arena = ArenaBuilder.BuildArena(Config.ArenaWidth, Config.ArenaHeight, iRand.Next(4).ToString(),
+                entities);
             this.arenaMenu = new Menu_Arena(this, arena);
             return this.arenaMenu;
         }
