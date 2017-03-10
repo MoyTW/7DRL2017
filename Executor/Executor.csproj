@@ -131,6 +131,8 @@
     <Compile Include="AI\ActionClause_AvoidMelee.cs" />
     <Compile Include="AI\ActionClause_Attack.cs" />
     <Compile Include="AI\ActionClause_Approach.cs" />
+    <Compile Include="EntityBuilderEnemies.cs" />
+    <Compile Include="EntityBuilderWeapons.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

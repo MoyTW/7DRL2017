@@ -65,6 +65,13 @@ namespace Executor.UI
         {
             int line = 1;
 
+            int y = line;
+            while (y < console.Height)
+            {
+                console.Print(0, y, "                                                                                                     ", RLColor.Black);
+                y++;
+            }
+
             var mechDestroyed = mech.TryGetDestroyed();
             if (mechDestroyed)
                 console.Print(1, line, mech.ToString() + "             ", RLColor.Red);
@@ -83,12 +90,6 @@ namespace Executor.UI
             Drawer_Mech.DrawBodyPartStatus(skeleton.InspectBodyPart(BodyPartLocation.RIGHT_ARM), 40, line + 4, mechDestroyed, console);
             Drawer_Mech.DrawBodyPartStatus(skeleton.InspectBodyPart(BodyPartLocation.RIGHT_LEG), 40, line + 14, mechDestroyed, console);
 
-            int y = line + 26;
-            while (y < console.Height)
-            {
-                console.Print(0, y, "                                                                 ", RLColor.Black);
-                y++;
-            }
             if (mech.HasComponentOfType<Component_AI>())
             {
                 Drawer_Mech.DrawAIInfo(mech, 0, line + 26, console);
