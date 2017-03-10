@@ -146,6 +146,9 @@ namespace Executor.UI
                 case RLKey.A:
                     this.targetingMenu.Reset();
                     return this.targetingMenu;
+                // BLOCKER: If you hit F on the same turn as somebody shoots you to death it locks up
+                // heh
+                // should fix that
                 case RLKey.F:
                     this.planFocusMenu.ResetFocusPlan();
                     return this.planFocusMenu;
