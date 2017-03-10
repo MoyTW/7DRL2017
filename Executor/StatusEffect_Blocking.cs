@@ -3,6 +3,7 @@ using System.Collections.Immutable;
 
 namespace Executor
 {
+    [Serializable()]
     public class StatusEffect_Blocking : StatusEffect
     {
         public int BlocksMax { get; }

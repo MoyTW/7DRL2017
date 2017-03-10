@@ -7,6 +7,7 @@ namespace Executor
     [Serializable()]
     public class Component_Buffable : Component
     {
+        private List<StatusEffect> applyQueue = new List<StatusEffect>();
         private List<StatusEffect> activeEffects = new List<StatusEffect>();
 
         public Component_Buffable() { }
@@ -20,7 +21,7 @@ namespace Executor
         {
             if (this.Parent == ev.CommandEntity)
             {
-                this.activeEffects.Add(ev.Effect);
+                this.applyQueue.Add(ev.Effect);
                 ev.Completed = true;
             }
         }
@@ -32,6 +33,11 @@ namespace Executor
                 if (this.activeEffects[i].Expired)
                     this.activeEffects.RemoveAt(i);
             }
+            foreach (var effect in this.applyQueue)
+            {
+                this.activeEffects.Add(effect);
+            }
+            this.applyQueue.Clear();
         }
 
         protected override GameEvent _HandleEvent(GameEvent ev)
