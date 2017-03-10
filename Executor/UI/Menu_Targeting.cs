@@ -124,6 +124,9 @@ namespace Executor.UI
                 case RLKey.Left:
                     this.TargetedLocation = BodyPartLocation.LEFT_ARM;
                     break;
+                case RLKey.Keypad2:
+                case RLKey.Down:
+                case RLKey.J:
                 case RLKey.Keypad5:
                     this.TargetedLocation = BodyPartLocation.TORSO;
                     break;
