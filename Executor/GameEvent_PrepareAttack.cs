@@ -90,7 +90,7 @@ namespace Executor
         {
             get
             {
-                return String.Format("{0} attacked {1}'s {2}: {3}", this.CommandEntity.Label, this.Target.Label,
+                return String.Format("{0} -> {1} ({2}): {3}", this.CommandEntity.Label, this.Target.Label,
                     this.SubTarget, this.resultMessage);
             }
         }

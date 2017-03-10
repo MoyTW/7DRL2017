@@ -97,15 +97,15 @@ namespace Executor
 
             // This is all damage handling
             if (subTargetEntity.TryGetDestroyed())
-                ev.RegisterAttackResults("MISSED (limb missing)");
+                ev.RegisterAttackResults("MISS (limb missing)");
             else
             {
                 subTargetEntity.HandleEvent(new GameEvent_TakeDamage(damage));
 
                 if (0 >= subTargetEntity.TryGetAttribute(EntityAttributeType.STRUCTURE).Value)
-                    ev.RegisterAttackResults("HIT (destroyed limb)");
+                    ev.RegisterAttackResults("HIT (" + damage + " dmg, destroyed limb)");
                 else
-                    ev.RegisterAttackResults("HIT (" + damage + "damage)");
+                    ev.RegisterAttackResults("HIT (" + damage + " dmg)");
             }
 
             this.AssessDamage();

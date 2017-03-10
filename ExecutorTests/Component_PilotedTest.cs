@@ -19,12 +19,10 @@ namespace ExecutorTests
             this.pilot = new Entity();
 
             this.mech1 = EntityBuilder.BuildNakedMech("1", true, pilot, null);
-            var mountedGun = EntityBuilder.BuildMountedPistol(mech1, BodyPartLocation.HEAD);
-            this.mech1Gun = mountedGun.GetComponentOfType<Component_AttachPoint>().InspectAttachedEntity();
-            EntityBuilder.SlotAt(mech1, BodyPartLocation.HEAD, mountedGun);
-            EntityBuilder.BuildMountedRifle(mech1, BodyPartLocation.LEFT_ARM);
+            this.mech1Gun = BlueprintListing.BuildForLabel(Blueprints.PISTOL);
+            EntityBuilder.MountOntoArm(this.mech1, BodyPartLocation.RIGHT_ARM, mech1Gun);
 
-            this.mech2 = EntityBuilder.BuildNakedMech("2", false, new Entity(), null);
+            this.mech2 = EntityBuilder.BuildArmoredMech("2", false);
             this.arena = ArenaBuilder.TestArena(mech1, mech2);
         }
 
@@ -38,8 +36,7 @@ namespace ExecutorTests
             var attack = stub.ReifyStub(this.arena);
             mech1.HandleEvent(attack);
 
-            // Assert.AreEqual(attack.ResultDamage, 6);
-            Assert.AreEqual(0, 1);
+            Assert.IsTrue(attack.LogMessage.Contains("6 dmg"));
         }
 
         [Test]

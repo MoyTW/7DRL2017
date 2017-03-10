@@ -100,7 +100,7 @@ namespace Executor
             return holster;
         }
 
-        private static Entity MountOntoArm(Entity mech, BodyPartLocation location, Entity mountable)
+        public static Entity MountOntoArm(Entity mech, BodyPartLocation location, Entity mountable)
         {
             var armActuator = GetBodyPart(mech, location)
                 .TryGetSubEntities(SubEntitiesSelector.SWAPPABLE_ATTACH_POINTS)
