@@ -10,6 +10,7 @@ namespace Executor.AI
     public class Guidebook
     {
         private List<ActionClause> builtRules;
+        public IEnumerable<ActionClause> ActionClauses { get { return this.builtRules; } }
 
         public Guidebook(IEnumerable<SingleClause> rawRules)
         {

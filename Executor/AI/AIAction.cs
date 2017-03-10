@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace Executor.AI
 {
     [Serializable()]
-    abstract class AIAction : SingleClause
+    public abstract class AIAction : SingleClause
     {
         public abstract Boolean CanExecuteOn(GameQuery_Command commandQuery);
         public abstract CommandStub GenerateCommand(GameQuery_Command commandQuery);

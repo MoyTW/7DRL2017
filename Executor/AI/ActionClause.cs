@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace Executor.AI
 {
     [Serializable()]
-    class ActionClause
+    public class ActionClause
     {
         private IEnumerable<Condition> conditions;
         private AIAction action;

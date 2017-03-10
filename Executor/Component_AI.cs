@@ -11,6 +11,8 @@ namespace Executor
     {
         private Guidebook book;
 
+        public IEnumerable<ActionClause> ActionClauses { get { return this.book.ActionClauses; } }
+
         public Component_AI()
         {
             List<SingleClause> rawRules = new List<SingleClause>();

@@ -48,6 +48,18 @@ namespace Executor.UI
             return y - 3;
         }
 
+        private static void DrawAIInfo(Entity mech, int x, int y, RLConsole console)
+        {
+            int line = y;
+
+            var clauses = mech.GetComponentOfType<Component_AI>().ActionClauses;
+            foreach (var clause in clauses)
+            {
+                console.Print(x, ++line, clause.ToString(), RLColor.Black);
+
+            }
+        }
+
         public static void DrawMechStatus(Entity mech, RLConsole console)
         {
             int line = 1;
@@ -69,6 +81,17 @@ namespace Executor.UI
 
             Drawer_Mech.DrawBodyPartStatus(skeleton.InspectBodyPart(BodyPartLocation.RIGHT_ARM), 40, line + 4, mechDestroyed, console);
             Drawer_Mech.DrawBodyPartStatus(skeleton.InspectBodyPart(BodyPartLocation.RIGHT_LEG), 40, line + 14, mechDestroyed, console);
+
+            int y = line + 26;
+            while (y < console.Height)
+            {
+                console.Print(0, y, "                                         ", RLColor.Black);
+                y++;
+            }
+            if (mech.HasComponentOfType<Component_AI>())
+            {
+                Drawer_Mech.DrawAIInfo(mech, 0, line + 26, console);
+            }
         }
     }
 }
