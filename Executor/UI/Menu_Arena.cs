@@ -296,6 +296,11 @@ namespace Executor.UI
             }
         }
 
+        private static RLColor FadeColor(RLColor color, float f)
+        {
+            return new RLColor(color.r * f, color.g * f, color.b * f);
+        }
+
         public void DrawArena(RLConsole console)
         {
             // Use RogueSharp to calculate the current field-of-view for the player
@@ -340,11 +345,12 @@ namespace Executor.UI
                     console.Set(entityPosition.X, entityPosition.Y, RLColor.Red, null, 'E');
             }
 
-            // Draw player and focus path
-            foreach (var fp in this.planFocusMenu.InspectFocusPath())
+            var paths = this.planFocusMenu.InspectFocusPath().ToList();
+            for (int i = 0; i < paths.Count; i++)
             {
-                if (fp.X != position.X && fp.Y != position.Y)
-                    console.SetBackColor(fp.X, fp.Y, RLColor.LightGreen);
+                float v = (float)i / (float)paths.Count;
+                var fp = paths[i];
+                console.SetBackColor(fp.X, fp.Y, FadeColor(RLColor.LightGreen, v));
             }
             console.Set(position.X, position.Y, RLColor.Green, null, '@');
         }
