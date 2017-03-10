@@ -29,8 +29,8 @@ namespace Executor
         {
             if (!seedsToMaps.ContainsKey(mapID))
             {
-                var map = Map.Create(new RogueSharp.MapCreation.CaveMapCreationStrategy<Map>(width, height,
-                    45, 4, 3, new DotNetRandom(Int32.Parse(mapID))));
+                var map = Map.Create(new RogueSharp.MapCreation.RandomRoomsMapCreationStrategy<Map>(width, height,
+                    2000, 9, 5, new DotNetRandom(Int32.Parse(mapID))));
                 var pathFinder = new PathFinder(map);
                 seedsToMaps[mapID] = new Tuple<IMap, PathFinder>(map, pathFinder);
             }
