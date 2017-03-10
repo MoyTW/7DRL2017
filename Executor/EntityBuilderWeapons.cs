@@ -7,7 +7,7 @@ namespace Executor
         private static Entity BuildWeapon(string label, AttachmentSize size, int maxRange, int damage, 
             int refireTicks)
         {
-            return new Entity(label, "Weapon")
+            return new Entity(label: label, typeLabel: "Weapon")
                 .AddComponent(new Component_Attachable(size))
                 .AddComponent(new Component_Weapon(size, Config.ZERO, maxRange, damage, refireTicks))
                 .AddComponent(new Component_Attacker());
