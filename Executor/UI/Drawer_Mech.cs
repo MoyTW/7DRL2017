@@ -52,10 +52,11 @@ namespace Executor.UI
         {
             int line = y;
 
+            console.Print(x + 1, ++line, "Enemy Threat Assessment:", RLColor.Black);
             var clauses = mech.GetComponentOfType<Component_AI>().ActionClauses;
             foreach (var clause in clauses)
             {
-                console.Print(x, ++line, clause.ToString(), RLColor.Black);
+                console.Print(x + 1, ++line, "* " + clause.Label + " (" + clause.Description + ")", RLColor.Black);
 
             }
         }
@@ -85,7 +86,7 @@ namespace Executor.UI
             int y = line + 26;
             while (y < console.Height)
             {
-                console.Print(0, y, "                                         ", RLColor.Black);
+                console.Print(0, y, "                                                                 ", RLColor.Black);
                 y++;
             }
             if (mech.HasComponentOfType<Component_AI>())

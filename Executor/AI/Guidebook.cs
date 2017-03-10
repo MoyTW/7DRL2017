@@ -9,36 +9,17 @@ namespace Executor.AI
     [Serializable()]
     public class Guidebook
     {
-        private List<ActionClause> builtRules;
-        public IEnumerable<ActionClause> ActionClauses { get { return this.builtRules; } }
+        private List<ActionClause> clauses;
+        public IList<ActionClause> ActionClauses { get { return this.clauses.AsReadOnly(); } }
 
-        public Guidebook(IEnumerable<SingleClause> rawRules)
+        public Guidebook(List<ActionClause> clauses)
         {
-            this.builtRules = Guidebook.BuildRules(rawRules);
-        }
-
-        private static List<ActionClause> BuildRules(IEnumerable<SingleClause> rawRules)
-        {
-            var builtRules = new List<ActionClause>();
-            var acc = new List<Condition>();
-            foreach (var clause in rawRules)
-            {
-                if (clause is AIAction)
-                {
-                    builtRules.Add(new ActionClause(acc, (AIAction)clause));
-                    acc = new List<Condition>();
-                }
-                else if (clause is Condition)
-                    acc.Add((Condition)clause);
-                else
-                    Log.ErrorLine("Can't process clause " + clause);
-            }
-            return builtRules;
+            this.clauses = clauses;
         }
 
         public void TryRegisterCommand(GameQuery_Command commandRequest)
         {
-            CommandStub command = this.builtRules.Where(r => r.ShouldTakeAction(commandRequest))
+            CommandStub command = this.clauses.Where(r => r.ShouldTakeAction(commandRequest))
                 .Select(r => r.CommandForQuery(commandRequest))
                 .FirstOrDefault();
             if (command != null)

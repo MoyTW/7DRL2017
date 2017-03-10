@@ -4,10 +4,12 @@ using System.Collections.Generic;
 namespace Executor.AI
 {
     [Serializable()]
-    public class ActionClause
+    abstract public class ActionClause
     {
         private IEnumerable<Condition> conditions;
         private AIAction action;
+        public abstract string Label { get; }
+        public abstract string Description { get; }
 
         public ActionClause(IEnumerable<Condition> conditions, AIAction action)
         {
