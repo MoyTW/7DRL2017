@@ -8,7 +8,8 @@ namespace Executor.AI
     {
         public override bool CanExecuteOn(GameQuery_Command commandQuery)
         {
-            return commandQuery.CommandEntity.HasComponentOfType<Component_Skeleton>();
+            return commandQuery.CommandEntity.HasComponentOfType<Component_Skeleton>() &&
+                this.GenerateCommand(commandQuery) != null;
         }
 
         public override CommandStub GenerateCommand(GameQuery_Command commandQuery)

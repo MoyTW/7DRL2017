@@ -16,7 +16,7 @@ namespace Executor
         public Component_AI()
         {
             List<ActionClause> clauses = new List<ActionClause>();
-            clauses.Add(new ActionClause_AvoidMelee());
+            clauses.Add(new ActionClause_SeekMaxWeaponRange());
             clauses.Add(new ActionClause_Attack());
             clauses.Add(new ActionClause_Approach());
 

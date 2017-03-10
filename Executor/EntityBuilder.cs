@@ -121,16 +121,6 @@ namespace Executor
             return BuildMountForWeapon(mech, location, BlueprintListing.BuildForLabel(Blueprints.SNIPER_RILFE));
         }
 
-        public static Entity BuildMountedRifle(Entity mech, BodyPartLocation location)
-        {
-            return BuildMountForWeapon(mech, location, BlueprintListing.BuildForLabel(Blueprints.RIFLE));
-        }
-
-        public static Entity BuildMountedPistol(Entity mech, BodyPartLocation location)
-        {
-            return BuildMountForWeapon(mech, location, BlueprintListing.BuildForLabel(Blueprints.PISTOL));
-        }
-
         #endregion
 
         #region Other Parts

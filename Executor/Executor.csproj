@@ -128,11 +128,12 @@
     <Compile Include="AI\Guidebook.cs" />
     <Compile Include="AI\ActionClause.cs" />
     <Compile Include="UI\Menu_Examine.cs" />
-    <Compile Include="AI\ActionClause_AvoidMelee.cs" />
     <Compile Include="AI\ActionClause_Attack.cs" />
     <Compile Include="AI\ActionClause_Approach.cs" />
     <Compile Include="EntityBuilderEnemies.cs" />
     <Compile Include="EntityBuilderWeapons.cs" />
+    <Compile Include="AI\ActionClause_AvoidMelee.cs" />
+    <Compile Include="AI\ActionClause_SeekMaxWeaponRange.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

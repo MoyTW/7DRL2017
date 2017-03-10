@@ -13,9 +13,14 @@ namespace Executor
                 .AddComponent(new Component_Attacker());
         }
 
-        public static Entity BuildRifle()
+        public static Entity BuildPistol()
         {
-            return EntityBuilderWeapons.BuildWeapon("Rifle", AttachmentSize.LARGE, 20, 8, 0);
+            return EntityBuilderWeapons.BuildWeapon("Pistol", AttachmentSize.SMALL, 20, 3, 0);
+        }
+
+        public static Entity BuildCombatRifle()
+        {
+            return EntityBuilderWeapons.BuildWeapon("Combat Rifle", AttachmentSize.LARGE, 50, 8, 0);
         }
     }
 }
