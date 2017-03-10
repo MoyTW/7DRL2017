@@ -1,4 +1,4 @@
-﻿using Executor.AI.Combat;
+﻿using Executor.AI;
 using RogueSharp.Random;
 using System;
 using System.Collections.Generic;

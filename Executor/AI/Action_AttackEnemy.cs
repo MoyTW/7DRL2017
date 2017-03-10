@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace Executor.AI.Combat
+namespace Executor.AI
 {
     [Serializable()]
     class Action_AttackEnemy : AIAction

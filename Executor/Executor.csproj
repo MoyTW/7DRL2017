@@ -103,16 +103,6 @@
     <Compile Include="UI\Menu_MechDetails.cs" />
     <Compile Include="UI\IntegerSelectionField.cs" />
     <Compile Include="UI\Menu_Main.cs" />
-    <Compile Include="AI\Combat\Action_AttackEnemy.cs" />
-    <Compile Include="AI\Combat\Action_Delay.cs" />
-    <Compile Include="AI\Combat\Action_MoveAwayEnemy.cs" />
-    <Compile Include="AI\Combat\Action_MoveTowardsEnemy.cs" />
-    <Compile Include="AI\Combat\AIAction.cs" />
-    <Compile Include="AI\Combat\Condition.cs" />
-    <Compile Include="AI\Combat\Condition_CanSeeEnemy.cs" />
-    <Compile Include="AI\Combat\Condition_Distance.cs" />
-    <Compile Include="AI\Combat\Condition_Health.cs" />
-    <Compile Include="AI\Combat\Guidebook.cs" />
     <Compile Include="Component_Piloted.cs" />
     <Compile Include="Component_AttributeModifier.cs" />
     <Compile Include="Component_Skeleton.cs" />
@@ -126,6 +116,16 @@
     <Compile Include="Component_Buffable.cs" />
     <Compile Include="StatusEffect.cs" />
     <Compile Include="StatusEffect_Blocking.cs" />
+    <Compile Include="AI\Action_AttackEnemy.cs" />
+    <Compile Include="AI\Action_Delay.cs" />
+    <Compile Include="AI\Action_MoveAwayEnemy.cs" />
+    <Compile Include="AI\Action_MoveTowardsEnemy.cs" />
+    <Compile Include="AI\AIAction.cs" />
+    <Compile Include="AI\Condition.cs" />
+    <Compile Include="AI\Condition_CanSeeEnemy.cs" />
+    <Compile Include="AI\Condition_Distance.cs" />
+    <Compile Include="AI\Condition_Health.cs" />
+    <Compile Include="AI\Guidebook.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

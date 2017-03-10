@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Executor.AI.Combat
+namespace Executor.AI
 {
     [Serializable()]
     class Action_MoveAwayEnemy : AIAction

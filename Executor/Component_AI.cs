@@ -1,5 +1,4 @@
 ﻿using Executor.AI;
-using Executor.AI.Combat;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;

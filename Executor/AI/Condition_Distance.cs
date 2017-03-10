@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Executor.AI.Combat
+namespace Executor.AI
 {
     enum DistanceOption
     {
