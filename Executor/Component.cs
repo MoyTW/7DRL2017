@@ -12,15 +12,11 @@ namespace Executor
         private Entity parent;
         public Entity Parent { get { return this.parent; } }
 
-        [NonSerialized()]
-        private IImmutableSet<SubEntitiesSelector> matchingSelectors;
         public IImmutableSet<SubEntitiesSelector> MatchingSelectors
         {
             get
             {
-                if (this.matchingSelectors == null)
-                    this.matchingSelectors = this._MatchingSelectors().Add(SubEntitiesSelector.ALL);
-                return this.matchingSelectors;
+                return this._MatchingSelectors().Add(SubEntitiesSelector.ALL);
             }
         }
 

@@ -17,7 +17,8 @@ namespace Executor
         SWAPPABLE_ATTACH_POINTS,
         ATTACH_POINT,
         ATTACHABLE,
-        SLOTTABLE
+        SLOTTABLE,
+        EQUIPPED
     }
 
     // This is definitely astronauting the heck out of my problem.

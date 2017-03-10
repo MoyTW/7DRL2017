@@ -15,10 +15,17 @@ namespace Executor
         public Component_AI()
         {
             List<SingleClause> rawRules = new List<SingleClause>();
-            rawRules.Add(new Action_MoveTowardsEnemy());
+
+            // Kite away from melee
+            rawRules.Add(new Condition_Distance(ComparisonOperator.LESS_THAN_EQUAL, DistanceOption.MELEE_RANGE));
+            rawRules.Add(new Action_MoveAwayEnemy());
+            // Shoot
             rawRules.Add(new Condition_CanSeeEnemy());
             rawRules.Add(new Condition_Distance(ComparisonOperator.LESS_THAN_EQUAL, DistanceOption.MY_LONGEST_RANGE));
             rawRules.Add(new Action_AttackEnemy());
+            // Move Towards
+            rawRules.Add(new Action_MoveTowardsEnemy());
+            // Catchall
             rawRules.Add(new Action_Delay());
 
             this.book = new Guidebook(rawRules);

@@ -22,13 +22,13 @@ namespace Executor
 
         public override GameEvent_Command ReifyStub(ArenaState arena)
         {
-            var equippedWeapon = arena.Player.GetComponentOfType<Component_Skeleton>()
+            var attackerEntity = arena.ResolveEID(this.AttackerEID);
+            var equippedWeapon = attackerEntity.GetComponentOfType<Component_Skeleton>()
                 .InspectBodyPart(BodyPartLocation.RIGHT_ARM)
                 .TryGetSubEntities(SubEntitiesSelector.WEAPON)
                 .FirstOrDefault();
 
             // TODO: Don't require exact square
-            var attackerEntity = arena.ResolveEID(this.AttackerEID);
             var attackerPosition = attackerEntity.TryGetPosition();
             var targetEntity = arena.EntityAtPosition(attackerPosition.X + this.x, attackerPosition.Y + this.y);
             if (targetEntity != null)
@@ -60,12 +60,13 @@ namespace Executor
         public override GameEvent_Command ReifyStub(ArenaState arena)
         {
             // TODO: Equipped items are *not* "Whatever is held in right right arm"
-            var equippedWeapon = arena.Player.GetComponentOfType<Component_Skeleton>()
+            var attackerEntity = arena.ResolveEID(this.AttackerEID);
+            var equippedWeapon = attackerEntity.GetComponentOfType<Component_Skeleton>()
                     .InspectBodyPart(BodyPartLocation.RIGHT_ARM)
                     .TryGetSubEntities(SubEntitiesSelector.WEAPON)
                     .FirstOrDefault();
 
-            return new GameEvent_PrepareAttack(arena.CurrentTick, Config.ONE, arena.ResolveEID(this.AttackerEID),
+            return new GameEvent_PrepareAttack(arena.CurrentTick, Config.ONE, attackerEntity,
                 arena.ResolveEID(this.TargetEID), equippedWeapon, arena.ArenaMap, this.SubTarget);
         }
 

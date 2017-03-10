@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace Executor.AI.Combat
 {
@@ -7,24 +8,15 @@ namespace Executor.AI.Combat
     {
         public override bool CanExecuteOn(GameQuery_Command commandQuery)
         {
-            throw new NotImplementedException();
+            var equipped = commandQuery.CommandEntity.TryGetSubEntities(SubEntitiesSelector.EQUIPPED);
+            return equipped.Any(e => e.MatchesSelector(SubEntitiesSelector.WEAPON));
         }
 
         public override CommandStub GenerateCommand(GameQuery_Command commandQuery)
         {
-            /*
-            Entity target;
-            if (commandQuery.CommandEntity == commandQuery.ArenaState.Player)
-                target = commandQuery.ArenaState.Mech2;
-            else
-                target = commandQuery.ArenaState.Player;
-            */
-
-            throw new NotImplementedException();
-            /*
-            return new GameEvent_PrepareAttack(commandQuery.ArenaState.CurrentTick, commandQuery.CommandEntity, target,
-                commandQuery.ExecutorEntity, commandQuery.ArenaState.ArenaMap, BodyPartLocation.TORSO);
-            */
+            Entity target = commandQuery.ArenaState.Player;    
+            return new CommandStub_PrepareTargetedAttack(commandQuery.CommandEntity.EntityID, target.EntityID,
+                target.Label, BodyPartLocation.TORSO);
         }
     }
 }

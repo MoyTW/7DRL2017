@@ -30,7 +30,11 @@ namespace Executor
 
         protected override IImmutableSet<SubEntitiesSelector> _MatchingSelectors()
         {
-            return ImmutableHashSet<SubEntitiesSelector>.Empty.Add(SubEntitiesSelector.ATTACHABLE);
+            if (this.AttachedTo.GetComponentOfType<Component_AttachPoint>().Active)
+                return ImmutableHashSet<SubEntitiesSelector>.Empty.Add(SubEntitiesSelector.ATTACHABLE)
+                    .Add(SubEntitiesSelector.EQUIPPED);
+            else
+                return ImmutableHashSet<SubEntitiesSelector>.Empty.Add(SubEntitiesSelector.ATTACHABLE);
         }
 
         private void HandleQueryDestroyed(GameQuery_Destroyed q)
