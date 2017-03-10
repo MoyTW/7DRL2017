@@ -35,7 +35,6 @@ namespace Executor.UI
         {
             this.parent = parent;
             this.arena = arena;
-            this.copyArena = arena.DeepCopy();
 
             this.targetingMenu = new Menu_Targeting(this, Config.TargetingWindowX, Config.TargetingWindowY);
             this.focusCommands = new List<CommandStub>();
@@ -49,6 +48,7 @@ namespace Executor.UI
         public void ResetFocusPlan()
         {
             this.copyArena = arena.DeepCopy();
+            this.copyArena.RemoveAllAIEntities();
             this.StartTick = arena.CurrentTick;
             this.focusCommands.Clear();
             this.QueueStub(new CommandStub_FocusBegin(this.arena.Player.EntityID));

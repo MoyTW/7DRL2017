@@ -106,6 +106,16 @@ namespace Executor
             return new ArenaState(copyList, this.MapID, this.ArenaMap.Clone(), this.ArenaPathFinder);
         }
 
+        // Only call this if you're using the arena as a copy!
+        public void RemoveAllAIEntities()
+        {
+            for (int i = this.mapEntities.Count - 1; i >= 0; i--)
+            {
+                if (this.mapEntities[i].HasComponentOfType<Component_AI>())
+                    this.mapEntities.RemoveAt(i);
+            }
+        }
+
         #region State Changes
 
         private void ForwardToNextAction()
