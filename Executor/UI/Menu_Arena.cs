@@ -71,7 +71,7 @@ namespace Executor.UI
                 this.targetingMenu.Reset();
                 return this;
             }
-            else if (this.planFocusMenu.InspectFocusCommands().Count != 0 &&
+            else if (this.planFocusMenu.InspectFocusCommands().Count() != 0 &&
                 this.arena.NextCommandEntity == this.arena.Player)
             {
                 this.arena.ResolveStub(this.planFocusMenu.PopStub());
@@ -211,7 +211,7 @@ namespace Executor.UI
             console.Print(0, ++line, "#        FOCUS STATUS        #", RLColor.Black);
             console.Print(0, ++line, "#                            #", RLColor.Black);
             line++;
-            if (this.planFocusMenu.InspectFocusCommands().Count != 0)
+            if (this.planFocusMenu.InspectFocusCommands().Count() != 0)
             {
                 console.Print(0, line, "#", RLColor.Black);
                 console.Print(3, line, "Turn: " + this.planFocusMenu.EndTick + "           ", RLColor.Black);
@@ -318,7 +318,7 @@ namespace Executor.UI
                     }
                 }
                 // If the Cell is not in the field-of-view but has been explored set it darker
-                else if (cell.IsExplored)
+                else
                 {
                     if (cell.IsWalkable)
                     {
@@ -335,11 +335,18 @@ namespace Executor.UI
             {
                 var entityPosition = e.TryGetPosition();
                 if (e.TryGetDestroyed())
-                    console.Set(entityPosition.X, entityPosition.Y, RLColor.LightGreen, null, 'D');
+                    console.Set(entityPosition.X, entityPosition.Y, RLColor.Gray, null, 'D');
                 else
-                    console.Set(entityPosition.X, entityPosition.Y, RLColor.LightGreen, null, 'E');
+                    console.Set(entityPosition.X, entityPosition.Y, RLColor.Red, null, 'E');
             }
-            console.Set(position.X, position.Y, RLColor.LightGreen, null, '@');
+
+            // Draw player and focus path
+            foreach (var fp in this.planFocusMenu.InspectFocusPath())
+            {
+                if (fp.X != position.X && fp.Y != position.Y)
+                    console.SetBackColor(fp.X, fp.Y, RLColor.LightGreen);
+            }
+            console.Set(position.X, position.Y, RLColor.Green, null, '@');
         }
     }
 

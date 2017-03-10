@@ -29,7 +29,7 @@ namespace Executor.UI
         }
 
         private readonly Menu_Targeting targetingMenu;
-        private List<CommandStub> focusCommands;
+        private List<Tuple<CommandStub,GameQuery_Position>> focusCommands;
 
         public Menu_PlanFocus(IDisplay parent, ArenaState arena)
         {
@@ -37,12 +37,17 @@ namespace Executor.UI
             this.arena = arena;
 
             this.targetingMenu = new Menu_Targeting(this, Config.TargetingWindowX, Config.TargetingWindowY);
-            this.focusCommands = new List<CommandStub>();
+            this.focusCommands = new List<Tuple<CommandStub,GameQuery_Position>>();
         }
 
-        public IList<CommandStub> InspectFocusCommands()
+        public IEnumerable<CommandStub> InspectFocusCommands()
         {
-            return this.focusCommands.AsReadOnly();
+            return this.focusCommands.Select(t => t.Item1);
+        }
+
+        public IEnumerable<GameQuery_Position> InspectFocusPath()
+        {
+            return this.focusCommands.Select(t => t.Item2);
         }
 
         public void ResetFocusPlan()
@@ -61,20 +66,22 @@ namespace Executor.UI
 
         public CommandStub PopStub()
         {
-            var stub = this.focusCommands[0];
+            var tuple = this.focusCommands[0];
             this.focusCommands.RemoveAt(0);
-            return stub;
+            return tuple.Item1;
         }
 
         private void QueueStub(CommandStub stub)
         {
-            this.focusCommands.Add(stub);
             this.copyArena.ResolveStub(stub);
             while (!this.copyArena.ShouldWaitForPlayerInput)
             {
                 this.copyArena.TryFindAndExecuteNextCommand();
             }
             this.EndTick = this.copyArena.CurrentTick;
+
+            var tuple = new Tuple<CommandStub,GameQuery_Position>(stub, this.copyArena.Player.TryGetPosition());
+            this.focusCommands.Add(tuple);
         }
 
         private void QueueMoveCommand(int dx, int dy)
