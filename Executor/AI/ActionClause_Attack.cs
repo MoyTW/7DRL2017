@@ -26,7 +26,7 @@ namespace Executor.AI
                 new Condition_CanSeeEnemy(),
                 new Condition_Distance(ComparisonOperator.LESS_THAN_EQUAL, DistanceOption.MY_LONGEST_RANGE)
             },
-            new Action_MoveAwayEnemy()) { }
+            new Action_AttackEnemy()) { }
     }
 }
 

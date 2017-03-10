@@ -23,7 +23,7 @@ namespace Executor.AI
 
         public ActionClause_Approach(): base(
             new List<Condition>() { },
-            new Action_MoveAwayEnemy()) { }
+            new Action_MoveTowardsEnemy()) { }
     }
 }
 
