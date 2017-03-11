@@ -18,6 +18,10 @@ namespace Executor.UI
         private const int arenaConsoleHeight = 70;
         private RLConsole arenaConsole;
 
+        private const int infoConsoleWidth = 70;
+        private const int infoConsoleHeight = 20;
+        private RLConsole infoConsole;
+
         private readonly int focusListWidth = 30;
         private readonly int focusListHeight = 90;
         private RLConsole focusListConsole;
@@ -39,6 +43,7 @@ namespace Executor.UI
             this.examineMenu = new Menu_Examine(this, arena);
 
             arenaConsole = new RLConsole(Menu_Arena.arenaConsoleWidth, Menu_Arena.arenaConsoleHeight);
+            this.infoConsole = new RLConsole(Menu_Arena.infoConsoleWidth, Menu_Arena.infoConsoleHeight);
             this.focusListConsole = new RLConsole(this.focusListWidth, this.focusListHeight);
             status1Console = new RLConsole(Menu_Arena.statusWidth, Menu_Arena.statusHeight);
             this.logConsole = new RLConsole(Menu_Arena.statusWidth, Menu_Arena.statusHeight);
@@ -72,6 +77,8 @@ namespace Executor.UI
             // Drawing sets
             this.arenaConsole.SetBackColor(0, 0, Menu_Arena.arenaConsoleWidth, Menu_Arena.arenaConsoleHeight, RLColor.Black);
             this.arenaConsole.Print(1, 1, "Arena", RLColor.White);
+
+            this.infoConsole.SetBackColor(0, 0, Menu_Arena.infoConsoleWidth, Menu_Arena.infoConsoleHeight, RLColor.Black);
 
             this.status1Console.SetBackColor(0, 0, Menu_Arena.statusWidth, Menu_Arena.statusHeight, RLColor.LightBlue);
             this.logConsole.SetBackColor(0, 0, Menu_Arena.statusWidth, Menu_Arena.statusHeight, RLColor.Black);
@@ -111,15 +118,48 @@ namespace Executor.UI
             }
         }
 
+        private void DrawInfo(RLConsole console)
+        {
+            console.Print(1, 1, "Controls Info", RLColor.White);
+
+            int normalX = 1;
+            int normalY = 3;
+            console.Print(normalX, normalY, "Normal Mode", RLColor.White);
+            console.Print(normalX, normalY + 1, "+ Move: NumPad, HJKLYUBN, Arrows", RLColor.White);
+            console.Print(normalX, normalY + 2, "+ Delay: Space", RLColor.White);
+            console.Print(normalX, normalY + 3, "+ Attack: A, -> Move Inputs", RLColor.White);
+            console.Print(normalX, normalY + 4, "+ Plan Focus: F -> Focus Inputs", RLColor.White);
+            console.Print(normalX, normalY + 5, "+ Examine: E -> Left/Right", RLColor.White);
+            console.Print(normalX, normalY + 6, "+ Main Menu: Esc", RLColor.White);
+
+            int focusX = 36;
+            int focusY = 3;
+            console.Print(focusX, focusY, "Focus Planning Mode", RLColor.White);
+            console.Print(focusX, focusY + 1, "+ Actions: Same as Normal", RLColor.White);
+            console.Print(focusX, focusY + 2, "+ Deflect Bullets: D", RLColor.White);
+            console.Print(focusX, focusY + 3, "+ Undo: Backspace", RLColor.White);
+            console.Print(focusX, focusY + 4, "+ Execute: Enter", RLColor.White);
+            console.Print(focusX, focusY + 5, "+ Exit Planning: Esc", RLColor.White);
+            
+            console.Print(focusX, focusY + 7, "Focus Execution Mode", RLColor.White);
+            console.Print(focusX, focusY + 8, "+ Execute: Enter", RLColor.White);
+            console.Print(focusX, focusY + 9, "+ Exit Focus: Space", RLColor.White);
+        }
+
         public void Blit(RLConsole console)
         {
             this.arenaConsole.SetBackColor(0, 0, Menu_Arena.arenaConsoleWidth, Menu_Arena.arenaConsoleHeight, RLColor.Black);
             this.arenaConsole.Print(1, 1, "Arena", RLColor.White);
 
+            this.infoConsole.SetBackColor(0, 0, Menu_Arena.infoConsoleWidth, Menu_Arena.infoConsoleHeight, RLColor.Black);
+
             this.status1Console.SetBackColor(0, 0, Menu_Arena.statusWidth, Menu_Arena.statusHeight, RLColor.LightBlue);
 
             this.DrawArena(this.arenaConsole);
             RLConsole.Blit(this.arenaConsole, 0, 0, Menu_Arena.arenaConsoleWidth, Menu_Arena.arenaConsoleHeight, console, 0, 0);
+
+            this.DrawInfo(this.infoConsole);
+            RLConsole.Blit(this.infoConsole, 0, 0, Menu_Arena.infoConsoleWidth, Menu_Arena.infoConsoleHeight, console, 0, Menu_Arena.arenaConsoleHeight);
 
             this.focusListConsole.SetBackColor(0, 0, this.focusListWidth, this.focusListHeight, RLColor.LightMagenta);
             this.DrawFocusList(this.focusListConsole);
