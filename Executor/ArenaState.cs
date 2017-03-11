@@ -291,7 +291,8 @@ namespace Executor
             {
                 foreach (var ai in this.mapEntities.Where(e => e.HasComponentOfType<Component_AI>()))
                 {
-                    if (ArenaState.DistanceBetweenEntities(this.Player, ai) <=
+                    if (!ai.GetComponentOfType<Component_AI>().Scanned &&
+                        ArenaState.DistanceBetweenEntities(this.Player, ai) <=
                         ai.TryGetAttribute(EntityAttributeType.SCAN_REQUIRED_RADIUS).Value)
                     {
                         ai.GetComponentOfType<Component_AI>().Scanned = true;
