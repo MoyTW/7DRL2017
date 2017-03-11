@@ -77,7 +77,6 @@ namespace Executor
         {
             if (ev.CommandEntity == this.Parent)
             {
-                this.SpendAP(ev.CommandTick, ev.APCost);
                 ev.Completed = true;
             }
         }
