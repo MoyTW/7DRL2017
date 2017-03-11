@@ -130,6 +130,15 @@ namespace Executor
 
         #region State Changes
 
+        public void AlertAllAIs()
+        {
+            foreach (var entity in this.mapEntities.Where(e => e.HasComponentOfType<Component_AI>()))
+            {
+                entity.GetComponentOfType<Component_AI>().Alerted = true;
+            }
+            this.ArenaLog.Add("Your cloak was disrupted! All enemies are now on ALERT!");
+        }
+
         private void ForwardToNextAction()
         {
             int leastTTL = 9999;

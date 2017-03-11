@@ -11,7 +11,7 @@ namespace Executor
     {
         private Guidebook activeBook;
 
-        public bool Alerted { get; private set; }
+        public bool Alerted { get; set; }
 
         public IEnumerable<ActionClause> ActionClauses { get { return this.activeBook.ActionClauses; } }
 
@@ -63,7 +63,7 @@ namespace Executor
             else if (ArenaState.DistanceBetweenEntities(this.Parent, q.ArenaState.Player) <=
                     this.Parent.TryGetAttribute(EntityAttributeType.DETECTION_RADIUS).Value)
             {
-                this.Alerted = true;
+                q.ArenaState.AlertAllAIs();
             }
         }
 
