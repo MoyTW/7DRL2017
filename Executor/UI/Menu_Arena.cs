@@ -59,6 +59,7 @@ namespace Executor.UI
                     this.planFocusMenu.Reset();
                     return this;
                 case RLKey.Enter:
+                case RLKey.KeypadEnter:
                     this.arena.ResolveStub(this.planFocusMenu.PopStub());
                     return this;
                 default:
@@ -225,7 +226,12 @@ namespace Executor.UI
             int line = 0;
             console.Print(0, line,   "##############################", RLColor.Black);
             console.Print(0, ++line, "#                            #", RLColor.Black);
-            console.Print(0, ++line, "#        FOCUS STATUS        #", RLColor.Black);
+
+            line++;
+            console.Print(0, line, "#", RLColor.Black);
+            console.Print(8, line, "CURRENT TURN: " + this.arena.CurrentTick + "           ", RLColor.Black);
+            console.Print(29, line, "#", RLColor.Black);
+            
             console.Print(0, ++line, "#                            #", RLColor.Black);
             line++;
             var playerFocus = this.arena.Player.GetComponentOfType<Component_FocusUser>();
@@ -233,6 +239,9 @@ namespace Executor.UI
             {
                 var remainingAP = this.arena.Player.TryGetAttribute(EntityAttributeType.CURRENT_AP).Value;
 
+                console.Print(0, line,   "#       EXECUTING FOCUS      #", RLColor.Black);
+                console.Print(0, ++line, "#                            #", RLColor.Black);
+                line++;
                 console.Print(0, line, "#", RLColor.Black);
                 console.Print(3, line, "Turn: " + this.arena.CurrentTick + "           ", RLColor.Black);
                 console.Print(12, line, "Moves: " + playerFocus.CurrentFreeMoves + "         ", RLColor.Black);
@@ -241,6 +250,9 @@ namespace Executor.UI
             }
             else if (this.planFocusMenu.InspectFocusCommands().Count() != 0)
             {
+                console.Print(0, line,   "#       PLANNING FOCUS       #", RLColor.Black);
+                console.Print(0, ++line, "#                            #", RLColor.Black);
+                line++;
                 console.Print(0, line, "#", RLColor.Black);
                 console.Print(3, line, "Turn: " + this.planFocusMenu.EndTick + "           ", RLColor.Black);
                 console.Print(12, line, "Moves: " + this.planFocusMenu.RemainingFreeMoves + "         ", RLColor.Black);
@@ -249,15 +261,10 @@ namespace Executor.UI
             }
             else
             {
-                console.Print(0, line, "#        NOT PLANNING        #", RLColor.Black);
+                console.Print(0, line,   "#      ACTING REGULARLY      #", RLColor.Black);
+                console.Print(0, ++line, "#                            #", RLColor.Black);
+                console.Print(0, ++line, "#          NO PLANS          #", RLColor.Black);
             }
-            console.Print(0, ++line, "#                            #", RLColor.Black);
-            console.Print(0, ++line, "##############################", RLColor.Black);
-
-
-            console.Print(0, line,   "##############################", RLColor.Black);
-            console.Print(0, ++line, "#                            #", RLColor.Black);
-            console.Print(0, ++line, "#         FOCUS LIST         #", RLColor.Black);
             console.Print(0, ++line, "#                            #", RLColor.Black);
             console.Print(0, ++line, "##############################", RLColor.Black);
             console.Print(0, ++line, "+----------------------------+", RLColor.Black);
