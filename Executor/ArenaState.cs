@@ -135,11 +135,6 @@ namespace Executor
 
         #region State Changes
 
-        public void ResolveAllPatrolPaths()
-        {
-
-        }
-
         public void AlertAllAIs()
         {
             foreach (var entity in this.mapEntities.Where(e => e.HasComponentOfType<Component_AI>()))
@@ -290,6 +285,20 @@ namespace Executor
             }
             else
                 throw new NullReferenceException("Stub " + stub + " reified to null; instead, return a delay!");
+
+            // Hacky
+            if (this.nextCommandEntity == this.Player)
+            {
+                foreach (var ai in this.mapEntities.Where(e => e.HasComponentOfType<Component_AI>()))
+                {
+                    if (ArenaState.DistanceBetweenEntities(this.Player, ai) <=
+                        ai.TryGetAttribute(EntityAttributeType.SCAN_REQUIRED_RADIUS).Value)
+                    {
+                        ai.GetComponentOfType<Component_AI>().Scanned = true;
+                        this.ArenaLog.Add("Scanned " + ai.Label + "!");
+                    }
+                }
+            }
             this.ForwardToNextAction();
         }
     }

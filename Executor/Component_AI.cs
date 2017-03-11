@@ -13,6 +13,7 @@ namespace Executor
     {
         private Guidebook activeBook;
 
+        public bool Scanned { get; set; }
         public bool Alerted { get; set; }
         public bool OnReturnLeg { get; private set; }
         public GameQuery_Position PatrolStart { get; private set; }
@@ -23,7 +24,9 @@ namespace Executor
         public Component_AI(Guidebook activeBook)
         {
             this.activeBook = activeBook;
+            this.Scanned = false;
             this.Alerted = false;
+            this.OnReturnLeg = false;
         }
 
         protected override IImmutableSet<SubEntitiesSelector> _MatchingSelectors()
@@ -36,32 +39,45 @@ namespace Executor
             return arena.ArenaMap.GetCell(pos.X, pos.Y);
         }
 
-        public IEnumerable<Cell> AlertCells(ArenaState arena)
+        public class CellInfo
         {
-            var radius = this.Parent.TryGetAttribute(EntityAttributeType.DETECTION_RADIUS).Value;
+            public List<Cell> AlertCells = new List<Cell>();
+            public List<Cell> ScanCells = new List<Cell>();
+        }
+
+        public CellInfo AlertCells(ArenaState arena)
+        {
+            var info = new CellInfo();
+            var scanRadius = this.Parent.TryGetAttribute(EntityAttributeType.SCAN_REQUIRED_RADIUS).Value;
+            var detectRadius = this.Parent.TryGetAttribute(EntityAttributeType.DETECTION_RADIUS).Value;
             var myPosition = this.Parent.TryGetPosition();
 
-            List<RogueSharp.Cell> cells = new List<RogueSharp.Cell>();
-
-            for (int x = -radius; x <= radius; ++x)
+            for (int x = -scanRadius; x <= scanRadius; ++x)
             {
-                for (int y = -radius; y <= radius; ++y)
+                for (int y = -scanRadius; y <= scanRadius; ++y)
                 {
                     var d = (int)Math.Floor(Math.Sqrt(x * x + y * y));
-                    if (d <= radius)
+                    int mx = myPosition.X + x;
+                    int my = myPosition.Y + y;
+                    Cell cell = null;
+                    if (mx >= 0 && my >= 0 && mx < arena.ArenaMap.Width && my < arena.ArenaMap.Height)
                     {
-                        int mx = myPosition.X + x;
-                        int my = myPosition.Y + y;
-                        if (mx >= 0 && my >= 0 && mx < arena.ArenaMap.Width && my < arena.ArenaMap.Height)
-                        {
-                            var cell = arena.ArenaMap.GetCell(myPosition.X + x, myPosition.Y + y);
-                            if (cell.IsWalkable)
-                                cells.Add(cell);
-                        }
+                        cell = arena.ArenaMap.GetCell(myPosition.X + x, myPosition.Y + y);
+                    }
+
+                    if (cell != null && d <= detectRadius)
+                    {
+                        if (cell.IsWalkable)
+                            info.AlertCells.Add(cell);
+                    }
+                    else if (!this.Scanned && cell != null && d <= scanRadius)
+                    {
+                        if (cell.IsWalkable)
+                            info.ScanCells.Add(cell);
                     }
                 }
             }
-            return cells;
+            return info;
         }
 
         private CommandStub MoveEventForPath(GameQuery_Command commandQuery, Path path)
@@ -132,6 +148,8 @@ namespace Executor
         {
             if (q.AttributeType == EntityAttributeType.DETECTION_RADIUS)
                 q.RegisterBaseValue(Config.ZERO);
+            else if (q.AttributeType == EntityAttributeType.SCAN_REQUIRED_RADIUS)
+                q.RegisterBaseValue(this.Parent.TryGetAttribute(EntityAttributeType.DETECTION_RADIUS).Value + 2);
         }
 
         protected override GameQuery _HandleQuery(GameQuery q)

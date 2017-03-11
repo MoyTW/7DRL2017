@@ -15,6 +15,7 @@ namespace Executor
         MAX_AP,
         SPEED,
         DETECTION_RADIUS,
+        SCAN_REQUIRED_RADIUS,
 
         // Weapon Attribute Types
         DAMAGE,

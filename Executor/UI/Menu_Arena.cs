@@ -296,6 +296,8 @@ namespace Executor.UI
                 }
             }
 
+            List<RogueSharp.Cell> alertCells = new List<RogueSharp.Cell>();
+            List<RogueSharp.Cell> scanCells = new List<RogueSharp.Cell>();
             foreach (var e in arena.InspectMapEntities().Where(e => e != arena.Player))
             {
                 var entityPosition = e.TryGetPosition();
@@ -308,11 +310,19 @@ namespace Executor.UI
                     var componentAI = e.GetComponentOfType<Component_AI>();
                     if (componentAI != null && !componentAI.Alerted)
                     {
-                        var dangerCells = componentAI.AlertCells(this.arena);
-                        foreach (var cell in dangerCells)
-                            console.SetBackColor(cell.X, cell.Y, RLColor.LightRed);
+                        var infoCells = componentAI.AlertCells(this.arena);
+                        scanCells.AddRange(infoCells.ScanCells);
+                        alertCells.AddRange(infoCells.AlertCells);
                     }
                 }
+            }
+            foreach (var cell in scanCells)
+            {
+                console.SetBackColor(cell.X, cell.Y, RLColor.LightBlue);
+            }
+            foreach (var cell in alertCells)
+            {
+                console.SetBackColor(cell.X, cell.Y, RLColor.LightRed);
             }
 
             // Draw focus path
