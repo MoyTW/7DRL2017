@@ -302,7 +302,17 @@ namespace Executor.UI
                 if (e.TryGetDestroyed())
                     console.Set(entityPosition.X, entityPosition.Y, RLColor.Gray, null, 'D');
                 else
+                {
                     console.Set(entityPosition.X, entityPosition.Y, RLColor.Red, null, 'E');
+
+                    var componentAI = e.GetComponentOfType<Component_AI>();
+                    if (componentAI != null && !componentAI.Alerted)
+                    {
+                        var dangerCells = componentAI.AlertCells(this.arena);
+                        foreach (var cell in dangerCells)
+                            console.SetBackColor(cell.X, cell.Y, RLColor.LightRed);
+                    }
+                }
             }
 
             // Draw focus path

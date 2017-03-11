@@ -14,6 +14,7 @@ namespace Executor
         CURRENT_AP,
         MAX_AP,
         SPEED,
+        DETECTION_RADIUS,
 
         // Weapon Attribute Types
         DAMAGE,
