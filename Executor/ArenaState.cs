@@ -72,7 +72,7 @@ namespace Executor
             try
             {
                 return this.ArenaPathFinder.ShortestPath(source, destination);
-            } catch (IndexOutOfRangeException ex)
+            } catch (ArgumentOutOfRangeException ex)
             {
                 Log.ErrorLine(ex.ToString());
                 return null;
