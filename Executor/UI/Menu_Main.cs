@@ -50,9 +50,9 @@ namespace Executor.UI
                     Log.ToggleDebugLog();
                     return this;
                 case RLKey.N:
-                    return this.NewArenaMenu();
-                case RLKey.M:
                     return this.NewArenaMenu(rand.Next());
+                case RLKey.M:
+                    return this.NewArenaMenu();
                 case RLKey.R:
                     if (this.arenaMenu != null && !this.arenaMenu.MatchEnded)
                         return this.arenaMenu;
@@ -85,18 +85,14 @@ namespace Executor.UI
             console.Print(baseX - 4, baseY, "Main Menu", RLColor.White);
 
             console.Print(baseX - 4, baseY + 2, "Options", RLColor.White);
-            console.Print(baseX - 2, baseY + 3, "N) Play Next Match", RLColor.White);
+            console.Print(baseX - 2, baseY + 3, "N) Play New Arena", RLColor.White);
             console.Print(baseX - 2, baseY + 4, "R) Return To Game", RLColor.White);
-            console.Print(baseX - 2, baseY + 5, "T) Fast-Forward Tournament", RLColor.White);
-            console.Print(baseX - 2, baseY + 6, "H) View Match History", RLColor.White);
-            console.Print(baseX - 2, baseY + 8, "Esc) Quit", RLColor.White);
+            console.Print(baseX - 2, baseY + 5, "Esc) Quit", RLColor.White);
 
             console.Print(baseX - 4, baseY + 10, "Arena Keys", RLColor.White);
             console.Print(baseX - 2, baseY + 11, "Movement: NumPad, HJKLYUBN, Arrow Keys", RLColor.White);
-            console.Print(baseX - 2, baseY + 12, "Fire Weapons: F", RLColor.White);
-            console.Print(baseX - 2, baseY + 13, "Delay For One TU: P", RLColor.White);
-            console.Print(baseX - 2, baseY + 14, "Delay Until Next Action: Space", RLColor.White);
-            console.Print(baseX - 2, baseY + 15, "Delay For Full Cooldown: Enter", RLColor.White);
+            console.Print(baseX - 2, baseY + 12, "Attack: A", RLColor.White);
+            console.Print(baseX - 2, baseY + 13, "Activate Focus: F", RLColor.White);
         }
     }
 }
