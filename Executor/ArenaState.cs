@@ -51,6 +51,14 @@ namespace Executor
             return this.ArenaMap.IsWalkable(x, y);
         }
 
+        public static int DistanceBetweenEntities(Entity a, Entity b)
+        {
+            var aPos = a.TryGetPosition();
+            var bPos = b.TryGetPosition();
+
+            return (int)Math.Floor(Math.Sqrt((aPos.X - bPos.X) * (aPos.X - bPos.X) + (aPos.Y - bPos.Y) * (aPos.Y - bPos.Y)));
+        }
+
         public IList<Entity> InspectMapEntities()
         {
             return this.mapEntities.AsReadOnly();

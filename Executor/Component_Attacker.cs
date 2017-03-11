@@ -16,15 +16,10 @@ namespace Executor
         {
             if (ev.ExecutorEntity == this.Parent)
             {
-                // Get all intervening modifiers (Inspect map for LOS & Terrain Bonuses)
-                var targetPos = ev.Target.TryGetPosition();
-                var attackerPos = ev.CommandEntity.TryGetPosition();
-                var lineCells = ev.GameMap.GetCellsAlongLine(attackerPos.X, attackerPos.Y, targetPos.X, targetPos.Y);
-
                 // If it's out of range, then the attack misses
                 int weaponRange = ev.ExecutorEntity.TryGetAttribute(EntityAttributeType.MAX_RANGE, ev.ExecutorEntity)
                     .Value;
-                var distance = lineCells.Count() - 1;
+                int distance = ArenaState.DistanceBetweenEntities(ev.Target, ev.CommandEntity);
                 if (distance > weaponRange)
                 {
                     ev.RegisterResult("MISS (out of range)");
@@ -33,6 +28,10 @@ namespace Executor
 
                 // TODO: This sequence of early exists is crufty because there's a lot of "before-exit-do" stuff here!
                 // If any of the cells isn't walkable, then your shot is blocked and the attack stops
+                var targetPos = ev.Target.TryGetPosition();
+                var attackerPos = ev.CommandEntity.TryGetPosition();
+                var lineCells = ev.GameMap.GetCellsAlongLine(attackerPos.X, attackerPos.Y, targetPos.X, targetPos.Y);
+
                 if (lineCells.Any(c => !c.IsWalkable))
                 {
                     ev.RegisterResult("MISS (no straight shot)");

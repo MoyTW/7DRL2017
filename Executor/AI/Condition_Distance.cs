@@ -70,11 +70,7 @@ namespace Executor.AI
             if (optionDistance == null)
                 return true;
 
-            var targetPos = target.TryGetPosition();
-            var selfPos = commandQuery.CommandEntity.TryGetPosition();
-            int currDist = commandQuery.ArenaState.ArenaMap
-                .GetCellsAlongLine(selfPos.X, selfPos.Y, targetPos.X, targetPos.Y)
-                .Count() - 1;
+            int currDist = ArenaState.DistanceBetweenEntities(target, commandQuery.CommandEntity);
 
             switch (this.Operator)
             {
