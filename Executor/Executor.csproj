@@ -109,6 +109,7 @@
     <Compile Include="Component_Piloted.cs" />
     <Compile Include="Component_AttributeModifier.cs" />
     <Compile Include="Component_Skeleton.cs" />
+    <Compile Include="UI\Menu_NextLevel.cs" />
     <Compile Include="UI\Menu_PlanFocus.cs" />
     <Compile Include="UI\Menu_Targeting.cs" />
     <Compile Include="GameEvent_FocusEnd.cs" />

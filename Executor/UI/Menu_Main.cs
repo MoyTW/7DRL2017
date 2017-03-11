@@ -23,6 +23,11 @@ namespace Executor.UI
             this.Height = height;
         }
 
+        public void SetArena(Menu_Arena arenaMenu)
+        {
+            this.arenaMenu = arenaMenu;
+        }
+
         private Menu_Arena NewArenaMenu(int seed=1)
         {
             RogueSharp.Random.IRandom iRand = new RogueSharp.Random.DotNetRandom(seed);

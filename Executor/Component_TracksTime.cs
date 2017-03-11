@@ -15,6 +15,11 @@ namespace Executor
             this.CooldownAttribute = cooldownAttribute;
         }
 
+        public void Reset()
+        {
+            this.LastActivationTick = -9999;
+        }
+
         protected override IImmutableSet<SubEntitiesSelector> _MatchingSelectors()
         {
             return ImmutableHashSet<SubEntitiesSelector>.Empty.Add(SubEntitiesSelector.TRACKS_TIME);

@@ -8,7 +8,7 @@ namespace Executor.UI
 {
     class Menu_Arena : IDisplay
     {
-        private readonly IDisplay parent;
+        private readonly Menu_Main parent;
         private readonly ArenaState arena;
         private readonly Menu_Targeting targetingMenu;
         private readonly Menu_PlanFocus planFocusMenu;
@@ -30,7 +30,7 @@ namespace Executor.UI
 
         public bool MatchEnded { get { return this.arena.PlayerLost || this.arena.PlayerWon; } }
 
-        public Menu_Arena(IDisplay parent, ArenaState arena)
+        public Menu_Arena(Menu_Main parent, ArenaState arena)
         {
             this.parent = parent;
             this.arena = arena;
@@ -60,8 +60,7 @@ namespace Executor.UI
                 return new Menu_Death(this.parent, this.arena.Level);
             else if (this.arena.PlayerWon)
             {
-                Console.WriteLine("PLAYER WON");
-                return this.parent;
+                return new Menu_NextLevel(this.parent, this.arena.Player, this.arena.Level + 1);
             }
 
             if (!this.arena.ShouldWaitForPlayerInput)
