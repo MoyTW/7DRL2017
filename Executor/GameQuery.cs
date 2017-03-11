@@ -5,6 +5,7 @@ using System.Text;
 
 namespace Executor
 {
+    [Serializable()]
     public class GameQuery
     {
         // Initializes as False, should probably be explicit to reduce confusion.

@@ -21,6 +21,8 @@ namespace Executor
         public static int TargetingWindowX { get { return 50; } }
         public static int TargetingWindowY { get { return 23; } }
 
+        public static int MinPatrolDistance { get { return 20; } }
+
         public static int NumMaps()
         {
             return 5;

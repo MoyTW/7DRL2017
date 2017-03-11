@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace Executor
 {
+    [Serializable()]
     public class GameQuery_Position : GameQuery
     {
         private int x, y;

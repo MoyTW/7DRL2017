@@ -50,6 +50,10 @@ namespace Executor
                 {
                     var cell = openCells[placementRand.Next(openCells.Count - 1)];
                     arena.PlaceEntityNear(e, cell.X, cell.Y);
+
+                    Component_AI ai = e.GetComponentOfType<Component_AI>();
+                    if (ai != null)
+                        ai.DeterminePatrolPath(arena, placementRand);
                 }
             }
 

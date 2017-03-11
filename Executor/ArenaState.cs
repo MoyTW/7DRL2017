@@ -56,7 +56,12 @@ namespace Executor
             var aPos = a.TryGetPosition();
             var bPos = b.TryGetPosition();
 
-            return (int)Math.Floor(Math.Sqrt((aPos.X - bPos.X) * (aPos.X - bPos.X) + (aPos.Y - bPos.Y) * (aPos.Y - bPos.Y)));
+            return ArenaState.DistanceBetweenPositions(aPos.X, aPos.Y, bPos.X, bPos.Y);
+        }
+
+        public static int DistanceBetweenPositions(int x0, int y0, int x1, int y1)
+        {
+            return (int)Math.Floor(Math.Sqrt((x0 - x1) * (x0 - x1) + (y0 - y1) * (y0 - y1)));
         }
 
         public IList<Entity> InspectMapEntities()
@@ -129,6 +134,11 @@ namespace Executor
         }
 
         #region State Changes
+
+        public void ResolveAllPatrolPaths()
+        {
+
+        }
 
         public void AlertAllAIs()
         {
@@ -214,6 +224,11 @@ namespace Executor
                 thisRound--;
             }
             return null;
+        }
+
+        public IEnumerable<Cell> WalkableCells()
+        {
+            return this.ArenaMap.GetAllCells().Where(c => c.IsWalkable).ToList();
         }
 
         public bool PlaceEntityNear(Entity en, int x, int y)
