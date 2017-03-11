@@ -134,10 +134,8 @@ namespace Executor
         }
 
         #endregion
-
-        #region Mechs
-
-        #region Mech Base
+        
+        #region Base
 
         public static Entity BuildBodyPart(BodyPartLocation location, int slotSpace, int internalStructure)
         {
@@ -148,11 +146,10 @@ namespace Executor
                 .AddComponent(new Component_InternalStructure(internalStructure));
         }
 
-        public static Entity BuildNakedMech(string label, bool player, Entity pilot, Guidebook book)
+        public static Entity BuildNakedMech(string label, bool player, Guidebook book)
         {
             var mech = new Entity(label: label, typeLabel: MechTypeLabel)
                 .AddComponent(new Component_Buffable())
-                .AddComponent(new Component_Piloted(pilot))
                 .AddComponent(new Component_ActionExecutor(Config.DefaultEntityAP))
                 .AddComponent(new Component_Skeleton());
 
@@ -175,7 +172,7 @@ namespace Executor
 
         public static Entity BuildPlayerEntity()
         {
-            var mech = BuildNakedMech("You", true, new Entity(), null);
+            var mech = BuildNakedMech("You", true, null);
 
             MountOntoArm(mech, BodyPartLocation.RIGHT_ARM, EntityBuilderWeapons.BuildHFBlade());
 
@@ -188,22 +185,6 @@ namespace Executor
         }
 
         #endregion
-
-        public static Entity BuildArmoredMech(string label, bool player, Guidebook book=null)
-        {
-            var mech = BuildNakedMech(label, player, new Entity(), book);
-
-            MountOntoArm(mech, BodyPartLocation.LEFT_ARM, BlueprintListing.BuildForLabel(Blueprints.RIFLE));
-            MountOntoArm(mech, BodyPartLocation.RIGHT_ARM, BlueprintListing.BuildForLabel(Blueprints.RIFLE));
-            
-            foreach (var location in EntityBuilder.MechLocations)
-            {
-                FillLocationWith(mech, location, BuildArmorPart);
-            }
-
-            return mech;
-        }
-
-        #endregion
+        
     }
 }

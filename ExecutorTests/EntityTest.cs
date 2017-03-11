@@ -56,6 +56,7 @@ namespace ExecutorTests
             this.ent.RemoveComponent(this.cmp);
         }
 
+        /*
         [Test]
         public void TestDeepCopy()
         {
@@ -73,5 +74,6 @@ namespace ExecutorTests
             Assert.AreNotEqual(mech.TryGetAttribute(EntityAttributeType.STRUCTURE).Value,
                 deepCopy.TryGetAttribute(EntityAttributeType.STRUCTURE).Value);
         }
+        */
     }
 }

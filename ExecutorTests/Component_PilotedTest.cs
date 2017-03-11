@@ -5,6 +5,7 @@ using NUnit.Framework;
 
 namespace ExecutorTests
 {
+    /*
     [TestFixture]
     public class Component_PilotedTest
     {
@@ -54,5 +55,6 @@ namespace ExecutorTests
             Assert.AreEqual(10, this.mech1.TryGetAttribute(EntityAttributeType.DAMAGE, this.mech1Gun).Value);
         }
     }
+    */
 }
 

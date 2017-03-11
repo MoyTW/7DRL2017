@@ -14,8 +14,7 @@ namespace Executor
             clauses.Add(new ActionClause_Attack());
             clauses.Add(new ActionClause_Approach());
 
-            var mech = EntityBuilder.BuildNakedMech("Rent-A-Cop " + designation, false, new Entity(),
-                new Guidebook(clauses));
+            var mech = EntityBuilder.BuildNakedMech("Rent-A-Cop " + designation, false, new Guidebook(clauses));
 
             EntityBuilder.MountOntoArm(mech, BodyPartLocation.RIGHT_ARM, EntityBuilderWeapons.BuildPistol());
             EntityBuilder.MountOntoArm(mech, BodyPartLocation.LEFT_ARM, EntityBuilder.BuildPhoneScanner());
@@ -30,8 +29,7 @@ namespace Executor
             clauses.Add(new ActionClause_Attack());
             clauses.Add(new ActionClause_Approach());
 
-            var mech = EntityBuilder.BuildNakedMech("Marksman " + designation, false, new Entity(),
-                new Guidebook(clauses));
+            var mech = EntityBuilder.BuildNakedMech("Marksman " + designation, false, new Guidebook(clauses));
 
             EntityBuilder.MountOntoArm(mech, BodyPartLocation.RIGHT_ARM, EntityBuilderWeapons.BuildCombatRifle());
             EntityBuilder.MountOntoArm(mech, BodyPartLocation.LEFT_ARM, EntityBuilder.BuildHandheldScanner());
