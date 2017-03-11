@@ -118,7 +118,7 @@ namespace Executor
         {
             return new Entity(label: "Helmet", typeLabel: "Armor")
                 .AddComponent(new Component_Slottable(2))
-                .AddComponent(new Component_AttributeModifier(EntityAttributeType.STRUCTURE, ModifierType.FLAT, 10));
+                .AddComponent(new Component_InternalStructure(10));
         }
 
         public static Entity BuildArmorPart()
