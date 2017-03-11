@@ -25,7 +25,7 @@ namespace Executor
             // This must be the exact name of the bitmap font file we are using or it will error.
             string fontFileName = "terminal8x8.png";
             // The title will appear at the top of the console window
-            string consoleTitle = "Mech Arena (I'm good at naming!) (In-Progress)";
+            string consoleTitle = "A Rougelike Where You Plan Your Moves";
 
             // Tell RLNet to use the bitmap font that we specified and that each tile is 8 x 8 pixels
             _rootConsole = new RLRootConsole(fontFileName, _screenWidth, _screenHeight, 8, 8, 1f, consoleTitle);

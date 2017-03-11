@@ -19,7 +19,7 @@ namespace Executor.UI
 
         public IDisplay OnRootConsoleUpdate(RLConsole console, RLKeyPress keyPress)
         {
-            if (keyPress != null)
+            if (keyPress != null && this.nextLevel < 10)
             {
                 RogueSharp.Random.IRandom iRand = new RogueSharp.Random.DotNetRandom();
 
@@ -30,15 +30,25 @@ namespace Executor.UI
                 this.mainMenu.SetArena(arenaMenu);
                 return arenaMenu;
             }
+            else if (keyPress != null)
+                return this.mainMenu;
             else
                 return this;
         }
 
         public void Blit(RLConsole console)
         {
-            console.SetBackColor(0, 0, console.Width, console.Height, RLColor.Black);
-            console.Print(console.Width / 2 - 19, console.Height / 2 - 1, "You have progressed to the next arena!", RLColor.White);
-            console.Print(console.Width / 2 - 10, console.Height / 2 + 1, "The next level is " + this.nextLevel, RLColor.White);
+            if (this.nextLevel < 10)
+            {
+                console.SetBackColor(0, 0, console.Width, console.Height, RLColor.Black);
+                console.Print(console.Width / 2 - 19, console.Height / 2 - 1, "You have progressed to the next arena!", RLColor.White);
+                console.Print(console.Width / 2 - 10, console.Height / 2 + 1, "The next level is " + this.nextLevel, RLColor.White);
+            }
+            else
+            {
+                console.SetBackColor(0, 0, console.Width, console.Height, RLColor.Black);
+                console.Print(console.Width / 2 - 15, console.Height / 2 - 1, "You have won! Congratulations!", RLColor.White);
+            }
         }
     }
 }
