@@ -27,8 +27,6 @@ namespace Executor.UI
         private RLConsole status1Console;
         private RLConsole logConsole;
 
-        private int attackDrawnForTurn = -1;
-
         public bool MatchEnded { get { return this.arena.IsMatchEnded(); } }
 
         public Menu_Arena(IDisplay parent, ArenaState arena)
@@ -77,8 +75,6 @@ namespace Executor.UI
             else if (this.planFocusMenu.InspectFocusCommands().Count() != 0)
             {
                 this.arena.ResolveStub(this.planFocusMenu.PopStub());
-                // TODO: hahaha turns!
-                Thread.Sleep(25);
                 return this;
             }
             else if (keyPress != null)
@@ -329,19 +325,22 @@ namespace Executor.UI
             }
 
             // Draw commands
-            if (this.arena.LastCommand is GameEvent_PrepareAttack && arena.CurrentTick != this.attackDrawnForTurn)
+            foreach (var command in arena.ExecutedCommands)
             {
-                var cmd = (GameEvent_PrepareAttack)this.arena.LastCommand;
-                var attackerPos = cmd.CommandEntity.TryGetPosition();
-                var targetPos = cmd.Target.TryGetPosition();
-                var lineCells = this.arena.ArenaMap.GetCellsAlongLine(attackerPos.X, attackerPos.Y, targetPos.X,
-                    targetPos.Y);
-                foreach (var cell in lineCells)
+                if (command is GameEvent_PrepareAttack)
                 {
-                    console.SetBackColor(cell.X, cell.Y, RLColor.LightRed);
+                    var cmd = (GameEvent_PrepareAttack)command;
+                    var attackerPos = cmd.CommandEntity.TryGetPosition();
+                    var targetPos = cmd.Target.TryGetPosition();
+                    var lineCells = this.arena.ArenaMap.GetCellsAlongLine(attackerPos.X, attackerPos.Y, targetPos.X,
+                                    targetPos.Y);
+                    foreach (var cell in lineCells)
+                    {
+                        console.SetBackColor(cell.X, cell.Y, RLColor.LightRed);
+                    }
                 }
-                this.attackDrawnForTurn = arena.CurrentTick;
             }
+            arena.ClearExecutedCommands();
         }
     }
 

@@ -10,6 +10,7 @@ namespace Executor
     public class ArenaState
     {
         private int currentTick;
+        private List<GameEvent_Command> executedCommands = new List<GameEvent_Command>();
 
         private List<Entity> mapEntities;
 
@@ -17,7 +18,9 @@ namespace Executor
         private Entity nextCommandEntity;
 
         public Entity NextCommandEntity { get { return this.nextCommandEntity; } }
-        public GameEvent_Command LastCommand { get; private set; }
+        public IEnumerable<GameEvent_Command> ExecutedCommands { get { return this.executedCommands; } }
+
+        public void ClearExecutedCommands() { this.executedCommands.Clear(); }
 
         // TODO: lol at exposing literally everything
         public int CurrentTick { get { return this.currentTick; } }
@@ -246,7 +249,7 @@ namespace Executor
                 gameEvent.CommandEntity.HandleEvent(gameEvent);
                 if (gameEvent.ShouldLog)
                     this.ArenaLog.Add(gameEvent.LogMessage);
-                this.LastCommand = gameEvent;
+                this.executedCommands.Add(gameEvent);
             }
             else if (gameEvent != null)
             {
