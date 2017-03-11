@@ -149,7 +149,7 @@ namespace Executor
             if (q.AttributeType == EntityAttributeType.DETECTION_RADIUS)
                 q.RegisterBaseValue(Config.ZERO);
             else if (q.AttributeType == EntityAttributeType.SCAN_REQUIRED_RADIUS)
-                q.RegisterBaseValue(this.Parent.TryGetAttribute(EntityAttributeType.DETECTION_RADIUS).Value + 2);
+                q.RegisterBaseValue(this.Parent.TryGetAttribute(EntityAttributeType.DETECTION_RADIUS).Value + 1);
         }
 
         protected override GameQuery _HandleQuery(GameQuery q)
