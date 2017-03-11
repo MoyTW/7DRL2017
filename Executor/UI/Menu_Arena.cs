@@ -141,6 +141,10 @@ namespace Executor.UI
                 case RLKey.F:
                     this.planFocusMenu.ResetFocusPlan();
                     return this.planFocusMenu;
+                case RLKey.Space:
+                    var stub = new CommandStub_Delay(this.arena.Player.EntityID, 1);
+                    this.arena.ResolveStub(stub);
+                    break;
                 case RLKey.Keypad1:
                 case RLKey.B:
                     this.TryPlayerMove(-1, 1);

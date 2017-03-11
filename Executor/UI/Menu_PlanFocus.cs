@@ -125,6 +125,9 @@ namespace Executor.UI
                     this.FinalizeFocusPlan();
                     return this.parent;
                 // Actions
+                case RLKey.Space:
+                    this.QueueStub(new CommandStub_Delay(this.arena.Player.EntityID, 1));
+                    break;
                 case RLKey.A:
                     this.targetingMenu.Reset();
                     return this.targetingMenu;
