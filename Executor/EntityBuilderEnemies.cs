@@ -14,27 +14,54 @@ namespace Executor
             clauses.Add(new ActionClause_Attack());
             clauses.Add(new ActionClause_Approach());
 
-            var mech = EntityBuilder.BuildNakedMech("Rent-A-Cop " + designation, false, new Guidebook(clauses));
+            var entity = EntityBuilder.BuildNakedMech("Rent-A-Cop " + designation, false, new Guidebook(clauses));
 
-            EntityBuilder.MountOntoArm(mech, BodyPartLocation.RIGHT_ARM, EntityBuilderWeapons.BuildPistol());
-            EntityBuilder.MountOntoArm(mech, BodyPartLocation.LEFT_ARM, EntityBuilder.BuildPhoneScanner());
+            EntityBuilder.MountOntoArm(entity, BodyPartLocation.RIGHT_ARM, EntityBuilderWeapons.BuildPistol());
+            EntityBuilder.MountOntoArm(entity, BodyPartLocation.LEFT_ARM, EntityBuilder.BuildPhoneScanner());
 
-            return mech;
+            return entity;
         }
-        
-        public static Entity BuildMarksman(string designation)
+
+        public static Entity BuildRentACopBaton(string designation)
+        {
+            List<ActionClause> clauses = new List<ActionClause>();
+            clauses.Add(new ActionClause_Attack());
+            clauses.Add(new ActionClause_Approach());
+
+            var entity = EntityBuilder.BuildNakedMech("Rent-A-Cop " + designation, false, new Guidebook(clauses));
+
+            EntityBuilder.MountOntoArm(entity, BodyPartLocation.RIGHT_ARM, EntityBuilderWeapons.BuildBaton());
+            EntityBuilder.MountOntoArm(entity, BodyPartLocation.LEFT_ARM, EntityBuilder.BuildPhoneScanner());
+
+            return entity;
+        }
+
+        public static Entity BuildRentACopBatonCowardly(string designation)
+        {
+            List<ActionClause> clauses = new List<ActionClause>();
+            clauses.Add(new ActionClause_Flee());
+
+            var entity = EntityBuilder.BuildNakedMech("Rent-A-Cop " + designation, false, new Guidebook(clauses));
+
+            EntityBuilder.MountOntoArm(entity, BodyPartLocation.RIGHT_ARM, EntityBuilderWeapons.BuildBaton());
+            EntityBuilder.MountOntoArm(entity, BodyPartLocation.LEFT_ARM, EntityBuilder.BuildPhoneScanner());
+
+            return entity;
+        }
+
+        public static Entity BuildPoliceMarksman(string designation)
         {
             List<ActionClause> clauses = new List<ActionClause>();
             clauses.Add(new ActionClause_AvoidMelee());
             clauses.Add(new ActionClause_Attack());
             clauses.Add(new ActionClause_Approach());
 
-            var mech = EntityBuilder.BuildNakedMech("Marksman " + designation, false, new Guidebook(clauses));
+            var entity = EntityBuilder.BuildNakedMech("Marksman " + designation, false, new Guidebook(clauses));
 
-            EntityBuilder.MountOntoArm(mech, BodyPartLocation.RIGHT_ARM, EntityBuilderWeapons.BuildCombatRifle());
-            EntityBuilder.MountOntoArm(mech, BodyPartLocation.LEFT_ARM, EntityBuilder.BuildHandheldScanner());
+            EntityBuilder.MountOntoArm(entity, BodyPartLocation.RIGHT_ARM, EntityBuilderWeapons.BuildCombatRifle());
+            EntityBuilder.MountOntoArm(entity, BodyPartLocation.LEFT_ARM, EntityBuilder.BuildHandheldScanner());
 
-            return mech;
+            return entity;
         }
 
         public static Entity BuildRandomEnemy(IRandom rand, string designation)

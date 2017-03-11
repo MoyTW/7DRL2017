@@ -18,6 +18,11 @@ namespace Executor
             return EntityBuilderWeapons.BuildWeapon("H.F. Blade", AttachmentSize.MEDIUM, 1, 10, 0);
         }
 
+        public static Entity BuildBaton()
+        {
+            return EntityBuilderWeapons.BuildWeapon("Baton", AttachmentSize.SMALL, 1, 3, 0);
+        }
+
         public static Entity BuildPistol()
         {
             return EntityBuilderWeapons.BuildWeapon("Pistol", AttachmentSize.SMALL, 20, 3, 0);
