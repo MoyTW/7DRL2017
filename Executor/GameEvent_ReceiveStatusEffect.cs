@@ -8,20 +8,22 @@ namespace Executor
         public string TargetLabel { get; }
         public string CasterEID { get; }
         public StatusEffect StatusEffect { get; }
+        public int APCost { get; }
 
         public CommandStub_ReceiveStatusEffect(string targetEID, string targetLabel, string casterEID,
-            StatusEffect statusEffect)
+            StatusEffect statusEffect, int APCost=Config.ZERO)
             : base(targetEID)
         {
             this.TargetEID = targetEID;
             this.TargetLabel = targetLabel;
             this.CasterEID = casterEID;
             this.StatusEffect = statusEffect;
+            this.APCost = APCost;
         }
 
         public override GameEvent_Command ReifyStub(ArenaState arena)
         {
-            return new GameEvent_ReceiveStatusEffect(arena.CurrentTick, Config.ZERO, arena.ResolveEID(this.TargetEID),
+            return new GameEvent_ReceiveStatusEffect(arena.CurrentTick, this.APCost, arena.ResolveEID(this.TargetEID),
                 arena.ResolveEID(this.CasterEID), this.StatusEffect);
         }
 

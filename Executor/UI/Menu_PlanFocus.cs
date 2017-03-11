@@ -131,7 +131,7 @@ namespace Executor.UI
                 case RLKey.D:
                     var blockEffect = new StatusEffect_Blocking(1, 3);
                     this.QueueStub(new CommandStub_ReceiveStatusEffect(this.arena.Player.EntityID,
-                            this.arena.Player.Label, this.arena.Player.EntityID, blockEffect));
+                            this.arena.Player.Label, this.arena.Player.EntityID, blockEffect, APCost: Config.ONE));
                     break;
                 // Movement
                 case RLKey.Keypad1:
