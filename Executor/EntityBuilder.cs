@@ -114,14 +114,24 @@ namespace Executor
 
         #region Slottable Parts
 
-        #region Other Parts
-
         public static Entity BuildArmorPart()
         {
             return BlueprintListing.BuildForLabel(Blueprints.ARMOR);
         }
 
-        #endregion
+        public static Entity BuildPhoneScanner()
+        {
+            return new Entity(label: "Phone Scanner", typeLabel: "Scanner")
+                .AddComponent(new Component_Attachable(AttachmentSize.SMALL))
+                .AddComponent(new Component_AttributeModifier(EntityAttributeType.DETECTION_RADIUS, ModifierType.FLAT, 2));
+        }
+
+        public static Entity BuildHandheldScanner()
+        {
+            return new Entity(label: "Hand Scanner", typeLabel: "Scanner")
+                .AddComponent(new Component_Attachable(AttachmentSize.SMALL))
+                .AddComponent(new Component_AttributeModifier(EntityAttributeType.DETECTION_RADIUS, ModifierType.FLAT, 4));
+        }
 
         #endregion
 

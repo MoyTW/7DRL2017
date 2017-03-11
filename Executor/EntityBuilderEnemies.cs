@@ -18,6 +18,7 @@ namespace Executor
                 new Guidebook(clauses));
 
             EntityBuilder.MountOntoArm(mech, BodyPartLocation.RIGHT_ARM, EntityBuilderWeapons.BuildPistol());
+            EntityBuilder.MountOntoArm(mech, BodyPartLocation.LEFT_ARM, EntityBuilder.BuildPhoneScanner());
 
             return mech;
         }
@@ -33,6 +34,7 @@ namespace Executor
                 new Guidebook(clauses));
 
             EntityBuilder.MountOntoArm(mech, BodyPartLocation.RIGHT_ARM, EntityBuilderWeapons.BuildCombatRifle());
+            EntityBuilder.MountOntoArm(mech, BodyPartLocation.LEFT_ARM, EntityBuilder.BuildHandheldScanner());
 
             return mech;
         }
