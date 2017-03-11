@@ -6,7 +6,7 @@ namespace Executor
     {
         private static bool printDebug = false;
         private static bool printInfo = true;
-        private static bool printError = false;
+        private static bool printError = true;
 
         public static void ToggleDebugLog() { SetDebugLog(!printDebug); }
 

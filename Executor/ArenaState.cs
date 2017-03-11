@@ -172,7 +172,7 @@ namespace Executor
             int leastTTL = 9999;
             Entity next = null;
 
-            foreach (var entity in this.mapEntities)
+            foreach (var entity in this.mapEntities.Where(e => !e.TryGetDestroyed()))
             {
                 var nextTTL = entity.HandleQuery(new GameQuery_TicksToLive(this.CurrentTick)).TicksToLive;
                 if (nextTTL < leastTTL)
