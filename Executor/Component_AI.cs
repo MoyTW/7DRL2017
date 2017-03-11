@@ -132,15 +132,17 @@ namespace Executor
                 Path patrolPath;
                 if (!this.OnReturnLeg)
                 {
-                    patrolPath = q.ArenaState.ArenaPathFinder.ShortestPath(myCell,
-                        this.PositionToCell(this.PatrolEnd, q.ArenaState));
+                    patrolPath = q.ArenaState.ShortestPath(myCell, this.PositionToCell(this.PatrolEnd, q.ArenaState));
                 }
                 else
                 {
-                    patrolPath = q.ArenaState.ArenaPathFinder.ShortestPath(myCell,
+                    patrolPath = q.ArenaState.ShortestPath(myCell, 
                         this.PositionToCell(this.PatrolStart, q.ArenaState));
                 }
-                q.RegisterCommand(this.MoveEventForPath(q, patrolPath));
+                if (patrolPath != null)
+                    q.RegisterCommand(this.MoveEventForPath(q, patrolPath));
+                else
+                    q.RegisterCommand(new CommandStub_Delay(this.Parent.EntityID, Config.ONE));
             }
         }
 

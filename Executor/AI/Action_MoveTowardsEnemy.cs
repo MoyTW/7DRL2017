@@ -20,7 +20,7 @@ namespace Executor.AI
             var commandCell = commandQuery.ArenaState.ArenaMap.GetCell(commandPos.X, commandPos.Y);
             var targetCell = commandQuery.ArenaState.ArenaMap.GetCell(targetPos.X, targetPos.Y);
 
-            return commandQuery.ArenaState.ArenaPathFinder.ShortestPath(commandCell, targetCell);
+            return commandQuery.ArenaState.ShortestPath(commandCell, targetCell);
         }
 
         private CommandStub MoveEventForPath(GameQuery_Command commandQuery, RogueSharp.Path path)

@@ -27,7 +27,7 @@ namespace Executor
         public Entity Player { get; }
         public string MapID { get; }
         public IMap ArenaMap { get; }
-        public PathFinder ArenaPathFinder { get; }
+        private PathFinder ArenaPathFinder { get; }
         public List<String> ArenaLog { get; }
 
         public bool ShouldWaitForPlayerInput {
@@ -49,6 +49,18 @@ namespace Executor
                     return false;
             }
             return this.ArenaMap.IsWalkable(x, y);
+        }
+
+        public Path ShortestPath(Cell source, Cell destination)
+        {
+            try
+            {
+                return this.ArenaPathFinder.ShortestPath(source, destination);
+            } catch (IndexOutOfRangeException ex)
+            {
+                Log.ErrorLine(ex.ToString());
+                return null;
+            }
         }
 
         public static int DistanceBetweenEntities(Entity a, Entity b)
