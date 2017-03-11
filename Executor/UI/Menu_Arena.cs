@@ -27,7 +27,8 @@ namespace Executor.UI
         private RLConsole status1Console;
         private RLConsole logConsole;
 
-        public bool MatchEnded { get { return this.arena.IsMatchEnded(); } }
+
+        public bool MatchEnded { get { return this.arena.PlayerLost || this.arena.PlayerWon; } }
 
         public Menu_Arena(IDisplay parent, ArenaState arena)
         {
@@ -55,8 +56,13 @@ namespace Executor.UI
             this.logConsole.SetBackColor(0, 0, Menu_Arena.statusWidth, Menu_Arena.statusHeight, RLColor.Black);
 
             // Logic
-            if (this.arena.IsMatchEnded())
+            if (this.arena.PlayerLost)
+                return new Menu_Death(this.parent, this.arena.Level);
+            else if (this.arena.PlayerWon)
+            {
+                Console.WriteLine("PLAYER WON");
                 return this.parent;
+            }
 
             if (!this.arena.ShouldWaitForPlayerInput)
             {

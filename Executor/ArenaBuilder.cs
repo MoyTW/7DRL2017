@@ -70,7 +70,7 @@ namespace Executor
         {
             var arenaMap = Map.Create(new RogueSharp.MapCreation.BorderOnlyMapCreationStrategy<Map>(15, 15));
             var mapEntities = new List<Entity>() { baseMech1, baseMech2 };
-            ArenaState arena = new ArenaState(mapEntities, "test", arenaMap, new PathFinder(arenaMap));
+            ArenaState arena = new ArenaState(mapEntities, "test", arenaMap, new PathFinder(arenaMap), 0);
             arena.PlaceEntityNear(baseMech1, 5, 5);
             arena.PlaceEntityNear(baseMech2, 10, 10);
 
@@ -100,10 +100,10 @@ namespace Executor
                     d++;
                 }
             }
-            return ArenaBuilder.BuildArena(width, height, mapID, mapEntities);
+            return ArenaBuilder.BuildArena(width, height, mapID, mapEntities, level);
         }
 
-        private static ArenaState BuildArena(int width, int height, string mapID, IEnumerable<Entity> entities)
+        private static ArenaState BuildArena(int width, int height, string mapID, IEnumerable<Entity> entities, int level)
         {
             if (!seedsToMaps.ContainsKey(mapID))
             {
@@ -118,7 +118,7 @@ namespace Executor
             {
                 mapEntities.Add(e.DeepCopy());
             }
-            ArenaState arena = new ArenaState(mapEntities, mapID, seedsToMaps[mapID].Item1, seedsToMaps[mapID].Item2);
+            ArenaState arena = new ArenaState(mapEntities, mapID, seedsToMaps[mapID].Item1, seedsToMaps[mapID].Item2, level);
 
             var openCells = arena.ArenaMap.GetAllCells().Where(c => c.IsWalkable).ToList();
             var placementRand = new DotNetRandom(Int32.Parse(mapID));

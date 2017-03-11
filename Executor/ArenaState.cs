@@ -23,12 +23,28 @@ namespace Executor
         public void ClearExecutedCommands() { this.executedCommands.Clear(); }
 
         // TODO: lol at exposing literally everything
+        public int Level { get; }
         public int CurrentTick { get { return this.currentTick; } }
         public Entity Player { get; }
         public string MapID { get; }
         public IMap ArenaMap { get; }
         private PathFinder ArenaPathFinder { get; }
         public List<String> ArenaLog { get; }
+        public bool PlayerWon
+        {
+            get
+            {
+                return !this.mapEntities.Where(e => e.HasComponentOfType<Component_AI>())
+                    .Any(e => !e.TryGetDestroyed());
+            }
+        }
+        public bool PlayerLost
+        {
+            get
+            {
+                return this.Player.TryGetDestroyed();
+            }
+        }
 
         public bool ShouldWaitForPlayerInput {
             get
@@ -95,14 +111,7 @@ namespace Executor
             return null;
         }
 
-        public bool IsMatchEnded()
-        {
-            bool survivingAIs = this.mapEntities.Where(e => e.HasComponentOfType<Component_AI>())
-                .Any(e => !e.TryGetDestroyed());
-            return this.Player.TryGetDestroyed() || !survivingAIs;
-        }
-
-        public ArenaState(IEnumerable<Entity> mapEntities, string mapID, IMap arenaMap, PathFinder arenaPathFinder)
+        public ArenaState(IEnumerable<Entity> mapEntities, string mapID, IMap arenaMap, PathFinder arenaPathFinder, int level)
         {
             this.currentTick = 0;
 
@@ -122,6 +131,8 @@ namespace Executor
             this.ArenaPathFinder = arenaPathFinder;
             this.ArenaLog = new List<String>();
 
+            this.Level = level;
+
             ForwardToNextAction();
         }
 
@@ -132,7 +143,7 @@ namespace Executor
             {
                 copyList.Add(e.DeepCopy());
             }
-            return new ArenaState(copyList, this.MapID, this.ArenaMap.Clone(), this.ArenaPathFinder);
+            return new ArenaState(copyList, this.MapID, this.ArenaMap.Clone(), this.ArenaPathFinder, this.Level);
         }
 
         // Only call this if you're using the arena as a copy!
