@@ -17,6 +17,7 @@ namespace Executor
         private Entity nextCommandEntity;
 
         public Entity NextCommandEntity { get { return this.nextCommandEntity; } }
+        public GameEvent_Command LastCommand { get; private set; }
 
         // TODO: lol at exposing literally everything
         public int CurrentTick { get { return this.currentTick; } }
@@ -245,6 +246,7 @@ namespace Executor
                 gameEvent.CommandEntity.HandleEvent(gameEvent);
                 if (gameEvent.ShouldLog)
                     this.ArenaLog.Add(gameEvent.LogMessage);
+                this.LastCommand = gameEvent;
             }
             else if (gameEvent != null)
             {

@@ -27,6 +27,8 @@ namespace Executor.UI
         private RLConsole status1Console;
         private RLConsole logConsole;
 
+        private int attackDrawnForTurn = -1;
+
         public bool MatchEnded { get { return this.arena.IsMatchEnded(); } }
 
         public Menu_Arena(IDisplay parent, ArenaState arena)
@@ -324,6 +326,21 @@ namespace Executor.UI
             {
                 var examinedPostion = this.examineMenu.ExaminedEntity.TryGetPosition();
                 console.SetBackColor(examinedPostion.X, examinedPostion.Y, RLColor.Yellow);
+            }
+
+            // Draw commands
+            if (this.arena.LastCommand is GameEvent_PrepareAttack && arena.CurrentTick != this.attackDrawnForTurn)
+            {
+                var cmd = (GameEvent_PrepareAttack)this.arena.LastCommand;
+                var attackerPos = cmd.CommandEntity.TryGetPosition();
+                var targetPos = cmd.Target.TryGetPosition();
+                var lineCells = this.arena.ArenaMap.GetCellsAlongLine(attackerPos.X, attackerPos.Y, targetPos.X,
+                    targetPos.Y);
+                foreach (var cell in lineCells)
+                {
+                    console.SetBackColor(cell.X, cell.Y, RLColor.LightRed);
+                }
+                this.attackDrawnForTurn = arena.CurrentTick;
             }
         }
     }
