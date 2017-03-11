@@ -32,7 +32,7 @@ namespace Executor.UI
             {
                 entities.Add(EntityBuilderEnemies.BuildRandomEnemy(iRand, i.ToString()));
             }
-            var arena = ArenaBuilder.BuildArena(Config.ArenaWidth, Config.ArenaHeight, iRand.Next(4).ToString(),
+            var arena = ArenaBuilder.BuildArena(Config.ArenaWidth, Config.ArenaHeight, iRand.Next(Int16.MaxValue).ToString(),
                 entities);
             this.arenaMenu = new Menu_Arena(this, arena);
             return this.arenaMenu;

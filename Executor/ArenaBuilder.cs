@@ -25,6 +25,14 @@ namespace Executor
             return arena;
         }
 
+        private static bool InScanRangeOfPlayer(Entity player, Entity aiEntity, Cell possiblePosition)
+        {
+            var scanRange = aiEntity.TryGetAttribute(EntityAttributeType.SCAN_REQUIRED_RADIUS).Value;
+            var playerPos = player.TryGetPosition();
+            var dist = ArenaState.DistanceBetweenPositions(playerPos.X, playerPos.Y, possiblePosition.X, possiblePosition.Y);
+            return dist <= scanRange;
+        }
+
         public static ArenaState BuildArena(int width, int height, string mapID, IEnumerable<Entity> entities)
         {
             if (!seedsToMaps.ContainsKey(mapID))
@@ -49,11 +57,15 @@ namespace Executor
                 while (!e.HasComponentOfType<Component_Position>())
                 {
                     var cell = openCells[placementRand.Next(openCells.Count - 1)];
-                    arena.PlaceEntityNear(e, cell.X, cell.Y);
 
                     Component_AI ai = e.GetComponentOfType<Component_AI>();
-                    if (ai != null)
+                    if (ai != null && !ArenaBuilder.InScanRangeOfPlayer(arena.Player, e, cell))
+                    {
+                        arena.PlaceEntityNear(e, cell.X, cell.Y);
                         ai.DeterminePatrolPath(arena, placementRand);
+                    }
+                    else if (ai == null)
+                        arena.PlaceEntityNear(e, cell.X, cell.Y);
                 }
             }
 
