@@ -347,6 +347,21 @@ namespace Executor
 
         #endregion
 
+        public static Entity BuildRandomLevelledEntity(IRandom rand, string designation, int level)
+        {
+            switch(level)
+            {
+                case 0:
+                    return EntityBuilderEnemies.BuildLevel0Entity(rand, designation);
+                case 1:
+                    return EntityBuilderEnemies.BuildLevel1Entity(rand, designation);
+                case 2:
+                    return EntityBuilderEnemies.BuildLevel2Entity(rand, designation);
+                default:
+                    throw new InvalidOperationException();
+            }
+        }
+
     }
 }
 

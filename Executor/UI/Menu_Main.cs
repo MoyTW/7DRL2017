@@ -27,13 +27,9 @@ namespace Executor.UI
         {
             RogueSharp.Random.IRandom iRand = new RogueSharp.Random.DotNetRandom(seed);
 
-            var entities = new List<Entity>() { EntityBuilder.BuildPlayerEntity() };
-            for (int i = 0; i < iRand.Next(3) + 5; i++)
-            {
-                entities.Add(EntityBuilderEnemies.BuildLevel2Entity(iRand, i.ToString()));
-            }
+            var player = EntityBuilder.BuildPlayerEntity();
             var arena = ArenaBuilder.BuildArena(Config.ArenaWidth, Config.ArenaHeight, iRand.Next(Int16.MaxValue).ToString(),
-                entities);
+                player, 0);
             this.arenaMenu = new Menu_Arena(this, arena);
             return this.arenaMenu;
         }

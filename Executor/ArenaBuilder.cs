@@ -10,6 +10,58 @@ namespace Executor
 {
     public static class ArenaBuilder
     {
+        public struct Distribution
+        {
+            public readonly int EntityLevel, Min, Max;
+
+            public Distribution(int entityLevel, int min, int max)
+            {
+                this.EntityLevel = entityLevel;
+                this.Min = min;
+                this.Max = max;
+            }
+
+        }
+
+        public static readonly Dictionary<int, List<Distribution>> levelDefinitions = new Dictionary<int, List<Distribution>>()
+        {
+            {0, new List<Distribution>() { new Distribution(0, 3, 5) } },
+            {1, new List<Distribution>() {
+                new Distribution(0, 3, 5),
+                new Distribution(1, 1, 3) } },
+            {2, new List<Distribution>() {
+                new Distribution(0, 1, 3),
+                new Distribution(1, 3, 5),
+            } },
+            {3, new List<Distribution>() {
+                new Distribution(0, 1, 3),
+                new Distribution(1, 3, 5),
+                new Distribution(2, 1, 3),
+            } },
+            {4, new List<Distribution>() {
+                new Distribution(0, 1, 3),
+                new Distribution(1, 3, 5),
+                new Distribution(2, 3, 5),
+            } },
+            {5, new List<Distribution>() {
+                new Distribution(1, 4, 8),
+                new Distribution(2, 3, 5),
+            } },
+            {6, new List<Distribution>() {
+                new Distribution(0, 3, 5),
+                new Distribution(1, 4, 8),
+                new Distribution(2, 3, 5),
+            } },
+            {7, new List<Distribution>() {
+                new Distribution(1, 3, 5),
+                new Distribution(2, 5, 9),
+            } },
+            {8, new List<Distribution>() {
+                new Distribution(2, 8, 14),
+            } },
+            {9, new List<Distribution>() { new Distribution(0, 1, 1) } }
+        };
+
         // TODO: Concurrent Dictionary
         private static ConcurrentDictionary<string, Tuple<IMap, PathFinder>> seedsToMaps =
             new ConcurrentDictionary<string, Tuple<IMap, PathFinder>>(Config.NumThreads(), Config.NumMaps());
@@ -33,7 +85,25 @@ namespace Executor
             return dist <= scanRange;
         }
 
-        public static ArenaState BuildArena(int width, int height, string mapID, IEnumerable<Entity> entities)
+        public static ArenaState BuildArena(int width, int height, string mapID, Entity player, int level)
+        {
+            var distributions = ArenaBuilder.levelDefinitions[level];
+            List<Entity> mapEntities = new List<Entity>() { player };
+            var placementRand = new DotNetRandom(Int32.Parse(mapID));
+            int d = 0;
+            foreach (var dist in distributions)
+            {
+                var numToAdd = placementRand.Next(dist.Min, dist.Max);
+                for (int i = 0; i < numToAdd; i++)
+                {
+                    mapEntities.Add(EntityBuilderEnemies.BuildRandomLevelledEntity(placementRand, d.ToString(), dist.EntityLevel));
+                    d++;
+                }
+            }
+            return ArenaBuilder.BuildArena(width, height, mapID, mapEntities);
+        }
+
+        private static ArenaState BuildArena(int width, int height, string mapID, IEnumerable<Entity> entities)
         {
             if (!seedsToMaps.ContainsKey(mapID))
             {
@@ -70,12 +140,6 @@ namespace Executor
             }
 
             return arena;
-        }
-
-        public static ArenaState BuildArena(int width, int height, string mapID, int arenaSeed,
-            Entity baseMech1, Entity baseMech2)
-        {
-            return ArenaBuilder.BuildArena(width, height, mapID, new List<Entity>() { baseMech1, baseMech2 });
         }
     }
 }
