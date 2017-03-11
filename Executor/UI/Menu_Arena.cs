@@ -312,7 +312,7 @@ namespace Executor.UI
                     console.Set(entityPosition.X, entityPosition.Y, RLColor.Red, null, 'E');
 
                     var componentAI = e.GetComponentOfType<Component_AI>();
-                    if (componentAI != null && !componentAI.Alerted)
+                    if (componentAI != null)
                     {
                         var infoCells = componentAI.AlertCells(this.arena);
                         scanCells.AddRange(infoCells.ScanCells);

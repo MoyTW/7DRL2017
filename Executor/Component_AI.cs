@@ -65,7 +65,7 @@ namespace Executor
                         cell = arena.ArenaMap.GetCell(myPosition.X + x, myPosition.Y + y);
                     }
 
-                    if (cell != null && d <= detectRadius)
+                    if (cell != null && d <= detectRadius && !this.Alerted)
                     {
                         if (cell.IsWalkable)
                             info.AlertCells.Add(cell);
