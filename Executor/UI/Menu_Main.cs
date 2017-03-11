@@ -30,7 +30,7 @@ namespace Executor.UI
             var entities = new List<Entity>() { EntityBuilder.BuildPlayerEntity() };
             for (int i = 0; i < iRand.Next(3) + 5; i++)
             {
-                entities.Add(EntityBuilderEnemies.BuildRandomEnemy(iRand, i.ToString()));
+                entities.Add(EntityBuilderEnemies.BuildLevel0Entity(iRand, i.ToString()));
             }
             var arena = ArenaBuilder.BuildArena(Config.ArenaWidth, Config.ArenaHeight, iRand.Next(Int16.MaxValue).ToString(),
                 entities);
