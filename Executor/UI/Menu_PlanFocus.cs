@@ -50,6 +50,11 @@ namespace Executor.UI
             return this.focusCommands.Select(t => t.Item2);
         }
 
+        public void Reset()
+        {
+            this.focusCommands.Clear();
+        }
+
         public void ResetFocusPlan()
         {
             this.copyArena = arena.DeepCopy();
@@ -62,6 +67,11 @@ namespace Executor.UI
         public void FinalizeFocusPlan()
         {
             this.QueueStub(new CommandStub_FocusEnd(this.arena.Player.EntityID));
+        }
+
+        public CommandStub LastStub()
+        {
+            return this.focusCommands.Last().Item1;
         }
 
         public CommandStub PopStub()

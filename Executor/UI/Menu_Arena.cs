@@ -46,6 +46,26 @@ namespace Executor.UI
 
         #region IDisplay Fns
 
+        private IDisplay HandleKeyPressedWhileInFocusMode(RLKeyPress keyPress)
+        {
+            if (keyPress == null)
+                return this;
+            switch (keyPress.Key)
+            {
+                case RLKey.Escape:
+                    return this.parent;
+                case RLKey.Space:
+                    this.arena.ResolveStub(this.planFocusMenu.LastStub());
+                    this.planFocusMenu.Reset();
+                    return this;
+                case RLKey.Enter:
+                    this.arena.ResolveStub(this.planFocusMenu.PopStub());
+                    return this;
+                default:
+                    return this;
+            }
+        }
+
         public IDisplay OnRootConsoleUpdate(RLConsole console, RLKeyPress keyPress)
         {
             // Drawing sets
@@ -79,8 +99,7 @@ namespace Executor.UI
             }
             else if (this.planFocusMenu.InspectFocusCommands().Count() != 0)
             {
-                this.arena.ResolveStub(this.planFocusMenu.PopStub());
-                return this;
+                return this.HandleKeyPressedWhileInFocusMode(keyPress);
             }
             else if (keyPress != null)
                 return this.HandleKeyPressed(keyPress);
@@ -209,7 +228,18 @@ namespace Executor.UI
             console.Print(0, ++line, "#        FOCUS STATUS        #", RLColor.Black);
             console.Print(0, ++line, "#                            #", RLColor.Black);
             line++;
-            if (this.planFocusMenu.InspectFocusCommands().Count() != 0)
+            var playerFocus = this.arena.Player.GetComponentOfType<Component_FocusUser>();
+            if (playerFocus.InFocus)
+            {
+                var remainingAP = this.arena.Player.TryGetAttribute(EntityAttributeType.CURRENT_AP).Value;
+
+                console.Print(0, line, "#", RLColor.Black);
+                console.Print(3, line, "Turn: " + this.arena.CurrentTick + "           ", RLColor.Black);
+                console.Print(12, line, "Moves: " + playerFocus.CurrentFreeMoves + "         ", RLColor.Black);
+                console.Print(22, line, "AP: " + remainingAP + "           ", RLColor.Black);
+                console.Print(29, line, "#", RLColor.Black);
+            }
+            else if (this.planFocusMenu.InspectFocusCommands().Count() != 0)
             {
                 console.Print(0, line, "#", RLColor.Black);
                 console.Print(3, line, "Turn: " + this.planFocusMenu.EndTick + "           ", RLColor.Black);
