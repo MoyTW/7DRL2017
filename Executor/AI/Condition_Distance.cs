@@ -10,6 +10,7 @@ namespace Executor.AI
     {
         MELEE_RANGE,
         // TODO: Implement the following!
+        MY_MEDIUM_RANGE,
         MY_LONGEST_RANGE,
         ENEMY_LONGEST_RANGE
         // MY_OPTIMAL_RANGE,
@@ -49,6 +50,10 @@ namespace Executor.AI
                     return commandQuery.CommandEntity.TryGetSubEntities(SubEntitiesSelector.WEAPON)
                         .Select(e => e.TryGetAttribute(EntityAttributeType.MAX_RANGE, e).Value)
                         .Max();
+                case DistanceOption.MY_MEDIUM_RANGE:
+                    return commandQuery.CommandEntity.TryGetSubEntities(SubEntitiesSelector.WEAPON)
+                        .Select(e => e.TryGetAttribute(EntityAttributeType.MAX_RANGE, e).Value)
+                        .Max() / 2;
                 case DistanceOption.ENEMY_LONGEST_RANGE:
                     return target.TryGetSubEntities(SubEntitiesSelector.WEAPON)
                         .Select(e => e.TryGetAttribute(EntityAttributeType.MAX_RANGE, e).Value)

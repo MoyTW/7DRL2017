@@ -28,6 +28,31 @@ namespace Executor
             return EntityBuilderWeapons.BuildWeapon("Pistol", AttachmentSize.SMALL, 20, 3, 0);
         }
 
+        public static Entity BuildShotgun()
+        {
+            return EntityBuilderWeapons.BuildWeapon("Shotgun", AttachmentSize.MEDIUM, 12, 5, 0);
+        }
+
+        public static Entity BuildRifle()
+        {
+            return EntityBuilderWeapons.BuildWeapon("Rifle", AttachmentSize.MEDIUM, 25, 4, 0);
+        }
+
+        public static Entity HFBaton()
+        {
+            return EntityBuilderWeapons.BuildWeapon("H.F. Baton", AttachmentSize.MEDIUM, 1, 9, 0);
+        }
+
+        public static Entity BuildCarbine()
+        {
+            return EntityBuilderWeapons.BuildWeapon("Rifle", AttachmentSize.LARGE, 25, 9, 0);
+        }
+
+        public static Entity BuildAssaultRifle()
+        {
+            return EntityBuilderWeapons.BuildWeapon("Rifle", AttachmentSize.LARGE, 30, 6, 0);
+        }
+
         public static Entity BuildCombatRifle()
         {
             return EntityBuilderWeapons.BuildWeapon("Combat Rifle", AttachmentSize.LARGE, 50, 8, 0);

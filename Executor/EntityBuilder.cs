@@ -114,6 +114,13 @@ namespace Executor
 
         #region Slottable Parts
 
+        public static Entity BuildHelmet()
+        {
+            return new Entity(label: "Helmet", typeLabel: "Armor")
+                .AddComponent(new Component_Slottable(2))
+                .AddComponent(new Component_AttributeModifier(EntityAttributeType.STRUCTURE, ModifierType.FLAT, 10));
+        }
+
         public static Entity BuildArmorPart()
         {
             return BlueprintListing.BuildForLabel(Blueprints.ARMOR);
@@ -130,11 +137,18 @@ namespace Executor
         {
             return new Entity(label: "Hand Scanner", typeLabel: "Scanner")
                 .AddComponent(new Component_Attachable(AttachmentSize.SMALL))
+                .AddComponent(new Component_AttributeModifier(EntityAttributeType.DETECTION_RADIUS, ModifierType.FLAT, 3));
+        }
+
+        public static Entity BuildDutyScanner()
+        {
+            return new Entity(label: "Duty Scanner", typeLabel: "Scanner")
+                .AddComponent(new Component_Attachable(AttachmentSize.SMALL))
                 .AddComponent(new Component_AttributeModifier(EntityAttributeType.DETECTION_RADIUS, ModifierType.FLAT, 4));
         }
 
         #endregion
-        
+
         #region Base
 
         public static Entity BuildBodyPart(BodyPartLocation location, int slotSpace, int internalStructure)

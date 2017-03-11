@@ -49,6 +49,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AI\ActionClause_KeepMediumRange.cs" />
     <Compile Include="AI\ActionClause_Flee.cs" />
     <Compile Include="AI\SingleClause.cs" />
     <Compile Include="ArenaState.cs" />
